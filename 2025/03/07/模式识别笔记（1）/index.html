@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言Word2Vec Embedding 技术Word2Vec 是一种用于将单词映射到向量空间的技术，通过训练语料库来学习单词的语义关系。核心思想是将单词转换为一个高维向量，使得语义相近的单词在向量空间中距离较近。 Word2Vec 过程 输入文本（例如：”我”、”是”、”中国”、”人民”） 嵌入层（Embedding）：将单词转换为向量表示 训练：使用 Skip-gram 或 CBOW 模型进行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="25 Spring - 模式识别笔记(1)">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/03/07/%E6%A8%A1%E5%BC%8F%E8%AF%86%E5%88%AB%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言Word2Vec Embedding 技术Word2Vec 是一种用于将单词映射到向量空间的技术，通过训练语料库来学习单词的语义关系。核心思想是将单词转换为一个高维向量，使得语义相近的单词在向量空间中距离较近。 Word2Vec 过程 输入文本（例如：”我”、”是”、”中国”、”人民”） 嵌入层（Embedding）：将单词转换为向量表示 训练：使用 Skip-gram 或 CBOW 模型进行">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-03-07T10:42:46.000Z">
+<meta property="article:modified_time" content="2025-08-04T08:07:20.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="模式识别">
+<meta property="article:tag" content="K-Means聚类">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/03/07/%E6%A8%A1%E5%BC%8F%E8%AF%86%E5%88%AB%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>25 Spring - 模式识别笔记(1) | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/03/07/%E6%A8%A1%E5%BC%8F%E8%AF%86%E5%88%AB%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          25 Spring - 模式识别笔记(1)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-03-07 18:42:46" itemprop="dateCreated datePublished" datetime="2025-03-07T18:42:46+08:00">2025-03-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-08-04 16:07:20" itemprop="dateModified" datetime="2025-08-04T16:07:20+08:00">2025-08-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Course/" itemprop="url" rel="index"><span itemprop="name">Course</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><h2 id="Word2Vec-Embedding-技术"><a href="#Word2Vec-Embedding-技术" class="headerlink" title="Word2Vec Embedding 技术"></a>Word2Vec Embedding 技术</h2><p>Word2Vec 是一种用于将单词映射到向量空间的技术，通过训练语料库来学习单词的语义关系。核心思想是将单词转换为一个高维向量，使得语义相近的单词在向量空间中距离较近。</p>
+<h3 id="Word2Vec-过程"><a href="#Word2Vec-过程" class="headerlink" title="Word2Vec 过程"></a>Word2Vec 过程</h3><ol>
+<li><strong>输入文本</strong>（例如：”我”、”是”、”中国”、”人民”）</li>
+<li><strong>嵌入层（Embedding）</strong>：将单词转换为向量表示</li>
+<li><strong>训练</strong>：使用 Skip-gram 或 CBOW 模型进行训练</li>
+<li><strong>输出向量</strong>：得到语义空间中的词向量表示</li>
+</ol>
+<p>在黑板上的示例中，展示了单词如何通过 Word2Vec 进行向量化，并且最终映射到一个 <em>n</em> 维向量空间中。</p>
+<hr>
+<h2 id="K-Means-聚类算法"><a href="#K-Means-聚类算法" class="headerlink" title="K-Means 聚类算法"></a>K-Means 聚类算法</h2><p>K-Means 是一种常见的无监督学习算法，主要用于数据聚类。其基本思想是：</p>
+<ol>
+<li>给定样本集合 $S$，包含样本 $S_1, S_2, \dots, S_k$。</li>
+<li>设定 $k$ 个聚类中心 $C_1, C_2, \dots, C_k$。</li>
+<li>将样本 $f$ 分配给最近的聚类中心 $C_k$。</li>
+</ol>
+<h3 id="数学定义"><a href="#数学定义" class="headerlink" title="数学定义"></a>数学定义</h3><p>定义样本 $f$ 归属于最接近的簇：</p>
+<p>$$<br>U_k^* &#x3D;<br>\begin{cases}<br>1, &amp; f \in S_k \<br>0, &amp; \text{otherwise}<br>\end{cases}<br>$$</p>
+<p>其中，样本 $f$ 的归属取决于其与聚类中心 $C_k$ 的欧式距离：</p>
+<p>$$<br>| f - C_k |^2<br>$$</p>
+<p>因此，每个样本都会归属于离它最近的簇。</p>
+<h3 id="K-Means-迭代步骤"><a href="#K-Means-迭代步骤" class="headerlink" title="K-Means 迭代步骤"></a>K-Means 迭代步骤</h3><ol>
+<li>随机初始化 $k$ 个聚类中心 $C_1, C_2, \dots, C_k$。</li>
+<li>计算每个样本到聚类中心的距离，并将其分配到最近的簇。</li>
+<li>更新聚类中心，使其成为簇中所有样本的平均值。</li>
+<li>重复步骤 2 和 3，直到聚类中心不再发生变化或达到迭代次数上限。</li>
+</ol>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><strong>Word2Vec</strong> 将单词映射到向量空间，使语义相似的单词在向量空间中更接近。  </li>
+<li><strong>K-Means</strong> 通过反复迭代，将数据点划分到不同的簇中进行聚类分析。</li>
+</ul>
+<p>这两者结合在自然语言处理 (NLP) 中可用于 <strong>文本分类、聚类分析</strong> 等任务。例如，先用 Word2Vec 将文本转换为向量，然后使用 K-Means 进行文本聚类。</p>
+<h2 id="kmeans算法的定义"><a href="#kmeans算法的定义" class="headerlink" title="kmeans算法的定义"></a>kmeans算法的定义</h2><h3 id="独热编码（One-Hot-Encoding）"><a href="#独热编码（One-Hot-Encoding）" class="headerlink" title="独热编码（One-Hot Encoding）"></a>独热编码（One-Hot Encoding）</h3><p>在 K-Means 聚类算法中，我们使用独热编码（One-Hot Encoding）来表示样本所属的类别：</p>
+<ul>
+<li><p>若样本 $f$ 属于第 $k$ 个簇，则其独热编码表示为</p>
+<p>$$<br>\mathbf{U}^* &#x3D; (0, 0, \dots, 1, \dots, 0)<br>$$</p>
+<p>其中只有第 $k$ 维的值为 1，其余维度为 0。</p>
+</li>
+<li><p>例如：</p>
+<ul>
+<li><strong>若 $f \in S_1$</strong>：<br>$$<br>\mathbf{U}^* &#x3D; (1, 0, 0, \dots, 0)<br>$$</li>
+<li><strong>若 $f \in S_k$</strong>：<br>$$<br>\mathbf{U}^* &#x3D; (0, 0, \dots, 1, \dots, 0)<br>$$</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="K-Means-目标函数"><a href="#K-Means-目标函数" class="headerlink" title="K-Means 目标函数"></a>K-Means 目标函数</h3><p>在 K-Means 算法中，我们的目标是最小化样本点到其分配的聚类中心的距离平方和：</p>
+<p>$$<br>\mathbf{U}^* &#x3D; \arg\min_{\mathbf{U} \in \mathcal{U}} \sum_{k&#x3D;1}^{K}U_k (f - C_k)^2<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$\mathcal{U}$ 是所有可能的独热编码集合：</li>
+</ul>
+  
+  $$\mathcal{U} = \left\{ \mathbf{u} = (U_1, U_2, \dots, U_K) \,\middle|\, \sum_{k=1}^{K} U_k = 1, \quad 0 \leq U_k \leq 1 \right\}$$
+
+<p>  表示每个样本点只能属于一个簇。</p>
+<hr>
+<h3 id="定理及其证明"><a href="#定理及其证明" class="headerlink" title="定理及其证明"></a>定理及其证明</h3><h4 id="定理（Thm）"><a href="#定理（Thm）" class="headerlink" title="定理（Thm）"></a>定理（Thm）</h4><p>对于任意样本 $f$ 和聚类中心 $C_1, C_2, \dots, C_K$，定义：</p>
+
+$$
+U_k^* =
+\begin{cases} 
+1, & k = \arg\min\limits_{R=1,2,\dots,K} (f - C_R)^2 \\
+0, & \text{else}
+\end{cases}
+$$
+
+
+<p>即，样本 $f$ 应该被分配到使得 $(f - C_k)^2$（最小值唯一） 最小的簇 $C_k$。</p>
+<h4 id="证明（Proof）"><a href="#证明（Proof）" class="headerlink" title="证明（Proof）"></a>证明（Proof）</h4><ol>
+<li><p>定义</p>
+<p>$$<br>m &#x3D; \min_{k \in {1,2,\dots,K}} {(f - C_k)^2}<br>$$</p>
+<p>由于 $U_k$ 是独热编码，所有可能的 $U_k$ 满足</p>
+<p>$$<br>\sum_{k&#x3D;1}^{K} U_k &#x3D; 1<br>$$</p>
+</li>
+<li><p>目标函数展开：</p>
+<p>$$<br>\sum_{k&#x3D;1}^{K} U_k (f - C_k)^2 \geq\ \sum_{k&#x3D;1}^{K} U_k \cdot m<br>$$</p>
+<p>由于 $\sum_{k&#x3D;1}^{K} U_k &#x3D; 1,$ 代入可得：</p>
+<p>$$<br>\sum_{k&#x3D;1}^{K} U_k (f - C_k)^2 \geq m<br>$$</p>
+</li>
+<li><p>取 $U_k^*$ 使得 $k$ 取最小距离的索引，则：</p>
+<p>$$<br>\sum_{k&#x3D;1}^{K} U_k^* (f - C_k)^2 &#x3D; m.<br>$$</p>
+<p>这说明只有当 $U_k^<em>$ 取最优独热编码时，目标函数才能取到最小值 $m$ ，从而证明了 $U_k^</em>$ 具有唯一最优解。</p>
+</li>
+</ol>
+<hr>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
+<li><strong>独热编码</strong> 用于表示样本所属的类别，每个样本只能属于一个簇。  </li>
+<li><strong>目标函数</strong> 通过最小化样本到其最近聚类中心的距离平方和，确定最优分类。  </li>
+<li><strong>定理证明</strong> 说明了最佳分配方案是将样本分配到使得 $(f - C_k)^2$ 最小的簇。</li>
+</ul>
+<p>这一定理是 K-Means 算法的核心之一，保证了算法在每一步迭代中都能使目标函数收敛到一个局部最优解。</p>
+<p>–</p>
+<h2 id="连续情况下的-K-Means-聚类定义"><a href="#连续情况下的-K-Means-聚类定义" class="headerlink" title="连续情况下的 K-Means 聚类定义"></a>连续情况下的 K-Means 聚类定义</h2><p>在离散情况下，我们用有限个样本点 $f$ 进行聚类，而在连续情况下，需要对整个定义域 $\Omega$ 进行考虑。</p>
+<h3 id="目标函数扩展到连续情况"><a href="#目标函数扩展到连续情况" class="headerlink" title="目标函数扩展到连续情况"></a>目标函数扩展到连续情况</h3><ul>
+<li><p>设函数 $f: \Omega \to \mathbb{R}$，其中 $\Omega$ 是定义域，$f(x)$ 是定义在 $\Omega$ 上的连续函数。  </p>
+</li>
+<li><p>目标是在整个 $\Omega$ 上最小化聚类误差：</p>
+<p>$$<br>\min_{\mathbf{U}(x) \in \mathcal{U}} \sum_{x \in \Omega} \sum_{k&#x3D;1}^{K} U_k(x) (f(x) - C_k)^2<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$C_1, C_2, \dots, C_K$ 为 $K$ 个聚类中心。  </li>
+<li>$U_k(x)$ 表示位置 $x$ 归属于第 $k$ 个聚类中心的程度。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="约束条件"><a href="#约束条件" class="headerlink" title="约束条件"></a>约束条件</h3><p>为了保证每个点 $x$ 仅归属于一个聚类簇，引入约束：</p>
+
+$$
+\mathcal{U} = \left\{ \mathbf{U}(x) = (U_1(x), U_2(x), \dots, U_K(x)) \,\middle|\, \sum_{k=1}^{K} U_k(x) = 1, \quad 0 \leq U_k(x) \leq 1, \quad \forall x \in \Omega \right\}
+$$
+
+
+
+<p>这意味着：</p>
+<ul>
+<li>每个 $x$ 只能属于一个簇（即某个 $U_k(x)$ 取 1，其余取 0）。</li>
+<li>$U_k(x)$ 的取值范围在 $[0,1]$ 之间。</li>
+</ul>
+<hr>
+<h3 id="直观解释"><a href="#直观解释" class="headerlink" title="直观解释"></a>直观解释</h3><p>从黑板上的示意图可以看出：</p>
+<ul>
+<li>$x \in \Omega$ 表示数据点在连续空间中的分布。</li>
+<li>$f(x)$ 代表数据点的特征值。</li>
+<li>目标是将这些数据点划分到不同的簇 $C_1, C_2, \dots, C_K$ 中，使得同一簇中的点具有较小的方差。</li>
+</ul>
+<hr>
+<h3 id="结论-1"><a href="#结论-1" class="headerlink" title="结论"></a>结论</h3><ul>
+<li>在连续情况下，K-Means 的目标函数和约束条件从离散样本点扩展到了整个定义域 $\Omega$。  </li>
+<li>目标仍然是最小化数据点到聚类中心的平方误差。  </li>
+<li>约束条件确保每个点 $x$ 只能归属于一个簇。  </li>
+<li>这种扩展形式在实际应用中可用于处理连续空间中的数据，如图像分割或概率密度估计。</li>
+</ul>
+<hr>
+<h2 id="K-Means-迭代优化过程"><a href="#K-Means-迭代优化过程" class="headerlink" title="K-Means 迭代优化过程"></a>K-Means 迭代优化过程</h2><p>K-Means 算法的目标是最小化聚类误差 $E(\mathbf{U}, \mathbf{C})$，即样本点到其聚类中心的平方误差和。它采用 <strong>迭代优化</strong> 的方式，在每次迭代中交替更新 <strong>簇分配</strong> 和 <strong>聚类中心</strong>，直到收敛。</p>
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
+<li><p>聚类中心向量：</p>
+<p>$$<br>\mathbf{C} &#x3D; (C_1, C_2, \dots, C_K)^T.<br>$$</p>
+</li>
+<li><p>K-Means 的优化目标：</p>
+<p>$$<br>\min_{\mathbf{U} \in \mathcal{U}, \mathbf{C}} E(\mathbf{U}, \mathbf{C}).<br>$$</p>
+</li>
+</ul>
+<h3 id="Step-1：更新簇分配-mathbf-U"><a href="#Step-1：更新簇分配-mathbf-U" class="headerlink" title="Step 1：更新簇分配 $\mathbf{U}$"></a>Step 1：更新簇分配 $\mathbf{U}$</h3><p>$$<br>\mathbf{U}^{t+1} &#x3D; \arg\min_{\mathbf{U} \in \mathcal{U}} E(\mathbf{U}, \mathbf{C}^t).<br>$$</p>
+<p>其中，$U_k^{t+1}(x)$ 按照最近邻准则更新：</p>
+
+$$
+U_k^{t+1}(x) =
+\begin{cases}
+1, & k = \arg\min\limits_{\,k' \in \{1,2,\dots,K\}} \bigl(f(x) - C_{k'}^t\bigr)^2 \\
+0, & \text{otherwise}
+\end{cases}
+$$
+
+
+<p>即，将样本 $x$ 归到当前最近的聚类中心 $C_k^t$。</p>
+<h3 id="Step-2：更新聚类中心-mathbf-C"><a href="#Step-2：更新聚类中心-mathbf-C" class="headerlink" title="Step 2：更新聚类中心 $\mathbf{C}$"></a>Step 2：更新聚类中心 $\mathbf{C}$</h3><p>$$<br>\mathbf{C}^{t+1} &#x3D; \arg\min_{\mathbf{C}} E(\mathbf{U}^{t+1}, \mathbf{C}).<br>$$</p>
+<p>聚类中心的更新公式：</p>
+<p>$$<br>C_k &#x3D; \frac{\sum\limits_{x \in \Omega} U_k^{t+1}(x) , f(x)}{|\Omega_k|},<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$\Omega_k$ 是当前属于第 $k$ 个簇的所有样本点集合。</li>
+<li>上式表示：新的聚类中心是该簇内所有样本的加权平均值。</li>
+<li>也可以把$\Omega_k$替换成$\sum_{x \in \Omega} U_k^{t+1} (x) :&#x3D; \Omega^{t+1}_{k}$</li>
+</ul>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><strong>Step 1</strong>：更新簇分配，使得每个点归属于与其最近的聚类中心。  </li>
+<li><strong>Step 2</strong>：更新聚类中心，使其为簇内所有点的均值。  </li>
+<li>这两步交替进行，直到聚类中心不再变化，算法收敛。</li>
+</ul>
+<hr>
+<h2 id="目标函数关于聚类中心的推导"><a href="#目标函数关于聚类中心的推导" class="headerlink" title="目标函数关于聚类中心的推导"></a>目标函数关于聚类中心的推导</h2><p>以下演示 <strong>Step 2</strong>（更新聚类中心）中，如何对目标函数关于聚类中心 $C_k$ 求导并得到更新公式。为简化，只对离散情形展示，连续情形可将求和替换为积分，思路相同。</p>
+<h3 id="目标函数拆分"><a href="#目标函数拆分" class="headerlink" title="目标函数拆分"></a>目标函数拆分</h3><p>K-Means 的目标函数（离散情形）：</p>
+<p>$$<br>E(\mathbf{U}, \mathbf{C})<br>&#x3D; \sum_{k&#x3D;1}^{K} \sum_{x \in \Omega} U_k(x)\bigl(f(x) - C_k\bigr)^2<br>$$</p>
+<p>我们先单独关注属于簇 $k$ 的部分：</p>
+<p>$$<br>E_k(\mathbf{U}, C_k)<br>&#x3D; \sum_{x \in \Omega} U_k(x)\bigl(f(x) - C_k\bigr)^2<br>$$</p>
+<p>在更新 $C_k$ 时，$U_k(x)$ 固定，只需对 $C_k$ 进行最优化。</p>
+<h3 id="对-C-k-求偏导"><a href="#对-C-k-求偏导" class="headerlink" title="对 $C_k$ 求偏导"></a>对 $C_k$ 求偏导</h3><p>令</p>
+<p>$$<br>E_k(\mathbf{U}, C_k)<br>&#x3D; \sum_{x \in \Omega} U_k(x)\bigl(f(x) - C_k\bigr)^2<br>$$</p>
+<p>对 $C_k$ 求导并令其为 0：</p>
+<p>$$<br>\frac{\partial}{\partial C_k} E_k(\mathbf{U}, C_k)<br>&#x3D; \sum_{x \in \Omega} 2 U_k(x)  \bigl(C_k - f(x)\bigr).<br>$$</p>
+<p>令其为 0，可得：</p>
+<p>$$<br>\sum_{x \in \Omega} U_k(x)\bigl(C_k - f(x)\bigr) &#x3D; 0<br>$$</p>
+<h3 id="解方程，得到更新公式"><a href="#解方程，得到更新公式" class="headerlink" title="解方程，得到更新公式"></a>解方程，得到更新公式</h3><p>整理可得：</p>
+<p>$$<br>C_k \sum_{x \in \Omega} U_k(x)<br>&#x3D; \sum_{x \in \Omega} U_k(x)f(x)<br>$$</p>
+<p>若分母不为 0（该簇有样本），则</p>
+<p>$$<br>C_k &#x3D; \frac{\sum\limits_{x \in \Omega} U_k(x) f(x)}{\sum\limits_{x \in \Omega} U_k(x)}<br>$$</p>
+<p>这就是 <strong>K-Means 中聚类中心的更新公式</strong>。在常见的离散数据立场下，上式意味着“该簇内所有样本特征的加权平均值”，权值由 $U_k(x)$ 决定。<br>若 $U_k(x)$ 只取 0 或 1（硬划分），则退化为简单的算术平均。</p>
+<blockquote>
+<p><strong>注：</strong></p>
+<ul>
+<li><p>在连续情况下，将“求和”换为对 $\Omega$ 的积分即可：</p>
+<p>$$C_k &#x3D; \frac{\int_{\Omega} U_k(x)f(x)\mathrm{d}x}{\int_{\Omega} U_k(x)\mathrm{d}x}$$</p>
+</li>
+<li><p>当 $U_k(x)$ 只取 0 或 1，即标准 K-Means，公式变为簇内样本的算术平均。</p>
+</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="K-Means-能量单调下降（不增）性"><a href="#K-Means-能量单调下降（不增）性" class="headerlink" title="K-Means 能量单调下降（不增）性"></a>K-Means 能量单调下降（不增）性</h2><p>以下笔记基于课堂板书，展示 K-Means 迭代过程中目标函数（也称“能量”或“误差”）如何在每一步都单调下降（或不增），从而收敛到局部最优解。</p>
+<h3 id="引理-定理描述"><a href="#引理-定理描述" class="headerlink" title="引理 &#x2F; 定理描述"></a>引理 &#x2F; 定理描述</h3><blockquote>
+<p><strong>定理：</strong><br>由 K-Means 算法产生的迭代序列 $(\mathbf{u}^{(t)}, \mathbf{c}^{(t)})$ 满足</p>
+<p>$$<br>E\bigl(\mathbf{u}^{(t+1)}, \mathbf{c}^{(t+1)}\bigr)<br>\le<br>E\bigl(\mathbf{u}^{(t)}, \mathbf{c}^{(t)}\bigr),<br>$$</p>
+<p>即每次迭代更新后，目标函数 $E(\cdot)$ 不会增大，从而保证了算法的单调收敛性。</p>
+</blockquote>
+<h3 id="目标函数回顾"><a href="#目标函数回顾" class="headerlink" title="目标函数回顾"></a>目标函数回顾</h3><p>离散情形下的 K-Means 目标函数：</p>
+<p>$$<br>E\bigl(\mathbf{u}, \mathbf{c}\bigr)<br>&#x3D; \sum_{k&#x3D;1}^{K} \sum_{x \in \Omega}<br>U_k(x)\bigl(f(x) - C_k\bigr)^2<br>$$</p>
+<h3 id="迭代过程（两步更新）"><a href="#迭代过程（两步更新）" class="headerlink" title="迭代过程（两步更新）"></a>迭代过程（两步更新）</h3><ul>
+<li><p><strong>Step 1：更新 $\mathbf{u}^{(t+1)}$</strong><br>固定 $\mathbf{c}^{(t)}$，令</p>
+<p>$$<br>\mathbf{u}^{(t+1)}<br>&#x3D; \arg\min_{\mathbf{u} \in \mathcal{U}}<br>  E\bigl(\mathbf{u}, \mathbf{c}^{(t)}\bigr)<br>$$</p>
+<p>由于独热编码的性质，每个样本 $x$ 归于距离最近的中心 $C_k^{(t)}$。<br>这样得到</p>
+<p>$$<br>E\bigl(\mathbf{u}^{(t+1)}, \mathbf{c}^{(t)}\bigr)<br>\le<br>E\bigl(\mathbf{u}^{(t)}, \mathbf{c}^{(t)}\bigr)<br>$$</p>
+</li>
+<li><p><strong>Step 2：更新 $\mathbf{c}^{(t+1)}$</strong><br>固定 $\mathbf{u}^{(t+1)}$，令</p>
+<p>$$<br>\mathbf{c}^{(t+1)}<br>&#x3D; \arg\min_{\mathbf{c}}<br>  E\bigl(\mathbf{u}^{(t+1)}, \mathbf{c}\bigr).<br>$$</p>
+<p>对每个 $C_k$ 求导并令其为 0，得到聚类中心是该簇内样本的加权平均。于是</p>
+<p>$$<br>E\bigl(\mathbf{u}^{(t+1)}, \mathbf{c}^{(t+1)}\bigr)<br>\le<br>E\bigl(\mathbf{u}^{(t+1)}, \mathbf{c}^{(t)}\bigr)<br>$$</p>
+</li>
+</ul>
+<h3 id="能量严格下降的证明思路"><a href="#能量严格下降的证明思路" class="headerlink" title="能量严格下降的证明思路"></a>能量严格下降的证明思路</h3><p>上两步结合，可得：</p>
+<p>$$<br>E\bigl(\mathbf{u}^{(t+1)}, \mathbf{c}^{(t+1)}\bigr)<br>\le<br>E\bigl(\mathbf{u}^{(t)}, \mathbf{c}^{(t)}\bigr)<br>$$</p>
+<p>这说明每一轮迭代后，目标函数都会朝着不增的方向变化，从而收敛到某个局部最优或鞍点。</p>
+<h3 id="结论-2"><a href="#结论-2" class="headerlink" title="结论"></a>结论</h3><ul>
+<li>K-Means 通过交替最小化簇分配 $\mathbf{u}$ 和聚类中心 $\mathbf{c}$，使目标函数在每次迭代中不增。  </li>
+<li>因此，算法<strong>单调地</strong>收敛到一个局部最优解（或鞍点）。</li>
+</ul>
+<p>这便是 <strong>K-Means 能量单调下降</strong> 的主要证明思路，也是该算法能保证在有限步内收敛的关键原因。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/%E6%A8%A1%E5%BC%8F%E8%AF%86%E5%88%AB/" rel="tag"># 模式识别</a>
+              <a href="/tags/K-Means%E8%81%9A%E7%B1%BB/" rel="tag"># K-Means聚类</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/02/25/Longitudinal%20associations%20between%20family%20conflict,%20intergenerational%20transmission,%20and%20adolescents%E2%80%99%20depressive%20symptoms%20evidence%20from%20China%20Family%20Panel%20studies/" rel="prev" title="Longitudinal associations between family conflict and depression among family members：Evidence from CFPS, 2016-2020.">
+      <i class="fa fa-chevron-left"></i> Longitudinal associations between family conflict and depression among family members：Evidence from CFPS, 2016-2020.
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/05/10/The%20Applications%20of%20Large%20Language%20Models%20in%20Mental%20Health%20Scoping%20Review/" rel="next" title="The Applications of Large Language Models in Mental Health Scoping Review.">
+      The Applications of Large Language Models in Mental Health Scoping Review. <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Word2Vec-Embedding-%E6%8A%80%E6%9C%AF"><span class="nav-number">1.1.</span> <span class="nav-text">Word2Vec Embedding 技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Word2Vec-%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">Word2Vec 过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#K-Means-%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">K-Means 聚类算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%A6%E5%AE%9A%E4%B9%89"><span class="nav-number">1.2.1.</span> <span class="nav-text">数学定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#K-Means-%E8%BF%AD%E4%BB%A3%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.2.2.</span> <span class="nav-text">K-Means 迭代步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.2.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kmeans%E7%AE%97%E6%B3%95%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.3.</span> <span class="nav-text">kmeans算法的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8B%AC%E7%83%AD%E7%BC%96%E7%A0%81%EF%BC%88One-Hot-Encoding%EF%BC%89"><span class="nav-number">1.3.1.</span> <span class="nav-text">独热编码（One-Hot Encoding）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#K-Means-%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">K-Means 目标函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E5%8F%8A%E5%85%B6%E8%AF%81%E6%98%8E"><span class="nav-number">1.3.3.</span> <span class="nav-text">定理及其证明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%EF%BC%88Thm%EF%BC%89"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">定理（Thm）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%81%E6%98%8E%EF%BC%88Proof%EF%BC%89"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">证明（Proof）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">1.4.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84-K-Means-%E8%81%9A%E7%B1%BB%E5%AE%9A%E4%B9%89"><span class="nav-number">1.5.</span> <span class="nav-text">连续情况下的 K-Means 聚类定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0%E6%89%A9%E5%B1%95%E5%88%B0%E8%BF%9E%E7%BB%AD%E6%83%85%E5%86%B5"><span class="nav-number">1.5.1.</span> <span class="nav-text">目标函数扩展到连续情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%A6%E6%9D%9F%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.5.2.</span> <span class="nav-text">约束条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B4%E8%A7%82%E8%A7%A3%E9%87%8A"><span class="nav-number">1.5.3.</span> <span class="nav-text">直观解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA-1"><span class="nav-number">1.5.4.</span> <span class="nav-text">结论</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#K-Means-%E8%BF%AD%E4%BB%A3%E4%BC%98%E5%8C%96%E8%BF%87%E7%A8%8B"><span class="nav-number">1.6.</span> <span class="nav-text">K-Means 迭代优化过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.6.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1%EF%BC%9A%E6%9B%B4%E6%96%B0%E7%B0%87%E5%88%86%E9%85%8D-mathbf-U"><span class="nav-number">1.6.2.</span> <span class="nav-text">Step 1：更新簇分配 $\mathbf{U}$</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2%EF%BC%9A%E6%9B%B4%E6%96%B0%E8%81%9A%E7%B1%BB%E4%B8%AD%E5%BF%83-mathbf-C"><span class="nav-number">1.6.3.</span> <span class="nav-text">Step 2：更新聚类中心 $\mathbf{C}$</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">1.6.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0%E5%85%B3%E4%BA%8E%E8%81%9A%E7%B1%BB%E4%B8%AD%E5%BF%83%E7%9A%84%E6%8E%A8%E5%AF%BC"><span class="nav-number">1.7.</span> <span class="nav-text">目标函数关于聚类中心的推导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0%E6%8B%86%E5%88%86"><span class="nav-number">1.7.1.</span> <span class="nav-text">目标函数拆分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9-C-k-%E6%B1%82%E5%81%8F%E5%AF%BC"><span class="nav-number">1.7.2.</span> <span class="nav-text">对 $C_k$ 求偏导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E6%96%B9%E7%A8%8B%EF%BC%8C%E5%BE%97%E5%88%B0%E6%9B%B4%E6%96%B0%E5%85%AC%E5%BC%8F"><span class="nav-number">1.7.3.</span> <span class="nav-text">解方程，得到更新公式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#K-Means-%E8%83%BD%E9%87%8F%E5%8D%95%E8%B0%83%E4%B8%8B%E9%99%8D%EF%BC%88%E4%B8%8D%E5%A2%9E%EF%BC%89%E6%80%A7"><span class="nav-number">1.8.</span> <span class="nav-text">K-Means 能量单调下降（不增）性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%90%86-%E5%AE%9A%E7%90%86%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.8.1.</span> <span class="nav-text">引理 &#x2F; 定理描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.8.2.</span> <span class="nav-text">目标函数回顾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E8%BF%87%E7%A8%8B%EF%BC%88%E4%B8%A4%E6%AD%A5%E6%9B%B4%E6%96%B0%EF%BC%89"><span class="nav-number">1.8.3.</span> <span class="nav-text">迭代过程（两步更新）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E9%87%8F%E4%B8%A5%E6%A0%BC%E4%B8%8B%E9%99%8D%E7%9A%84%E8%AF%81%E6%98%8E%E6%80%9D%E8%B7%AF"><span class="nav-number">1.8.4.</span> <span class="nav-text">能量严格下降的证明思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA-2"><span class="nav-number">1.8.5.</span> <span class="nav-text">结论</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

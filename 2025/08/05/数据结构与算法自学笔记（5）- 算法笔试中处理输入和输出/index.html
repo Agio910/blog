@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 是class019的内容，本笔记重点介绍Python在算法竞赛和笔试中的高效输入输出处理技巧，包含子矩阵最大累加和问题的完整实现，以及与Java的性能对比分析。 019【必备】算法笔试中处理输入和输出概述在算法竞赛和大厂笔试中，输入输出的处理效率往往是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（5）- 算法笔试中处理输入和输出">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/08/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%885%EF%BC%89-%20%E7%AE%97%E6%B3%95%E7%AC%94%E8%AF%95%E4%B8%AD%E5%A4%84%E7%90%86%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 是class019的内容，本笔记重点介绍Python在算法竞赛和笔试中的高效输入输出处理技巧，包含子矩阵最大累加和问题的完整实现，以及与Java的性能对比分析。 019【必备】算法笔试中处理输入和输出概述在算法竞赛和大厂笔试中，输入输出的处理效率往往是">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-08-05T00:42:46.000Z">
+<meta property="article:modified_time" content="2025-08-05T08:37:24.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="输入输出(IO)">
+<meta property="article:tag" content="高效编程">
+<meta property="article:tag" content="子矩阵问题">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/08/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%885%EF%BC%89-%20%E7%AE%97%E6%B3%95%E7%AC%94%E8%AF%95%E4%B8%AD%E5%A4%84%E7%90%86%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（5）- 算法笔试中处理输入和输出 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/08/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%885%EF%BC%89-%20%E7%AE%97%E6%B3%95%E7%AC%94%E8%AF%95%E4%B8%AD%E5%A4%84%E7%90%86%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（5）- 算法笔试中处理输入和输出
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-08-05 08:42:46 / Modified: 16:37:24" itemprop="dateCreated datePublished" datetime="2025-08-05T08:42:46+08:00">2025-08-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a></p>
+<p>是class019的内容，本笔记重点介绍Python在算法竞赛和笔试中的高效输入输出处理技巧，包含子矩阵最大累加和问题的完整实现，以及与Java的性能对比分析。</p>
+<h1 id="019【必备】算法笔试中处理输入和输出"><a href="#019【必备】算法笔试中处理输入和输出" class="headerlink" title="019【必备】算法笔试中处理输入和输出"></a>019【必备】算法笔试中处理输入和输出</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在算法竞赛和大厂笔试中，输入输出的处理效率往往是程序性能的关键瓶颈。Python虽然在执行速度上不如C++和Java，但通过合理的IO优化技巧，同样可以在大多数场景下取得良好的性能表现。</p>
+<h3 id="Python-vs-Java-IO性能对比"><a href="#Python-vs-Java-IO性能对比" class="headerlink" title="Python vs Java IO性能对比"></a>Python vs Java IO性能对比</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Python</th>
+<th>Java</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>默认IO</strong></td>
+<td><code>input()</code>、<code>print()</code> 较慢</td>
+<td><code>Scanner</code>、<code>System.out</code> 较慢</td>
+</tr>
+<tr>
+<td><strong>高效IO</strong></td>
+<td><code>sys.stdin.read()</code>、批量输出</td>
+<td><code>BufferedReader</code>、<code>PrintWriter</code></td>
+</tr>
+<tr>
+<td><strong>内存管理</strong></td>
+<td>自动垃圾回收，相对简单</td>
+<td>需要考虑静态空间分配</td>
+</tr>
+<tr>
+<td><strong>大整数</strong></td>
+<td>原生支持任意精度</td>
+<td>需要<code>BigInteger</code>类</td>
+</tr>
+<tr>
+<td><strong>编程复杂度</strong></td>
+<td>语法简洁，容易上手</td>
+<td>类型安全，但代码较长</td>
+</tr>
+</tbody></table>
+<h2 id="Python编程风格选择"><a href="#Python编程风格选择" class="headerlink" title="Python编程风格选择"></a>Python编程风格选择</h2><h3 id="填函数风格（OJ平台推荐）"><a href="#填函数风格（OJ平台推荐）" class="headerlink" title="填函数风格（OJ平台推荐）"></a>填函数风格（OJ平台推荐）</h3><p>适用于LeetCode、牛客网等在线判题平台，平台会自动处理输入输出。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sumOfSubMatrix</span>(<span class="params">self, mat, n</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        只需实现核心算法逻辑</span></span><br><span class="line"><span class="string">        平台自动调用并验证结果</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.maxSumSubmatrix(mat, n, n)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxSumSubmatrix</span>(<span class="params">self, mat, rows, cols</span>):</span><br><span class="line">        max_sum = <span class="built_in">float</span>(<span class="string">&#x27;-inf&#x27;</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(rows):</span><br><span class="line">            arr = [<span class="number">0</span>] * cols  <span class="comment"># 辅助数组</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i, rows):</span><br><span class="line">                <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(cols):</span><br><span class="line">                    arr[k] += mat[j][k]</span><br><span class="line">                max_sum = <span class="built_in">max</span>(max_sum, <span class="variable language_">self</span>.maxSumSubarray(arr))</span><br><span class="line">        <span class="keyword">return</span> max_sum</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxSumSubarray</span>(<span class="params">self, arr</span>):</span><br><span class="line">        max_sum = <span class="built_in">float</span>(<span class="string">&#x27;-inf&#x27;</span>)</span><br><span class="line">        cur = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> arr:</span><br><span class="line">            cur += num</span><br><span class="line">            max_sum = <span class="built_in">max</span>(max_sum, cur)</span><br><span class="line">            cur = <span class="built_in">max</span>(cur, <span class="number">0</span>)  <span class="comment"># 负数时重置为0</span></span><br><span class="line">        <span class="keyword">return</span> max_sum</span><br></pre></td></tr></table></figure>
+
+<h3 id="ACM风格（竞赛笔试推荐）"><a href="#ACM风格（竞赛笔试推荐）" class="headerlink" title="ACM风格（竞赛笔试推荐）"></a>ACM风格（竞赛笔试推荐）</h3><p>适用于ACM竞赛、大厂笔试等需要自己处理输入输出的场景。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    完整的输入输出处理</span></span><br><span class="line"><span class="string">    需要自己解析数据格式</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    lines = sys.stdin.read().split()</span><br><span class="line">    ptr = <span class="number">0</span></span><br><span class="line">    output = []</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> ptr &lt; <span class="built_in">len</span>(lines):</span><br><span class="line">        n = <span class="built_in">int</span>(lines[ptr])</span><br><span class="line">        ptr += <span class="number">1</span></span><br><span class="line">        m = <span class="built_in">int</span>(lines[ptr])</span><br><span class="line">        ptr += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 构建矩阵</span></span><br><span class="line">        mat = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            row = []</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">                row.append(<span class="built_in">int</span>(lines[ptr]))</span><br><span class="line">                ptr += <span class="number">1</span></span><br><span class="line">            mat.append(row)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 计算结果</span></span><br><span class="line">        result = maxSumSubmatrix(mat, n, m)</span><br><span class="line">        output.append(<span class="built_in">str</span>(result))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 批量输出</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;\n&#x27;</span>.join(output))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h2 id="高效输入输出技巧"><a href="#高效输入输出技巧" class="headerlink" title="高效输入输出技巧"></a>高效输入输出技巧</h2><h3 id="输入优化策略"><a href="#输入优化策略" class="headerlink" title="输入优化策略"></a>输入优化策略</h3><h4 id="推荐：一次性读取大数据"><a href="#推荐：一次性读取大数据" class="headerlink" title="推荐：一次性读取大数据"></a>推荐：一次性读取大数据</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最高效：适用于已知数据量的场景</span></span><br><span class="line">lines = sys.stdin.read().split()</span><br><span class="line">ptr = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 逐个解析数据</span></span><br><span class="line"><span class="keyword">while</span> ptr &lt; <span class="built_in">len</span>(lines):</span><br><span class="line">    n = <span class="built_in">int</span>(lines[ptr])</span><br><span class="line">    ptr += <span class="number">1</span></span><br><span class="line">    <span class="comment"># 处理数据...</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>优点</strong>：</p>
+<ul>
+<li>IO次数最少，效率最高</li>
+<li>相当于Java的<code>BufferedReader</code>一次性读取</li>
+<li>适合大数据量场景</li>
+</ul>
+<h4 id="可选：按行读取"><a href="#可选：按行读取" class="headerlink" title="可选：按行读取"></a>可选：按行读取</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 适用：需要按行处理不同格式数据</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> sys.stdin:</span><br><span class="line">    parts = line.strip().split()</span><br><span class="line">    total = <span class="built_in">sum</span>(<span class="built_in">int</span>(num) <span class="keyword">for</span> num <span class="keyword">in</span> parts)</span><br><span class="line">    <span class="built_in">print</span>(total)</span><br></pre></td></tr></table></figure>
+
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>每行数据格式不同</li>
+<li>无法提前确定数据量</li>
+<li>相当于Java的逐行<code>readLine()</code></li>
+</ul>
+<h4 id="不推荐：频繁调用input"><a href="#不推荐：频繁调用input" class="headerlink" title="不推荐：频繁调用input()"></a>不推荐：频繁调用input()</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 效率低：类似Java的Scanner</span></span><br><span class="line">n = <span class="built_in">int</span>(<span class="built_in">input</span>())  <span class="comment"># 大数据时很慢</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    x = <span class="built_in">int</span>(<span class="built_in">input</span>())  <span class="comment"># 每次都要系统调用</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="输出优化策略"><a href="#输出优化策略" class="headerlink" title="输出优化策略"></a>输出优化策略</h3><h4 id="推荐：批量输出"><a href="#推荐：批量输出" class="headerlink" title="推荐：批量输出"></a>推荐：批量输出</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 收集所有结果，最后一次性输出</span></span><br><span class="line">output = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    result = solve(data[i])</span><br><span class="line">    output.append(<span class="built_in">str</span>(result))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;\n&#x27;</span>.join(output))  <span class="comment"># 一次性输出</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="不推荐：频繁print"><a href="#不推荐：频繁print" class="headerlink" title="不推荐：频繁print()"></a>不推荐：频繁print()</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每次print都会刷新缓冲区，效率低</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    <span class="built_in">print</span>(solve(data[i]))  <span class="comment"># 大数据时很慢</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="内存优化：静态空间vs动态空间"><a href="#内存优化：静态空间vs动态空间" class="headerlink" title="内存优化：静态空间vs动态空间"></a>内存优化：静态空间vs动态空间</h3><h4 id="推荐：静态空间分配"><a href="#推荐：静态空间分配" class="headerlink" title="推荐：静态空间分配"></a>推荐：静态空间分配</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 全局预分配，避免频繁内存分配</span></span><br><span class="line">MAXN = <span class="number">201</span></span><br><span class="line">MAXM = <span class="number">201</span></span><br><span class="line">mat = [[<span class="number">0</span>] * MAXM <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(MAXN)]  <span class="comment"># 静态矩阵</span></span><br><span class="line">arr = [<span class="number">0</span>] * MAXM  <span class="comment"># 静态辅助数组</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">solve</span>():</span><br><span class="line">    <span class="keyword">global</span> n, m</span><br><span class="line">    <span class="comment"># 复用已分配的空间</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">            mat[i][j] = read_next_int()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 使用前先清空</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">        arr[i] = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="不推荐：频繁动态分配"><a href="#不推荐：频繁动态分配" class="headerlink" title="不推荐：频繁动态分配"></a>不推荐：频繁动态分配</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solve</span>():</span><br><span class="line">    <span class="comment"># 每次都重新分配内存</span></span><br><span class="line">    mat = []  <span class="comment"># 动态创建</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        row = []  <span class="comment"># 每行都新建</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">            row.append(read_next_int())</span><br><span class="line">        mat.append(row)</span><br></pre></td></tr></table></figure>
+
+<h2 id="子矩阵最大累加和问题详解"><a href="#子矩阵最大累加和问题详解" class="headerlink" title="子矩阵最大累加和问题详解"></a>子矩阵最大累加和问题详解</h2><h3 id="问题描述与算法思路"><a href="#问题描述与算法思路" class="headerlink" title="问题描述与算法思路"></a>问题描述与算法思路</h3><p><strong>问题</strong>：给定包含正数、负数、零的矩阵，求累加和最大的子矩阵。</p>
+<p><strong>核心思想</strong>：将二维问题转化为一维最大子数组和问题</p>
+<ol>
+<li>枚举子矩阵的上下边界（第i行到第j行）</li>
+<li>将每列在这个范围内的元素累加，得到一维数组</li>
+<li>对一维数组使用Kadane算法求最大子数组和</li>
+</ol>
+<h3 id="完整实现（填函数风格）"><a href="#完整实现（填函数风格）" class="headerlink" title="完整实现（填函数风格）"></a>完整实现（填函数风格）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Code01_FillFunction</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sumOfSubMatrix</span>(<span class="params">self, mat, n</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;主方法，求n×n矩阵的最大子矩阵和&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.maxSumSubmatrix(mat, n, n)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxSumSubmatrix</span>(<span class="params">mat, n, m</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;求子矩阵的最大累加和&quot;&quot;&quot;</span></span><br><span class="line">        max_sum = <span class="built_in">float</span>(<span class="string">&#x27;-inf&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 枚举上边界</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            arr = [<span class="number">0</span>] * m  <span class="comment"># 辅助数组，每次重置</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 枚举下边界（从i到n-1）</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i, n):</span><br><span class="line">                <span class="comment"># 将第j行累加到辅助数组</span></span><br><span class="line">                <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">                    arr[k] += mat[j][k]</span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 求当前辅助数组的最大子数组和</span></span><br><span class="line">                max_sum = <span class="built_in">max</span>(max_sum, Code01_FillFunction.maxSumSubarray(arr, m))</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> max_sum</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxSumSubarray</span>(<span class="params">arr, m</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Kadane算法求最大子数组和&quot;&quot;&quot;</span></span><br><span class="line">        max_sum = <span class="built_in">float</span>(<span class="string">&#x27;-inf&#x27;</span>)</span><br><span class="line">        cur = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">            cur += arr[i]</span><br><span class="line">            max_sum = <span class="built_in">max</span>(max_sum, cur)</span><br><span class="line">            cur = <span class="number">0</span> <span class="keyword">if</span> cur &lt; <span class="number">0</span> <span class="keyword">else</span> cur  <span class="comment"># 负数时重置</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> max_sum</span><br></pre></td></tr></table></figure>
+
+<p><strong>算法复杂度</strong>：</p>
+<ul>
+<li><strong>时间复杂度</strong>：O(n² × m)</li>
+<li><strong>空间复杂度</strong>：O(m)</li>
+</ul>
+<h3 id="ACM风格实现（静态空间优化）"><a href="#ACM风格实现（静态空间优化）" class="headerlink" title="ACM风格实现（静态空间优化）"></a>ACM风格实现（静态空间优化）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 静态空间分配，避免频繁内存分配</span></span><br><span class="line">MAXN = <span class="number">201</span></span><br><span class="line">MAXM = <span class="number">201</span></span><br><span class="line">mat = [[<span class="number">0</span>] * MAXM <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(MAXN)]</span><br><span class="line">arr = [<span class="number">0</span>] * MAXM</span><br><span class="line">n = m = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="keyword">global</span> n, m</span><br><span class="line">    tokens = sys.stdin.read().split()</span><br><span class="line">    idx = <span class="number">0</span></span><br><span class="line">    output = []</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> idx &lt; <span class="built_in">len</span>(tokens):</span><br><span class="line">        n = <span class="built_in">int</span>(tokens[idx])</span><br><span class="line">        idx += <span class="number">1</span></span><br><span class="line">        m = <span class="built_in">int</span>(tokens[idx])</span><br><span class="line">        idx += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 读取矩阵数据到静态空间</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">                mat[i][j] = <span class="built_in">int</span>(tokens[idx])</span><br><span class="line">                idx += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 计算结果并收集输出</span></span><br><span class="line">        output.append(<span class="built_in">str</span>(maxSumSubmatrix()))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 批量输出所有结果</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;\n&#x27;</span>.join(output))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">maxSumSubmatrix</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;使用静态空间的子矩阵最大和算法&quot;&quot;&quot;</span></span><br><span class="line">    max_sum = <span class="built_in">float</span>(<span class="string">&#x27;-inf&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        <span class="comment"># 清空辅助数组（复用静态空间）</span></span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">            arr[x] = <span class="number">0</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i, n):</span><br><span class="line">            <span class="comment"># 累加第j行到辅助数组</span></span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">                arr[k] += mat[j][k]</span><br><span class="line">            max_sum = <span class="built_in">max</span>(max_sum, maxSumSubarray())</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> max_sum</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">maxSumSubarray</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;一维最大子数组和&quot;&quot;&quot;</span></span><br><span class="line">    max_sum = <span class="built_in">float</span>(<span class="string">&#x27;-inf&#x27;</span>)</span><br><span class="line">    cur = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">        cur += arr[i]</span><br><span class="line">        max_sum = <span class="built_in">max</span>(max_sum, cur)</span><br><span class="line">        cur = <span class="number">0</span> <span class="keyword">if</span> cur &lt; <span class="number">0</span> <span class="keyword">else</span> cur</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> max_sum</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h3 id="执行过程示例"><a href="#执行过程示例" class="headerlink" title="执行过程示例"></a>执行过程示例</h3><p>以矩阵为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[-90, 48, 78],</span><br><span class="line"> [ 64,-40, 64], </span><br><span class="line"> [-81, -7, 66]]</span><br></pre></td></tr></table></figure>
+
+<p><strong>枚举过程</strong>：</p>
+<ol>
+<li><strong>i&#x3D;0, j&#x3D;0</strong>（第0行）：arr&#x3D;[-90, 48, 78] → 最大子数组和&#x3D;126</li>
+<li><strong>i&#x3D;0, j&#x3D;1</strong>（第0-1行）：arr&#x3D;[-26, 8, 142] → 最大子数组和&#x3D;150  </li>
+<li><strong>i&#x3D;0, j&#x3D;2</strong>（第0-2行）：arr&#x3D;[-107, 1, 208] → 最大子数组和&#x3D;209</li>
+<li><strong>i&#x3D;1, j&#x3D;1</strong>（第1行）：arr&#x3D;[64, -40, 64] → 最大子数组和&#x3D;88</li>
+<li><strong>i&#x3D;1, j&#x3D;2</strong>（第1-2行）：arr&#x3D;[-17, -47, 130] → 最大子数组和&#x3D;130</li>
+<li><strong>i&#x3D;2, j&#x3D;2</strong>（第2行）：arr&#x3D;[-81, -7, 66] → 最大子数组和&#x3D;66</li>
+</ol>
+<p><strong>最终结果</strong>：209（来自第0-2行，第2-2列的子矩阵）</p>
+<h2 id="Python高级IO优化"><a href="#Python高级IO优化" class="headerlink" title="Python高级IO优化"></a>Python高级IO优化</h2><h3 id="FastReader快读类"><a href="#FastReader快读类" class="headerlink" title="FastReader快读类"></a>FastReader快读类</h3><p>FastReader 是一个极致追求输入速度的工具，适用于数据量极大的算法竞赛场景。</p>
+<p><strong>主要作用</strong></p>
+<ul>
+<li>极速读取输入，尤其是大量数字（如百万级数据）。</li>
+<li>通过 <strong>一次性读取大块数据（8KB）</strong> 到内存，减少系统I&#x2F;O调用次数。</li>
+<li>按字节处理并手动解析数字，比标准 input() 或 sys.stdin.readline() 更快。</li>
+</ul>
+<p><strong>工作原理</strong></p>
+<ul>
+<li>缓冲区：用 self.buffer 存储从输入流一次性读取的大块数据。</li>
+<li>按字节解析：用 readByte 方法逐字节读取，跳过非数字字符，自己实现整数解析（包括负数）。</li>
+<li>高效：只处理数字和符号，省略 split、strip 等高层方法，极致优化输入。</li>
+</ul>
+<p><strong>典型用法</strong><br>适合极端大数据输入、对时间卡得很紧的OJ平台。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">FastReader</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, file=sys.stdin</span>):</span><br><span class="line">        <span class="variable language_">self</span>.file = file</span><br><span class="line">        <span class="variable language_">self</span>.buffer = <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.idx = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_read</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;一次性读取8KB数据到缓冲区&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.buffer = <span class="variable language_">self</span>.file.read(<span class="number">8192</span>)</span><br><span class="line">        <span class="variable language_">self</span>.idx = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">readByte</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;读取下一个字节&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.idx &gt;= <span class="built_in">len</span>(<span class="variable language_">self</span>.buffer):</span><br><span class="line">            <span class="variable language_">self</span>._read()</span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>.buffer == <span class="string">&quot;&quot;</span>:</span><br><span class="line">                <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        byte = <span class="variable language_">self</span>.buffer[<span class="variable language_">self</span>.idx]</span><br><span class="line">        <span class="variable language_">self</span>.idx += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">ord</span>(byte)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">readInt</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;快速读取整数&quot;&quot;&quot;</span></span><br><span class="line">        num = <span class="number">0</span></span><br><span class="line">        minus = <span class="literal">False</span></span><br><span class="line">        b = <span class="variable language_">self</span>.readByte()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 跳过非数字字符</span></span><br><span class="line">        <span class="keyword">while</span> b != -<span class="number">1</span> <span class="keyword">and</span> (b &lt; <span class="built_in">ord</span>(<span class="string">&#x27;0&#x27;</span>) <span class="keyword">or</span> b &gt; <span class="built_in">ord</span>(<span class="string">&#x27;9&#x27;</span>)) <span class="keyword">and</span> b != <span class="built_in">ord</span>(<span class="string">&#x27;-&#x27;</span>):</span><br><span class="line">            b = <span class="variable language_">self</span>.readByte()</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">if</span> b == <span class="built_in">ord</span>(<span class="string">&#x27;-&#x27;</span>):</span><br><span class="line">            minus = <span class="literal">True</span></span><br><span class="line">            b = <span class="variable language_">self</span>.readByte()</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 读取数字</span></span><br><span class="line">        <span class="keyword">while</span> b != -<span class="number">1</span> <span class="keyword">and</span> (<span class="built_in">ord</span>(<span class="string">&#x27;0&#x27;</span>) &lt;= b &lt;= <span class="built_in">ord</span>(<span class="string">&#x27;9&#x27;</span>)):</span><br><span class="line">            num = num * <span class="number">10</span> + (b - <span class="built_in">ord</span>(<span class="string">&#x27;0&#x27;</span>))</span><br><span class="line">            b = <span class="variable language_">self</span>.readByte()</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> -num <span class="keyword">if</span> minus <span class="keyword">else</span> num</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">readLong</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;读取长整数（Python中与int相同）&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.readInt()</span><br></pre></td></tr></table></figure>
+
+<h3 id="FastWriter快写类"><a href="#FastWriter快写类" class="headerlink" title="FastWriter快写类"></a>FastWriter快写类</h3><p>FastWriter 是一个高效输出工具，适用于需要频繁输出、输出量大的场合。</p>
+<p><strong>主要作用</strong></p>
+<ul>
+<li>减少输出次数：把所有输出内容先缓存在内存里，最后统一输出，减少系统调用。</li>
+<li>链式调用和兼容Java风格，用起来很方便。</li>
+</ul>
+<p><strong>工作原理</strong></p>
+<ul>
+<li>缓冲区：所有待输出内容先存入 self.buffer 列表。</li>
+<li>批量输出：调用 flush() 时，一次性将所有内容写入输出流。</li>
+<li>兼容性：支持 write（写字符串）、writeln&#x2F;println（写一行），用法灵活。</li>
+</ul>
+<p><strong>典型用法</strong></p>
+<p>适合数据量大、频繁输出的算法题&#x2F;竞赛场景，防止 print() 太慢导致超时。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">FastWriter</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, file=sys.stdout</span>):</span><br><span class="line">        <span class="variable language_">self</span>.file = file</span><br><span class="line">        <span class="variable language_">self</span>.buffer = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">write</span>(<span class="params">self, s</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;写入字符串到缓冲区&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.buffer.append(<span class="built_in">str</span>(s))</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>  <span class="comment"># 支持链式调用</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">writeln</span>(<span class="params">self, s=<span class="string">&quot;&quot;</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;写入一行&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.buffer.append(<span class="built_in">str</span>(s) + <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">println</span>(<span class="params">self, s=<span class="string">&quot;&quot;</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;兼容Java习惯的方法名&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.writeln(s)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">flush</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;刷新缓冲区，实际写入文件&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.buffer:</span><br><span class="line">            <span class="variable language_">self</span>.file.write(<span class="string">&quot;&quot;</span>.join(<span class="variable language_">self</span>.buffer))</span><br><span class="line">            <span class="variable language_">self</span>.file.flush()</span><br><span class="line">            <span class="variable language_">self</span>.buffer = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">close</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;关闭写入器&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.flush()</span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.file != sys.stdout:</span><br><span class="line">            <span class="variable language_">self</span>.file.close()</span><br></pre></td></tr></table></figure>
+
+<h3 id="Kattio类（Python版）"><a href="#Kattio类（Python版）" class="headerlink" title="Kattio类（Python版）"></a>Kattio类（Python版）</h3><p>Kattio 类是一个高效的输入输出（I&#x2F;O）工具类，最初流行于 Java 的竞赛编程圈。它的 Python 版本（如你上面给出的代码）主要是用来简化和加快处理标准输入输出，尤其适合数据量较大、输入格式“特殊”或需要频繁读取单个数据的场景，比如各类算法竞赛、OJ（Online Judge）平台等。</p>
+<p><strong>主要作用</strong></p>
+<ul>
+<li>高效读取输入：普通的 input() 在数据量大时会变慢，Kattio 通过缓冲和一次性读取一行数据，提升了读取效率。</li>
+<li>简化输入格式处理：常见的输入格式如多行多列、混合类型（int、float、str）都能方便读取，不用每次都写 split、map 一大堆。</li>
+<li>输出简便：带有封装的 println 方法，输出不再需要手动 print(…, file&#x3D;…)。</li>
+</ul>
+<p><strong>工作原理</strong></p>
+<ul>
+<li>维护一个缓冲区（self.buffer），每次读取一整行并分割成单词。</li>
+<li>提供 next() 方法按顺序读取下一个字符串，nextInt() 读取下一个整数，nextDouble() 读取下一个浮点数等。</li>
+<li>适配输入和输出流（默认为标准输入输出，但也可以重定向到文件），并提供 close 方法在需要时关闭流。</li>
+</ul>
+<p>参考Java版Kattio的Python实现，处理特殊输入格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Optional</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Kattio</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    高效IO类，适用于特殊格式输入</span></span><br><span class="line"><span class="string">    效率略低于FastReader，但兼容性更好</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, input_stream=sys.stdin, output_stream=sys.stdout</span>):</span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">input</span> = input_stream</span><br><span class="line">        <span class="variable language_">self</span>.output = output_stream</span><br><span class="line">        <span class="variable language_">self</span>.buffer = []</span><br><span class="line">        <span class="variable language_">self</span>.idx = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_fill_buffer</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;填充缓冲区&quot;&quot;&quot;</span></span><br><span class="line">        line = <span class="variable language_">self</span>.<span class="built_in">input</span>.readline()</span><br><span class="line">        <span class="keyword">if</span> line == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="variable language_">self</span>.buffer = line.strip().split()</span><br><span class="line">        <span class="variable language_">self</span>.idx = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">next</span>(<span class="params">self</span>) -&gt; <span class="type">Optional</span>[<span class="built_in">str</span>]:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;读取下一个字符串&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">while</span> <span class="variable language_">self</span>.idx &gt;= <span class="built_in">len</span>(<span class="variable language_">self</span>.buffer):</span><br><span class="line">            <span class="variable language_">self</span>._fill_buffer()</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> <span class="variable language_">self</span>.buffer:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        result = <span class="variable language_">self</span>.buffer[<span class="variable language_">self</span>.idx]</span><br><span class="line">        <span class="variable language_">self</span>.idx += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">nextInt</span>(<span class="params">self</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;读取下一个整数&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">int</span>(<span class="variable language_">self</span>.<span class="built_in">next</span>())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">nextLong</span>(<span class="params">self</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;读取下一个长整数&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">int</span>(<span class="variable language_">self</span>.<span class="built_in">next</span>())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">nextDouble</span>(<span class="params">self</span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;读取下一个浮点数&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">float</span>(<span class="variable language_">self</span>.<span class="built_in">next</span>())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">println</span>(<span class="params">self, s</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;输出一行&quot;&quot;&quot;</span></span><br><span class="line">        <span class="built_in">print</span>(s, file=<span class="variable language_">self</span>.output)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">close</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;关闭IO流&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.<span class="built_in">input</span> != sys.stdin:</span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">input</span>.close()</span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.output != sys.stdout:</span><br><span class="line">            <span class="variable language_">self</span>.output.close()</span><br></pre></td></tr></table></figure>
+
+<h2 id="Python常用数据结构快速参考"><a href="#Python常用数据结构快速参考" class="headerlink" title="Python常用数据结构快速参考"></a>Python常用数据结构快速参考</h2><h3 id="基础容器操作"><a href="#基础容器操作" class="headerlink" title="基础容器操作"></a>基础容器操作</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque, defaultdict</span><br><span class="line"><span class="keyword">import</span> bisect</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列表（动态数组）</span></span><br><span class="line">arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">arr.append(<span class="number">4</span>)              <span class="comment"># O(1) 尾部添加</span></span><br><span class="line">arr.insert(<span class="number">0</span>, <span class="number">0</span>)           <span class="comment"># O(n) 头部插入</span></span><br><span class="line">arr.pop()                  <span class="comment"># O(1) 尾部删除</span></span><br><span class="line">arr.pop(<span class="number">0</span>)                 <span class="comment"># O(n) 头部删除</span></span><br><span class="line"><span class="built_in">print</span>(arr[<span class="number">1</span>])              <span class="comment"># O(1) 随机访问</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 双端队列（可当栈或队列）</span></span><br><span class="line">dq = deque()</span><br><span class="line">dq.append(<span class="number">1</span>)               <span class="comment"># 队尾入队</span></span><br><span class="line">dq.appendleft(<span class="number">2</span>)           <span class="comment"># 队首入队</span></span><br><span class="line">dq.pop()                   <span class="comment"># 队尾出队</span></span><br><span class="line">dq.popleft()               <span class="comment"># 队首出队</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 集合操作</span></span><br><span class="line">s1 = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line">s2 = &#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(s1 | s2)             <span class="comment"># 并集</span></span><br><span class="line"><span class="built_in">print</span>(s1 &amp; s2)             <span class="comment"># 交集</span></span><br><span class="line"><span class="built_in">print</span>(s1 - s2)             <span class="comment"># 差集</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 字典操作</span></span><br><span class="line">d = defaultdict(<span class="built_in">int</span>)       <span class="comment"># 默认值为0</span></span><br><span class="line">d[<span class="string">&quot;key&quot;</span>] += <span class="number">1</span>              <span class="comment"># 自动初始化并自增</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="排序与查找"><a href="#排序与查找" class="headerlink" title="排序与查找"></a>排序与查找</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 排序</span></span><br><span class="line">arr = [<span class="number">3</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">5</span>]</span><br><span class="line">arr.sort()                           <span class="comment"># 原地升序排序</span></span><br><span class="line">arr.sort(reverse=<span class="literal">True</span>)               <span class="comment"># 原地降序排序</span></span><br><span class="line">sorted_arr = <span class="built_in">sorted</span>(arr)             <span class="comment"># 返回新的排序数组</span></span><br><span class="line">custom_sorted = <span class="built_in">sorted</span>(arr, key=<span class="keyword">lambda</span> x: -x)  <span class="comment"># 自定义排序</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 二分查找</span></span><br><span class="line">arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">9</span>]  <span class="comment"># 必须有序</span></span><br><span class="line">idx = bisect.bisect_left(arr, <span class="number">4</span>)     <span class="comment"># 查找插入位置</span></span><br><span class="line">idx = bisect.bisect_right(arr, <span class="number">4</span>)    <span class="comment"># 查找插入位置（右侧）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="大整数与高精度"><a href="#大整数与高精度" class="headerlink" title="大整数与高精度"></a>大整数与高精度</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python原生支持任意精度整数</span></span><br><span class="line">big_num = <span class="number">10</span>**<span class="number">100</span>                    <span class="comment"># 10的100次方</span></span><br><span class="line">result = big_num * big_num           <span class="comment"># 自动处理大整数运算</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 高精度除法</span></span><br><span class="line"><span class="keyword">import</span> decimal</span><br><span class="line">decimal.getcontext().prec = <span class="number">50</span>       <span class="comment"># 设置精度</span></span><br><span class="line">a = decimal.Decimal(<span class="string">&#x27;1&#x27;</span>) / decimal.Decimal(<span class="string">&#x27;3&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="实战技巧与注意事项"><a href="#实战技巧与注意事项" class="headerlink" title="实战技巧与注意事项"></a>实战技巧与注意事项</h2><h3 id="性能优化技巧"><a href="#性能优化技巧" class="headerlink" title="性能优化技巧"></a>性能优化技巧</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 避免在循环中重复计算</span></span><br><span class="line"><span class="comment"># 错误写法</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(arr)):  <span class="comment"># 每次都计算len(arr)</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 正确写法  </span></span><br><span class="line">arr_len = <span class="built_in">len</span>(arr)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(arr_len):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 使用局部变量访问全局数据</span></span><br><span class="line"><span class="comment"># 错误写法</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">process</span>():</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        result += global_data[i]  <span class="comment"># 每次都查找全局变量</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 正确写法</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">process</span>():</span><br><span class="line">    local_data = global_data  <span class="comment"># 本地化全局变量</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        result += local_data[i]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 字符串拼接优化</span></span><br><span class="line"><span class="comment"># 错误写法</span></span><br><span class="line">s = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    s += <span class="built_in">str</span>(i)  <span class="comment"># 每次都创建新字符串</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 正确写法</span></span><br><span class="line">parts = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    parts.append(<span class="built_in">str</span>(i))</span><br><span class="line">s = <span class="string">&quot;&quot;</span>.join(parts)</span><br></pre></td></tr></table></figure>
+
+<h3 id="常见陷阱与解决方案"><a href="#常见陷阱与解决方案" class="headerlink" title="常见陷阱与解决方案"></a>常见陷阱与解决方案</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 递归深度限制</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.setrecursionlimit(<span class="number">10000</span>)  <span class="comment"># 设置递归深度限制</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 浮点数精度问题</span></span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">is_equal</span>(<span class="params">a, b, eps=<span class="number">1e-9</span></span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">abs</span>(a - b) &lt; eps</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 列表初始化陷阱</span></span><br><span class="line"><span class="comment"># 错误：所有行共享同一个列表</span></span><br><span class="line">matrix = [[<span class="number">0</span>] * m] * n</span><br><span class="line"></span><br><span class="line"><span class="comment"># 正确：每行都是独立的列表</span></span><br><span class="line">matrix = [[<span class="number">0</span>] * m <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n)]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 字典默认值</span></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="comment"># 使用defaultdict避免KeyError</span></span><br><span class="line">count = defaultdict(<span class="built_in">int</span>)</span><br><span class="line">count[key] += <span class="number">1</span>  <span class="comment"># 自动初始化为0</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="调试技巧"><a href="#调试技巧" class="headerlink" title="调试技巧"></a>调试技巧</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 条件编译式调试</span></span><br><span class="line">DEBUG = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">debug_print</span>(<span class="params">*args</span>):</span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;DEBUG:&quot;</span>, *args)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入输出重定向（本地测试）</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">if</span> DEBUG:</span><br><span class="line">    sys.stdin = <span class="built_in">open</span>(<span class="string">&#x27;input.txt&#x27;</span>, <span class="string">&#x27;r&#x27;</span>)</span><br><span class="line">    sys.stdout = <span class="built_in">open</span>(<span class="string">&#x27;output.txt&#x27;</span>, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计时器</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line">start_time = time.time()</span><br><span class="line"><span class="comment"># ... 算法代码 ...</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;执行时间: <span class="subst">&#123;time.time() - start_time:<span class="number">.3</span>f&#125;</span>秒&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA-IO/" rel="tag"># 输入输出(IO)</a>
+              <a href="/tags/%E9%AB%98%E6%95%88%E7%BC%96%E7%A8%8B/" rel="tag"># 高效编程</a>
+              <a href="/tags/%E5%AD%90%E7%9F%A9%E9%98%B5%E9%97%AE%E9%A2%98/" rel="tag"># 子矩阵问题</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/08/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%884%EF%BC%89-%20%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9B%B8%E5%85%B3/" rel="prev" title="数据结构与算法自学笔记（4）- 二叉树相关">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（4）- 二叉树相关
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/08/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%886%EF%BC%89-%20%E9%80%92%E5%BD%92%E4%B8%8Emaster%E5%85%AC%E5%BC%8F%E7%9B%B8%E5%85%B3/" rel="next" title="数据结构与算法自学笔记（6）- 递归、归并排序与归并分治">
+      数据结构与算法自学笔记（6）- 递归、归并排序与归并分治 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#019%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E7%AE%97%E6%B3%95%E7%AC%94%E8%AF%95%E4%B8%AD%E5%A4%84%E7%90%86%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA"><span class="nav-number">2.</span> <span class="nav-text">019【必备】算法笔试中处理输入和输出</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">2.1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-vs-Java-IO%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="nav-number">2.1.1.</span> <span class="nav-text">Python vs Java IO性能对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python%E7%BC%96%E7%A8%8B%E9%A3%8E%E6%A0%BC%E9%80%89%E6%8B%A9"><span class="nav-number">2.2.</span> <span class="nav-text">Python编程风格选择</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A1%AB%E5%87%BD%E6%95%B0%E9%A3%8E%E6%A0%BC%EF%BC%88OJ%E5%B9%B3%E5%8F%B0%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">2.2.1.</span> <span class="nav-text">填函数风格（OJ平台推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACM%E9%A3%8E%E6%A0%BC%EF%BC%88%E7%AB%9E%E8%B5%9B%E7%AC%94%E8%AF%95%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">2.2.2.</span> <span class="nav-text">ACM风格（竞赛笔试推荐）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E6%95%88%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%8A%80%E5%B7%A7"><span class="nav-number">2.3.</span> <span class="nav-text">高效输入输出技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="nav-number">2.3.1.</span> <span class="nav-text">输入优化策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%EF%BC%9A%E4%B8%80%E6%AC%A1%E6%80%A7%E8%AF%BB%E5%8F%96%E5%A4%A7%E6%95%B0%E6%8D%AE"><span class="nav-number">2.3.1.1.</span> <span class="nav-text">推荐：一次性读取大数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%EF%BC%9A%E6%8C%89%E8%A1%8C%E8%AF%BB%E5%8F%96"><span class="nav-number">2.3.1.2.</span> <span class="nav-text">可选：按行读取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E6%8E%A8%E8%8D%90%EF%BC%9A%E9%A2%91%E7%B9%81%E8%B0%83%E7%94%A8input"><span class="nav-number">2.3.1.3.</span> <span class="nav-text">不推荐：频繁调用input()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="nav-number">2.3.2.</span> <span class="nav-text">输出优化策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%EF%BC%9A%E6%89%B9%E9%87%8F%E8%BE%93%E5%87%BA"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">推荐：批量输出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E6%8E%A8%E8%8D%90%EF%BC%9A%E9%A2%91%E7%B9%81print"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">不推荐：频繁print()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96%EF%BC%9A%E9%9D%99%E6%80%81%E7%A9%BA%E9%97%B4vs%E5%8A%A8%E6%80%81%E7%A9%BA%E9%97%B4"><span class="nav-number">2.3.3.</span> <span class="nav-text">内存优化：静态空间vs动态空间</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%EF%BC%9A%E9%9D%99%E6%80%81%E7%A9%BA%E9%97%B4%E5%88%86%E9%85%8D"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">推荐：静态空间分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E6%8E%A8%E8%8D%90%EF%BC%9A%E9%A2%91%E7%B9%81%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D"><span class="nav-number">2.3.3.2.</span> <span class="nav-text">不推荐：频繁动态分配</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%90%E7%9F%A9%E9%98%B5%E6%9C%80%E5%A4%A7%E7%B4%AF%E5%8A%A0%E5%92%8C%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.4.</span> <span class="nav-text">子矩阵最大累加和问题详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0%E4%B8%8E%E7%AE%97%E6%B3%95%E6%80%9D%E8%B7%AF"><span class="nav-number">2.4.1.</span> <span class="nav-text">问题描述与算法思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E5%AE%9E%E7%8E%B0%EF%BC%88%E5%A1%AB%E5%87%BD%E6%95%B0%E9%A3%8E%E6%A0%BC%EF%BC%89"><span class="nav-number">2.4.2.</span> <span class="nav-text">完整实现（填函数风格）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACM%E9%A3%8E%E6%A0%BC%E5%AE%9E%E7%8E%B0%EF%BC%88%E9%9D%99%E6%80%81%E7%A9%BA%E9%97%B4%E4%BC%98%E5%8C%96%EF%BC%89"><span class="nav-number">2.4.3.</span> <span class="nav-text">ACM风格实现（静态空间优化）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.4.4.</span> <span class="nav-text">执行过程示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python%E9%AB%98%E7%BA%A7IO%E4%BC%98%E5%8C%96"><span class="nav-number">2.5.</span> <span class="nav-text">Python高级IO优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FastReader%E5%BF%AB%E8%AF%BB%E7%B1%BB"><span class="nav-number">2.5.1.</span> <span class="nav-text">FastReader快读类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FastWriter%E5%BF%AB%E5%86%99%E7%B1%BB"><span class="nav-number">2.5.2.</span> <span class="nav-text">FastWriter快写类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kattio%E7%B1%BB%EF%BC%88Python%E7%89%88%EF%BC%89"><span class="nav-number">2.5.3.</span> <span class="nav-text">Kattio类（Python版）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%BF%AB%E9%80%9F%E5%8F%82%E8%80%83"><span class="nav-number">2.6.</span> <span class="nav-text">Python常用数据结构快速参考</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E5%AE%B9%E5%99%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">2.6.1.</span> <span class="nav-text">基础容器操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E4%B8%8E%E6%9F%A5%E6%89%BE"><span class="nav-number">2.6.2.</span> <span class="nav-text">排序与查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E6%95%B4%E6%95%B0%E4%B8%8E%E9%AB%98%E7%B2%BE%E5%BA%A6"><span class="nav-number">2.6.3.</span> <span class="nav-text">大整数与高精度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E6%8A%80%E5%B7%A7%E4%B8%8E%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">2.7.</span> <span class="nav-text">实战技巧与注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8A%80%E5%B7%A7"><span class="nav-number">2.7.1.</span> <span class="nav-text">性能优化技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%99%B7%E9%98%B1%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">2.7.2.</span> <span class="nav-text">常见陷阱与解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7"><span class="nav-number">2.7.3.</span> <span class="nav-text">调试技巧</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

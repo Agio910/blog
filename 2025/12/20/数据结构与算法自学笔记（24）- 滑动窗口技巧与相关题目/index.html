@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记为class49的内容。滑动窗口是处理子数组（子串）问题的重要技巧，通过维持左右边界都不回退的一段范围，可以高效求解各类连续区间问题。 前置知识学习滑动窗口之前，需要掌握以下基础知识：  双指针的基本概念 数组和字符串的基本操作 哈希表或数组的计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（24）- 滑动窗口技巧详解">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/12/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8824%EF%BC%89-%20%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%8A%80%E5%B7%A7%E4%B8%8E%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记为class49的内容。滑动窗口是处理子数组（子串）问题的重要技巧，通过维持左右边界都不回退的一段范围，可以高效求解各类连续区间问题。 前置知识学习滑动窗口之前，需要掌握以下基础知识：  双指针的基本概念 数组和字符串的基本操作 哈希表或数组的计">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%90%86%E8%A7%A3png.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E4%B8%80.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E4%BA%8C.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E4%B8%89.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E5%9B%9B%E5%9B%BE%E7%A4%BA.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E5%9B%9B%E7%8E%AF%E7%8A%B6%E6%95%B0%E7%BB%84.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E5%9B%9B%E5%89%AA%E6%9E%9D%E6%93%8D%E4%BD%9C.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E5%85%AD%E9%97%AE%E9%A2%98%E8%BD%AC%E5%8C%96.png">
+<meta property="article:published_time" content="2025-12-20T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-09T05:16:04.218Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="滑动窗口">
+<meta property="article:tag" content="双指针">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%90%86%E8%A7%A3png.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/12/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8824%EF%BC%89-%20%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%8A%80%E5%B7%A7%E4%B8%8E%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（24）- 滑动窗口技巧详解 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/12/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8824%EF%BC%89-%20%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%8A%80%E5%B7%A7%E4%B8%8E%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（24）- 滑动窗口技巧详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-12-20 10:00:00" itemprop="dateCreated datePublished" datetime="2025-12-20T10:00:00+08:00">2025-12-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-10-09 13:16:04" itemprop="dateModified" datetime="2026-10-09T13:16:04+08:00">2026-10-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a></p>
+<p>本笔记为class49的内容。滑动窗口是处理子数组（子串）问题的重要技巧，通过维持左右边界都不回退的一段范围，可以高效求解各类连续区间问题。</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>学习滑动窗口之前，需要掌握以下基础知识：</p>
+<ul>
+<li>双指针的基本概念</li>
+<li>数组和字符串的基本操作</li>
+<li>哈希表或数组的计数技巧</li>
+<li>贪心思想的理解</li>
+</ul>
+<hr>
+<h1 id="049【必备】滑动窗口技巧与相关题目"><a href="#049【必备】滑动窗口技巧与相关题目" class="headerlink" title="049【必备】滑动窗口技巧与相关题目"></a>049【必备】滑动窗口技巧与相关题目</h1><h2 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h2><p>滑动窗口是通过维护一个动态区间来求解子数组或子串问题的技巧：</p>
+<ul>
+<li><strong>核心特征</strong>：左右边界都不回退（单调移动）</li>
+<li><strong>关键要素</strong>：找到范围和答案指标之间的单调性关系</li>
+<li><strong>维护信息</strong>：使用简单变量或额外结构（如数组、哈希表）来维护窗口信息</li>
+<li><strong>求解方式</strong>：通常固定一个边界（左或右），移动另一个边界来找答案</li>
+</ul>
+<h2 id="单调性关系"><a href="#单调性关系" class="headerlink" title="单调性关系"></a>单调性关系</h2><p>滑动窗口能够应用的前提是找到单调性：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 示例1：累加和的单调性</span></span><br><span class="line"><span class="comment"># 范围变大 → 累加和一定变大（或不变）</span></span><br><span class="line"><span class="comment"># 范围变小 → 累加和一定变小（或不变）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例2：字符种类的单调性</span></span><br><span class="line"><span class="comment"># 范围变大 → 字符种类一定增加（或不变）</span></span><br><span class="line"><span class="comment"># 范围变小 → 字符种类一定减少（或不变）</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="窗口维护策略"><a href="#窗口维护策略" class="headerlink" title="窗口维护策略"></a>窗口维护策略</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 标准滑动窗口模板</span></span><br><span class="line">l = <span class="number">0</span>  <span class="comment"># 左边界</span></span><br><span class="line"><span class="keyword">for</span> r <span class="keyword">in</span> <span class="built_in">range</span>(n):  <span class="comment"># 右边界遍历</span></span><br><span class="line">    <span class="comment"># 1. 扩展右边界，加入新元素</span></span><br><span class="line">    add_element(r)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 2. 收缩左边界，维持窗口性质</span></span><br><span class="line">    <span class="keyword">while</span> not_valid():</span><br><span class="line">        remove_element(l)</span><br><span class="line">        l += <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 3. 更新答案</span></span><br><span class="line">    update_answer(l, r)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%90%86%E8%A7%A3png.png" alt="滑动窗口理解"></p>
+<hr>
+<h2 id="题目一：长度最小的子数组"><a href="#题目一：长度最小的子数组" class="headerlink" title="题目一：长度最小的子数组"></a>题目一：长度最小的子数组</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定一个含有n个正整数的数组和一个正整数target，找到累加和≥target的长度最小的子数组并返回其长度。如果不存在符合条件的子数组返回0。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/minimum-size-subarray-sum/">https://leetcode.cn/problems/minimum-size-subarray-sum/</a></p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E4%B8%80.png" alt="题目一"></p>
+<h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>利用累加和的单调性质：范围变大累加和一定增加</p>
+<ol>
+<li><strong>右边界扩展</strong>：不断加入新元素增加累加和</li>
+<li><strong>左边界收缩</strong>：当满足条件时，尝试缩小窗口</li>
+<li><strong>贪心策略</strong>：在满足条件的前提下找最小长度</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">示例：target = 7, nums = [2,3,1,2,4,3]</span><br><span class="line"></span><br><span class="line">初始：l=0, r=0, sum=0</span><br><span class="line">r=0: sum=2, [2]</span><br><span class="line">r=1: sum=5, [2,3]</span><br><span class="line">r=2: sum=6, [2,3,1]</span><br><span class="line">r=3: sum=8, [2,3,1,2] ✓ 满足，尝试收缩</span><br><span class="line">     → 移除2，sum=6 &lt; 7，不满足，停止收缩</span><br><span class="line">     答案=4</span><br><span class="line">r=4: sum=10, [3,1,2,4] ✓ 满足，收缩</span><br><span class="line">     → 移除3，sum=7 ✓ 仍满足，继续</span><br><span class="line">     → 移除1，sum=6 &lt; 7，停止</span><br><span class="line">     答案=min(4,3)=3</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">minSubArrayLen</span>(<span class="params">self, target: <span class="built_in">int</span>, nums: <span class="built_in">list</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        滑动窗口求最短达标子数组</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        时间复杂度：O(n)</span></span><br><span class="line"><span class="string">        - 虽然是for+while双层循环，但每个元素最多被访问两次</span></span><br><span class="line"><span class="string">        - 右指针遍历n次，左指针最多移动n次</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        空间复杂度：O(1)</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        ans = <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>)  <span class="comment"># 初始化答案为无穷大</span></span><br><span class="line">        l = <span class="number">0</span>  <span class="comment"># 左指针</span></span><br><span class="line">        sum_val = <span class="number">0</span>  <span class="comment"># 当前窗口的累加和</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 右指针遍历数组</span></span><br><span class="line">        <span class="keyword">for</span> r <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(nums)):</span><br><span class="line">            sum_val += nums[r]  <span class="comment"># 右边界扩展，加入新元素</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 尝试收缩左边界，保持累加和刚好 &gt;= target</span></span><br><span class="line">            <span class="comment"># 贪心思想：如果去掉l位置的数还能达标，那就去掉</span></span><br><span class="line">            <span class="keyword">while</span> sum_val - nums[l] &gt;= target:</span><br><span class="line">                sum_val -= nums[l]  <span class="comment"># l位置的数从窗口出去</span></span><br><span class="line">                l += <span class="number">1</span>  <span class="comment"># 左指针右移</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果当前窗口满足条件，更新答案</span></span><br><span class="line">            <span class="keyword">if</span> sum_val &gt;= target:</span><br><span class="line">                ans = <span class="built_in">min</span>(ans, r - l + <span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 如果没有找到满足条件的子数组，返回0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span> <span class="keyword">if</span> ans == <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>) <span class="keyword">else</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n)（每个元素最多访问两次）</li>
+<li><strong>空间复杂度</strong>：O(1)</li>
+<li><strong>关键技巧</strong>：贪心收缩窗口</li>
+</ul>
+<hr>
+<h2 id="题目二：无重复字符的最长子串"><a href="#题目二：无重复字符的最长子串" class="headerlink" title="题目二：无重复字符的最长子串"></a>题目二：无重复字符的最长子串</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定一个字符串s，请找出其中不含有重复字符的最长子串的长度。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/longest-substring-without-repeating-characters/">https://leetcode.cn/problems/longest-substring-without-repeating-characters/</a></p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E4%BA%8C.png" alt="题目二"></p>
+<h3 id="核心思想-1"><a href="#核心思想-1" class="headerlink" title="核心思想"></a>核心思想</h3><p>使用数组记录每个字符最后出现的位置，动态调整左边界：</p>
+<ol>
+<li><strong>位置记录</strong>：last[c]记录字符c上次出现的位置</li>
+<li><strong>左边界更新</strong>：遇到重复字符时，左边界跳到重复位置的下一位</li>
+<li><strong>答案更新</strong>：每次右边界扩展时更新最长长度</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">示例：s = &quot;abcabcbb&quot;</span><br><span class="line"></span><br><span class="line">r=0: &#x27;a&#x27;, last[&#x27;a&#x27;]=-1→0, l=0, len=1</span><br><span class="line">r=1: &#x27;b&#x27;, last[&#x27;b&#x27;]=-1→1, l=0, len=2</span><br><span class="line">r=2: &#x27;c&#x27;, last[&#x27;c&#x27;]=-1→2, l=0, len=3</span><br><span class="line">r=3: &#x27;a&#x27;, last[&#x27;a&#x27;]=0→3, l=max(0,0+1)=1, len=3</span><br><span class="line">                          ↑重复了，左边界跳到1</span><br><span class="line">r=4: &#x27;b&#x27;, last[&#x27;b&#x27;]=1→4, l=max(1,1+1)=2, len=3</span><br><span class="line">r=5: &#x27;c&#x27;, last[&#x27;c&#x27;]=2→5, l=max(2,2+1)=3, len=3</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法实现-1"><a href="#算法实现-1" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">lengthOfLongestSubstring</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        滑动窗口 + 位置记录</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        1. 固定窗口右边界，动态调整左边界</span></span><br><span class="line"><span class="string">        2. 使用last数组记录每个字符上次出现的位置</span></span><br><span class="line"><span class="string">        3. 遇到重复字符时，左边界跳到重复字符的下一个位置</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        时间复杂度：O(n)</span></span><br><span class="line"><span class="string">        空间复杂度：O(1)（last数组固定256大小）</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        <span class="comment"># 记录每个字符上次出现的位置，初始化为-1表示未出现过</span></span><br><span class="line">        last = [-<span class="number">1</span>] * <span class="number">256</span>  <span class="comment"># ASCII码范围</span></span><br><span class="line">        ans = <span class="number">0</span>  <span class="comment"># 记录最长子串的长度</span></span><br><span class="line">        l = <span class="number">0</span>  <span class="comment"># 左指针</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 右指针遍历字符串</span></span><br><span class="line">        <span class="keyword">for</span> r <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            char_code = <span class="built_in">ord</span>(s[r])  <span class="comment"># 获取字符的ASCII码</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 更新左指针：要么保持原位，要么跳到重复字符的下一个位置</span></span><br><span class="line">            <span class="comment"># 这个逻辑可以理解为：如果当前字符已经出现过，那么左边界需要跳到重复字符的下一个位置，因为不能包含重复字符</span></span><br><span class="line">            <span class="comment"># 如果当前字符没有出现过，那么左边界保持原位，因为可以包含重复字符</span></span><br><span class="line">            l = <span class="built_in">max</span>(l, last[char_code] + <span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 更新答案</span></span><br><span class="line">            ans = <span class="built_in">max</span>(ans, r - l + <span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 更新当前字符最后出现的位置</span></span><br><span class="line">            last[char_code] = r</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="关键点说明"><a href="#关键点说明" class="headerlink" title="关键点说明"></a>关键点说明</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为什么使用max(l, last[char_code] + 1)？</span></span><br><span class="line"></span><br><span class="line">示例：<span class="string">&quot;abba&quot;</span></span><br><span class="line">r=<span class="number">0</span>: <span class="string">&#x27;a&#x27;</span>, last[<span class="string">&#x27;a&#x27;</span>]=-<span class="number">1</span>, l=<span class="built_in">max</span>(<span class="number">0</span>,-<span class="number">1</span>+<span class="number">1</span>)=<span class="number">0</span> ✓</span><br><span class="line">r=<span class="number">1</span>: <span class="string">&#x27;b&#x27;</span>, last[<span class="string">&#x27;b&#x27;</span>]=-<span class="number">1</span>, l=<span class="built_in">max</span>(<span class="number">0</span>,-<span class="number">1</span>+<span class="number">1</span>)=<span class="number">0</span> ✓</span><br><span class="line">r=<span class="number">2</span>: <span class="string">&#x27;b&#x27;</span>, last[<span class="string">&#x27;b&#x27;</span>]=<span class="number">1</span>,  l=<span class="built_in">max</span>(<span class="number">0</span>,<span class="number">1</span>+<span class="number">1</span>)=<span class="number">2</span>  ✓ 左边界跳过第一个<span class="string">&#x27;b&#x27;</span></span><br><span class="line">r=<span class="number">3</span>: <span class="string">&#x27;a&#x27;</span>, last[<span class="string">&#x27;a&#x27;</span>]=<span class="number">0</span>,  l=<span class="built_in">max</span>(<span class="number">2</span>,<span class="number">0</span>+<span class="number">1</span>)=<span class="number">2</span>  ✓ 左边界不回退</span><br><span class="line">                                          如果不用<span class="built_in">max</span>，会错误地回到<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-1"><a href="#算法分析-1" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n)</li>
+<li><strong>空间复杂度</strong>：O(1)（256大小的数组）</li>
+<li><strong>优化技巧</strong>：通过位置数组避免重复扫描</li>
+</ul>
+<hr>
+<h2 id="题目三：最小覆盖子串"><a href="#题目三：最小覆盖子串" class="headerlink" title="题目三：最小覆盖子串"></a>题目三：最小覆盖子串</h2><h3 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个字符串s、一个字符串t。返回s中涵盖t所有字符的最小子串。如果s中不存在涵盖t所有字符的子串，则返回空字符串””。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/minimum-window-substring/">https://leetcode.cn/problems/minimum-window-substring/</a></p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E4%B8%89.png" alt="题目三"></p>
+<h3 id="核心思想-2"><a href="#核心思想-2" class="headerlink" title="核心思想"></a>核心思想</h3><p>使用”欠债表”维护字符需求，先负债后还债：</p>
+<ol>
+<li><strong>欠债表</strong>：cnts[c] &lt; 0表示还需要字符c，&gt; 0表示字符c多余</li>
+<li><strong>债务管理</strong>：debt记录总债务（还需要多少个字符）</li>
+<li><strong>两阶段处理</strong>：先扩展找到覆盖，再收缩找到最小</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">示例：s = &quot;ADOBECODEBANC&quot;, t = &quot;ABC&quot;</span><br><span class="line"></span><br><span class="line">初始化欠债表：</span><br><span class="line">cnts[&#x27;A&#x27;] = -1 (欠1个A)</span><br><span class="line">cnts[&#x27;B&#x27;] = -1 (欠1个B)</span><br><span class="line">cnts[&#x27;C&#x27;] = -1 (欠1个C)</span><br><span class="line">debt = 3</span><br><span class="line"></span><br><span class="line">扩展阶段：</span><br><span class="line">r=0: &#x27;A&#x27;, cnts[&#x27;A&#x27;]=-1→0, debt=3→2</span><br><span class="line">r=1: &#x27;D&#x27;, cnts[&#x27;D&#x27;]=0→1,  debt=2</span><br><span class="line">r=2: &#x27;O&#x27;, cnts[&#x27;O&#x27;]=0→1,  debt=2</span><br><span class="line">r=3: &#x27;B&#x27;, cnts[&#x27;B&#x27;]=-1→0, debt=2→1</span><br><span class="line">r=4: &#x27;E&#x27;, cnts[&#x27;E&#x27;]=0→1,  debt=1</span><br><span class="line">r=5: &#x27;C&#x27;, cnts[&#x27;C&#x27;]=-1→0, debt=1→0 ✓ 债务还清！</span><br><span class="line"></span><br><span class="line">收缩阶段：</span><br><span class="line">去掉&#x27;A&#x27;：cnts[&#x27;A&#x27;]=0→-1, 不行（会欠债）</span><br><span class="line">窗口：&quot;ADOBEC&quot;，长度=6</span><br><span class="line"></span><br><span class="line">继续扩展...</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法实现-2"><a href="#算法实现-2" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">minWindow</span>(<span class="params">self, s: <span class="built_in">str</span>, t: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        滑动窗口 + 欠债表</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        1. cnts数组维护欠债情况：</span></span><br><span class="line"><span class="string">           - cnts[i] &lt; 0：字符i有负债（还需要）</span></span><br><span class="line"><span class="string">           - cnts[i] &gt; 0：字符i有盈余（多了）</span></span><br><span class="line"><span class="string">        2. debt记录总债务（还需要多少个字符）</span></span><br><span class="line"><span class="string">        3. 先扩展窗口还债，债务清零后再收缩窗口</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        时间复杂度：O(n + m)，n是s长度，m是t长度</span></span><br><span class="line"><span class="string">        空间复杂度：O(1)（cnts数组固定256大小）</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 记录每种字符的欠债情况</span></span><br><span class="line">        cnts = [<span class="number">0</span>] * <span class="number">256</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 统计t中每个字符的需求，初始为负数（欠债）</span></span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> t:</span><br><span class="line">            cnts[<span class="built_in">ord</span>(char)] -= <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        length = <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>)  <span class="comment"># 最小覆盖子串的长度</span></span><br><span class="line">        start = <span class="number">0</span>  <span class="comment"># 最小覆盖子串的起始位置</span></span><br><span class="line">        debt = <span class="built_in">len</span>(t)  <span class="comment"># 总债务（还需要多少个字符）</span></span><br><span class="line">        l = <span class="number">0</span>  <span class="comment"># 左指针</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 右指针遍历字符串s</span></span><br><span class="line">        <span class="keyword">for</span> r <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(s)):</span><br><span class="line">            char_code = <span class="built_in">ord</span>(s[r])</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果当前字符是需要的（cnts &lt; 0），则减少债务</span></span><br><span class="line">            <span class="keyword">if</span> cnts[char_code] &lt; <span class="number">0</span>:</span><br><span class="line">                debt -= <span class="number">1</span></span><br><span class="line">            cnts[char_code] += <span class="number">1</span>  <span class="comment"># 字符进入窗口</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果债务已还清（找到了包含t所有字符的窗口）</span></span><br><span class="line">            <span class="keyword">if</span> debt == <span class="number">0</span>:</span><br><span class="line">                <span class="comment"># 收缩左边界，去掉多余的字符</span></span><br><span class="line">                <span class="keyword">while</span> cnts[<span class="built_in">ord</span>(s[l])] &gt; <span class="number">0</span>:</span><br><span class="line">                    cnts[<span class="built_in">ord</span>(s[l])] -= <span class="number">1</span></span><br><span class="line">                    l += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 更新最小窗口</span></span><br><span class="line">                <span class="keyword">if</span> r - l + <span class="number">1</span> &lt; length:</span><br><span class="line">                    length = r - l + <span class="number">1</span></span><br><span class="line">                    start = l</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 如果没有找到满足条件的子串，返回空字符串</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span> <span class="keyword">if</span> length == <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>) <span class="keyword">else</span> s[start:start + length]</span><br></pre></td></tr></table></figure>
+
+<h3 id="欠债表机制详解"><a href="#欠债表机制详解" class="headerlink" title="欠债表机制详解"></a>欠债表机制详解</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 欠债表的工作原理</span></span><br><span class="line"></span><br><span class="line">初始状态（t = <span class="string">&quot;ABC&quot;</span>）:</span><br><span class="line">cnts[<span class="string">&#x27;A&#x27;</span>] = -<span class="number">1</span>  <span class="comment"># 欠1个A</span></span><br><span class="line">cnts[<span class="string">&#x27;B&#x27;</span>] = -<span class="number">1</span>  <span class="comment"># 欠1个B  </span></span><br><span class="line">cnts[<span class="string">&#x27;C&#x27;</span>] = -<span class="number">1</span>  <span class="comment"># 欠1个C</span></span><br><span class="line">其他字符 = <span class="number">0</span>     <span class="comment"># 不欠不多</span></span><br><span class="line"></span><br><span class="line">加入字符<span class="string">&#x27;A&#x27;</span>:</span><br><span class="line">cnts[<span class="string">&#x27;A&#x27;</span>] = -<span class="number">1</span> + <span class="number">1</span> = <span class="number">0</span>  <span class="comment"># 刚好够，debt减1</span></span><br><span class="line">加入字符<span class="string">&#x27;A&#x27;</span>:</span><br><span class="line">cnts[<span class="string">&#x27;A&#x27;</span>] = <span class="number">0</span> + <span class="number">1</span> = <span class="number">1</span>   <span class="comment"># 多了1个，debt不变</span></span><br><span class="line"></span><br><span class="line">去掉字符<span class="string">&#x27;A&#x27;</span>:</span><br><span class="line">cnts[<span class="string">&#x27;A&#x27;</span>] = <span class="number">1</span> - <span class="number">1</span> = <span class="number">0</span>   <span class="comment"># 还是刚好，可以去掉</span></span><br><span class="line">去掉字符<span class="string">&#x27;A&#x27;</span>:</span><br><span class="line">cnts[<span class="string">&#x27;A&#x27;</span>] = <span class="number">0</span> - <span class="number">1</span> = -<span class="number">1</span>  <span class="comment"># 又欠了，不能再去掉</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-2"><a href="#算法分析-2" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n + m)</li>
+<li><strong>空间复杂度</strong>：O(1)</li>
+<li><strong>核心技巧</strong>：欠债表 + 两阶段处理</li>
+</ul>
+<hr>
+<h2 id="题目四：加油站"><a href="#题目四：加油站" class="headerlink" title="题目四：加油站"></a>题目四：加油站</h2><h3 id="问题描述-3"><a href="#问题描述-3" class="headerlink" title="问题描述"></a>问题描述</h3><p>在一条环路上有n个加油站，其中第i个加油站有汽油gas[i]升。你有一辆油箱容量无限的汽车，从第i个加油站开往第i+1个加油站需要消耗汽油cost[i]升。如果你可以按顺序绕环路行驶一周，则返回出发时加油站的编号，否则返回-1。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/gas-station/">https://leetcode.cn/problems/gas-station/</a></p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E5%9B%9B%E5%9B%BE%E7%A4%BA.png" alt="题目四图示"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E5%9B%9B%E7%8E%AF%E7%8A%B6%E6%95%B0%E7%BB%84.png" alt="题目四环状数组"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E5%9B%9B%E5%89%AA%E6%9E%9D%E6%93%8D%E4%BD%9C.png" alt="题目四剪枝操作"></p>
+<h3 id="核心思想-3"><a href="#核心思想-3" class="headerlink" title="核心思想"></a>核心思想</h3><p>通过结余数组和滑动窗口找到合适的起点：</p>
+<ol>
+<li><strong>结余计算</strong>：每个位置的结余 &#x3D; gas[i] - cost[i]</li>
+<li><strong>环路扩展</strong>：将数组扩展为两倍处理环路</li>
+<li><strong>窗口验证</strong>：从每个位置出发，看能否走完一圈</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">示例：gas = [1,2,3,4,5], cost = [3,4,5,1,2]</span><br><span class="line">结余数组 = [-2,-2,-2,3,3]</span><br><span class="line"></span><br><span class="line">扩展数组：</span><br><span class="line">索引：0   1   2   3   4   5   6   7   8   9</span><br><span class="line">结余：-2  -2  -2  3   3   -2  -2  -2  3   3</span><br><span class="line">                          ↑原数组重复</span><br><span class="line"></span><br><span class="line">从l=0开始：</span><br><span class="line">r=0: sum=-2 &lt; 0，失败，跳到r+1=1</span><br><span class="line">从l=1开始：</span><br><span class="line">r=1: sum=-2 &lt; 0，失败，跳到r+1=2</span><br><span class="line">...</span><br><span class="line">从l=3开始：</span><br><span class="line">r=3: sum=3 ✓</span><br><span class="line">r=4: sum=6 ✓</span><br><span class="line">r=5: sum=4 ✓</span><br><span class="line">r=6: sum=2 ✓</span><br><span class="line">r=7: sum=0 ✓</span><br><span class="line">走完一圈！答案=3</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法实现-3"><a href="#算法实现-3" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">canCompleteCircuit</span>(<span class="params">self, gas: <span class="built_in">list</span>[<span class="built_in">int</span>], cost: <span class="built_in">list</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        滑动窗口处理环路问题</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        1. 将环路扩展为两倍：[a,b,c,d,e] → [a,b,c,d,e,a,b,c,d,e]</span></span><br><span class="line"><span class="string">        2. 窗口范围[l,r)，左闭右开，r是到不了的位置</span></span><br><span class="line"><span class="string">        3. 从每个位置l出发，看能否走完n个站点</span></span><br><span class="line"><span class="string">        4. 如果失败，直接跳到r+1位置（剪枝）</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        时间复杂度：O(n)</span></span><br><span class="line"><span class="string">        - 外层循环l最多到n-1</span></span><br><span class="line"><span class="string">        - 内层循环r最多移动到2n</span></span><br><span class="line"><span class="string">        - 总移动次数不超过2n</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        空间复杂度：O(1)</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(gas)</span><br><span class="line">        l = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> l &lt; n:</span><br><span class="line">            r = l  <span class="comment"># 右指针从左指针开始</span></span><br><span class="line">            sum_val = <span class="number">0</span>  <span class="comment"># 当前油量余额</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 尝试从l位置出发</span></span><br><span class="line">            <span class="keyword">while</span> sum_val + gas[r % n] - cost[r % n] &gt;= <span class="number">0</span>:</span><br><span class="line">                <span class="comment"># 检查是否已经绕了一圈</span></span><br><span class="line">                <span class="keyword">if</span> r - l + <span class="number">1</span> == n:</span><br><span class="line">                    <span class="keyword">return</span> l  <span class="comment"># 找到答案</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># r位置进入窗口，累加油量余额</span></span><br><span class="line">                sum_val += gas[r % n] - cost[r % n]</span><br><span class="line">                r += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 从l出发无法完成，直接跳到r+1开始尝试（剪枝）</span></span><br><span class="line">            <span class="comment"># 原理：如果从l到r失败，那么从l+1到r也必然失败</span></span><br><span class="line">            l = r + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>  <span class="comment"># 没有找到可行的起点</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="剪枝原理说明"><a href="#剪枝原理说明" class="headerlink" title="剪枝原理说明"></a>剪枝原理说明</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为什么可以直接跳到r+1？</span></span><br><span class="line"></span><br><span class="line">假设从位置i到位置j失败（油量不足）：</span><br><span class="line">  i → i+<span class="number">1</span> → i+<span class="number">2</span> → ... → j (失败)</span><br><span class="line">  </span><br><span class="line">如果从i能到j-<span class="number">1</span>，说明：</span><br><span class="line">  <span class="built_in">sum</span>(i到j-<span class="number">1</span>) &gt;= <span class="number">0</span></span><br><span class="line">  </span><br><span class="line">但在j失败，说明：</span><br><span class="line">  <span class="built_in">sum</span>(i到j) &lt; <span class="number">0</span></span><br><span class="line">  即 <span class="built_in">sum</span>(i到j-<span class="number">1</span>) + rest[j] &lt; <span class="number">0</span></span><br><span class="line">  </span><br><span class="line">现在考虑从i+<span class="number">1</span>出发：</span><br><span class="line">  <span class="built_in">sum</span>(i+<span class="number">1</span>到j) = <span class="built_in">sum</span>(i到j) - rest[i]</span><br><span class="line">  </span><br><span class="line">因为<span class="built_in">sum</span>(i到j) &lt; <span class="number">0</span>，且rest[i] &lt;= <span class="built_in">sum</span>(i到j-<span class="number">1</span>)（否则到不了i+<span class="number">1</span>）</span><br><span class="line">所以 <span class="built_in">sum</span>(i+<span class="number">1</span>到j) &lt;= <span class="built_in">sum</span>(i到j) &lt; <span class="number">0</span></span><br><span class="line"></span><br><span class="line">结论：从i+<span class="number">1</span>、i+<span class="number">2.</span>..j出发都无法到达j，可以直接跳过</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-3"><a href="#算法分析-3" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n)</li>
+<li><strong>空间复杂度</strong>：O(1)</li>
+<li><strong>核心技巧</strong>：环路扩展 + 剪枝优化</li>
+</ul>
+<hr>
+<h2 id="题目五：替换子串得到平衡字符串"><a href="#题目五：替换子串得到平衡字符串" class="headerlink" title="题目五：替换子串得到平衡字符串"></a>题目五：替换子串得到平衡字符串</h2><h3 id="问题描述-4"><a href="#问题描述-4" class="headerlink" title="问题描述"></a>问题描述</h3><p>有一个只含有’Q’,’W’,’E’,’R’四种字符，且长度为n的字符串。假如在该字符串中，这四个字符都恰好出现n&#x2F;4次，那么它就是一个「平衡字符串」。请通过「替换一个子串」的方式，使原字符串变成一个「平衡字符串」，返回待替换子串的最小可能长度。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/replace-the-substring-for-balanced-string/">https://leetcode.cn/problems/replace-the-substring-for-balanced-string/</a></p>
+<h3 id="核心思想-4"><a href="#核心思想-4" class="headerlink" title="核心思想"></a>核心思想</h3><p>反向思考：找到包含所有多余字符的最小窗口</p>
+<ol>
+<li><strong>字符整数化</strong>：将QWER映射为0123</li>
+<li><strong>计算过剩</strong>：统计每种字符超过n&#x2F;4的数量</li>
+<li><strong>窗口覆盖</strong>：找到包含所有过剩字符的最小窗口</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">示例：s = &quot;QWER&quot;, n = 4</span><br><span class="line">期望：每种字符1个</span><br><span class="line"></span><br><span class="line">示例：s = &quot;QQWE&quot;, n = 4</span><br><span class="line">Q出现2次，多1个</span><br><span class="line">W出现1次，正好</span><br><span class="line">E出现1次，正好</span><br><span class="line">R出现0次，少1个</span><br><span class="line"></span><br><span class="line">初始欠债表：</span><br><span class="line">cnts[Q] = 1-2 = -1 (多1个Q要放进窗口)</span><br><span class="line">cnts[W] = 1-1 = 0</span><br><span class="line">cnts[E] = 1-1 = 0</span><br><span class="line">cnts[R] = 1-0 = 1 (缺1个R，不用管)</span><br><span class="line">debt = 1</span><br><span class="line"></span><br><span class="line">找到包含这1个多余Q的最小窗口即可</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法实现-4"><a href="#算法实现-4" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">balancedString</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        滑动窗口 + 字符整数化</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        1. 将字符映射为数字：Q→0, W→1, E→2, R→3</span></span><br><span class="line"><span class="string">        2. 计算每种字符的过剩数量（超过n/4的部分）</span></span><br><span class="line"><span class="string">        3. 找到包含所有过剩字符的最小窗口</span></span><br><span class="line"><span class="string">        4. 这个窗口就是需要替换的最小子串</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        时间复杂度：O(n)</span></span><br><span class="line"><span class="string">        空间复杂度：O(1)（cnts数组固定4大小）</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        <span class="comment"># 将字符映射为数字</span></span><br><span class="line">        char_to_num = []</span><br><span class="line">        cnts = [<span class="number">0</span>] * <span class="number">4</span>  <span class="comment"># 统计四种字符的出现次数</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> s:</span><br><span class="line">            <span class="keyword">if</span> char == <span class="string">&#x27;W&#x27;</span>:</span><br><span class="line">                num = <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> char == <span class="string">&#x27;E&#x27;</span>:</span><br><span class="line">                num = <span class="number">2</span></span><br><span class="line">            <span class="keyword">elif</span> char == <span class="string">&#x27;R&#x27;</span>:</span><br><span class="line">                num = <span class="number">3</span></span><br><span class="line">            <span class="keyword">else</span>:  <span class="comment"># &#x27;Q&#x27;</span></span><br><span class="line">                num = <span class="number">0</span></span><br><span class="line">            char_to_num.append(num)</span><br><span class="line">            cnts[num] += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 计算每种字符的欠债情况</span></span><br><span class="line">        debt = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">            <span class="keyword">if</span> cnts[i] &lt; n // <span class="number">4</span>:</span><br><span class="line">                <span class="comment"># 该字符不足，不需要减少</span></span><br><span class="line">                cnts[i] = <span class="number">0</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 该字符过多，需要减少到n/4</span></span><br><span class="line">                cnts[i] = n // <span class="number">4</span> - cnts[i]  <span class="comment"># 负数表示需要减少的数量</span></span><br><span class="line">                debt -= cnts[i]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 如果已经平衡，直接返回0</span></span><br><span class="line">        <span class="keyword">if</span> debt == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        ans = <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>)</span><br><span class="line">        l = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 滑动窗口</span></span><br><span class="line">        <span class="keyword">for</span> r <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="comment"># 窗口右边界向右，给出字符</span></span><br><span class="line">            <span class="keyword">if</span> cnts[char_to_num[r]] &lt; <span class="number">0</span>:</span><br><span class="line">                debt -= <span class="number">1</span></span><br><span class="line">            cnts[char_to_num[r]] += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果债务已还清</span></span><br><span class="line">            <span class="keyword">if</span> debt == <span class="number">0</span>:</span><br><span class="line">                <span class="comment"># 窗口左边界向右，拿回字符</span></span><br><span class="line">                <span class="keyword">while</span> cnts[char_to_num[l]] &gt; <span class="number">0</span>:</span><br><span class="line">                    cnts[char_to_num[l]] -= <span class="number">1</span></span><br><span class="line">                    l += <span class="number">1</span></span><br><span class="line">                <span class="comment"># 更新答案</span></span><br><span class="line">                ans = <span class="built_in">min</span>(ans, r - l + <span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="字符整数化技巧"><a href="#字符整数化技巧" class="headerlink" title="字符整数化技巧"></a>字符整数化技巧</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为什么要字符整数化？</span></span><br><span class="line"></span><br><span class="line">方法<span class="number">1</span>：直接用字符作为索引（不推荐）</span><br><span class="line">cnts = &#123;&#125;</span><br><span class="line">cnts[<span class="string">&#x27;Q&#x27;</span>] = ...  <span class="comment"># 字典操作，较慢</span></span><br><span class="line"></span><br><span class="line">方法<span class="number">2</span>：字符整数化（推荐）</span><br><span class="line">cnts = [<span class="number">0</span>] * <span class="number">4</span>  <span class="comment"># 数组操作，更快</span></span><br><span class="line">Q → <span class="number">0</span></span><br><span class="line">W → <span class="number">1</span></span><br><span class="line">E → <span class="number">2</span></span><br><span class="line">R → <span class="number">3</span></span><br><span class="line"></span><br><span class="line">优势：</span><br><span class="line"><span class="number">1.</span> 数组访问比字典快</span><br><span class="line"><span class="number">2.</span> 空间固定，不需要哈希表</span><br><span class="line"><span class="number">3.</span> 代码更清晰</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-4"><a href="#算法分析-4" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n)</li>
+<li><strong>空间复杂度</strong>：O(1)</li>
+<li><strong>核心技巧</strong>：字符整数化 + 反向思考</li>
+</ul>
+<hr>
+<h2 id="题目六：K个不同整数的子数组"><a href="#题目六：K个不同整数的子数组" class="headerlink" title="题目六：K个不同整数的子数组"></a>题目六：K个不同整数的子数组</h2><h3 id="问题描述-5"><a href="#问题描述-5" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定一个正整数数组nums和一个整数k，返回nums中「好子数组」的数目。如果nums的某个子数组中不同整数的个数恰好为k，则称这个连续子数组为「好子数组」。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/subarrays-with-k-different-integers/">https://leetcode.cn/problems/subarrays-with-k-different-integers/</a></p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(24)/class49-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE%E5%85%AD%E9%97%AE%E9%A2%98%E8%BD%AC%E5%8C%96.png" alt="题目六问题转化"></p>
+<h3 id="核心思想-5"><a href="#核心思想-5" class="headerlink" title="核心思想"></a>核心思想</h3><p>将”恰好k种”转化为”最多k种”的差值：</p>
+<p><strong>核心公式</strong>：恰好k种 &#x3D; 最多k种 - 最多k-1种</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">示例：nums = [1,2,1,2,3], k = 2</span><br><span class="line"></span><br><span class="line">最多2种的子数组：</span><br><span class="line">[1]         1种 ✓</span><br><span class="line">[1,2]       2种 ✓</span><br><span class="line">[2]         1种 ✓</span><br><span class="line">[1]         1种 ✓</span><br><span class="line">[1,2]       2种 ✓</span><br><span class="line">[2]         1种 ✓</span><br><span class="line">[2,1]       2种 ✓</span><br><span class="line">[1]         1种 ✓</span><br><span class="line">[2]         1种 ✓</span><br><span class="line">[2,3]       2种 ✓</span><br><span class="line">[3]         1种 ✓</span><br><span class="line">...</span><br><span class="line">总计：最多2种的数量 = X</span><br><span class="line"></span><br><span class="line">最多1种的子数组：</span><br><span class="line">[1]         1种 ✓</span><br><span class="line">[2]         1种 ✓</span><br><span class="line">[1]         1种 ✓</span><br><span class="line">[2]         1种 ✓</span><br><span class="line">[3]         1种 ✓</span><br><span class="line">总计：最多1种的数量 = Y</span><br><span class="line"></span><br><span class="line">恰好2种的数量 = X - Y</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法实现-5"><a href="#算法实现-5" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">subarraysWithKDistinct</span>(<span class="params">self, nums: <span class="built_in">list</span>[<span class="built_in">int</span>], k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        恰好k种 = 最多k种 - 最多k-1种</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        1. &quot;恰好k种&quot;不好直接计算</span></span><br><span class="line"><span class="string">        2. &quot;最多k种&quot;可以用滑动窗口</span></span><br><span class="line"><span class="string">        3. 利用差值关系转化问题</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.numsOfMostKinds(nums, k) - <span class="variable language_">self</span>.numsOfMostKinds(nums, k - <span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">numsOfMostKinds</span>(<span class="params">self, arr: <span class="built_in">list</span>[<span class="built_in">int</span>], k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        计算数组中有多少子数组，数字种类不超过k</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        1. 固定右边界r，计算以r结尾的满足条件的子数组数量</span></span><br><span class="line"><span class="string">        2. 对于固定的r，所有从[l,r]区间的子数组都满足条件</span></span><br><span class="line"><span class="string">        3. 数量 = r - l + 1</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        时间复杂度：O(n)</span></span><br><span class="line"><span class="string">        空间复杂度：O(n)（cnts数组大小）</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        cnts = [<span class="number">0</span>] * <span class="number">20001</span>  <span class="comment"># 统计每个数字出现的次数</span></span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        collect = <span class="number">0</span>  <span class="comment"># 当前窗口中不同数字的种类数</span></span><br><span class="line">        l = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> r <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(arr)):</span><br><span class="line">            <span class="comment"># 右边界扩展</span></span><br><span class="line">            cnts[arr[r]] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> cnts[arr[r]] == <span class="number">1</span>:</span><br><span class="line">                collect += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果种类数超过k，收缩左边界</span></span><br><span class="line">            <span class="keyword">while</span> collect &gt; k:</span><br><span class="line">                cnts[arr[l]] -= <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> cnts[arr[l]] == <span class="number">0</span>:</span><br><span class="line">                    collect -= <span class="number">1</span></span><br><span class="line">                l += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 以r结尾的，种类数不超过k的子数组个数</span></span><br><span class="line">            <span class="comment"># 例如：l=0, r=3，则子数组有[0,3],[1,3],[2,3],[3,3]</span></span><br><span class="line">            ans += r - l + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="计数原理详解"><a href="#计数原理详解" class="headerlink" title="计数原理详解"></a>计数原理详解</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为什么ans += r - l + 1？</span></span><br><span class="line"></span><br><span class="line">固定右边界r，所有从[l,r]区间开始的子数组都满足条件</span><br><span class="line"></span><br><span class="line">示例：l=<span class="number">1</span>, r=<span class="number">4</span>，数组=[a,b,c,d,e]</span><br><span class="line">窗口内：[b,c,d,e]，种类数≤k</span><br><span class="line"></span><br><span class="line">以r=<span class="number">4</span>结尾的满足条件的子数组：</span><br><span class="line">[b,c,d,e]  从<span class="number">1</span>到<span class="number">4</span></span><br><span class="line">[c,d,e]    从<span class="number">2</span>到<span class="number">4</span></span><br><span class="line">[d,e]      从<span class="number">3</span>到<span class="number">4</span></span><br><span class="line">[e]        从<span class="number">4</span>到<span class="number">4</span></span><br><span class="line"></span><br><span class="line">共<span class="number">4</span>个，即 r - l + <span class="number">1</span> = <span class="number">4</span> - <span class="number">1</span> + <span class="number">1</span> = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">累加过程：</span><br><span class="line">r=<span class="number">0</span>: ans += <span class="number">1</span>        (<span class="number">1</span>个子数组)</span><br><span class="line">r=<span class="number">1</span>: ans += ...      (若干个子数组)</span><br><span class="line">r=<span class="number">2</span>: ans += ...</span><br><span class="line">...</span><br><span class="line">最终ans = 所有满足条件的子数组总数</span><br></pre></td></tr></table></figure>
+
+<h3 id="转化技巧总结"><a href="#转化技巧总结" class="headerlink" title="转化技巧总结"></a>转化技巧总结</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 恰好 vs 最多 转化技巧</span></span><br><span class="line"></span><br><span class="line">问题类型                     转化方式</span><br><span class="line">========================================================</span><br><span class="line">恰好k个                   = 最多k个 - 最多k-<span class="number">1</span>个</span><br><span class="line">至少k个                   = 全部 - 最多k-<span class="number">1</span>个</span><br><span class="line">恰好在[a,b]区间内         = 最多b - 最多a-<span class="number">1</span></span><br><span class="line">========================================================</span><br><span class="line"></span><br><span class="line">这种转化技巧可以将复杂的<span class="string">&quot;恰好&quot;</span>问题转化为</span><br><span class="line">更容易处理的<span class="string">&quot;最多&quot;</span>问题</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-5"><a href="#算法分析-5" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n)</li>
+<li><strong>空间复杂度</strong>：O(n)</li>
+<li><strong>核心技巧</strong>：”恰好”转化为”最多”的差值</li>
+</ul>
+<hr>
+<h2 id="题目七：至少有K个重复字符的最长子串"><a href="#题目七：至少有K个重复字符的最长子串" class="headerlink" title="题目七：至少有K个重复字符的最长子串"></a>题目七：至少有K个重复字符的最长子串</h2><h3 id="问题描述-6"><a href="#问题描述-6" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个字符串s和一个整数k，请你找出s中的最长子串，要求该子串中的每一字符出现次数都不少于k。返回这一子串的长度。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/longest-substring-with-at-least-k-repeating-characters/">https://leetcode.cn/problems/longest-substring-with-at-least-k-repeating-characters/</a></p>
+<h3 id="核心思想-6"><a href="#核心思想-6" class="headerlink" title="核心思想"></a>核心思想</h3><p><strong>固定字符种类 + 滑动窗口</strong></p>
+<p>为什么要固定字符种类？因为直接求解没有单调性：</p>
+<ul>
+<li>窗口变大：字符种类可能增加，但某些字符可能不达标</li>
+<li>窗口变小：字符种类可能减少，但剩余字符可能达标</li>
+</ul>
+<p><strong>解决方案</strong>：枚举字符种类数（1到26），对每种情况求最长子串</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">示例：s = &quot;aaabb&quot;, k = 3</span><br><span class="line"></span><br><span class="line">要求：每种字符必须出现≥3次</span><br><span class="line"></span><br><span class="line">情况1：恰好1种字符</span><br><span class="line">窗口[aaa]：&#x27;a&#x27;出现3次 ✓，长度=3</span><br><span class="line"></span><br><span class="line">情况2：恰好2种字符</span><br><span class="line">窗口[aaabb]：&#x27;a&#x27;出现3次 ✓，&#x27;b&#x27;出现2次 ✗</span><br><span class="line">无满足条件的窗口</span><br><span class="line"></span><br><span class="line">答案 = 3</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法实现-6"><a href="#算法实现-6" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">longestSubstring</span>(<span class="params">self, s: <span class="built_in">str</span>, k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        固定字符种类 + 滑动窗口</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        1. 直接求解没有单调性，需要固定字符种类</span></span><br><span class="line"><span class="string">        2. 枚举字符种类数require（1到26）</span></span><br><span class="line"><span class="string">        3. 对每种情况，用滑动窗口求最长子串</span></span><br><span class="line"><span class="string">        4. 维护两个指标：</span></span><br><span class="line"><span class="string">           - collect: 窗口中字符种类数</span></span><br><span class="line"><span class="string">           - satisfy: 达标的字符种类数（次数≥k）</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        时间复杂度：O(26n) = O(n)</span></span><br><span class="line"><span class="string">        空间复杂度：O(1)（cnts数组固定256大小）</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 枚举字符种类数：1到26种</span></span><br><span class="line">        <span class="keyword">for</span> require <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">27</span>):</span><br><span class="line">            cnts = [<span class="number">0</span>] * <span class="number">256</span>  <span class="comment"># 统计每个字符出现的次数</span></span><br><span class="line">            collect = <span class="number">0</span>  <span class="comment"># 窗口中字符种类数</span></span><br><span class="line">            satisfy = <span class="number">0</span>  <span class="comment"># 达标的字符种类数(次数≥k)</span></span><br><span class="line">            l = <span class="number">0</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 滑动窗口</span></span><br><span class="line">            <span class="keyword">for</span> r <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">                char_code = <span class="built_in">ord</span>(s[r])</span><br><span class="line">                cnts[char_code] += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 新增一种字符</span></span><br><span class="line">                <span class="keyword">if</span> cnts[char_code] == <span class="number">1</span>:</span><br><span class="line">                    collect += <span class="number">1</span></span><br><span class="line">                <span class="comment"># 该字符达标</span></span><br><span class="line">                <span class="keyword">if</span> cnts[char_code] == k:</span><br><span class="line">                    satisfy += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 种类数超过require，收缩左边界</span></span><br><span class="line">                <span class="keyword">while</span> collect &gt; require:</span><br><span class="line">                    left_char_code = <span class="built_in">ord</span>(s[l])</span><br><span class="line">                    <span class="keyword">if</span> cnts[left_char_code] == <span class="number">1</span>:</span><br><span class="line">                        collect -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> cnts[left_char_code] == k:</span><br><span class="line">                        satisfy -= <span class="number">1</span></span><br><span class="line">                    cnts[left_char_code] -= <span class="number">1</span></span><br><span class="line">                    l += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 所有字符都达标，更新答案</span></span><br><span class="line">                <span class="keyword">if</span> satisfy == require:</span><br><span class="line">                    ans = <span class="built_in">max</span>(ans, r - l + <span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="为什么要固定字符种类？"><a href="#为什么要固定字符种类？" class="headerlink" title="为什么要固定字符种类？"></a>为什么要固定字符种类？</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 反例：不固定字符种类的问题</span></span><br><span class="line"></span><br><span class="line">s = <span class="string">&quot;aaabbc&quot;</span>, k = <span class="number">3</span></span><br><span class="line"></span><br><span class="line">窗口扩展过程：</span><br><span class="line">[a]       <span class="string">&#x27;a&#x27;</span>:<span class="number">1</span> ✗</span><br><span class="line">[aa]      <span class="string">&#x27;a&#x27;</span>:<span class="number">2</span> ✗</span><br><span class="line">[aaa]     <span class="string">&#x27;a&#x27;</span>:<span class="number">3</span> ✓  达标！</span><br><span class="line">[aaab]    <span class="string">&#x27;a&#x27;</span>:<span class="number">3</span> ✓, <span class="string">&#x27;b&#x27;</span>:<span class="number">1</span> ✗  不达标</span><br><span class="line">[aaabb]   <span class="string">&#x27;a&#x27;</span>:<span class="number">3</span> ✓, <span class="string">&#x27;b&#x27;</span>:<span class="number">2</span> ✗  不达标</span><br><span class="line">[aaabbc]  <span class="string">&#x27;a&#x27;</span>:<span class="number">3</span> ✓, <span class="string">&#x27;b&#x27;</span>:<span class="number">2</span> ✗, <span class="string">&#x27;c&#x27;</span>:<span class="number">1</span> ✗  更不达标</span><br><span class="line"></span><br><span class="line">问题：窗口变大后，新字符可能不达标</span><br><span class="line">      没有明确的单调性</span><br><span class="line"></span><br><span class="line">解决：固定字符种类后</span><br><span class="line">require=<span class="number">1</span>: [aaa] ✓</span><br><span class="line">require=<span class="number">2</span>: 无满足条件的窗口</span><br><span class="line">require=<span class="number">3</span>: 无满足条件的窗口</span><br></pre></td></tr></table></figure>
+
+<h3 id="双指标维护"><a href="#双指标维护" class="headerlink" title="双指标维护"></a>双指标维护</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># collect 和 satisfy 的关系</span></span><br><span class="line"></span><br><span class="line">collect: 窗口中有多少种字符</span><br><span class="line">satisfy: 其中有多少种达标（出现次数≥k）</span><br><span class="line"></span><br><span class="line">示例：s = <span class="string">&quot;aabbc&quot;</span>, k = <span class="number">2</span>, require = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">r=<span class="number">0</span>: <span class="string">&#x27;a&#x27;</span>  cnts[<span class="string">&#x27;a&#x27;</span>]=<span class="number">1</span>, collect=<span class="number">1</span>, satisfy=<span class="number">0</span></span><br><span class="line">r=<span class="number">1</span>: <span class="string">&#x27;a&#x27;</span>  cnts[<span class="string">&#x27;a&#x27;</span>]=<span class="number">2</span>, collect=<span class="number">1</span>, satisfy=<span class="number">1</span> (a达标)</span><br><span class="line">r=<span class="number">2</span>: <span class="string">&#x27;b&#x27;</span>  cnts[<span class="string">&#x27;b&#x27;</span>]=<span class="number">1</span>, collect=<span class="number">2</span>, satisfy=<span class="number">1</span></span><br><span class="line">r=<span class="number">3</span>: <span class="string">&#x27;b&#x27;</span>  cnts[<span class="string">&#x27;b&#x27;</span>]=<span class="number">2</span>, collect=<span class="number">2</span>, satisfy=<span class="number">2</span> (a,b都达标)</span><br><span class="line">     ✓ satisfy == require，更新答案</span><br><span class="line"></span><br><span class="line">关键判断：</span><br><span class="line"><span class="keyword">if</span> satisfy == require:  <span class="comment"># 所有种类都达标</span></span><br><span class="line">    ans = <span class="built_in">max</span>(ans, r - l + <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-6"><a href="#算法分析-6" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(26n) &#x3D; O(n)</li>
+<li><strong>空间复杂度</strong>：O(1)</li>
+<li><strong>核心技巧</strong>：固定变量制造单调性</li>
+</ul>
+<hr>
+<h2 id="滑动窗口技巧总结"><a href="#滑动窗口技巧总结" class="headerlink" title="滑动窗口技巧总结"></a>滑动窗口技巧总结</h2><h3 id="1-核心模板"><a href="#1-核心模板" class="headerlink" title="1. 核心模板"></a>1. 核心模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 标准滑动窗口框架</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sliding_window</span>(<span class="params">arr, constraint</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    arr: 输入数组/字符串</span></span><br><span class="line"><span class="string">    constraint: 约束条件</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    n = <span class="built_in">len</span>(arr)</span><br><span class="line">    l = <span class="number">0</span>  <span class="comment"># 左指针</span></span><br><span class="line">    ans = 初始值  <span class="comment"># 根据题目初始化</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 维护信息的数据结构（根据题目选择）</span></span><br><span class="line">    info = &#123;&#125;  <span class="comment"># 或 [], 或 变量</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> r <span class="keyword">in</span> <span class="built_in">range</span>(n):  <span class="comment"># 右指针遍历</span></span><br><span class="line">        <span class="comment"># 1. 扩展右边界，更新信息</span></span><br><span class="line">        update_info_add(arr[r])</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 2. 收缩左边界，维持约束</span></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> satisfy_constraint():</span><br><span class="line">            update_info_remove(arr[l])</span><br><span class="line">            l += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 3. 更新答案</span></span><br><span class="line">        update_answer(l, r)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-常见维护信息的方式"><a href="#2-常见维护信息的方式" class="headerlink" title="2. 常见维护信息的方式"></a>2. 常见维护信息的方式</h3><table>
+<thead>
+<tr>
+<th>信息类型</th>
+<th>数据结构</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>计数</td>
+<td>数组&#x2F;字典</td>
+<td>字符出现次数</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>数组</td>
+<td>最后出现位置</td>
+</tr>
+<tr>
+<td>总和</td>
+<td>变量</td>
+<td>窗口累加和</td>
+</tr>
+<tr>
+<td>种类</td>
+<td>变量</td>
+<td>不同字符数</td>
+</tr>
+<tr>
+<td>达标数</td>
+<td>变量</td>
+<td>满足条件的数量</td>
+</tr>
+</tbody></table>
+<h3 id="3-滑动窗口-vs-其他技巧"><a href="#3-滑动窗口-vs-其他技巧" class="headerlink" title="3. 滑动窗口 vs 其他技巧"></a>3. 滑动窗口 vs 其他技巧</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 何时使用滑动窗口？</span></span><br><span class="line"></span><br><span class="line">适用情况：</span><br><span class="line">✓ 连续子数组/子串问题</span><br><span class="line">✓ 存在单调性关系</span><br><span class="line">✓ 需要维护区间信息</span><br><span class="line">✓ 左右边界都单向移动</span><br><span class="line"></span><br><span class="line">不适用情况：</span><br><span class="line">✗ 非连续子序列</span><br><span class="line">✗ 需要回溯的问题</span><br><span class="line">✗ 边界需要回退</span><br><span class="line">✗ 需要排序的问题</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-时间复杂度分析"><a href="#4-时间复杂度分析" class="headerlink" title="4. 时间复杂度分析"></a>4. 时间复杂度分析</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为什么是O(n)？</span></span><br><span class="line"></span><br><span class="line">虽然代码是双层循环：</span><br><span class="line"><span class="keyword">for</span> r <span class="keyword">in</span> <span class="built_in">range</span>(n):      <span class="comment"># O(n)</span></span><br><span class="line">    <span class="keyword">while</span> ...:          <span class="comment"># 看起来O(n)</span></span><br><span class="line">        l += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">但实际上：</span><br><span class="line">- 右指针r：从<span class="number">0</span>移动到n-<span class="number">1</span>，移动n次</span><br><span class="line">- 左指针l：从<span class="number">0</span>移动到n-<span class="number">1</span>，最多移动n次</span><br><span class="line">- 总移动次数：2n次</span><br><span class="line">- 时间复杂度：O(n)</span><br><span class="line"></span><br><span class="line">关键：每个元素最多被访问常数次（进入窗口<span class="number">1</span>次，离开窗口<span class="number">1</span>次）</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-常见技巧汇总"><a href="#5-常见技巧汇总" class="headerlink" title="5. 常见技巧汇总"></a>5. 常见技巧汇总</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 技巧1：位置数组避免重复扫描</span></span><br><span class="line">last = [-<span class="number">1</span>] * <span class="number">256</span></span><br><span class="line">l = <span class="built_in">max</span>(l, last[char] + <span class="number">1</span>)  <span class="comment"># 左边界不回退</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 技巧2：欠债表维护需求</span></span><br><span class="line">cnts[char] = -need  <span class="comment"># 负数表示欠债</span></span><br><span class="line">debt = total_need   <span class="comment"># 总债务</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 技巧3：字符整数化</span></span><br><span class="line">char_to_num = &#123;<span class="string">&#x27;Q&#x27;</span>: <span class="number">0</span>, <span class="string">&#x27;W&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;R&#x27;</span>: <span class="number">3</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 技巧4：恰好转化为最多</span></span><br><span class="line">exactly_k = at_most_k - at_most_(k-<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 技巧5：固定变量制造单调性</span></span><br><span class="line"><span class="keyword">for</span> require <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">27</span>):  <span class="comment"># 固定字符种类</span></span><br><span class="line">    <span class="comment"># 滑动窗口求解</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-调试技巧"><a href="#6-调试技巧" class="headerlink" title="6. 调试技巧"></a>6. 调试技巧</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 调试检查点</span></span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 左右边界是否正确移动？</span><br><span class="line">   - 打印l和r的值</span><br><span class="line">   - 检查边界条件</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span> 维护信息是否正确？</span><br><span class="line">   - 打印info的内容</span><br><span class="line">   - 验证更新逻辑</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span> 答案更新时机是否正确？</span><br><span class="line">   - 检查更新条件</span><br><span class="line">   - 验证窗口状态</span><br><span class="line"></span><br><span class="line"><span class="number">4.</span> 边界情况是否处理？</span><br><span class="line">   - 空数组</span><br><span class="line">   - 单元素</span><br><span class="line">   - 全相同元素</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="学习建议"><a href="#学习建议" class="headerlink" title="学习建议"></a>学习建议</h2><h3 id="1-理解单调性"><a href="#1-理解单调性" class="headerlink" title="1. 理解单调性"></a>1. 理解单调性</h3><p>滑动窗口的核心是单调性关系：</p>
+<ul>
+<li>明确范围和答案的关系</li>
+<li>识别哪些变量具有单调性</li>
+<li>理解如何固定变量制造单调性</li>
+</ul>
+<h3 id="2-掌握维护技巧"><a href="#2-掌握维护技巧" class="headerlink" title="2. 掌握维护技巧"></a>2. 掌握维护技巧</h3><p>熟练使用各种数据结构维护窗口信息：</p>
+<ul>
+<li>数组计数（字符频次）</li>
+<li>位置记录（避免重复扫描）</li>
+<li>多变量跟踪（种类数、达标数等）</li>
+</ul>
+<h3 id="3-练习转化思维"><a href="#3-练习转化思维" class="headerlink" title="3. 练习转化思维"></a>3. 练习转化思维</h3><p>学会将复杂问题转化为简单问题：</p>
+<ul>
+<li>“恰好”转化为”最多”的差值</li>
+<li>固定变量降低问题维度</li>
+<li>反向思考问题本质</li>
+</ul>
+<h3 id="4-注意边界处理"><a href="#4-注意边界处理" class="headerlink" title="4. 注意边界处理"></a>4. 注意边界处理</h3><p>重点关注边界条件：</p>
+<ul>
+<li>左右边界的移动时机</li>
+<li>答案更新的条件判断</li>
+<li>特殊情况的处理</li>
+</ul>
+<h3 id="5-复杂度分析"><a href="#5-复杂度分析" class="headerlink" title="5. 复杂度分析"></a>5. 复杂度分析</h3><p>理解滑动窗口为什么是O(n)：</p>
+<ul>
+<li>每个元素最多访问两次</li>
+<li>左右指针都单向移动</li>
+<li>总移动次数是线性的</li>
+</ul>
+<p>通过掌握滑动窗口技巧，可以高效解决各类子数组和子串问题。关键在于识别单调性关系，选择合适的维护方式，以及灵活运用转化技巧。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag"># 滑动窗口</a>
+              <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag"># 双指针</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/13/Linux%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%AC%94%E8%AE%B0/" rel="prev" title="Linux使用指南与常用命令笔记">
+      <i class="fa fa-chevron-left"></i> Linux使用指南与常用命令笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2026/08/09/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%881%20%EF%BC%89-%20%E7%BB%AA%E8%AE%BA/" rel="next" title="生物信息学笔记（1 ）- 绪论">
+      生物信息学笔记（1 ）- 绪论 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">前置知识</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#049%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%8A%80%E5%B7%A7%E4%B8%8E%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE"><span class="nav-number">2.</span> <span class="nav-text">049【必备】滑动窗口技巧与相关题目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="nav-number">2.1.</span> <span class="nav-text">基本思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E8%B0%83%E6%80%A7%E5%85%B3%E7%B3%BB"><span class="nav-number">2.2.</span> <span class="nav-text">单调性关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AA%97%E5%8F%A3%E7%BB%B4%E6%8A%A4%E7%AD%96%E7%95%A5"><span class="nav-number">2.3.</span> <span class="nav-text">窗口维护策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%80%EF%BC%9A%E9%95%BF%E5%BA%A6%E6%9C%80%E5%B0%8F%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84"><span class="nav-number">2.4.</span> <span class="nav-text">题目一：长度最小的子数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">2.4.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">2.4.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.4.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">2.4.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%8C%EF%BC%9A%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2"><span class="nav-number">2.5.</span> <span class="nav-text">题目二：无重复字符的最长子串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">2.5.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-1"><span class="nav-number">2.5.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">2.5.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%82%B9%E8%AF%B4%E6%98%8E"><span class="nav-number">2.5.4.</span> <span class="nav-text">关键点说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-1"><span class="nav-number">2.5.5.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%89%EF%BC%9A%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2"><span class="nav-number">2.6.</span> <span class="nav-text">题目三：最小覆盖子串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">2.6.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-2"><span class="nav-number">2.6.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">2.6.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AC%A0%E5%80%BA%E8%A1%A8%E6%9C%BA%E5%88%B6%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.6.4.</span> <span class="nav-text">欠债表机制详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-2"><span class="nav-number">2.6.5.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%9B%9B%EF%BC%9A%E5%8A%A0%E6%B2%B9%E7%AB%99"><span class="nav-number">2.7.</span> <span class="nav-text">题目四：加油站</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-3"><span class="nav-number">2.7.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-3"><span class="nav-number">2.7.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-3"><span class="nav-number">2.7.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%AA%E6%9E%9D%E5%8E%9F%E7%90%86%E8%AF%B4%E6%98%8E"><span class="nav-number">2.7.4.</span> <span class="nav-text">剪枝原理说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-3"><span class="nav-number">2.7.5.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%94%EF%BC%9A%E6%9B%BF%E6%8D%A2%E5%AD%90%E4%B8%B2%E5%BE%97%E5%88%B0%E5%B9%B3%E8%A1%A1%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">2.8.</span> <span class="nav-text">题目五：替换子串得到平衡字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-4"><span class="nav-number">2.8.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-4"><span class="nav-number">2.8.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-4"><span class="nav-number">2.8.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E6%95%B4%E6%95%B0%E5%8C%96%E6%8A%80%E5%B7%A7"><span class="nav-number">2.8.4.</span> <span class="nav-text">字符整数化技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-4"><span class="nav-number">2.8.5.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%85%AD%EF%BC%9AK%E4%B8%AA%E4%B8%8D%E5%90%8C%E6%95%B4%E6%95%B0%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84"><span class="nav-number">2.9.</span> <span class="nav-text">题目六：K个不同整数的子数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-5"><span class="nav-number">2.9.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-5"><span class="nav-number">2.9.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-5"><span class="nav-number">2.9.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E6%95%B0%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.9.4.</span> <span class="nav-text">计数原理详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AC%E5%8C%96%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93"><span class="nav-number">2.9.5.</span> <span class="nav-text">转化技巧总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-5"><span class="nav-number">2.9.6.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%83%EF%BC%9A%E8%87%B3%E5%B0%91%E6%9C%89K%E4%B8%AA%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2"><span class="nav-number">2.10.</span> <span class="nav-text">题目七：至少有K个重复字符的最长子串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-6"><span class="nav-number">2.10.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-6"><span class="nav-number">2.10.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-6"><span class="nav-number">2.10.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%9B%BA%E5%AE%9A%E5%AD%97%E7%AC%A6%E7%A7%8D%E7%B1%BB%EF%BC%9F"><span class="nav-number">2.10.4.</span> <span class="nav-text">为什么要固定字符种类？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E6%8C%87%E6%A0%87%E7%BB%B4%E6%8A%A4"><span class="nav-number">2.10.5.</span> <span class="nav-text">双指标维护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-6"><span class="nav-number">2.10.6.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93"><span class="nav-number">2.11.</span> <span class="nav-text">滑动窗口技巧总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A0%B8%E5%BF%83%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.11.1.</span> <span class="nav-text">1. 核心模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%B8%B8%E8%A7%81%E7%BB%B4%E6%8A%A4%E4%BF%A1%E6%81%AF%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="nav-number">2.11.2.</span> <span class="nav-text">2. 常见维护信息的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3-vs-%E5%85%B6%E4%BB%96%E6%8A%80%E5%B7%A7"><span class="nav-number">2.11.3.</span> <span class="nav-text">3. 滑动窗口 vs 其他技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">2.11.4.</span> <span class="nav-text">4. 时间复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%B8%B8%E8%A7%81%E6%8A%80%E5%B7%A7%E6%B1%87%E6%80%BB"><span class="nav-number">2.11.5.</span> <span class="nav-text">5. 常见技巧汇总</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7"><span class="nav-number">2.11.6.</span> <span class="nav-text">6. 调试技巧</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.12.</span> <span class="nav-text">学习建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%90%86%E8%A7%A3%E5%8D%95%E8%B0%83%E6%80%A7"><span class="nav-number">2.12.1.</span> <span class="nav-text">1. 理解单调性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%8E%8C%E6%8F%A1%E7%BB%B4%E6%8A%A4%E6%8A%80%E5%B7%A7"><span class="nav-number">2.12.2.</span> <span class="nav-text">2. 掌握维护技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%BB%83%E4%B9%A0%E8%BD%AC%E5%8C%96%E6%80%9D%E7%BB%B4"><span class="nav-number">2.12.3.</span> <span class="nav-text">3. 练习转化思维</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%B3%A8%E6%84%8F%E8%BE%B9%E7%95%8C%E5%A4%84%E7%90%86"><span class="nav-number">2.12.4.</span> <span class="nav-text">4. 注意边界处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">2.12.5.</span> <span class="nav-text">5. 复杂度分析</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

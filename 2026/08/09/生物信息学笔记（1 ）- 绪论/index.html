@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="生物信息学学习笔记：第 1 章 绪论 0. PDF 内容检查1. 书名 &#x2F; 章 &#x2F; 节 &#x2F; 小节结构  书名：生物信息学（第二版）（中文教材，配套有《生物信息学实验指导》） 章标题：第 1 章 绪论 节与小节结构（严格按 PDF 顺序）： 第一节 生物信息与生物信息学 一、迅速增长的生物信息 二、生物信息学概念   第二节 生物信息学历史与展望 一、发展简史 二、应用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生物信息学笔记（1 ）- 绪论">
+<meta property="og:url" content="https://blog.agiopan.cn/2026/08/09/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%881%20%EF%BC%89-%20%E7%BB%AA%E8%AE%BA/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="生物信息学学习笔记：第 1 章 绪论 0. PDF 内容检查1. 书名 &#x2F; 章 &#x2F; 节 &#x2F; 小节结构  书名：生物信息学（第二版）（中文教材，配套有《生物信息学实验指导》） 章标题：第 1 章 绪论 节与小节结构（严格按 PDF 顺序）： 第一节 生物信息与生物信息学 一、迅速增长的生物信息 二、生物信息学概念   第二节 生物信息学历史与展望 一、发展简史 二、应用">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0(1)/fig1.2%E6%97%A9%E6%9C%9F%E8%B7%AF%E7%BA%BF%E5%9B%BE.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0(1)/table1.1%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%A7%91%E5%8F%91%E5%B1%95%E4%B8%BB%E8%A6%81%E4%BA%8B%E4%BB%B6.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0(1)/table1.1%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%A7%91%E5%8F%91%E5%B1%95%E4%B8%BB%E8%A6%81%E4%BA%8B%E4%BB%B6_%E7%BB%AD%E8%A1%A8.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0(1)/fig1.6%20%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%9F%BA%E5%9B%A0%E7%BB%84%E5%8F%91%E5%B1%95%E4%B8%8E%E5%BA%94%E7%94%A8.png">
+<meta property="article:published_time" content="2026-08-09T00:30:00.000Z">
+<meta property="article:modified_time" content="2026-10-09T05:16:04.220Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="生物信息">
+<meta property="article:tag" content="生物数据">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0(1)/fig1.2%E6%97%A9%E6%9C%9F%E8%B7%AF%E7%BA%BF%E5%9B%BE.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2026/08/09/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%881%20%EF%BC%89-%20%E7%BB%AA%E8%AE%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>生物信息学笔记（1 ）- 绪论 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2026/08/09/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%881%20%EF%BC%89-%20%E7%BB%AA%E8%AE%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          生物信息学笔记（1 ）- 绪论
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-08-09 08:30:00" itemprop="dateCreated datePublished" datetime="2026-08-09T08:30:00+08:00">2026-08-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-10-09 13:16:04" itemprop="dateModified" datetime="2026-10-09T13:16:04+08:00">2026-10-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Bioinfomatics/" itemprop="url" rel="index"><span itemprop="name">Bioinfomatics</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="生物信息学学习笔记：第-1-章-绪论"><a href="#生物信息学学习笔记：第-1-章-绪论" class="headerlink" title="生物信息学学习笔记：第 1 章 绪论"></a>生物信息学学习笔记：第 1 章 绪论</h1><hr>
+<h1 id="0-PDF-内容检查"><a href="#0-PDF-内容检查" class="headerlink" title="0. PDF 内容检查"></a>0. PDF 内容检查</h1><p><strong>1. 书名 &#x2F; 章 &#x2F; 节 &#x2F; 小节结构</strong></p>
+<ul>
+<li>书名：<strong>生物信息学（第二版）</strong>（中文教材，配套有《生物信息学实验指导》）</li>
+<li>章标题：<strong>第 1 章 绪论</strong></li>
+<li>节与小节结构（严格按 PDF 顺序）：<ul>
+<li><strong>第一节 生物信息与生物信息学</strong><ul>
+<li>一、迅速增长的生物信息</li>
+<li>二、生物信息学概念</li>
+</ul>
+</li>
+<li><strong>第二节 生物信息学历史与展望</strong><ul>
+<li>一、发展简史</li>
+<li>二、应用领域</li>
+<li>三、学科展望</li>
+</ul>
+</li>
+<li>习题（5 题）</li>
+<li>历史与人物：“bioinformatics”之名的由来（Paulien Hogeweg &#x2F; 林华安 Hwa A. Lim）</li>
+</ul>
+</li>
+</ul>
+<p><strong>2. PDF 页与印刷页对应</strong></p>
+<ul>
+<li>PDF 共 15 页，对应教材印刷页码 <strong>第 1～15 页</strong>（页脚可见“第 1 章 绪论 1&#x2F;2&#x2F;3…”与“生物信息学 2&#x2F;4&#x2F;6…”交替，为奇偶页页眉页脚）。对应关系基本 1:1。</li>
+</ul>
+<p><strong>3. 缺页 &#x2F; 重复 &#x2F; 乱码 &#x2F; OCR 错误</strong></p>
+<ul>
+<li>无明显缺页，章节从开头到习题、历史人物完整。</li>
+<li>存在少量 OCR&#x2F;排版小瑕疵：<ul>
+<li>图 1.1 的坐标轴数字（14&#x2F;12&#x2F;10…）与图注被打散夹在正文里，<strong>图本身无法从文本还原</strong>，只能读文字说明。</li>
+<li>个别外文拼写按原文保留（如 “Fleischman” 应为 Fleischmann、“Ensemble” 应为 Ensembl、“Neighbour-Joining”），这些是<strong>教材&#x2F;OCR 层面的小笔误</strong>，我在术语表会给出正确写法。</li>
+<li>“kisac.ki.se，现为 <a target="_blank" rel="noopener" href="http://www.bea.ki.se”/">www.bea.ki.se”</a> 一句被排到图 1.2 描述前面（排版跨页所致），不影响理解。</li>
+</ul>
+</li>
+</ul>
+<p><strong>4. 图表公式可识别性</strong></p>
+<ul>
+<li>图 1.1～1.7 <strong>只能读到文字标题和说明</strong>，图像内容（曲线、漫画、网页截图）无法从文本判读。</li>
+<li>表 1.1（学科发展主要事件）、表 1.2（高被引论文）<strong>文本完整可读</strong>，是本章最有价值的可提取信息。</li>
+<li><strong>本章无任何数学公式</strong>。</li>
+</ul>
+<p><strong>5. 是否完整章节</strong>：是，绪论完整。</p>
+<p><strong>6. 缺失上下文</strong>：本章多次以“详见第 2&#x2F;3&#x2F;4 章”“附录 2”指向后续内容（数据类型、数据库、序列联配、系统发生等），这些<strong>属于后续章节</strong>，不在本 PDF 中。</p>
+<hr>
+<h1 id="1-本节定位与知识地图"><a href="#1-本节定位与知识地图" class="headerlink" title="1. 本节定位与知识地图"></a>1. 本节定位与知识地图</h1><p><strong>1. 本章解决什么问题</strong><br>回答三个入门问题：①什么是生物信息（biological information）以及它为何爆炸式增长；②什么是生物信息学（bioinformatics）这门学科；③它从哪来、往哪去（历史、应用、展望、就业、我国发展）。</p>
+<p><strong>2. 在全书与整个学科体系中的位置</strong><br>它是<strong>全书的“地图与导言”</strong>：先建立“数据海洋”的世界观和学科边界，再由后续章节逐一展开数据类型（第 2 章）、数据库（第 3 章）、序列联配（第 4 章）等。</p>
+<p><strong>3. 属于哪个子领域</strong>：学科概论 &#x2F; 学科史，不属于任何具体计算子领域。</p>
+<p><strong>4. 在真实研究 pipeline 中的位置</strong>：<strong>不对应任何 pipeline 步骤</strong>。它是“为什么要有 pipeline”的动机层。</p>
+<p><strong>5. 上游输入 &#x2F; 6. 下游分析</strong>：不适用（无数据流）。可类比理解为：上游是“测序技术产生海量数据”，下游是“本书后续所有分析方法”。</p>
+<p><strong>7. 与其他章节 &#x2F; 实验指导的对应</strong></p>
+<ul>
+<li>与主教材：第 2 章（数据类型）、第 3 章（数据库、Dayhoff）、第 4 章（序列联配、Waterman）、进化分析章（Sankoff、NJ、自举法）均在本章被点名预告。</li>
+<li>与《实验指导》：本章本身<strong>无配套实验</strong>，但它列出的工具（BLAST、ClustalW、ORF finder、HMMER、FGENESH、NCBI&#x2F;EBI 在线服务）正是后续实验的主角。</li>
+</ul>
+<p><strong>前置知识</strong></p>
+<ul>
+<li>生物学：中心法则（DNA→RNA→蛋白质）、碱基与氨基酸、基因&#x2F;基因组的基本概念。</li>
+<li>数学统计：本章几乎不需要；仅需理解“数据量指数增长&#x2F;翻番”这类直觉。</li>
+<li>算法&#x2F;数据结构：无硬性要求；了解“动态规划、图论”是名词即可（后续章节才展开）。</li>
+<li>编程工具：无；但本章明确建议未来要会 <strong>命令行 + Python&#x2F;Perl + C&#x2F;C++</strong>，会用 Unix&#x2F;Linux。</li>
+</ul>
+<p><strong>知识结构树</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">绪论（生物信息学是什么）</span><br><span class="line">├── 生物学问题：如何管理/解读/使用爆炸增长的生物数据</span><br><span class="line">├── 核心对象：生物信息（核酸/蛋白序列、结构、表达、通路…）</span><br><span class="line">│   ├── 初级数据库 primary（原始序列/结构）</span><br><span class="line">│   └── 二级数据库 secondary（domain、二级结构、疏水位点…）</span><br><span class="line">├── 学科定义：分子生物学 + 遗传学 + 计算机科学</span><br><span class="line">│   ├── 三大内容：新算法/统计；数据分析解释；数据管理工具</span><br><span class="line">│   └── 研究范式：假设—实验（数据库搜索=一次“实验”）</span><br><span class="line">├── 历史四阶段：萌芽/形成/基因组与互联网/高通量测序</span><br><span class="line">├── 应用领域：序列分析、基因预测、拼接、结构预测、进化、精准医疗…</span><br><span class="line">├── 平民化桥梁：Windows 软件 + 在线 Web 服务（SSS/MSA/BSA）</span><br><span class="line">└── 展望：从&quot;积累数据&quot;转向&quot;解读数据&quot;；大数据/AI/合成生物学/就业</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="2-按教材顺序精读"><a href="#2-按教材顺序精读" class="headerlink" title="2. 按教材顺序精读"></a>2. 按教材顺序精读</h1><h2 id="第一节-·-一、迅速增长的生物信息-【应该理解】"><a href="#第一节-·-一、迅速增长的生物信息-【应该理解】" class="headerlink" title="第一节 · 一、迅速增长的生物信息 【应该理解】"></a>第一节 · 一、迅速增长的生物信息 【应该理解】</h2><ol>
+<li><strong>要回答的问题</strong>：生物信息指什么？增长有多快？</li>
+<li><strong>主要内容</strong>：生物信息包含分子序列（核酸&#x2F;蛋白）、蛋白二级&#x2F;三维结构等；原始数据构成<strong>初级数据库</strong>，分析衍生数据构成<strong>二级数据库</strong>；核酸库数据约每 <strong>14 个月翻一番</strong>。</li>
+<li><strong>核心结论</strong>：数据爆炸 → 催生“如何有效管理、准确解读、充分使用”的新需求。</li>
+<li><strong>重要术语</strong>：初级数据库(primary database)、二级数据库(secondary database)、功能区&#x2F;结构域(domain)、WGS。</li>
+<li><strong>数据（作为素材）</strong>：DNA 字母表 {A,T,G,C}；蛋白 20 个氨基酸字母；GenBank 2000 年底 &gt;100 亿 bp，2020 年 4 月 4158 亿 bp（+WGS 7.8 万亿 → 合计约 8.2 万亿 bp &#x2F; 14.8 亿条）。</li>
+<li><strong>方法</strong>：无（描述性）。</li>
+<li><strong>易错点</strong>：“每 14 个月翻一番”是<strong>核酸库</strong>的历史经验值，不同来源&#x2F;年份数字不同（人类基因组测序另有“每 5–7 个月翻番”）——<strong>不要当作精确定律</strong>。</li>
+<li><strong>前后关系</strong>：为下一小节“为何需要一门新学科”做铺垫。</li>
+<li><strong>页码&#x2F;图</strong>：印刷 p.1–2，图 1.1（GenBank&#x2F;WGS 增长曲线）。</li>
+</ol>
+<h2 id="第一节-·-二、生物信息学概念-【必须掌握】"><a href="#第一节-·-二、生物信息学概念-【必须掌握】" class="headerlink" title="第一节 · 二、生物信息学概念 【必须掌握】"></a>第一节 · 二、生物信息学概念 【必须掌握】</h2><ol>
+<li><strong>要回答的问题</strong>：生物信息学是什么？</li>
+<li><strong>主要内容</strong>：一般定义&#x3D;研究生物信息的<strong>采集、处理、存储、传播、分析、解释</strong>；三大组成部分&#x3D;①新算法与统计方法；②数据分析与解释；③数据管理利用工具。引用 Claverie(2000)、Wikipedia 定义。研究范式&#x3D;<strong>假设—实验</strong>（如“该序列在库中无同源序列”是无效假设，数据库搜索就是一次验证实验）。</li>
+<li><strong>核心结论</strong>：生物信息学<strong>不是</strong>“移植信息学技术到生物学”的纯应用技术，而是有丰富科学内涵、有大量未解科学问题（生物学的+计算的）的独立学科。</li>
+<li><strong>重要术语</strong>：bioinformatics、假设—实验模式、无效假设。</li>
+<li><strong>方法&#x2F;数据</strong>：无。</li>
+<li><strong>易错点</strong>：两个常见误解——“人人可做&#x2F;不花钱&#x2F;软件都免费”与“只是敲键盘写论文”。教材明确反驳：需算力投入、需实验验证、需想象力。</li>
+<li><strong>前后关系</strong>：给出全书立场（学科定位），承上（数据爆炸）启下（历史）。</li>
+<li><strong>页码&#x2F;图</strong>：p.2–4，图 1.2（早期“路线图”）、图 1.3（NCBI 在线工具网页）。</li>
+</ol>
+<p><img src="/images/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0(1)/fig1.2%E6%97%A9%E6%9C%9F%E8%B7%AF%E7%BA%BF%E5%9B%BE.png" alt="fig1.2早期路线图"></p>
+<h2 id="第二节-·-一、发展简史-【应该理解-部分必须掌握】"><a href="#第二节-·-一、发展简史-【应该理解-部分必须掌握】" class="headerlink" title="第二节 · 一、发展简史 【应该理解 + 部分必须掌握】"></a>第二节 · 一、发展简史 【应该理解 + 部分必须掌握】</h2><ol>
+<li><strong>要回答的问题</strong>：这门学科怎么来的？关键里程碑有哪些？</li>
+<li><strong>主要内容</strong>：起源可追溯到 1960s；术语最早由 <strong>Paulien Hogeweg (1978)</strong> 提出（“the study of informatic processes in biotic systems”），另一说 1990 年由 <strong>林华安 (Hwa A. Lim)</strong> 提出并办首届会议。学科奠基人：<strong>Margaret Dayhoff、Michael Waterman、David Sankoff</strong>。<strong>四阶段划分（必须掌握）</strong>：①萌芽期(1960s–70s，Dayhoff 替换矩阵、Needleman-Wunsch)；②形成期(1980s，分子数据库+BLAST&#x2F;FASTA)；③基因组与互联网期(1990s–2005，基因组测序、Phred-Phrap-Consed、在线数据库)；④高通量测序期(2005 至今，NGS&#x2F;三代)。</li>
+<li><strong>核心结论</strong>：最核心的算法在 1960–70s 就已奠基（序列联配是最基本内容），之后是不断改进。</li>
+<li><strong>重要术语</strong>：替换矩阵、Needleman-Wunsch、Smith-Waterman、BLAST&#x2F;FASTA、Phred-Phrap-Consed、NGS。</li>
+<li><strong>数据</strong>：表 1.1（发展大事记）——本章最值得记的干货。</li>
+<li><strong>易错点</strong>：术语“谁最早提出”有<strong>两种说法</strong>（Hogeweg 1978 vs Lim 1990），教材两者并存；别只记一个。</li>
+<li><strong>前后关系</strong>：承接“学科定位”，为“应用&#x2F;展望”提供时间脉络。</li>
+<li><strong>页码&#x2F;表</strong>：p.4–7，表 1.1。</li>
+</ol>
+<p><img src="/images/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0(1)/table1.1%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%A7%91%E5%8F%91%E5%B1%95%E4%B8%BB%E8%A6%81%E4%BA%8B%E4%BB%B6.png" alt="table1.1生物信息学科发展主要事件"><br><img src="/images/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0(1)/table1.1%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%A7%91%E5%8F%91%E5%B1%95%E4%B8%BB%E8%A6%81%E4%BA%8B%E4%BB%B6_%E7%BB%AD%E8%A1%A8.png" alt="table1.1table1.1生物信息学科发展主要事件_续表"></p>
+<h2 id="第二节-·-二、应用领域-【应该理解】"><a href="#第二节-·-二、应用领域-【应该理解】" class="headerlink" title="第二节 · 二、应用领域 【应该理解】"></a>第二节 · 二、应用领域 【应该理解】</h2><ol>
+<li><strong>问题</strong>：生物信息学有什么用？入门者能做什么？</li>
+<li><strong>主要内容</strong>：Nature 高被引 100 篇中生物信息学（含系统发生）占 10 篇（表 1.2，含 ClustalW、BLAST、NJ、自举法、MEGA4、ModelTest、MrBayes 等）；“平民化”两条路——<strong>Windows 桌面软件</strong> 与 <strong>在线 Web 服务</strong>；EBI 把在线平台分三类 <strong>SSS（序列搜索）&#x2F;MSA（多序列联配）&#x2F;BSA（序列分析）</strong>；NAR 每年 <strong>Database Issue（1993 起）</strong> 和 <strong>Web Server Issue（2004 起）</strong> 两大专刊是“两座桥梁”。给出“何时该找专业人员帮忙”的判据（&gt;100 条序列、需 Linux、NGS、大规模芯片数据、复杂统计等）。</li>
+<li><strong>核心结论</strong>：绝大多数生物学家日常工作集中在<strong>数据库搜索 + BLAST + ClustalW</strong>。</li>
+<li><strong>术语</strong>：SSS、MSA、BSA、workflow management system、Database Issue、Web Server Issue。</li>
+<li><strong>易错点</strong>：“在线服务方便”≠“适合所有场景”；超过一定规模&#x2F;复杂度必须转向命令行与专业分析（本章已明说）。</li>
+<li><strong>前后关系</strong>：把历史落到“今天能干嘛”，并引出展望。</li>
+<li><strong>页码&#x2F;表</strong>：p.8–9，表 1.2。</li>
+</ol>
+<h2 id="第二节-·-三、学科展望-【了解即可-少量必须掌握】"><a href="#第二节-·-三、学科展望-【了解即可-少量必须掌握】" class="headerlink" title="第二节 · 三、学科展望 【了解即可 + 少量必须掌握】"></a>第二节 · 三、学科展望 【了解即可 + 少量必须掌握】</h2><ol>
+<li><strong>问题</strong>：学科往哪走？我国现状？关键待解难题？就业？</li>
+<li><strong>主要内容</strong>：研究重心从<strong>数据积累转向数据解读</strong>（图 1.4）；人类基因组测序数据每 5–7 个月翻番（图 1.5）；从“读懂基因组”走向“书写基因组&#x2F;基因组社会化”（图 1.6）；我国机构与人物（北大 CBI、清华、NGDC&#x2F;CNCB&#x2F;CNGB、终身成就奖名单）；<strong>五大急需攻关技术（必须掌握其类别）</strong>：①大基因组从头组装；②基因组注释；③比较基因组与进化；④群体重测序变异检测(SNP&#x2F;Indel&#x2F;SV&#x2F;CNV)；⑤RNA 分析。</li>
+<li><strong>核心结论</strong>：大数据时代“产生 &gt; 处理能力”，生物信息学是瓶颈也是马达；就业前景好但要求“生物学理解 + 编程 + 统计 + Linux + 沟通”。</li>
+<li><strong>术语</strong>：de novo assembly、注释 annotation、SNP&#x2F;Indel&#x2F;SV&#x2F;CNV、精准医疗、合成生物学、后基因组时代。</li>
+<li><strong>易错点</strong>：图 1.5&#x2F;1.6 的“预测曲线”是<strong>预测</strong>，教材已注明“实际增长超过预测”——别把预测当事实。</li>
+<li><strong>前后关系</strong>：收束全章，指向后续章节的技术内容。</li>
+<li><strong>页码&#x2F;图</strong>：p.9–14，图 1.4–1.7。</li>
+</ol>
+<p><img src="/images/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0(1)/fig1.6%20%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%9F%BA%E5%9B%A0%E7%BB%84%E5%8F%91%E5%B1%95%E4%B8%8E%E5%BA%94%E7%94%A8.png" alt="fig1.6 生物信息基因组发展与应用"></p>
+<h2 id="习题-历史与人物-【了解即可】"><a href="#习题-历史与人物-【了解即可】" class="headerlink" title="习题 &amp; 历史与人物 【了解即可】"></a>习题 &amp; 历史与人物 【了解即可】</h2><ul>
+<li>习题 5 道（见第 14 节 G 我已整理并给参考答案思路）。</li>
+<li>人物：Hogeweg（1978，理论生物学，迭代多序列联配、RNA 折叠预测）；林华安（1988 提 bio-informatique→bioinformatics，1990 办首会）。属背景故事。</li>
+</ul>
+<hr>
+<h1 id="3-生物学问题到计算问题的映射"><a href="#3-生物学问题到计算问题的映射" class="headerlink" title="3. 生物学问题到计算问题的映射"></a>3. 生物学问题到计算问题的映射</h1><blockquote>
+<p>本章是导论，<strong>没有一个具体的计算任务</strong>可映射。但它反复给出了整个学科的“总链路直觉”，我据此给出<strong>学科级映射</strong>（而非某算法的映射）。</p>
+</blockquote>
+<ul>
+<li>生物学对象：核酸&#x2F;蛋白质序列、结构、表达、通路、群体变异。</li>
+<li>不可直接观测的状态：基因功能、进化关系、调控机制、分子结构。</li>
+<li>原始生物学问题：<strong>如何管理、解读、使用爆炸增长的生物数据</strong>。</li>
+<li>实验技术测量：（测序等）——本章不展开，属后续章节。</li>
+<li>计算任务归类（本章点名的学科任务，非本章实现）：序列<strong>搜索</strong>（BLAST）、序列<strong>比对&#x2F;联配</strong>（NW&#x2F;SW&#x2F;ClustalW）、基因组<strong>拼装</strong>（assembly）、基因<strong>预测&#x2F;分类</strong>（HMM、GENSCAN）、<strong>系统发生推断</strong>（NJ、MrBayes）、变异<strong>检测</strong>（SNP&#x2F;SV）。</li>
+<li>转换中丢失&#x2F;推断的东西：本章的核心洞见是——<strong>生物信息学结论大多是“预测&#x2F;估计”，是指示实验方向的“路灯”，最终仍需湿实验验证</strong>（“你最终还是需要具体的实验”）。</li>
+</ul>
+<p>学科级链路（本章的世界观）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">生物学问题(功能/进化/机制)</span><br><span class="line">→ 高通量实验(测序等)</span><br><span class="line">→ 海量原始数据(primary database)</span><br><span class="line">→ 计算方法(联配/搜索/拼接/预测/推断)</span><br><span class="line">→ 衍生信息(secondary database: domain/结构…)</span><br><span class="line">→ 生物学解释(预测=假设)</span><br><span class="line">→ 湿实验验证</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="4-数据对象、文件格式和-shape"><a href="#4-数据对象、文件格式和-shape" class="headerlink" title="4. 数据对象、文件格式和 shape"></a>4. 数据对象、文件格式和 shape</h1><blockquote>
+<p>本章<strong>不定义任何文件格式，也没有可给出 shape 的数据矩阵</strong>。为忠实原文，我只把本章**提到的“数据概念”**列出，并标注“具体格式见后续章节”。请不要把下表当作可直接编程的对象。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>数据对象</th>
+<th>生物学含义</th>
+<th>产生方式</th>
+<th>文件格式</th>
+<th>字段含义</th>
+<th>shape</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>核酸序列</td>
+<td>DNA&#x2F;RNA 一级序列</td>
+<td>测序仪</td>
+<td>本章未给（后续 FASTA 等）</td>
+<td>—</td>
+<td>概念上 <code>seq ∈ &#123;A,T,G,C&#125;^L</code></td>
+<td>字母表 4 字符</td>
+</tr>
+<tr>
+<td>蛋白质序列</td>
+<td>氨基酸一级序列</td>
+<td>由核酸推导&#x2F;测定</td>
+<td>本章未给</td>
+<td>—</td>
+<td><code>seq ∈ &#123;20 aa&#125;^L</code></td>
+<td>字母表 20 字符（教材列出 A R N D C Q E G H I L K M F P S T W Y V）</td>
+</tr>
+<tr>
+<td>初级数据库</td>
+<td>原始序列&#x2F;结构集合</td>
+<td>测序&#x2F;结构测定汇交</td>
+<td>GenBank&#x2F;EMBL&#x2F;DDBJ（名称提及，格式未展开）</td>
+<td>—</td>
+<td>—</td>
+<td>三库联盟</td>
+</tr>
+<tr>
+<td>二级数据库</td>
+<td>domain&#x2F;二级结构&#x2F;疏水位点等</td>
+<td>对原始数据分析</td>
+<td>未展开</td>
+<td>—</td>
+<td>—</td>
+<td>衍生信息</td>
+</tr>
+<tr>
+<td>结构数据</td>
+<td>蛋白二级&#x2F;三维结构</td>
+<td>结构测定&#x2F;预测</td>
+<td>未展开</td>
+<td>—</td>
+<td>—</td>
+<td>后续章节</td>
+</tr>
+</tbody></table>
+<p><strong>唯一可明确写出的“数据表示”直觉（本章反复强调）</strong>：</p>
+<ul>
+<li>一批 DNA 序列：<code>sequences ∈ &#123;A,T,G,C,N&#125;^(n × 变长)</code></li>
+<li>一批蛋白序列：<code>sequences ∈ &#123;20 种氨基酸,X&#125;^(n × 变长)</code></li>
+</ul>
+<p>坐标系统、0&#x2F;1-based、链方向、FASTA&#x2F;FASTQ 结构等——<strong>本章均未涉及，属第 2–3 章</strong>。</p>
+<hr>
+<h1 id="5-端到端数据处理流程"><a href="#5-端到端数据处理流程" class="headerlink" title="5. 端到端数据处理流程"></a>5. 端到端数据处理流程</h1><p><strong>本章不适用</strong>（无 pipeline）。</p>
+<p>它只给出了“学科级的宏观流程直觉”（见第 3 节链路图），以及一个重要的<strong>实践决策规则</strong>（值得记）：</p>
+<blockquote>
+<p>何时从“在线服务&#x2F;桌面软件”升级到“找专业人员 &#x2F; Linux &#x2F; 脚本 &#x2F; workflow”：</p>
+<ul>
+<li>序列数 &gt; ~100</li>
+<li>需要 Linux-only 软件</li>
+<li>使用高通量测序数据</li>
+<li>大规模数据（如芯片&#x2F;表达矩阵）</li>
+<li>数据结构&#x2F;完整性有问题</li>
+<li>需要复杂统计（多假设&#x2F;前提&#x2F;检验）</li>
+</ul>
+</blockquote>
+<p>这条规则本身就是你未来搭建真实 pipeline 的“分流开关”。</p>
+<hr>
+<h1 id="6-算法、统计模型和公式"><a href="#6-算法、统计模型和公式" class="headerlink" title="6. 算法、统计模型和公式"></a>6. 算法、统计模型和公式</h1><p><strong>本章不适用</strong>——无任何算法细节或公式。</p>
+<p>但本章<strong>点名了后续要学的核心算法</strong>，先建立“待学清单”（都不在本章展开）：</p>
+<table>
+<thead>
+<tr>
+<th>算法&#x2F;模型</th>
+<th>首次年份</th>
+<th>任务类别</th>
+<th>将在哪学</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Needleman-Wunsch</td>
+<td>1970</td>
+<td>全局序列联配（动态规划）</td>
+<td>第 4 章</td>
+</tr>
+<tr>
+<td>Smith-Waterman</td>
+<td>1981</td>
+<td>局部序列联配（动态规划）</td>
+<td>第 4 章</td>
+</tr>
+<tr>
+<td>Dayhoff&#x2F;PAM 替换矩阵</td>
+<td>1965&#x2F;1978</td>
+<td>打分矩阵</td>
+<td>第 3&#x2F;4 章</td>
+</tr>
+<tr>
+<td>BLAST&#x2F;FASTA</td>
+<td>1990&#x2F;1985</td>
+<td>数据库序列搜索（启发式）</td>
+<td>后续章</td>
+</tr>
+<tr>
+<td>Neighbor-Joining</td>
+<td>1987</td>
+<td>距离法建树</td>
+<td>进化章</td>
+</tr>
+<tr>
+<td>自举法 Bootstrap</td>
+<td>1985</td>
+<td>系统发生置信度</td>
+<td>进化章</td>
+</tr>
+<tr>
+<td>HMM (GENSCAN&#x2F;功能域)</td>
+<td>1994&#x2F;1997</td>
+<td>基因预测&#x2F;domain（概率模型）</td>
+<td>后续章</td>
+</tr>
+<tr>
+<td>MrBayes</td>
+<td>2003</td>
+<td>贝叶斯系统发生推断</td>
+<td>进化章</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="7-软件、数据库与工具"><a href="#7-软件、数据库与工具" class="headerlink" title="7. 软件、数据库与工具"></a>7. 软件、数据库与工具</h1><blockquote>
+<p>本章是“工具全景图”，非常适合建立总览。以下区分教材角色与现状。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>工具&#x2F;数据库</th>
+<th>Pipeline 位置</th>
+<th>用途</th>
+<th>教材角色</th>
+<th>当前状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GenBank &#x2F; EMBL(ENA) &#x2F; DDBJ</strong></td>
+<td>数据存储</td>
+<td>国际核酸序列数据库（三库联盟）</td>
+<td>经典+现代</td>
+<td>仍在用（EMBL 现为 ENA）</td>
+</tr>
+<tr>
+<td><strong>NCBI &#x2F; EBI &#x2F; BIGD(NGDC)</strong></td>
+<td>门户</td>
+<td>数据+在线分析</td>
+<td>现代常用</td>
+<td>活跃</td>
+</tr>
+<tr>
+<td><strong>BLAST &#x2F; PSI-BLAST</strong></td>
+<td>序列搜索(SSS)</td>
+<td>相似性搜索</td>
+<td>经典+现代</td>
+<td>仍是标准工具</td>
+</tr>
+<tr>
+<td><strong>FASTA&#x2F;FASTP&#x2F;FASTN</strong></td>
+<td>序列搜索</td>
+<td>早期搜索引擎</td>
+<td>经典</td>
+<td>较少用，历史地位重要</td>
+</tr>
+<tr>
+<td><strong>ClustalW &#x2F; Clustal X</strong></td>
+<td>多序列联配(MSA)</td>
+<td>MSA</td>
+<td>经典</td>
+<td>部分被 MAFFT&#x2F;MUSCLE 取代</td>
+</tr>
+<tr>
+<td><strong>ORF finder &#x2F; HMMER &#x2F; FGENESH</strong></td>
+<td>序列分析(BSA)</td>
+<td>ORF&#x2F;结构域&#x2F;基因预测</td>
+<td>教材工具</td>
+<td>HMMER 仍主流</td>
+</tr>
+<tr>
+<td><strong>Phred-Phrap-Consed</strong></td>
+<td>测序碱基识别&#x2F;拼接</td>
+<td>Sanger 时代主力</td>
+<td>经典</td>
+<td>已被 NGS 工具取代</td>
+</tr>
+<tr>
+<td><strong>Bowtie&#x2F;BWA&#x2F;SAMtools&#x2F;GATK&#x2F;TopHat&#x2F;Cufflinks</strong></td>
+<td>比对&#x2F;变异&#x2F;RNA-Seq</td>
+<td>NGS 分析</td>
+<td>现代常用</td>
+<td><strong>仍高度活跃</strong>（表 1.1 提及）</td>
+</tr>
+<tr>
+<td><strong>Velvet&#x2F;SOAPdenovo&#x2F;ALLPATHS&#x2F;Celera&#x2F;EULER</strong></td>
+<td>基因组拼接</td>
+<td>de novo assembly</td>
+<td>经典&#x2F;现代混合</td>
+<td>部分被 SPAdes&#x2F;长读工具取代【需要查证具体版本】</td>
+</tr>
+<tr>
+<td><strong>UCSC Genome Browser &#x2F; Ensembl &#x2F; Galaxy</strong></td>
+<td>浏览&#x2F;workflow</td>
+<td>可视化与流程</td>
+<td>现代常用</td>
+<td>活跃</td>
+</tr>
+<tr>
+<td><strong>MEGA4 &#x2F; ModelTest &#x2F; MrBayes</strong></td>
+<td>系统发生</td>
+<td>建树&#x2F;模型选择&#x2F;贝叶斯</td>
+<td>经典+现代</td>
+<td>MEGA 已到 MEGA11+</td>
+</tr>
+</tbody></table>
+<p><strong>教材实验偏向在线服务 + Windows</strong>；真实科研需补充：</p>
+<ul>
+<li>Linux 命令行版（如 <code>blastn</code>&#x2F;<code>blastp</code>、<code>mafft</code>、<code>hmmsearch</code>、<code>bwa mem</code>、<code>samtools</code>、<code>gatk</code>）；</li>
+<li>批量&#x2F;脚本化（Bash + Python&#x2F;R）；</li>
+<li>workflow（Nextflow &#x2F; Snakemake &#x2F; Galaxy）；</li>
+<li>环境管理（conda&#x2F;mamba、容器 Docker&#x2F;Singularity）；</li>
+<li>HPC（SLURM 作业调度）。</li>
+<li>本章给出的官方入口（部分可能变动，<strong>需要查证</strong>）：<code>www.bea.ki.se</code>（早期路线图）、<code>bigd.big.ac.cn</code>（NGDC）、<code>www.bioinformatics.org</code>。</li>
+</ul>
+<hr>
+<h1 id="8-实验设计、QC、偏差与结果解释"><a href="#8-实验设计、QC、偏差与结果解释" class="headerlink" title="8. 实验设计、QC、偏差与结果解释"></a>8. 实验设计、QC、偏差与结果解释</h1><p>本章无具体数据分析，故传统 QC 项目不适用。但它<strong>明确了一条方法论红线</strong>，值得抽成检查清单：</p>
+<p><strong>分析前检查清单（本章精神）</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> 我是否清楚自己的<strong>无效假设</strong>是什么？（如“该序列无同源序列”）</li>
+<li><input disabled="" type="checkbox"> 数据规模&#x2F;复杂度是否超过在线工具能力（&gt;100 序列、NGS、需 Linux）？</li>
+<li><input disabled="" type="checkbox"> 我是否具备该问题的<strong>生物学背景知识</strong>（避免误解合作方需求）？</li>
+</ul>
+<p><strong>结果解释检查清单（本章反复强调）</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> 我的结果是<strong>预测&#x2F;估计</strong>还是<strong>观测事实</strong>？（生物信息学多为预测&#x3D;“路灯”）</li>
+<li><input disabled="" type="checkbox"> 是否需要<strong>湿实验验证</strong>？（“你最终还是需要具体的实验”）</li>
+<li><input disabled="" type="checkbox"> 相关性是否被误当因果？</li>
+</ul>
+<p><strong>能&#x2F;不能由本章支持的结论</strong></p>
+<ul>
+<li>能支持：学科定义、历史脉络、工具全景、方法论立场。</li>
+<li>不能支持：任何具体数据的分析结论（本章无数据分析）。</li>
+</ul>
+<hr>
+<h1 id="9-易混淆概念"><a href="#9-易混淆概念" class="headerlink" title="9. 易混淆概念"></a>9. 易混淆概念</h1><table>
+<thead>
+<tr>
+<th>概念 A</th>
+<th>概念 B</th>
+<th>核心区别</th>
+<th>联系</th>
+<th>例子</th>
+<th>常见误区</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>初级数据库 primary</td>
+<td>二级数据库 secondary</td>
+<td>primary 存原始数据（序列&#x2F;结构）；secondary 存分析衍生数据（domain&#x2F;二级结构）</td>
+<td>secondary 由 primary 分析而来</td>
+<td>GenBank(primary) vs Pfam-类 domain 库(secondary)</td>
+<td>以为二级&#x3D;次要&#x2F;低质量</td>
+</tr>
+<tr>
+<td>生物信息学 bioinformatics</td>
+<td>计算生物学 computational biology</td>
+<td>侧重不同、常混用；前者偏数据&#x2F;工具&#x2F;数据库，后者偏建模&#x2F;理论</td>
+<td>高度重叠，界限模糊</td>
+<td>Claverie 一文即讨论二者关系</td>
+<td>认为完全等同或完全不同</td>
+</tr>
+<tr>
+<td>序列相似性 similarity</td>
+<td>同源性 homology</td>
+<td>相似是可测量的数值；同源是“有共同祖先”的进化推断</td>
+<td>高相似常提示同源，但相似≠一定同源</td>
+<td>BLAST 报 similarity；结论说 homolog 是推断</td>
+<td>把高相似直接当作同源</td>
+</tr>
+<tr>
+<td>SSS &#x2F; MSA &#x2F; BSA</td>
+<td>—</td>
+<td>EBI 三类在线平台：搜索&#x2F;多序列联配&#x2F;序列分析</td>
+<td>常串联使用</td>
+<td>BLAST(SSS)→ClustalW(MSA)→ORF finder(BSA)</td>
+<td>把三类混为一谈</td>
+</tr>
+<tr>
+<td>预测 prediction</td>
+<td>事实&#x2F;注释验证</td>
+<td>计算预测 vs 实验证实</td>
+<td>预测指导实验</td>
+<td>基因预测≠已证实的基因</td>
+<td>把预测当已确证</td>
+</tr>
+<tr>
+<td>从头拼接 de novo</td>
+<td>参考比对 mapping</td>
+<td>无参考 vs 有参考</td>
+<td>都属基因组分析第一步族</td>
+<td>de novo assembly vs BWA mapping</td>
+<td>本章仅提名，细节在后续章</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="10-Toy-example"><a href="#10-Toy-example" class="headerlink" title="10. Toy example"></a>10. Toy example</h1><p><strong>本章不适用</strong>（无可计算的方法）。</p>
+<p>作为替代，给一个<strong>能手工完成的“字母表核对”小练习</strong>（源于本章唯一具体的“数据”——字母表）：</p>
+<ul>
+<li>生物学背景：本章说 DNA&#x3D;4 字符、蛋白&#x3D;20 字符。</li>
+<li>练习：教材列出的 20 个氨基酸单字母为<br><code>A R N D C Q E G H I L K M F P S T W Y V</code><br>→ 数一数是否恰好 20 个？（答案：是，20 个）</li>
+<li>反向核对：标准 20 种氨基酸单字母中未在 DNA 字母表出现的、也未被用作特殊符号的字母有哪些？（如 B、J、O、U、X、Z 不在标准 20 内；X 常表示未知氨基酸，N 常表示未知核苷酸）</li>
+<li>意义：理解“alphabet”是后续所有序列算法的基础（打分矩阵、联配、搜索都建立在字母表上）。</li>
+</ul>
+<p>最小项目目录（供你<strong>未来</strong>做真实实验时预先建立的规范，本章不产出文件）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">project/</span><br><span class="line">├── raw_data/        # 原始序列（FASTA/FASTQ，后续章节）</span><br><span class="line">├── reference/       # 参考基因组/注释</span><br><span class="line">├── metadata/        # 样本信息</span><br><span class="line">├── results/&#123;qc,intermediate,final&#125;/</span><br><span class="line">├── scripts/         # Python/R/Bash</span><br><span class="line">└── environment/     # conda env / Dockerfile</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="11-从教学实验到真实科研"><a href="#11-从教学实验到真实科研" class="headerlink" title="11. 从教学实验到真实科研"></a>11. 从教学实验到真实科研</h1><p>本章<strong>无配套实验</strong>，但它本身就在讨论“教学式在线工具 vs 真实科研”的差别，我据此整理：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>教材&#x2F;在线服务式（本章描述）</th>
+<th>真实科研流程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据规模</td>
+<td>少量序列（&lt;100）</td>
+<td>海量（NGS、群体、芯片）</td>
+</tr>
+<tr>
+<td>运行环境</td>
+<td>Windows&#x2F;浏览器点击</td>
+<td>Linux&#x2F;HPC&#x2F;云</td>
+</tr>
+<tr>
+<td>工具</td>
+<td>在线 BLAST&#x2F;ClustalW</td>
+<td>命令行 + workflow</td>
+</tr>
+<tr>
+<td>参数</td>
+<td>多用默认</td>
+<td>显式记录、可调</td>
+</tr>
+<tr>
+<td>自动化</td>
+<td>手工逐条</td>
+<td>脚本&#x2F;Snakemake&#x2F;Nextflow</td>
+</tr>
+<tr>
+<td>可复现</td>
+<td>弱（无日志）</td>
+<td>强（版本+种子+env）</td>
+</tr>
+<tr>
+<td>QC</td>
+<td>几乎无</td>
+<td>系统化 QC</td>
+</tr>
+<tr>
+<td>计算资源</td>
+<td>一台 PC</td>
+<td>多核&#x2F;大内存&#x2F;集群</td>
+</tr>
+<tr>
+<td>结果验证</td>
+<td>依赖直觉</td>
+<td>对照+统计+湿实验</td>
+</tr>
+</tbody></table>
+<p>本章要训练的能力：<strong>建立学科世界观 + 知道有哪些工具 + 明白“何时该升级到专业流程”</strong>。<br>真实项目必须补充：命令行技能、脚本化、版本与参数记录、统计设计、验证。</p>
+<hr>
+<h1 id="12-与现代机器学习的联系"><a href="#12-与现代机器学习的联系" class="headerlink" title="12. 与现代机器学习的联系"></a>12. 与现代机器学习的联系</h1><p>本章<strong>只在“展望&#x2F;就业”中点到 AI、机器学习、数据挖掘、模式识别、文本挖掘、Hadoop&#x2F;MySQL</strong>，作为“未来趋势与就业技能”，<strong>没有任何可建模的数据或标签</strong>。</p>
+<ul>
+<li>是否适合把本章内容做成 ML 任务：<strong>不适用</strong>。</li>
+<li>唯一可记的联系（学科层面）：教材把“模式识别、数据挖掘、机器学习、可视化”列为生物信息学<strong>实现目标的手段</strong>，并把 HMM 作为早期概率序列模型的代表（1994&#x2F;1997）——这是经典方法通向现代序列建模（乃至今天的深度学习&#x2F;大模型）的历史脉络起点。</li>
+</ul>
+<hr>
+<h1 id="13-研究复现视角"><a href="#13-研究复现视角" class="headerlink" title="13. 研究复现视角"></a>13. 研究复现视角</h1><p>本章不涉及可复现的分析，故传统复现清单不适用。</p>
+<p><strong>但本章提出了一个与复现直接相关的重要主张</strong>（值得作为科研伦理&#x2F;复现意识记住）：</p>
+<ul>
+<li><strong>数据共享与尽早释放</strong>：HGP 采用“正式发表前即上网释放”的政策，许多基因组计划沿用。</li>
+<li>复现的前提是<strong>原始数据（primary data）可获取</strong>——本章反问：“测序仪每天产生的初级数据归谁所有？何时公开？能否设限？”这些正是今天数据可获得性 &#x2F; 复现性的核心议题。</li>
+</ul>
+<p>给你的实操提醒：从现在起养成记录 <strong>软件版本、数据库版本（如 GenBank Release 号）、访问日期、参数</strong> 的习惯——本章多处引用“GenBank Release 120&#x2F;236”“数据截至 2020 年 2 月”，正示范了“引用数据库要写版本和日期”。</p>
+<hr>
+<h1 id="14-最终汇总"><a href="#14-最终汇总" class="headerlink" title="14. 最终汇总"></a>14. 最终汇总</h1><h2 id="A-一页式总结"><a href="#A-一页式总结" class="headerlink" title="A. 一页式总结"></a>A. 一页式总结</h2><ul>
+<li><strong>核心生物学问题</strong>：生物数据爆炸（核酸库约每 14 个月翻番），如何<strong>管理、解读、使用</strong>。</li>
+<li><strong>核心实验</strong>：无（本章为导论）；学科动机来自高通量测序。</li>
+<li><strong>核心数据</strong>：核酸序列 {A,T,G,C}、蛋白序列（20 氨基酸）；初级 vs 二级数据库。</li>
+<li><strong>核心 shape</strong>：<code>seq ∈ &#123;A,T,G,C&#125;^L</code>（概念性）。</li>
+<li><strong>核心算法</strong>：无本章算法；预告 NW&#x2F;SW&#x2F;BLAST&#x2F;HMM&#x2F;NJ 等。</li>
+<li><strong>核心工具</strong>：BLAST、ClustalW、NCBI&#x2F;EBI 在线服务（SSS&#x2F;MSA&#x2F;BSA）。</li>
+<li><strong>核心 pipeline</strong>：无；给出“何时升级到 Linux&#x2F;专业流程”的分流规则。</li>
+<li><strong>核心假设&#x2F;范式</strong>：假设—实验模式（数据库搜索&#x3D;一次实验）。</li>
+<li><strong>核心 QC</strong>：区分“预测”与“事实”。</li>
+<li><strong>核心解释边界</strong>：生物信息学结论多为<strong>预测</strong>，是“路灯”，最终需<strong>湿实验验证</strong>。</li>
+</ul>
+<h2 id="B-必须记住的知识点（12-条）"><a href="#B-必须记住的知识点（12-条）" class="headerlink" title="B. 必须记住的知识点（12 条）"></a>B. 必须记住的知识点（12 条）</h2><ol>
+<li>生物信息学&#x3D;研究生物信息的采集&#x2F;处理&#x2F;存储&#x2F;传播&#x2F;分析&#x2F;解释的学科（分子生物学+遗传学+计算机科学）。</li>
+<li>三大组成：新算法与统计、数据分析与解释、数据管理工具。</li>
+<li>初级数据库(原始) vs 二级数据库(衍生 domain&#x2F;结构等)。</li>
+<li>DNA 字母表 4 个；蛋白字母表 20 个（会背单字母更好）。</li>
+<li>术语提出者两说：Hogeweg(1978) &#x2F; 林华安(1990)。</li>
+<li>三位奠基人：Dayhoff、Waterman、Sankoff。</li>
+<li>历史四阶段：萌芽&#x2F;形成&#x2F;基因组与互联网&#x2F;高通量测序。</li>
+<li>里程碑算法年份：NW 1970、SW 1981、NJ 1987、BLAST 1990、HMM 应用 1994。</li>
+<li>三大数据库联盟：GenBank + EMBL(ENA) + DDBJ。</li>
+<li>EBI 在线平台三类：SSS &#x2F; MSA &#x2F; BSA；NAR 两大专刊：Database Issue(1993)、Web Server Issue(2004)。</li>
+<li>研究范式&#x3D;假设—实验；结论多为预测，需实验验证（“最终还是需要具体的实验”）。</li>
+<li>五大待攻关技术：从头组装、注释、比较基因组&#x2F;进化、群体变异检测(SNP&#x2F;Indel&#x2F;SV&#x2F;CNV)、RNA 分析。</li>
+</ol>
+<h2 id="C-术语表"><a href="#C-术语表" class="headerlink" title="C. 术语表"></a>C. 术语表</h2><table>
+<thead>
+<tr>
+<th>缩写&#x2F;术语</th>
+<th>英文全称</th>
+<th>中文含义</th>
+<th>本节作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bioinformatics</td>
+<td>bioinformatics</td>
+<td>生物信息学</td>
+<td>学科主题</td>
+</tr>
+<tr>
+<td>primary database</td>
+<td>primary database</td>
+<td>初级数据库</td>
+<td>存原始数据</td>
+</tr>
+<tr>
+<td>secondary database</td>
+<td>secondary database</td>
+<td>二级数据库</td>
+<td>存衍生信息</td>
+</tr>
+<tr>
+<td>domain</td>
+<td>domain</td>
+<td>结构域&#x2F;功能区</td>
+<td>二级数据库内容</td>
+</tr>
+<tr>
+<td>WGS</td>
+<td>Whole Genome Shotgun</td>
+<td>全基因组鸟枪法（数据）</td>
+<td>GenBank 单列大类</td>
+</tr>
+<tr>
+<td>NGS</td>
+<td>Next-Generation Sequencing</td>
+<td>二代&#x2F;高通量测序</td>
+<td>第四阶段核心</td>
+</tr>
+<tr>
+<td>SSS</td>
+<td>Sequence Search Service</td>
+<td>序列搜索服务</td>
+<td>EBI 平台分类</td>
+</tr>
+<tr>
+<td>MSA</td>
+<td>Multiple Sequence Alignment</td>
+<td>多序列联配</td>
+<td>EBI 平台分类</td>
+</tr>
+<tr>
+<td>BSA</td>
+<td>Biological Sequence Analysis</td>
+<td>生物序列分析</td>
+<td>EBI 平台分类</td>
+</tr>
+<tr>
+<td>NW</td>
+<td>Needleman-Wunsch</td>
+<td>全局联配算法</td>
+<td>萌芽期里程碑</td>
+</tr>
+<tr>
+<td>SW</td>
+<td>Smith-Waterman</td>
+<td>局部联配算法</td>
+<td>形成期里程碑</td>
+</tr>
+<tr>
+<td>HMM</td>
+<td>Hidden Markov Model</td>
+<td>隐马尔可夫模型</td>
+<td>基因预测&#x2F;domain</td>
+</tr>
+<tr>
+<td>NJ</td>
+<td>Neighbor-Joining</td>
+<td>邻接法</td>
+<td>建树</td>
+</tr>
+<tr>
+<td>SNP&#x2F;Indel&#x2F;SV&#x2F;CNV</td>
+<td>见全称</td>
+<td>单核苷酸多态&#x2F;插入缺失&#x2F;结构变异&#x2F;拷贝数变异</td>
+<td>群体变异类型</td>
+</tr>
+<tr>
+<td>HGP</td>
+<td>Human Genome Project</td>
+<td>人类基因组计划</td>
+<td>数据共享范例</td>
+</tr>
+<tr>
+<td>NAR</td>
+<td>Nucleic Acids Research</td>
+<td>期刊名</td>
+<td>两大专刊来源</td>
+</tr>
+<tr>
+<td>ISCB</td>
+<td>International Society for Computational Biology</td>
+<td>国际计算生物学会</td>
+<td>Bioinformatics 期刊主办</td>
+</tr>
+<tr>
+<td>NGDC&#x2F;CNCB&#x2F;CNGB</td>
+<td>见正文</td>
+<td>国家基因组科学数据中心&#x2F;国家生物信息中心&#x2F;国家基因库</td>
+<td>我国机构</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>正名：EMBL Data Library → 现 <strong>ENA</strong>；表 1.1 中 “Ensemble”应为 <strong>Ensembl</strong>，“Fleischman”应为 <strong>Fleischmann</strong>。</p>
+</blockquote>
+<h2 id="D-数据-shape-汇总表"><a href="#D-数据-shape-汇总表" class="headerlink" title="D. 数据 shape 汇总表"></a>D. 数据 shape 汇总表</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>数据对象</th>
+<th>行&#x2F;列&#x2F;字段</th>
+<th>shape</th>
+<th>数据类型</th>
+<th>文件格式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>概念</td>
+<td>DNA 序列</td>
+<td>字符序列</td>
+<td><code>&#123;A,T,G,C&#125;^L</code></td>
+<td>字符</td>
+<td>（后续 FASTA）</td>
+</tr>
+<tr>
+<td>概念</td>
+<td>蛋白序列</td>
+<td>字符序列</td>
+<td><code>&#123;20 aa&#125;^L</code></td>
+<td>字符</td>
+<td>（后续 FASTA）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>本章仅此两项为概念性；无真实矩阵&#x2F;坐标&#x2F;文件结构。</p>
+</blockquote>
+<h2 id="E-工具汇总表"><a href="#E-工具汇总表" class="headerlink" title="E. 工具汇总表"></a>E. 工具汇总表</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>工具</th>
+<th>输入</th>
+<th>输出</th>
+<th>核心参数</th>
+<th>QC</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>序列搜索</td>
+<td>BLAST</td>
+<td>查询序列+库</td>
+<td>相似命中(E-value 等)</td>
+<td>见后续章</td>
+<td>区分相似&#x2F;同源</td>
+</tr>
+<tr>
+<td>多序列联配</td>
+<td>ClustalW</td>
+<td>多条序列</td>
+<td>MSA</td>
+<td>见后续章</td>
+<td>人工检查列</td>
+</tr>
+<tr>
+<td>数据&#x2F;门户</td>
+<td>NCBI&#x2F;EBI&#x2F;NGDC</td>
+<td>—</td>
+<td>数据+在线分析</td>
+<td>—</td>
+<td>记录版本日期</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>参数细节本章未给，均属后续章节&#x2F;官方文档，<strong>需要查证</strong>。</p>
+</blockquote>
+<h2 id="F-掌握程度清单"><a href="#F-掌握程度清单" class="headerlink" title="F. 掌握程度清单"></a>F. 掌握程度清单</h2><ul>
+<li><strong>应能口头解释</strong>：生物信息学定义、三大组成、初级&#x2F;二级数据库、假设—实验范式、历史四阶段、“预测&#x3D;路灯，需实验验证”。</li>
+<li><strong>应能手工计算</strong>：本章无（仅字母表计数练习）。</li>
+<li><strong>应能从头编程实现</strong>：本章无算法（NW&#x2F;SW 留待第 4 章）。</li>
+<li><strong>应能调用工具完成</strong>：能在 NCBI&#x2F;EBI 上做一次在线 BLAST（作为体验，细节后续学）。</li>
+<li><strong>应能设计的 pipeline</strong>：本章无；但应记住“何时升级到 Linux&#x2F;脚本&#x2F;专业流程”的判据。</li>
+<li><strong>只需知道其存在</strong>：具体人物生平、我国机构名单、期刊史、就业调查细节、表 1.1 全部年份（记大事件即可）。</li>
+</ul>
+<h2 id="G-自测题"><a href="#G-自测题" class="headerlink" title="G. 自测题"></a>G. 自测题</h2><p><strong>概念题</strong></p>
+<ol>
+<li>用一句话给出生物信息学的定义，并列出其三大组成部分。</li>
+<li>初级数据库与二级数据库有何区别？各举一例。</li>
+<li>为什么说生物信息学结论常是“预测”而非“事实”？举例说明假设—实验范式。</li>
+<li>谁被认为是“bioinformatics”一词的提出者？为何有两种说法？</li>
+<li>EBI 把在线分析平台分为哪三类？各对应什么任务？</li>
+</ol>
+<p><strong>数据格式与 shape 题</strong><br>6. DNA 与蛋白质序列的字母表各有多少字符？分别写出。<br>7. 用集合记号写出“一条 DNA 序列”的概念表示，并说明 L 代表什么。<br>8. GenBank 为什么把 WGS 数据单列一类？这提示序列数据具有什么特征？</p>
+<p><strong>算法&#x2F;公式题</strong>（本章仅涉及“提名”，考查历史定位）<br>9. Needleman-Wunsch 与 Smith-Waterman 分别属于哪种联配、分属哪个历史阶段？<br>10. HMM 在生物信息学中最早被用于哪两类任务（举本章提到的例子）？<br>11. 按提出年份排序：BLAST、Neighbor-Joining、Needleman-Wunsch、Smith-Waterman。</p>
+<p><strong>pipeline 设计题</strong><br>12. 你拿到 500 条蛋白序列要做进化分析，为什么不建议全程用在线网页工具？给出本章依据。<br>13. 请据本章“何时求助专业人员”的判据，列出至少 4 种应转向专业&#x2F;Linux 流程的情形。<br>14. 若要让一次 BLAST 分析可复现，你至少应记录哪些信息？（结合第 13 节）</p>
+<p><strong>批判性思考题</strong><br>15. 教材说数据每若干月翻一番、并给出“预测曲线”，你如何看待“预测被实际超过”这一事实对“数据处理能力滞后”论断的支持或削弱？<br>16. “人人都能做生物信息学”这一说法错在哪里？请从经费、软件、验证三方面反驳。</p>
+<h2 id="参考答案"><a href="#参考答案" class="headerlink" title="参考答案"></a>参考答案</h2><ol>
+<li>研究生物信息的采集、处理、存储、传播、分析与解释的交叉学科（分子生物学+遗传学+计算机科学）；三大组成&#x3D;新算法与统计方法、数据分析与解释、数据管理与利用工具。</li>
+<li>初级库存原始数据（如 GenBank 的序列、PDB 的结构）；二级库存由原始数据分析衍生的信息（如结构域 domain、二级结构、疏水位点）。</li>
+<li>因为多数结果是从数据中<strong>推断&#x2F;估计</strong>出来的（如同源、基因位置、结构），不是直接观测；它像“路灯”指示实验方向。范式：先立无效假设（如“该序列无同源序列”），用数据库搜索作为“实验”去验证，拒绝或接受假设，最终仍需湿实验确证。</li>
+<li>两说：Paulien Hogeweg（1978，最早文献）与林华安 Hwa A. Lim（1990 年被普遍认为提出并办首会）；因不同来源追溯口径不同，教材两者并存。</li>
+<li>SSS（序列搜索）、MSA（多序列联配）、BSA（序列分析）。</li>
+<li>DNA 4 个：A、T、G、C；蛋白 20 个：A R N D C Q E G H I L K M F P S T W Y V。</li>
+<li><code>seq ∈ &#123;A,T,G,C&#125;^L</code>，L&#x3D;序列长度（碱基数），不同序列 L 可变。</li>
+<li>因为 WGS（全基因组鸟枪法）数据体量极大（万亿 bp 级），单列便于管理；提示序列数据规模巨大、增长极快、异质。</li>
+<li>NW&#x3D;全局联配，属萌芽期(1970)；SW&#x3D;局部联配，属形成期(1981)。</li>
+<li>功能域(domain)分析 与 基因预测（GENSCAN）。</li>
+<li>NW(1970) → SW(1981) → NJ(1987) → BLAST(1990)。</li>
+<li>序列数已接近&#x2F;超过在线工具适用上限（本章以 &gt;100 条为经验阈值），且进化分析常需模型选择、自举、复杂统计与批处理，网页工具难以胜任、不可批量、难复现——本章明确建议此类情形求助专业&#x2F;Linux 流程。</li>
+<li>①&gt;100 条序列；②需 Linux-only 软件；③使用高通量测序数据；④处理大规模数据（如芯片&#x2F;表达矩阵）；⑤数据结构或完整性有问题；⑥需复杂统计（多假设&#x2F;前提&#x2F;检验）。（任列 4 项）</li>
+<li>查询序列与数据库、<strong>数据库版本与访问日期</strong>、程序与版本、参数（矩阵、E-value 阈值、gap 罚分等）、运行环境。</li>
+<li>开放题要点：实际增长超过预测，说明数据产生速度被低估，反而<strong>强化</strong>“数据产生 &gt; 处理能力”的论断；同时提醒“预测曲线”不可当精确定律，应关注趋势方向而非具体数值。</li>
+<li>①经费误解：算力&#x2F;大型机与商业软件昂贵，并非零成本；②软件误解：先进商业软件多需付费，非全免费；③验证误解：计算结果是预测，“最终还是需要具体实验”，仅有电脑和教科书不足以产出可靠科学结论。</li>
+</ol>
+<h2 id="H-下一步学习建议"><a href="#H-下一步学习建议" class="headerlink" title="H. 下一步学习建议"></a>H. 下一步学习建议</h2><ul>
+<li><strong>下一节&#x2F;章</strong>：进入<strong>第 2 章（生物数据&#x2F;数据类型）</strong>，把本章“核酸&#x2F;蛋白&#x2F;结构&#x2F;初级二级库”的概念落到<strong>具体文件格式与 shape</strong>；随后第 3 章（数据库、Dayhoff）、第 4 章（序列联配 NW&#x2F;SW，Waterman）。</li>
+<li><strong>需补的前置</strong>：中心法则、碱基&#x2F;氨基酸生化基础；命令行入门（bash）、Python 基础——本章已明确点名为必备技能。</li>
+<li><strong>值得亲手实现的算法</strong>：读到第 4 章时，<strong>自己用 Python 实现 Needleman-Wunsch</strong>（本章埋下的最经典起点）。</li>
+<li><strong>值得实际运行的工具</strong>：去 NCBI 做一次在线 <strong>BLAST</strong>，体验 SSS 流程；再用 EBI 做一次 ClustalW&#x2F;MSA。</li>
+<li><strong>值得手工查看的文件格式</strong>：下一章的 <strong>FASTA</strong>（本章尚未出现，但是所有后续分析的入口）。</li>
+<li><strong>配套实验</strong>：本章无专属实验；从第 2&#x2F;3 章起对接《实验指导》中数据库检索与 BLAST&#x2F;ClustalW 实验。</li>
+<li><strong>需查最新官方资料</strong>：GenBank&#x2F;ENA&#x2F;DDBJ 现状与最新 Release、NGDC(bigd.big.ac.cn)、BLAST&#x2F;ClustalW 现行版本与替代工具（MAFFT&#x2F;MUSCLE、DIAMOND）——本章数字截至 2020 年，<strong>需要查证更新</strong>。</li>
+</ul>
+<hr>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF/" rel="tag"># 生物信息</a>
+              <a href="/tags/%E7%94%9F%E7%89%A9%E6%95%B0%E6%8D%AE/" rel="tag"># 生物数据</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/12/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8824%EF%BC%89-%20%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%8A%80%E5%B7%A7%E4%B8%8E%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" rel="prev" title="数据结构与算法自学笔记（24）- 滑动窗口技巧详解">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（24）- 滑动窗口技巧详解
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9A%E7%AC%AC-1-%E7%AB%A0-%E7%BB%AA%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">生物信息学学习笔记：第 1 章 绪论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0-PDF-%E5%86%85%E5%AE%B9%E6%A3%80%E6%9F%A5"><span class="nav-number">2.</span> <span class="nav-text">0. PDF 内容检查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%9C%AC%E8%8A%82%E5%AE%9A%E4%BD%8D%E4%B8%8E%E7%9F%A5%E8%AF%86%E5%9C%B0%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">1. 本节定位与知识地图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%8C%89%E6%95%99%E6%9D%90%E9%A1%BA%E5%BA%8F%E7%B2%BE%E8%AF%BB"><span class="nav-number">4.</span> <span class="nav-text">2. 按教材顺序精读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E8%8A%82-%C2%B7-%E4%B8%80%E3%80%81%E8%BF%85%E9%80%9F%E5%A2%9E%E9%95%BF%E7%9A%84%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF-%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">4.1.</span> <span class="nav-text">第一节 · 一、迅速增长的生物信息 【应该理解】</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E8%8A%82-%C2%B7-%E4%BA%8C%E3%80%81%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%A6%82%E5%BF%B5-%E3%80%90%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E3%80%91"><span class="nav-number">4.2.</span> <span class="nav-text">第一节 · 二、生物信息学概念 【必须掌握】</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E8%8A%82-%C2%B7-%E4%B8%80%E3%80%81%E5%8F%91%E5%B1%95%E7%AE%80%E5%8F%B2-%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3-%E9%83%A8%E5%88%86%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E3%80%91"><span class="nav-number">4.3.</span> <span class="nav-text">第二节 · 一、发展简史 【应该理解 + 部分必须掌握】</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E8%8A%82-%C2%B7-%E4%BA%8C%E3%80%81%E5%BA%94%E7%94%A8%E9%A2%86%E5%9F%9F-%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">4.4.</span> <span class="nav-text">第二节 · 二、应用领域 【应该理解】</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E8%8A%82-%C2%B7-%E4%B8%89%E3%80%81%E5%AD%A6%E7%A7%91%E5%B1%95%E6%9C%9B-%E3%80%90%E4%BA%86%E8%A7%A3%E5%8D%B3%E5%8F%AF-%E5%B0%91%E9%87%8F%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E3%80%91"><span class="nav-number">4.5.</span> <span class="nav-text">第二节 · 三、学科展望 【了解即可 + 少量必须掌握】</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98-%E5%8E%86%E5%8F%B2%E4%B8%8E%E4%BA%BA%E7%89%A9-%E3%80%90%E4%BA%86%E8%A7%A3%E5%8D%B3%E5%8F%AF%E3%80%91"><span class="nav-number">4.6.</span> <span class="nav-text">习题 &amp; 历史与人物 【了解即可】</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E7%94%9F%E7%89%A9%E5%AD%A6%E9%97%AE%E9%A2%98%E5%88%B0%E8%AE%A1%E7%AE%97%E9%97%AE%E9%A2%98%E7%9A%84%E6%98%A0%E5%B0%84"><span class="nav-number">5.</span> <span class="nav-text">3. 生物学问题到计算问题的映射</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E6%95%B0%E6%8D%AE%E5%AF%B9%E8%B1%A1%E3%80%81%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E5%92%8C-shape"><span class="nav-number">6.</span> <span class="nav-text">4. 数据对象、文件格式和 shape</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="nav-number">7.</span> <span class="nav-text">5. 端到端数据处理流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-%E7%AE%97%E6%B3%95%E3%80%81%E7%BB%9F%E8%AE%A1%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%85%AC%E5%BC%8F"><span class="nav-number">8.</span> <span class="nav-text">6. 算法、统计模型和公式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-%E8%BD%AF%E4%BB%B6%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-number">9.</span> <span class="nav-text">7. 软件、数据库与工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-%E5%AE%9E%E9%AA%8C%E8%AE%BE%E8%AE%A1%E3%80%81QC%E3%80%81%E5%81%8F%E5%B7%AE%E4%B8%8E%E7%BB%93%E6%9E%9C%E8%A7%A3%E9%87%8A"><span class="nav-number">10.</span> <span class="nav-text">8. 实验设计、QC、偏差与结果解释</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-%E6%98%93%E6%B7%B7%E6%B7%86%E6%A6%82%E5%BF%B5"><span class="nav-number">11.</span> <span class="nav-text">9. 易混淆概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-Toy-example"><span class="nav-number">12.</span> <span class="nav-text">10. Toy example</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-%E4%BB%8E%E6%95%99%E5%AD%A6%E5%AE%9E%E9%AA%8C%E5%88%B0%E7%9C%9F%E5%AE%9E%E7%A7%91%E7%A0%94"><span class="nav-number">13.</span> <span class="nav-text">11. 从教学实验到真实科研</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-%E4%B8%8E%E7%8E%B0%E4%BB%A3%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%9A%84%E8%81%94%E7%B3%BB"><span class="nav-number">14.</span> <span class="nav-text">12. 与现代机器学习的联系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-%E7%A0%94%E7%A9%B6%E5%A4%8D%E7%8E%B0%E8%A7%86%E8%A7%92"><span class="nav-number">15.</span> <span class="nav-text">13. 研究复现视角</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#14-%E6%9C%80%E7%BB%88%E6%B1%87%E6%80%BB"><span class="nav-number">16.</span> <span class="nav-text">14. 最终汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#A-%E4%B8%80%E9%A1%B5%E5%BC%8F%E6%80%BB%E7%BB%93"><span class="nav-number">16.1.</span> <span class="nav-text">A. 一页式总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-%E5%BF%85%E9%A1%BB%E8%AE%B0%E4%BD%8F%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%8812-%E6%9D%A1%EF%BC%89"><span class="nav-number">16.2.</span> <span class="nav-text">B. 必须记住的知识点（12 条）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-%E6%9C%AF%E8%AF%AD%E8%A1%A8"><span class="nav-number">16.3.</span> <span class="nav-text">C. 术语表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#D-%E6%95%B0%E6%8D%AE-shape-%E6%B1%87%E6%80%BB%E8%A1%A8"><span class="nav-number">16.4.</span> <span class="nav-text">D. 数据 shape 汇总表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#E-%E5%B7%A5%E5%85%B7%E6%B1%87%E6%80%BB%E8%A1%A8"><span class="nav-number">16.5.</span> <span class="nav-text">E. 工具汇总表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#F-%E6%8E%8C%E6%8F%A1%E7%A8%8B%E5%BA%A6%E6%B8%85%E5%8D%95"><span class="nav-number">16.6.</span> <span class="nav-text">F. 掌握程度清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#G-%E8%87%AA%E6%B5%8B%E9%A2%98"><span class="nav-number">16.7.</span> <span class="nav-text">G. 自测题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88"><span class="nav-number">16.8.</span> <span class="nav-text">参考答案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#H-%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">16.9.</span> <span class="nav-text">H. 下一步学习建议</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

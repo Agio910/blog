@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是class048的内容，总结了二维前缀和、二维差分和离散化技巧的核心思想和应用。这些技巧是处理二维矩阵问题的重要工具，特别适用于矩形区域的批量查询和修改。 前置知识在学习二维前缀和与差分之前，需要掌握以下基础知识：  一维前缀和与差分的原理 矩">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（23）- 二维前缀和、二维差分、离散化技巧">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/09/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8823%EF%BC%89-%20%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C%E3%80%81%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86%E3%80%81%E7%A6%BB%E6%95%A3%E5%8C%96%E6%8A%80%E5%B7%A7/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是class048的内容，总结了二维前缀和、二维差分和离散化技巧的核心思想和应用。这些技巧是处理二维矩阵问题的重要工具，特别适用于矩形区域的批量查询和修改。 前置知识在学习二维前缀和与差分之前，需要掌握以下基础知识：  一维前缀和与差分的原理 矩">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E5%89%8D%E7%BC%80%E5%92%8C%E7%9A%84%E5%85%AC%E5%BC%8F.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E6%B1%82%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E5%92%8C.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E6%B1%82%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E5%92%8C%E6%8A%BD%E8%B1%A1%E5%8C%96.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E5%AF%BB%E6%89%BE%E6%9C%80%E5%A4%A7%E7%9A%84%E5%91%A8%E9%95%BF%E9%83%BD%E6%98%AF1%E7%9A%84%E5%9B%9B%E8%BE%B9%E5%BD%A2.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86%E8%A1%A5%E5%81%BF.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E5%A1%AB%E8%A1%A5%E9%82%AE%E7%A5%A8%E6%A1%88%E4%BE%8B.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E8%B4%B4%E9%82%AE%E7%A5%A8.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E5%8A%9B%E5%9C%BA%E5%B9%B3%E7%A7%BB%E5%8F%98%E6%8D%A2.png">
+<meta property="article:published_time" content="2025-09-13T00:30:00.000Z">
+<meta property="article:modified_time" content="2025-09-13T08:25:04.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="二维前缀和">
+<meta property="article:tag" content="二维差分">
+<meta property="article:tag" content="离散化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E5%89%8D%E7%BC%80%E5%92%8C%E7%9A%84%E5%85%AC%E5%BC%8F.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/09/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8823%EF%BC%89-%20%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C%E3%80%81%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86%E3%80%81%E7%A6%BB%E6%95%A3%E5%8C%96%E6%8A%80%E5%B7%A7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（23）- 二维前缀和、二维差分、离散化技巧 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/09/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8823%EF%BC%89-%20%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C%E3%80%81%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86%E3%80%81%E7%A6%BB%E6%95%A3%E5%8C%96%E6%8A%80%E5%B7%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（23）- 二维前缀和、二维差分、离散化技巧
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-09-13 08:30:00 / Modified: 16:25:04" itemprop="dateCreated datePublished" datetime="2025-09-13T08:30:00+08:00">2025-09-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a></p>
+<p>本笔记是class048的内容，总结了二维前缀和、二维差分和离散化技巧的核心思想和应用。这些技巧是处理二维矩阵问题的重要工具，特别适用于矩形区域的批量查询和修改。</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>在学习二维前缀和与差分之前，需要掌握以下基础知识：</p>
+<ul>
+<li>一维前缀和与差分的原理</li>
+<li>矩阵的基本操作</li>
+<li>容斥原理的理解</li>
+<li>坐标系统和索引处理</li>
+</ul>
+<hr>
+<h1 id="048【必备】二维前缀和、二维差分、离散化技巧"><a href="#048【必备】二维前缀和、二维差分、离散化技巧" class="headerlink" title="048【必备】二维前缀和、二维差分、离散化技巧"></a>048【必备】二维前缀和、二维差分、离散化技巧</h1><h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><h3 id="二维前缀和的基本思想"><a href="#二维前缀和的基本思想" class="headerlink" title="二维前缀和的基本思想"></a>二维前缀和的基本思想</h3><p>二维前缀和是一维前缀和在二维空间的扩展：</p>
+<ul>
+<li><strong>原理</strong>：预处理出每个位置到左上角(0,0)的矩形区域和</li>
+<li><strong>查询优化</strong>：任意矩形区域的和查询在O(1)时间内完成</li>
+<li><strong>核心公式</strong>：使用容斥原理计算矩形区域和</li>
+</ul>
+<h3 id="二维差分的基本思想"><a href="#二维差分的基本思想" class="headerlink" title="二维差分的基本思想"></a>二维差分的基本思想</h3><p>二维差分用于优化矩形区域的批量修改：</p>
+<ul>
+<li><strong>原理</strong>：将矩形区域修改转化为四个关键点的修改</li>
+<li><strong>适用场景</strong>：大量矩形修改操作，最后统一查询</li>
+<li><strong>实现方式</strong>：通过四点修改实现区域增减，最后二维前缀和还原</li>
+</ul>
+<h3 id="离散化技巧"><a href="#离散化技巧" class="headerlink" title="离散化技巧"></a>离散化技巧</h3><p>离散化用于处理坐标范围过大的问题：</p>
+<ul>
+<li><strong>核心思想</strong>：将大范围坐标映射到小范围数组</li>
+<li><strong>关键步骤</strong>：收集关键坐标、排序去重、建立映射关系</li>
+<li><strong>应用场景</strong>：坐标值很大但关键点有限的问题</li>
+</ul>
+<hr>
+<h2 id="题目一：二维前缀和模板"><a href="#题目一：二维前缀和模板" class="headerlink" title="题目一：二维前缀和模板"></a>题目一：二维前缀和模板</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定一个二维矩阵matrix，实现一个类来处理以下类型的多次查询：</p>
+<ul>
+<li>计算其子矩形范围内元素的总和，该子矩形的左上角为(row1, col1)，右下角为(row2, col2)。</li>
+</ul>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/range-sum-query-2d-immutable/">https://leetcode.cn/problems/range-sum-query-2d-immutable/</a></p>
+<h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>通过预计算二维前缀和，实现O(1)时间复杂度的矩形区域和查询：</p>
+<ol>
+<li><strong>前缀和构建</strong>：<code>s[i][j]</code> 存储从左上角(0,0)到右下角(i-1,j-1)的区域和</li>
+<li><strong>容斥原理</strong>：利用四个矩形的加减关系计算目标区域</li>
+<li><strong>边界处理</strong>：通过增加一圈0来简化边界判断</li>
+</ol>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E5%89%8D%E7%BC%80%E5%92%8C%E7%9A%84%E5%85%AC%E5%BC%8F.png" alt="前缀和的公式"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E6%B1%82%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E5%92%8C.png" alt="求二维数组子数组的和"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E6%B1%82%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E5%92%8C%E6%8A%BD%E8%B1%A1%E5%8C%96.png" alt="求二维数组子数组的和抽象化"></p>
+<h3 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NumMatrix</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    通过预计算二维前缀和，实现O(1)时间复杂度的矩形区域和查询。</span></span><br><span class="line"><span class="string">    核心思想 (Inclusion-Exclusion Principle):</span></span><br><span class="line"><span class="string">    1. 创建一个比原矩阵行列各大1的前缀和矩阵 `self.s`。</span></span><br><span class="line"><span class="string">    2. `self.s[i][j]` 存储原矩阵中从左上角 (0,0) 到右下角 (i-1,j-1) 的矩形区域内所有元素的和。</span></span><br><span class="line"><span class="string">    3. 构建公式: s[i][j] = matrix[i-1][j-1] + s[i-1][j] + s[i][j-1] - s[i-1][j-1]</span></span><br><span class="line"><span class="string">       (当前格子的值 + 上方矩形和 + 左方矩形和 - 左上方被重复计算的矩形和)</span></span><br><span class="line"><span class="string">    4. 查询 (r1,c1)到(r2,c2)的区域和:</span></span><br><span class="line"><span class="string">       ans = s[r2+1][c2+1] - s[r1][c2+1] - s[r2+1][c1] + s[r1][c1]</span></span><br><span class="line"><span class="string">       (大矩形 - 上方多余矩形 - 左方多余矩形 + 左上方被重复减去的矩形)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, matrix: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> matrix <span class="keyword">or</span> <span class="keyword">not</span> matrix[<span class="number">0</span>]:</span><br><span class="line">            <span class="variable language_">self</span>.s = [[<span class="number">0</span>]]</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">        n = <span class="built_in">len</span>(matrix)</span><br><span class="line">        m = <span class="built_in">len</span>(matrix[<span class="number">0</span>])</span><br><span class="line">        <span class="comment"># s 的行列都比原 matrix 大 1，方便处理边界</span></span><br><span class="line">        <span class="variable language_">self</span>.s = [[<span class="number">0</span>] * (m + <span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n + <span class="number">1</span>)]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 构建前缀和矩阵，在左边上边和左上补0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">                <span class="variable language_">self</span>.s[i][j] = matrix[i - <span class="number">1</span>][j - <span class="number">1</span>] + <span class="variable language_">self</span>.s[i - <span class="number">1</span>][j] + <span class="variable language_">self</span>.s[i][j - <span class="number">1</span>] - <span class="variable language_">self</span>.s[i - <span class="number">1</span>][j - <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sumRegion</span>(<span class="params">self, r1: <span class="built_in">int</span>, c1: <span class="built_in">int</span>, r2: <span class="built_in">int</span>, c2: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 传入的r1, c1, r2, c2是0-indexed, 对应到前缀和矩阵需要+1</span></span><br><span class="line">        r1, c1, r2, c2 = r1 + <span class="number">1</span>, c1 + <span class="number">1</span>, r2 + <span class="number">1</span>, c2 + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.s[r2][c2] - <span class="variable language_">self</span>.s[r1 - <span class="number">1</span>][c2] - <span class="variable language_">self</span>.s[r2][c1 - <span class="number">1</span>] + <span class="variable language_">self</span>.s[r1 - <span class="number">1</span>][c1 - <span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="容斥原理图解"><a href="#容斥原理图解" class="headerlink" title="容斥原理图解"></a>容斥原理图解</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">查询矩形区域 (r1,c1) 到 (r2,c2) 的和：</span><br><span class="line">目标区域 = 大矩形 - 上方矩形 - 左方矩形 + 重叠矩形</span><br><span class="line"></span><br><span class="line">    (0,0) ----- (0,c1)----- (0,c2)</span><br><span class="line">      |    A     |      B    |</span><br><span class="line">      |          |           |</span><br><span class="line">   (r1,0) ---- (r1,c1) ---- (r1,c2)</span><br><span class="line">      |    C     |      D    |</span><br><span class="line">      |          |           |</span><br><span class="line">   (r2,0) ---- (r2,c1) ---- (r2,c2)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">答案 = (A+B+C+D) - (A+B) - (A+C) + A = D</span><br><span class="line">即：s[r2][c2] - s[r1-1][c2] - s[r2][c1-1] + s[r1-1][c1-1]</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>预处理时间复杂度</strong>：O(n×m)</li>
+<li><strong>查询时间复杂度</strong>：O(1)</li>
+<li><strong>空间复杂度</strong>：O(n×m)</li>
+</ul>
+<hr>
+<h2 id="题目二：边框为1的最大正方形"><a href="#题目二：边框为1的最大正方形" class="headerlink" title="题目二：边框为1的最大正方形"></a>题目二：边框为1的最大正方形</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个由若干0和1组成的二维网格grid，请你找出边界全部由1组成的最大正方形子网格，并返回该子网格中的元素数量。如果不存在，则返回0。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/largest-1-bordered-square/">https://leetcode.cn/problems/largest-1-bordered-square/</a></p>
+<h3 id="核心思想-1"><a href="#核心思想-1" class="headerlink" title="核心思想"></a>核心思想</h3><p>利用二维前缀和快速验证正方形边框是否全为1：</p>
+<ol>
+<li><strong>边框验证</strong>：边框和 &#x3D; 整个正方形和 - 内部正方形和</li>
+<li><strong>边框元素数量</strong>：边长为k的正方形边框有4×(k-1)个元素</li>
+<li><strong>枚举优化</strong>：从已知最大边长+1开始尝试，进行剪枝</li>
+</ol>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E5%AF%BB%E6%89%BE%E6%9C%80%E5%A4%A7%E7%9A%84%E5%91%A8%E9%95%BF%E9%83%BD%E6%98%AF1%E7%9A%84%E5%9B%9B%E8%BE%B9%E5%BD%A2.png" alt="寻找最大的周长都是1的四边形"></p>
+<h3 id="算法实现-1"><a href="#算法实现-1" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="comment"># 打败比例不高，但完全是常数时间的问题</span></span><br><span class="line">    <span class="comment"># 时间复杂度O(n * m * min(n,m))，额外空间复杂度O(1)，因为直接复用的自己</span></span><br><span class="line">    <span class="comment"># 复杂度指标上绝对是最优解</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">largest1BorderedSquare</span>(<span class="params">self, grid: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        核心思想:</span></span><br><span class="line"><span class="string">        1. 使用二维前缀和快速计算任意子矩阵的元素和。</span></span><br><span class="line"><span class="string">           为了节省空间，直接在原输入 `grid` 上构建前缀和矩阵。</span></span><br><span class="line"><span class="string">        2. 遍历所有可能的正方形。一个正方形由其左上角 `(r1, c1)` 和边长 `k` 决定。</span></span><br><span class="line"><span class="string">        3. 对于一个边长为 `k` 的正方形，其右下角为 `(r2, c2)`。</span></span><br><span class="line"><span class="string">           要判断其边框是否全为1，可以计算边框上所有元素的和。</span></span><br><span class="line"><span class="string">           边框和 = (整个正方形的和) - (去掉边框后的内部小正方形的和)</span></span><br><span class="line"><span class="string">        4. 一个边长为 `k` 的正方形，其边框共有 `4 * (k - 1)` 个单元格 (如果k&gt;1)。</span></span><br><span class="line"><span class="string">        5. 如果计算出的 &quot;边框和&quot; 等于 `4 * (k - 1)`，则说明这个正方形边框全为1，</span></span><br><span class="line"><span class="string">           我们更新找到的最大边长。</span></span><br><span class="line"><span class="string">        6. 从大到小或从小到大遍历边长均可，这里是从小到大。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(grid)</span><br><span class="line">        m = <span class="built_in">len</span>(grid[<span class="number">0</span>])</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 直接在 grid 上构建前缀和矩阵</span></span><br><span class="line">        <span class="variable language_">self</span>._build(n, m, grid)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 找到的最大合法正方形的边长</span></span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        <span class="comment"># 检查是否存在至少一个 1</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>._<span class="built_in">sum</span>(grid, <span class="number">0</span>, <span class="number">0</span>, n - <span class="number">1</span>, m - <span class="number">1</span>) &gt; <span class="number">0</span>:</span><br><span class="line">            ans = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> r1 <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">for</span> c1 <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">                <span class="comment"># (r1, c1) 作为所有可能的左上角点</span></span><br><span class="line">                <span class="comment"># k 是当前尝试的边长</span></span><br><span class="line">                <span class="comment"># 从已知的最大边长+1开始尝试，进行剪枝</span></span><br><span class="line">                k = ans + <span class="number">1</span></span><br><span class="line">                <span class="keyword">while</span> r1 + k - <span class="number">1</span> &lt; n <span class="keyword">and</span> c1 + k - <span class="number">1</span> &lt; m:</span><br><span class="line">                    r2 = r1 + k - <span class="number">1</span></span><br><span class="line">                    c2 = c1 + k - <span class="number">1</span></span><br><span class="line">                    </span><br><span class="line">                    <span class="comment"># 边框和 = 大正方形和 - 小正方形和</span></span><br><span class="line">                    border_sum = <span class="variable language_">self</span>._<span class="built_in">sum</span>(grid, r1, c1, r2, c2) - <span class="variable language_">self</span>._<span class="built_in">sum</span>(grid, r1 + <span class="number">1</span>, c1 + <span class="number">1</span>, r2 - <span class="number">1</span>, c2 - <span class="number">1</span>)</span><br><span class="line">                    </span><br><span class="line">                    <span class="comment"># 边长为k的正方形，边框有 4 * (k-1) 个格子，可以带入前缀和公式逐个元素相加得到下面成立</span></span><br><span class="line">                    <span class="keyword">if</span> border_sum == (k - <span class="number">1</span>) * <span class="number">4</span>:</span><br><span class="line">                        ans = k</span><br><span class="line">                    k += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans * ans</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_build</span>(<span class="params">self, n, m, g</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;把g变成原始二维数组的前缀和数组sum，复用自己&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">                g[i][j] += <span class="variable language_">self</span>._get(g, i, j - <span class="number">1</span>) + <span class="variable language_">self</span>._get(g, i - <span class="number">1</span>, j) - <span class="variable language_">self</span>._get(g, i - <span class="number">1</span>, j - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_sum</span>(<span class="params">self, g, r1, c1, r2, c2</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;计算 (r1,c1) 到 (r2,c2) 矩形区域的和&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> r1 &gt; r2 <span class="keyword">or</span> c1 &gt; c2:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>._get(g, r2, c2) - <span class="variable language_">self</span>._get(g, r2, c1 - <span class="number">1</span>) - <span class="variable language_">self</span>._get(g, r1 - <span class="number">1</span>, c2) + <span class="variable language_">self</span>._get(g, r1 - <span class="number">1</span>, c1 - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_get</span>(<span class="params">self, g, i, j</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;安全地获取前缀和，处理边界情况&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> g[i][j] <span class="keyword">if</span> i &gt;= <span class="number">0</span> <span class="keyword">and</span> j &gt;= <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-1"><a href="#算法分析-1" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n×m×min(n,m))</li>
+<li><strong>空间复杂度</strong>：O(1)（复用输入数组）</li>
+<li><strong>优化策略</strong>：剪枝搜索，从大边长开始尝试</li>
+</ul>
+<hr>
+<h2 id="题目三：二维差分模板"><a href="#题目三：二维差分模板" class="headerlink" title="题目三：二维差分模板"></a>题目三：二维差分模板</h2><h3 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定一个n×n的矩阵，初始时所有元素都是0。进行q次操作，每次操作给定一个矩形区域(r1,c1)到(r2,c2)，将该区域内所有元素加1。求所有操作完成后的矩阵。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://www.luogu.cn/problem/P3397">https://www.luogu.cn/problem/P3397</a></p>
+<h3 id="核心思想-2"><a href="#核心思想-2" class="headerlink" title="核心思想"></a>核心思想</h3><p>使用二维差分数组优化矩形区域的批量修改：</p>
+<ol>
+<li><strong>四点修改</strong>：对矩形区域的修改转化为四个关键点的修改</li>
+<li><strong>差分还原</strong>：通过二维前缀和从差分数组还原最终结果</li>
+<li><strong>边界处理</strong>：使用额外的边界空间简化边界判断</li>
+</ol>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86%E8%A1%A5%E5%81%BF.png" alt="二维差分补偿"></p>
+<h3 id="关键函数解析"><a href="#关键函数解析" class="headerlink" title="关键函数解析"></a>关键函数解析</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">r1, c1, r2, c2, k</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    在二维差分矩阵上进行修改，以实现对原矩阵的矩形区域加值。</span></span><br><span class="line"><span class="string">    这是通过在矩形的四个角点进行修改来完成的。</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    数学原理：</span></span><br><span class="line"><span class="string">    要让矩形区域(r1,c1)到(r2,c2)都增加k，需要：</span></span><br><span class="line"><span class="string">    - 在(r1,c1)处 +k：影响从该点到右下角的所有区域</span></span><br><span class="line"><span class="string">    - 在(r2+1,c1)处 -k：抵消下方区域的影响</span></span><br><span class="line"><span class="string">    - 在(r1,c2+1)处 -k：抵消右方区域的影响  </span></span><br><span class="line"><span class="string">    - 在(r2+1,c2+1)处 +k：补偿被重复抵消的右下角区域</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    diff[r1][c1] += k</span><br><span class="line">    diff[r2 + <span class="number">1</span>][c1] -= k</span><br><span class="line">    diff[r1][c2 + <span class="number">1</span>] -= k</span><br><span class="line">    diff[r2 + <span class="number">1</span>][c2 + <span class="number">1</span>] += k</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    通过一次二维前缀和运算，从差分矩阵还原出最终的矩阵。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">            diff[i][j] += diff[i - <span class="number">1</span>][j] + diff[i][j - <span class="number">1</span>] - diff[i - <span class="number">1</span>][j - <span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="二维差分图解"><a href="#二维差分图解" class="headerlink" title="二维差分图解"></a>二维差分图解</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">原始矩形修改：对区域(r1,c1)到(r2,c2)加k</span><br><span class="line"></span><br><span class="line">(r1,c1) -------- (r1,c2+1)</span><br><span class="line">   |        目标区域    |</span><br><span class="line">   |                   |</span><br><span class="line">(r2+1,c1) ---- (r2+1,c2+1)</span><br><span class="line"></span><br><span class="line">四点修改：</span><br><span class="line">diff[r1][c1] += k        (左上角)</span><br><span class="line">diff[r2+1][c1] -= k      (左下角)</span><br><span class="line">diff[r1][c2+1] -= k      (右上角)</span><br><span class="line">diff[r2+1][c2+1] += k    (右下角)</span><br><span class="line"></span><br><span class="line">前缀和还原后，只有目标区域内的值增加k</span><br></pre></td></tr></table></figure>
+
+<h3 id="完整实现"><a href="#完整实现" class="headerlink" title="完整实现"></a>完整实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">MAXN = <span class="number">1002</span></span><br><span class="line">diff = [[<span class="number">0</span>] * MAXN <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(MAXN)]</span><br><span class="line">n, q = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">r1, c1, r2, c2, k</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;在二维差分矩阵上进行修改&quot;&quot;&quot;</span></span><br><span class="line">    diff[r1][c1] += k</span><br><span class="line">    diff[r2 + <span class="number">1</span>][c1] -= k</span><br><span class="line">    diff[r1][c2 + <span class="number">1</span>] -= k</span><br><span class="line">    diff[r2 + <span class="number">1</span>][c2 + <span class="number">1</span>] += k</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;从差分矩阵还原出最终矩阵&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">            diff[i][j] += diff[i - <span class="number">1</span>][j] + diff[i][j - <span class="number">1</span>] - diff[i - <span class="number">1</span>][j - <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">clear</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;清空差分矩阵&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n + <span class="number">2</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n + <span class="number">2</span>):</span><br><span class="line">            diff[i][j] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    核心思想：二维差分数组</span></span><br><span class="line"><span class="string">    1. 对一个矩阵的子矩阵`(r1,c1)`到`(r2,c2)`范围内的所有元素加`k`，</span></span><br><span class="line"><span class="string">       如果暴力修改，效率很低。</span></span><br><span class="line"><span class="string">    2. 我们可以使用一个差分矩阵`D`。对上述范围的修改，只需在`D`的4个点上操作。</span></span><br><span class="line"><span class="string">    3. 在处理完所有`q`个操作后，对差分矩阵`D`求一次二维前缀和，</span></span><br><span class="line"><span class="string">       就可以得到最终的矩阵。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">global</span> n, q</span><br><span class="line">    lines = sys.stdin.readlines()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> lines:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    line_iter = <span class="built_in">iter</span>(lines)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            n_q_line = <span class="built_in">next</span>(line_iter)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> n_q_line: <span class="keyword">break</span></span><br><span class="line">            </span><br><span class="line">            n, q = <span class="built_in">map</span>(<span class="built_in">int</span>, n_q_line.strip().split())</span><br><span class="line">            clear()</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(q):</span><br><span class="line">                r1, c1, r2, c2 = <span class="built_in">map</span>(<span class="built_in">int</span>, <span class="built_in">next</span>(line_iter).strip().split())</span><br><span class="line">                add(r1, c1, r2, c2, <span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">            build()</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 打印结果</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27; &#x27;</span>.join(<span class="built_in">map</span>(<span class="built_in">str</span>, diff[i][<span class="number">1</span>:n+<span class="number">1</span>])))</span><br><span class="line">                </span><br><span class="line">    <span class="keyword">except</span> StopIteration:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-2"><a href="#算法分析-2" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(q + n²)</li>
+<li><strong>空间复杂度</strong>：O(n²)</li>
+<li><strong>核心优势</strong>：将每次O(n²)的区域修改优化为O(1)的四点修改</li>
+</ul>
+<hr>
+<h2 id="题目四：用邮票贴满网格图"><a href="#题目四：用邮票贴满网格图" class="headerlink" title="题目四：用邮票贴满网格图"></a>题目四：用邮票贴满网格图</h2><h3 id="问题描述-3"><a href="#问题描述-3" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个m×n的二进制矩阵grid，每个格子要么为0（空）要么为1（被占据）。给你邮票的尺寸为stampHeight×stampWidth。要求用邮票覆盖所有空格子，不覆盖任何被占据的格子。邮票可以相互重叠，但不允许旋转，必须完全在矩阵内。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/stamping-the-grid/">https://leetcode.cn/problems/stamping-the-grid/</a></p>
+<h3 id="核心思想-3"><a href="#核心思想-3" class="headerlink" title="核心思想"></a>核心思想</h3><p>分两步解决：找出所有可贴位置，然后验证覆盖完整性：</p>
+<ol>
+<li><strong>可贴位置检测</strong>：使用二维前缀和快速判断区域是否全为0</li>
+<li><strong>覆盖标记</strong>：使用二维差分标记所有被邮票覆盖的位置</li>
+<li><strong>完整性验证</strong>：检查所有空格子是否都被覆盖</li>
+</ol>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E5%A1%AB%E8%A1%A5%E9%82%AE%E7%A5%A8%E6%A1%88%E4%BE%8B.png" alt="填补邮票案例"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E8%B4%B4%E9%82%AE%E7%A5%A8.png" alt="贴邮票"></p>
+<h3 id="算法实现-2"><a href="#算法实现-2" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">possibleToStamp</span>(<span class="params">self, grid: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]], h: <span class="built_in">int</span>, w: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        核心思想：分两步走</span></span><br><span class="line"><span class="string">        1. 找出所有可以贴邮票的位置：</span></span><br><span class="line"><span class="string">           - 对原 `grid` 建立一个二维前缀和数组 `s`，这样可以 O(1) 查询任何矩形区域的和。</span></span><br><span class="line"><span class="string">           - 遍历所有可能的邮票左上角 `(r, c)`，利用前缀和 `s` 检查对应的 `h x w` 区域</span></span><br><span class="line"><span class="string">             是否全为0 (即区域和为0)。</span></span><br><span class="line"><span class="string">        2. 标记所有被邮票覆盖的空格子：</span></span><br><span class="line"><span class="string">           - 创建一个二维差分数组 `diff`。</span></span><br><span class="line"><span class="string">           - 对于第一步中找到的每一个可以贴邮票的区域，我们在 `diff` 数组上执行一次</span></span><br><span class="line"><span class="string">             范围增加 `+1` 的操作。</span></span><br><span class="line"><span class="string">           - 所有可贴位置都处理完后，对 `diff` 数组求一次二维前缀和。</span></span><br><span class="line"><span class="string">             这样 `diff[r][c]` 的值就代表了 `(r, c)` 这个格子被多少张邮票覆盖了。</span></span><br><span class="line"><span class="string">        3. 验证结果：</span></span><br><span class="line"><span class="string">           - 遍历原 `grid`，如果发现任何一个空格子 (`grid[r][c] == 0`)</span></span><br><span class="line"><span class="string">             在 `diff` 数组中对应的值也为0，说明这个空格子没有被任何邮票覆盖，</span></span><br><span class="line"><span class="string">             因此无法完成任务，返回 `False`。</span></span><br><span class="line"><span class="string">           - 如果所有空格子都被覆盖了，返回 `True`。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(grid)</span><br><span class="line">        m = <span class="built_in">len</span>(grid[<span class="number">0</span>])</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 1. 构建 grid 的前缀和数组</span></span><br><span class="line">        s = [[<span class="number">0</span>] * (m + <span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n + <span class="number">1</span>)]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">                s[i + <span class="number">1</span>][j + <span class="number">1</span>] = grid[i][j]</span><br><span class="line">        <span class="variable language_">self</span>._build(s)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 2. 创建差分数组并标记所有可贴邮票的区域</span></span><br><span class="line">        diff = [[<span class="number">0</span>] * (m + <span class="number">2</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n + <span class="number">2</span>)]</span><br><span class="line">        <span class="keyword">for</span> r1 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n - h + <span class="number">2</span>):</span><br><span class="line">            <span class="keyword">for</span> c1 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, m - w + <span class="number">2</span>):</span><br><span class="line">                r2, c2 = r1 + h - <span class="number">1</span>, c1 + w - <span class="number">1</span></span><br><span class="line">                <span class="comment"># 如果 h x w 区域全为0，则可以贴邮票</span></span><br><span class="line">                <span class="keyword">if</span> <span class="variable language_">self</span>._sum_region(s, r1, c1, r2, c2) == <span class="number">0</span>:</span><br><span class="line">                    <span class="variable language_">self</span>._add(diff, r1, c1, r2, c2)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 3. 从差分数组构建覆盖矩阵</span></span><br><span class="line">        <span class="variable language_">self</span>._build(diff)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 4. 验证所有空格子是否都被覆盖</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">                <span class="keyword">if</span> grid[i][j] == <span class="number">0</span> <span class="keyword">and</span> diff[i + <span class="number">1</span>][j + <span class="number">1</span>] == <span class="number">0</span>:</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_build</span>(<span class="params">self, mat: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;对矩阵构建二维前缀和&quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(mat)</span><br><span class="line">        m = <span class="built_in">len</span>(mat[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, m):</span><br><span class="line">                mat[i][j] += mat[i - <span class="number">1</span>][j] + mat[i][j - <span class="number">1</span>] - mat[i - <span class="number">1</span>][j - <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_sum_region</span>(<span class="params">self, s: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]], r1: <span class="built_in">int</span>, c1: <span class="built_in">int</span>, r2: <span class="built_in">int</span>, c2: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;查询区域和&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> s[r2][c2] - s[r2][c1 - <span class="number">1</span>] - s[r1 - <span class="number">1</span>][c2] + s[r1 - <span class="number">1</span>][c1 - <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_add</span>(<span class="params">self, diff: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]], r1: <span class="built_in">int</span>, c1: <span class="built_in">int</span>, r2: <span class="built_in">int</span>, c2: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;二维差分操作&quot;&quot;&quot;</span></span><br><span class="line">        diff[r1][c1] += <span class="number">1</span></span><br><span class="line">        diff[r2 + <span class="number">1</span>][c2 + <span class="number">1</span>] += <span class="number">1</span></span><br><span class="line">        diff[r2 + <span class="number">1</span>][c1] -= <span class="number">1</span></span><br><span class="line">        diff[r1][c2 + <span class="number">1</span>] -= <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-3"><a href="#算法分析-3" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n×m)</li>
+<li><strong>空间复杂度</strong>：O(n×m)</li>
+<li><strong>核心技巧</strong>：前缀和检测 + 差分标记</li>
+</ul>
+<hr>
+<h2 id="题目五：最强祝福力场（离散化技巧）"><a href="#题目五：最强祝福力场（离散化技巧）" class="headerlink" title="题目五：最强祝福力场（离散化技巧）"></a>题目五：最强祝福力场（离散化技巧）</h2><h3 id="问题描述-4"><a href="#问题描述-4" class="headerlink" title="问题描述"></a>问题描述</h3><p>小扣发现了带有「祝福」效果的力场，每个力场覆盖以坐标(x,y)为中心、边长为side的正方形区域。求力场强度最强处的力场强度（即覆盖该点的力场数量的最大值）。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/xepqZ5/">https://leetcode.cn/problems/xepqZ5/</a></p>
+<h3 id="核心思想-4"><a href="#核心思想-4" class="headerlink" title="核心思想"></a>核心思想</h3><p>使用离散化技巧处理大坐标范围问题：</p>
+<ol>
+<li><strong>坐标收集</strong>：收集所有力场的边界坐标</li>
+<li><strong>坐标压缩</strong>：排序去重得到压缩坐标轴</li>
+<li><strong>映射转换</strong>：将原始坐标映射到压缩空间</li>
+<li><strong>差分处理</strong>：在压缩空间中进行二维差分操作</li>
+</ol>
+<h3 id="离散化原理"><a href="#离散化原理" class="headerlink" title="离散化原理"></a>离散化原理</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 离散化的核心步骤：</span></span><br><span class="line"><span class="comment"># 1. 收集关键坐标</span></span><br><span class="line">coordinates = []</span><br><span class="line"><span class="keyword">for</span> field <span class="keyword">in</span> fields:</span><br><span class="line">    x, y, side = field</span><br><span class="line">    coordinates.extend([x-side//<span class="number">2</span>, x+side//<span class="number">2</span>+<span class="number">1</span>])  <span class="comment"># 边界坐标</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 排序去重</span></span><br><span class="line">coordinates = <span class="built_in">sorted</span>(<span class="built_in">list</span>(<span class="built_in">set</span>(coordinates)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 建立映射关系</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_index</span>(<span class="params">val</span>):</span><br><span class="line">    <span class="keyword">return</span> bisect.bisect_left(coordinates, val)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 在压缩空间中操作</span></span><br><span class="line">compressed_index = get_index(original_coordinate)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(23)/class48-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/%E5%8A%9B%E5%9C%BA%E5%B9%B3%E7%A7%BB%E5%8F%98%E6%8D%A2.png" alt="力场平移变换"></p>
+<h3 id="算法实现-3"><a href="#算法实现-3" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> bisect</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fieldOfGreatestBlessing</span>(<span class="params">self, fields: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        核心思想：坐标压缩 + 二维差分</span></span><br><span class="line"><span class="string">        1. 坐标范围可能很大，无法直接建立网格。但起决定性作用的只有力场的边界。</span></span><br><span class="line"><span class="string">           因此，我们先进行&quot;坐标压缩&quot;（或称&quot;离散化&quot;）。</span></span><br><span class="line"><span class="string">        2. 收集所有力场正方形的左右边界和上下边界。</span></span><br><span class="line"><span class="string">        3. 对收集到的 x 和 y 坐标分别排序并去重，得到两组唯一的、有序的坐标轴。</span></span><br><span class="line"><span class="string">        4. 这两组坐标轴构成了一个压缩后的网格。每个原始的力场矩形都可以映射到</span></span><br><span class="line"><span class="string">           这个压缩网格上的一个小矩形区域。</span></span><br><span class="line"><span class="string">        5. 创建一个基于压缩坐标尺寸的二维差分数组。</span></span><br><span class="line"><span class="string">        6. 遍历每个原始力场，将其边界坐标在压缩坐标轴中进行二分查找，</span></span><br><span class="line"><span class="string">           得到其在压缩网格中的索引。</span></span><br><span class="line"><span class="string">        7. 在差分数组上对这个压缩后的矩形区域执行 `+1` 的范围增加操作。</span></span><br><span class="line"><span class="string">        8. 所有力场处理完毕后，对差分数组求二维前缀和，得到每个压缩单元格的力场强度。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(fields)</span><br><span class="line">        xs, ys = [<span class="number">0</span>] * (n * <span class="number">2</span>), [<span class="number">0</span>] * (n * <span class="number">2</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 收集所有边界坐标 (乘以2以避免处理小数)</span></span><br><span class="line">        <span class="keyword">for</span> i, (x, y, side) <span class="keyword">in</span> <span class="built_in">enumerate</span>(fields):</span><br><span class="line">            xs[<span class="number">2</span> * i] = <span class="number">2</span> * x - side</span><br><span class="line">            xs[<span class="number">2</span> * i + <span class="number">1</span>] = <span class="number">2</span> * x + side</span><br><span class="line">            ys[<span class="number">2</span> * i] = <span class="number">2</span> * y - side</span><br><span class="line">            ys[<span class="number">2</span> * i + <span class="number">1</span>] = <span class="number">2</span> * y + side</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 排序并去重，得到唯一的坐标轴，只有不同的才保留</span></span><br><span class="line">        xs = <span class="built_in">sorted</span>(<span class="built_in">list</span>(<span class="built_in">set</span>(xs)))</span><br><span class="line">        ys = <span class="built_in">sorted</span>(<span class="built_in">list</span>(<span class="built_in">set</span>(ys)))</span><br><span class="line">        </span><br><span class="line">        size_x = <span class="built_in">len</span>(xs)</span><br><span class="line">        size_y = <span class="built_in">len</span>(ys)</span><br><span class="line">        diff = [[<span class="number">0</span>] * (size_y + <span class="number">2</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(size_x + <span class="number">2</span>)]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 对每个力场，在压缩后的差分矩阵上进行修改</span></span><br><span class="line">        <span class="keyword">for</span> x, y, side <span class="keyword">in</span> fields:</span><br><span class="line">            <span class="comment"># 找到力场边界在压缩坐标轴上的索引(rank)</span></span><br><span class="line">            <span class="comment"># bisect_left 实现了二分查找，效率高</span></span><br><span class="line">            r1 = bisect.bisect_left(xs, <span class="number">2</span> * x - side) + <span class="number">1</span> <span class="comment"># bisect_left返回的是目标值在有序列表中的插入位置。</span></span><br><span class="line">            c1 = bisect.bisect_left(ys, <span class="number">2</span> * y - side) + <span class="number">1</span></span><br><span class="line">            <span class="comment"># 注意：右边界和上边界在差分矩阵中对应的是块的结束，而不是下一个块的开始</span></span><br><span class="line">            <span class="comment"># rank(v) 找到的是 v 的位置，而这个位置是区间的开始，所以是rank(end)-1</span></span><br><span class="line">            <span class="comment"># 但add操作是[c+1]，所以直接rank(end)即可</span></span><br><span class="line">            r2 = bisect.bisect_left(xs, <span class="number">2</span> * x + side) + <span class="number">1</span></span><br><span class="line">            c2 = bisect.bisect_left(ys, <span class="number">2</span> * y + side) + <span class="number">1</span></span><br><span class="line">            <span class="variable language_">self</span>._add(diff, r1, c1, r2-<span class="number">1</span>, c2-<span class="number">1</span>) <span class="comment">#对每个力场调用 add → 在差分数组上标记覆盖</span></span><br><span class="line"></span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        <span class="comment"># 从差分矩阵进行前缀和还原，并找到最大值</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, size_x + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, size_y + <span class="number">1</span>):</span><br><span class="line">                diff[i][j] += diff[i - <span class="number">1</span>][j] + diff[i][j - <span class="number">1</span>] - diff[i - <span class="number">1</span>][j - <span class="number">1</span>]</span><br><span class="line">                ans = <span class="built_in">max</span>(ans, diff[i][j])</span><br><span class="line">                </span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_add</span>(<span class="params">self, diff: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]], r1: <span class="built_in">int</span>, c1: <span class="built_in">int</span>, r2: <span class="built_in">int</span>, c2: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;二维差分操作&quot;&quot;&quot;</span></span><br><span class="line">        diff[r1][c1] += <span class="number">1</span></span><br><span class="line">        diff[r2 + <span class="number">1</span>][c2 + <span class="number">1</span>] += <span class="number">1</span></span><br><span class="line">        diff[r2 + <span class="number">1</span>][c1] -= <span class="number">1</span></span><br><span class="line">        diff[r1][c2 + <span class="number">1</span>] -= <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="离散化技巧总结"><a href="#离散化技巧总结" class="headerlink" title="离散化技巧总结"></a>离散化技巧总结</h3><ol>
+<li><strong>适用场景</strong>：坐标范围大但关键点少</li>
+<li><strong>核心步骤</strong>：收集→排序→去重→映射</li>
+<li><strong>空间优化</strong>：从O(坐标范围)降到O(关键点数量)</li>
+<li><strong>查找效率</strong>：使用二分查找进行坐标映射</li>
+</ol>
+<h3 id="算法分析-4"><a href="#算法分析-4" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n²log n)</li>
+<li><strong>空间复杂度</strong>：O(n²)</li>
+<li><strong>优化效果</strong>：坐标压缩后空间大大减少</li>
+</ul>
+<hr>
+<h2 id="技巧总结与应用场景"><a href="#技巧总结与应用场景" class="headerlink" title="技巧总结与应用场景"></a>技巧总结与应用场景</h2><h3 id="1-二维前缀和应用场景"><a href="#1-二维前缀和应用场景" class="headerlink" title="1. 二维前缀和应用场景"></a>1. 二维前缀和应用场景</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 适用情况：</span></span><br><span class="line"><span class="comment"># 1. 大量矩形区域查询</span></span><br><span class="line"><span class="comment"># 2. 查询频率远大于修改频率</span></span><br><span class="line"><span class="comment"># 3. 矩阵相对较小，可以承受O(n×m)的预处理</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 核心模板：</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build_prefix_sum</span>(<span class="params">matrix</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;构建二维前缀和&quot;&quot;&quot;</span></span><br><span class="line">    n, m = <span class="built_in">len</span>(matrix), <span class="built_in">len</span>(matrix[<span class="number">0</span>])</span><br><span class="line">    s = [[<span class="number">0</span>] * (m + <span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n + <span class="number">1</span>)]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">            s[i][j] = matrix[i-<span class="number">1</span>][j-<span class="number">1</span>] + s[i-<span class="number">1</span>][j] + s[i][j-<span class="number">1</span>] - s[i-<span class="number">1</span>][j-<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">query_sum</span>(<span class="params">s, r1, c1, r2, c2</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;查询矩形区域和&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> s[r2+<span class="number">1</span>][c2+<span class="number">1</span>] - s[r1][c2+<span class="number">1</span>] - s[r2+<span class="number">1</span>][c1] + s[r1][c1]</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-二维差分应用场景"><a href="#2-二维差分应用场景" class="headerlink" title="2. 二维差分应用场景"></a>2. 二维差分应用场景</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 适用情况：</span></span><br><span class="line"><span class="comment"># 1. 大量矩形区域修改</span></span><br><span class="line"><span class="comment"># 2. 修改完成后批量查询</span></span><br><span class="line"><span class="comment"># 3. 不需要边修改边查询</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 核心模板：</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add_rectangle</span>(<span class="params">diff, r1, c1, r2, c2, val</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;矩形区域增加val&quot;&quot;&quot;</span></span><br><span class="line">    diff[r1][c1] += val</span><br><span class="line">    diff[r2+<span class="number">1</span>][c1] -= val</span><br><span class="line">    diff[r1][c2+<span class="number">1</span>] -= val</span><br><span class="line">    diff[r2+<span class="number">1</span>][c2+<span class="number">1</span>] += val</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build_result</span>(<span class="params">diff</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;从差分数组构建结果&quot;&quot;&quot;</span></span><br><span class="line">    n, m = <span class="built_in">len</span>(diff)-<span class="number">1</span>, <span class="built_in">len</span>(diff[<span class="number">0</span>])-<span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, m):</span><br><span class="line">            diff[i][j] += diff[i-<span class="number">1</span>][j] + diff[i][j-<span class="number">1</span>] - diff[i-<span class="number">1</span>][j-<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-离散化应用场景"><a href="#3-离散化应用场景" class="headerlink" title="3. 离散化应用场景"></a>3. 离散化应用场景</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 适用情况：</span></span><br><span class="line"><span class="comment"># 1. 坐标范围很大（如10^9）</span></span><br><span class="line"><span class="comment"># 2. 关键坐标点相对较少</span></span><br><span class="line"><span class="comment"># 3. 需要在坐标上进行区间操作</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 核心模板：</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">discretize</span>(<span class="params">coordinates</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;坐标离散化&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 去重排序</span></span><br><span class="line">    sorted_coords = <span class="built_in">sorted</span>(<span class="built_in">list</span>(<span class="built_in">set</span>(coordinates)))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 建立映射</span></span><br><span class="line">    coord_to_index = &#123;coord: i <span class="keyword">for</span> i, coord <span class="keyword">in</span> <span class="built_in">enumerate</span>(sorted_coords)&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> sorted_coords, coord_to_index</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_compressed_index</span>(<span class="params">coord, sorted_coords</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;获取压缩后的索引&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> bisect.bisect_left(sorted_coords, coord)</span><br></pre></td></tr></table></figure>
+
+<h2 id="复杂度分析对比"><a href="#复杂度分析对比" class="headerlink" title="复杂度分析对比"></a>复杂度分析对比</h2><table>
+<thead>
+<tr>
+<th>技巧</th>
+<th>预处理</th>
+<th>单次操作</th>
+<th>空间复杂度</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>二维前缀和</td>
+<td>O(n×m)</td>
+<td>O(1)查询</td>
+<td>O(n×m)</td>
+<td>多查询少修改</td>
+</tr>
+<tr>
+<td>二维差分</td>
+<td>O(1)</td>
+<td>O(1)修改 + O(n×m)构建</td>
+<td>O(n×m)</td>
+<td>多修改后查询</td>
+</tr>
+<tr>
+<td>离散化</td>
+<td>O(k log k)</td>
+<td>依赖具体算法</td>
+<td>O(k²)</td>
+<td>大坐标少关键点</td>
+</tr>
+</tbody></table>
+<h2 id="学习建议"><a href="#学习建议" class="headerlink" title="学习建议"></a>学习建议</h2><h3 id="1-理解容斥原理"><a href="#1-理解容斥原理" class="headerlink" title="1. 理解容斥原理"></a>1. 理解容斥原理</h3><ul>
+<li>掌握二维前缀和的数学基础</li>
+<li>理解四个矩形的加减关系</li>
+<li>练习边界处理技巧</li>
+</ul>
+<h3 id="2-掌握差分思想"><a href="#2-掌握差分思想" class="headerlink" title="2. 掌握差分思想"></a>2. 掌握差分思想</h3><ul>
+<li>理解二维差分的四点修改原理</li>
+<li>熟练掌握差分与前缀和的转换</li>
+<li>注意边界扩展的重要性</li>
+</ul>
+<h3 id="3-熟练离散化技巧"><a href="#3-熟练离散化技巧" class="headerlink" title="3. 熟练离散化技巧"></a>3. 熟练离散化技巧</h3><ul>
+<li>理解坐标压缩的核心思想</li>
+<li>掌握二分查找在离散化中的应用</li>
+<li>练习大坐标问题的转换</li>
+</ul>
+<h3 id="4-综合应用能力"><a href="#4-综合应用能力" class="headerlink" title="4. 综合应用能力"></a>4. 综合应用能力</h3><ul>
+<li>能够识别适合使用哪种技巧的问题</li>
+<li>掌握多种技巧的组合使用</li>
+<li>注意边界条件和特殊情况的处理</li>
+</ul>
+<h3 id="5-调试技巧"><a href="#5-调试技巧" class="headerlink" title="5. 调试技巧"></a>5. 调试技巧</h3><ul>
+<li>验证前缀和构建的正确性</li>
+<li>检查差分操作的边界</li>
+<li>测试离散化映射的准确性</li>
+</ul>
+<p>通过掌握二维前缀和、二维差分和离散化技巧，可以高效解决各种二维矩阵问题。关键在于理解每种技巧的适用场景，以及合理的边界处理和空间优化策略。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C/" rel="tag"># 二维前缀和</a>
+              <a href="/tags/%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86/" rel="tag"># 二维差分</a>
+              <a href="/tags/%E7%A6%BB%E6%95%A3%E5%8C%96/" rel="tag"># 离散化</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/09/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8822%EF%BC%89-%20%E4%B8%80%E7%BB%B4%E5%B7%AE%E5%88%86%E4%B8%8E%E7%AD%89%E5%B7%AE%E6%95%B0%E5%88%97%E5%B7%AE%E5%88%86/" rel="prev" title="数据结构与算法自学笔记（22）- 一维差分与等差数列差分">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（22）- 一维差分与等差数列差分
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/13/Linux%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%AC%94%E8%AE%B0/" rel="next" title="Linux使用指南与常用命令笔记">
+      Linux使用指南与常用命令笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">前置知识</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#048%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C%E3%80%81%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86%E3%80%81%E7%A6%BB%E6%95%A3%E5%8C%96%E6%8A%80%E5%B7%A7"><span class="nav-number">2.</span> <span class="nav-text">048【必备】二维前缀和、二维差分、离散化技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.</span> <span class="nav-text">核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="nav-number">2.1.1.</span> <span class="nav-text">二维前缀和的基本思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="nav-number">2.1.2.</span> <span class="nav-text">二维差分的基本思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%BB%E6%95%A3%E5%8C%96%E6%8A%80%E5%B7%A7"><span class="nav-number">2.1.3.</span> <span class="nav-text">离散化技巧</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%80%EF%BC%9A%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.2.</span> <span class="nav-text">题目一：二维前缀和模板</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">2.2.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">2.2.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.2.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86%E5%9B%BE%E8%A7%A3"><span class="nav-number">2.2.4.</span> <span class="nav-text">容斥原理图解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">2.2.5.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%8C%EF%BC%9A%E8%BE%B9%E6%A1%86%E4%B8%BA1%E7%9A%84%E6%9C%80%E5%A4%A7%E6%AD%A3%E6%96%B9%E5%BD%A2"><span class="nav-number">2.3.</span> <span class="nav-text">题目二：边框为1的最大正方形</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">2.3.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-1"><span class="nav-number">2.3.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">2.3.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-1"><span class="nav-number">2.3.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%89%EF%BC%9A%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.4.</span> <span class="nav-text">题目三：二维差分模板</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">2.4.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-2"><span class="nav-number">2.4.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90"><span class="nav-number">2.4.3.</span> <span class="nav-text">关键函数解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86%E5%9B%BE%E8%A7%A3"><span class="nav-number">2.4.4.</span> <span class="nav-text">二维差分图解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.4.5.</span> <span class="nav-text">完整实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-2"><span class="nav-number">2.4.6.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%9B%9B%EF%BC%9A%E7%94%A8%E9%82%AE%E7%A5%A8%E8%B4%B4%E6%BB%A1%E7%BD%91%E6%A0%BC%E5%9B%BE"><span class="nav-number">2.5.</span> <span class="nav-text">题目四：用邮票贴满网格图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-3"><span class="nav-number">2.5.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-3"><span class="nav-number">2.5.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">2.5.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-3"><span class="nav-number">2.5.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%94%EF%BC%9A%E6%9C%80%E5%BC%BA%E7%A5%9D%E7%A6%8F%E5%8A%9B%E5%9C%BA%EF%BC%88%E7%A6%BB%E6%95%A3%E5%8C%96%E6%8A%80%E5%B7%A7%EF%BC%89"><span class="nav-number">2.6.</span> <span class="nav-text">题目五：最强祝福力场（离散化技巧）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-4"><span class="nav-number">2.6.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-4"><span class="nav-number">2.6.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%BB%E6%95%A3%E5%8C%96%E5%8E%9F%E7%90%86"><span class="nav-number">2.6.3.</span> <span class="nav-text">离散化原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-3"><span class="nav-number">2.6.4.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%BB%E6%95%A3%E5%8C%96%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93"><span class="nav-number">2.6.5.</span> <span class="nav-text">离散化技巧总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-4"><span class="nav-number">2.6.6.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93%E4%B8%8E%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.7.</span> <span class="nav-text">技巧总结与应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.7.1.</span> <span class="nav-text">1. 二维前缀和应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.7.2.</span> <span class="nav-text">2. 二维差分应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%A6%BB%E6%95%A3%E5%8C%96%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.7.3.</span> <span class="nav-text">3. 离散化应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90%E5%AF%B9%E6%AF%94"><span class="nav-number">2.8.</span> <span class="nav-text">复杂度分析对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.9.</span> <span class="nav-text">学习建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%90%86%E8%A7%A3%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86"><span class="nav-number">2.9.1.</span> <span class="nav-text">1. 理解容斥原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%8E%8C%E6%8F%A1%E5%B7%AE%E5%88%86%E6%80%9D%E6%83%B3"><span class="nav-number">2.9.2.</span> <span class="nav-text">2. 掌握差分思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%86%9F%E7%BB%83%E7%A6%BB%E6%95%A3%E5%8C%96%E6%8A%80%E5%B7%A7"><span class="nav-number">2.9.3.</span> <span class="nav-text">3. 熟练离散化技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%BB%BC%E5%90%88%E5%BA%94%E7%94%A8%E8%83%BD%E5%8A%9B"><span class="nav-number">2.9.4.</span> <span class="nav-text">4. 综合应用能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7"><span class="nav-number">2.9.5.</span> <span class="nav-text">5. 调试技巧</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

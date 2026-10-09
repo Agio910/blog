@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是class043的内容，介绍了算法竞赛和面试中极其重要的一个技巧——根据数据量猜解法。这是”天字第一号重要技巧”，能够帮助我们在看到题目后迅速判断应该使用什么复杂度的算法。 前置知识在学习本技巧之前，需要掌握以下基础知识：  时间复杂度的概念（">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（19）- 根据数据量猜解法的核心技巧">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/09/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8819%EF%BC%89-%20%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E9%87%8F%E7%8C%9C%E8%A7%A3%E6%B3%95%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8A%80%E5%B7%A7/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是class043的内容，介绍了算法竞赛和面试中极其重要的一个技巧——根据数据量猜解法。这是”天字第一号重要技巧”，能够帮助我们在看到题目后迅速判断应该使用什么复杂度的算法。 前置知识在学习本技巧之前，需要掌握以下基础知识：  时间复杂度的概念（">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(19)/class43-%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E9%87%8F%E7%8C%9C%E9%A2%98%E8%A7%A3/%E6%A0%B9%E6%8D%AEseed%E7%94%9F%E6%88%90%E5%9B%9E%E6%96%87%E6%95%B0.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(19)/class43-%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E9%87%8F%E7%8C%9C%E9%A2%98%E8%A7%A3/%E5%B0%8F%E6%95%B0%E6%8D%AE%E5%8A%9E%E5%A4%A7%E4%BA%8B.png">
+<meta property="article:published_time" content="2025-09-06T00:30:00.000Z">
+<meta property="article:modified_time" content="2025-09-08T10:26:04.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="算法技巧">
+<meta property="article:tag" content="递归">
+<meta property="article:tag" content="回溯">
+<meta property="article:tag" content="时间复杂度">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(19)/class43-%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E9%87%8F%E7%8C%9C%E9%A2%98%E8%A7%A3/%E6%A0%B9%E6%8D%AEseed%E7%94%9F%E6%88%90%E5%9B%9E%E6%96%87%E6%95%B0.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/09/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8819%EF%BC%89-%20%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E9%87%8F%E7%8C%9C%E8%A7%A3%E6%B3%95%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8A%80%E5%B7%A7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（19）- 根据数据量猜解法的核心技巧 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/09/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8819%EF%BC%89-%20%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E9%87%8F%E7%8C%9C%E8%A7%A3%E6%B3%95%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8A%80%E5%B7%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（19）- 根据数据量猜解法的核心技巧
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-09-06 08:30:00" itemprop="dateCreated datePublished" datetime="2025-09-06T08:30:00+08:00">2025-09-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-09-08 18:26:04" itemprop="dateModified" datetime="2025-09-08T18:26:04+08:00">2025-09-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a></p>
+<p>本笔记是class043的内容，介绍了算法竞赛和面试中极其重要的一个技巧——<strong>根据数据量猜解法</strong>。这是”天字第一号重要技巧”，能够帮助我们在看到题目后迅速判断应该使用什么复杂度的算法。</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>在学习本技巧之前，需要掌握以下基础知识：</p>
+<ul>
+<li>时间复杂度的概念（讲解007）</li>
+<li>全排列递归代码的执行细节（讲解038）</li>
+</ul>
+<hr>
+<h2 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h2><h3 id="基本事实"><a href="#基本事实" class="headerlink" title="基本事实"></a>基本事实</h3><p>无论在什么测试平台、什么CPU上，都有一个基本的性能标准：</p>
+<ul>
+<li><strong>C&#x2F;C++</strong>：运行时间1秒，对应常数指令操作量约为 <strong>10^7 ~ 10^8</strong></li>
+<li><strong>Java&#x2F;Python&#x2F;Go等其他语言</strong>：运行时间1-2秒，对应常数指令操作量约为 <strong>10^7 ~ 10^8</strong></li>
+</ul>
+<p>这个数量级是固定的，是我们进行算法复杂度估算的重要依据。</p>
+<h3 id="运用条件"><a href="#运用条件" class="headerlink" title="运用条件"></a>运用条件</h3><p>要成功运用这个技巧，需要满足两个条件：</p>
+<ol>
+<li><p><strong>题目给定各个参数的范围最大值</strong></p>
+<ul>
+<li>正式笔试、比赛的题目一定会给出</li>
+<li>面试中需要和面试官确认</li>
+</ul>
+</li>
+<li><p><strong>对自己设计的算法有准确的时间复杂度估计</strong></p>
+<ul>
+<li>这需要扎实的算法基础</li>
+<li>对各种算法模式的复杂度要熟悉</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="问题规模与可用算法对照表"><a href="#问题规模与可用算法对照表" class="headerlink" title="问题规模与可用算法对照表"></a>问题规模与可用算法对照表</h2><table>
+<thead>
+<tr>
+<th>数据规模n</th>
+<th>logn</th>
+<th>n</th>
+<th>n*logn</th>
+<th>n*√n</th>
+<th>n²</th>
+<th>2^n</th>
+<th>n!</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>n ≤ 11</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>n ≤ 25</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>n ≤ 5000</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>n ≤ 10^5</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>n ≤ 10^6</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>n ≤ 10^7</td>
+<td>✓</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>n ≥ 10^8</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+</tbody></table>
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><em><em>n</em>√n 复杂度</em>*：常出现在”莫队算法”相关题目中</li>
+<li>这张表提供参考，但实际应用中要考虑多个参数的组合影响</li>
+<li>关键是记住<strong>常数指令操作量 10^7 ~ 10^8</strong>这个基准</li>
+</ul>
+<hr>
+<h1 id="043【必备】根据数据量猜解法的技巧-天字第一号重要技巧"><a href="#043【必备】根据数据量猜解法的技巧-天字第一号重要技巧" class="headerlink" title="043【必备】根据数据量猜解法的技巧-天字第一号重要技巧"></a>043【必备】根据数据量猜解法的技巧-天字第一号重要技巧</h1><h2 id="实战案例"><a href="#实战案例" class="headerlink" title="实战案例"></a>实战案例</h2><h3 id="案例一：最优的技能释放顺序"><a href="#案例一：最优的技能释放顺序" class="headerlink" title="案例一：最优的技能释放顺序"></a>案例一：最优的技能释放顺序</h3><h4 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h4><p>现在有一个打怪类型的游戏：</p>
+<ul>
+<li>你有n个技能，每个技能最多只能释放一次</li>
+<li>每个技能有基础伤害值</li>
+<li>当怪物血量小于等于某个阈值时，该技能可能造成双倍伤害</li>
+<li>已知怪物有m点血量</li>
+<li>求最少用几个技能能消灭怪物</li>
+</ul>
+<p><strong>约束条件：</strong></p>
+<ul>
+<li>1 ≤ n ≤ 10</li>
+<li>1 ≤ m、x[i]、y[i] ≤ 10^6</li>
+</ul>
+<p><strong>测试链接：</strong> <a target="_blank" rel="noopener" href="https://www.nowcoder.com/practice/d88ef50f8dab4850be8cd4b95514bbbd">https://www.nowcoder.com/practice/d88ef50f8dab4850be8cd4b95514bbbd</a></p>
+<h4 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h4><p>由于 n ≤ 10，我们可以尝试所有技能的排列组合：</p>
+<ul>
+<li>排列数：n! ≤ 10! &#x3D; 3,628,800</li>
+<li>远小于 10^7，所以回溯算法完全可行</li>
+</ul>
+<h4 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.kill = []      <span class="comment"># 技能伤害值</span></span><br><span class="line">        <span class="variable language_">self</span>.blood = []     <span class="comment"># 触发双倍伤害的血量阈值</span></span><br><span class="line">        <span class="variable language_">self</span>.n = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, i: <span class="built_in">int</span>, r: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        回溯算法核心函数</span></span><br><span class="line"><span class="string">        i: 当前使用的技能数量</span></span><br><span class="line"><span class="string">        r: 怪物剩余血量</span></span><br><span class="line"><span class="string">        返回: 从当前状态到击败怪物还需要的最少技能数</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># base case: 怪物已被击败</span></span><br><span class="line">        <span class="keyword">if</span> r &lt;= <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># base case: 技能用完但怪物未死</span></span><br><span class="line">        <span class="keyword">if</span> i == <span class="variable language_">self</span>.n:</span><br><span class="line">            <span class="keyword">return</span> math.inf</span><br><span class="line"></span><br><span class="line">        ans = math.inf</span><br><span class="line">        <span class="comment"># 尝试所有未使用的技能</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i, <span class="variable language_">self</span>.n):</span><br><span class="line">            <span class="comment"># 将第j个技能换到位置i尝试</span></span><br><span class="line">            <span class="variable language_">self</span>._swap(i, j)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 计算伤害（是否触发双倍）</span></span><br><span class="line">            damage = <span class="variable language_">self</span>.kill[i] <span class="keyword">if</span> r &gt; <span class="variable language_">self</span>.blood[i] <span class="keyword">else</span> <span class="variable language_">self</span>.kill[i] * <span class="number">2</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 递归求解</span></span><br><span class="line">            res = <span class="variable language_">self</span>._f(i + <span class="number">1</span>, r - damage)</span><br><span class="line">            <span class="keyword">if</span> res != math.inf:</span><br><span class="line">                ans = <span class="built_in">min</span>(ans, <span class="number">1</span> + res)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 回溯</span></span><br><span class="line">            <span class="variable language_">self</span>._swap(i, j)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_swap</span>(<span class="params">self, i: <span class="built_in">int</span>, j: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;交换第i个和第j个技能&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.kill[i], <span class="variable language_">self</span>.kill[j] = <span class="variable language_">self</span>.kill[j], <span class="variable language_">self</span>.kill[i]</span><br><span class="line">        <span class="variable language_">self</span>.blood[i], <span class="variable language_">self</span>.blood[j] = <span class="variable language_">self</span>.blood[j], <span class="variable language_">self</span>.blood[i]</span><br></pre></td></tr></table></figure>
+
+<h4 id="优化版本（剪枝）"><a href="#优化版本（剪枝）" class="headerlink" title="优化版本（剪枝）"></a>优化版本（剪枝）</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solve_optimized</span>():</span><br><span class="line">    t = <span class="built_in">int</span>(<span class="built_in">input</span>())</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(t):</span><br><span class="line">        n, m = <span class="built_in">map</span>(<span class="built_in">int</span>, <span class="built_in">input</span>().split())</span><br><span class="line">        skills = []</span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            skills.append(<span class="built_in">tuple</span>(<span class="built_in">map</span>(<span class="built_in">int</span>, <span class="built_in">input</span>().split())))</span><br><span class="line">        </span><br><span class="line">        ans = -<span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">blood, used=<span class="built_in">set</span>(<span class="params"></span>)</span>):</span><br><span class="line">            <span class="keyword">nonlocal</span> ans</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 剪枝1: 假设剩余技能全部打出双倍伤害</span></span><br><span class="line">            rest_max_damage = <span class="built_in">sum</span>([<span class="number">2</span> * skills[i][<span class="number">0</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n) <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> used])</span><br><span class="line">            <span class="keyword">if</span> blood &gt; rest_max_damage:</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 剪枝2: 如果当前已使用技能数不优于已知答案</span></span><br><span class="line">            <span class="keyword">if</span> ans != -<span class="number">1</span> <span class="keyword">and</span> <span class="built_in">len</span>(used) &gt;= ans:</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 成功条件</span></span><br><span class="line">            <span class="keyword">if</span> blood &lt;= <span class="number">0</span>:</span><br><span class="line">                ans = <span class="built_in">min</span>(ans, <span class="built_in">len</span>(used)) <span class="keyword">if</span> ans &gt;= <span class="number">0</span> <span class="keyword">else</span> <span class="built_in">len</span>(used)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 失败条件</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(used) == n <span class="keyword">and</span> blood &gt; <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 尝试每个未使用的技能</span></span><br><span class="line">            <span class="keyword">for</span> i, (damage, threshold) <span class="keyword">in</span> <span class="built_in">enumerate</span>(skills):</span><br><span class="line">                <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> used:</span><br><span class="line">                    used.add(i)</span><br><span class="line">                    actual_damage = <span class="number">2</span> * damage <span class="keyword">if</span> blood &lt;= threshold <span class="keyword">else</span> damage</span><br><span class="line">                    dfs(blood - actual_damage, used)</span><br><span class="line">                    used.remove(i)</span><br><span class="line">        </span><br><span class="line">        dfs(m)</span><br><span class="line">        <span class="built_in">print</span>(ans)</span><br></pre></td></tr></table></figure>
+
+<h3 id="案例二：超级回文数的数目"><a href="#案例二：超级回文数的数目" class="headerlink" title="案例二：超级回文数的数目"></a>案例二：超级回文数的数目</h3><h4 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h4><p>如果一个正整数自身是回文数，而且它也是一个回文数的平方，那么我们称这个数为超级回文数。</p>
+<p>给定两个正整数L和R，返回包含在范围[L, R]中的超级回文数的数目。</p>
+<p><strong>约束条件：</strong></p>
+<ul>
+<li>1 ≤ len(L) ≤ 18</li>
+<li>1 ≤ len(R) ≤ 18</li>
+<li>L和R表示[1, 10^18)范围的整数</li>
+</ul>
+<p><strong>测试链接：</strong> <a target="_blank" rel="noopener" href="https://leetcode.cn/problems/super-palindromes/">https://leetcode.cn/problems/super-palindromes/</a></p>
+<h4 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h4><p>设超级回文数为S &#x3D; x²，其中S和x都是回文数：</p>
+<ul>
+<li>S最大为10^18，所以x最大为10^9</li>
+<li>回文数的数量远少于普通数</li>
+<li>可以通过”种子”生成回文数，种子范围约为10^5</li>
+<li>时间复杂度约为O(√10^9) &#x3D; O(10^5)，完全可行</li>
+</ul>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(19)/class43-%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E9%87%8F%E7%8C%9C%E9%A2%98%E8%A7%A3/%E6%A0%B9%E6%8D%AEseed%E7%94%9F%E6%88%90%E5%9B%9E%E6%96%87%E6%95%B0.png" alt="根据seed生成回文数"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(19)/class43-%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E9%87%8F%E7%8C%9C%E9%A2%98%E8%A7%A3/%E5%B0%8F%E6%95%B0%E6%8D%AE%E5%8A%9E%E5%A4%A7%E4%BA%8B.png" alt="小数据办大事"></p>
+<h4 id="算法实现-1"><a href="#算法实现-1" class="headerlink" title="算法实现"></a>算法实现</h4><h5 id="方法一：枚举回文数的根"><a href="#方法一：枚举回文数的根" class="headerlink" title="方法一：枚举回文数的根"></a>方法一：枚举回文数的根</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">superpalindromesInRange1</span>(<span class="params">self, left: <span class="built_in">str</span>, right: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        核心思想：枚举所有可能的回文数x，检查x²是否也是回文且在范围内</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        l, r = <span class="built_in">int</span>(left), <span class="built_in">int</span>(right)</span><br><span class="line">        limit = <span class="built_in">int</span>(math.sqrt(r))</span><br><span class="line">        </span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        seed = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            <span class="comment"># 生成偶数长度回文数</span></span><br><span class="line">            num_even = <span class="variable language_">self</span>._even_enlarge(seed)</span><br><span class="line">            <span class="keyword">if</span> num_even &gt; limit:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            square = num_even * num_even</span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>._check(square, l, r):</span><br><span class="line">                ans += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 生成奇数长度回文数</span></span><br><span class="line">            num_odd = <span class="variable language_">self</span>._odd_enlarge(seed)</span><br><span class="line">            <span class="keyword">if</span> num_odd &lt;= limit:</span><br><span class="line">                square = num_odd * num_odd</span><br><span class="line">                <span class="keyword">if</span> <span class="variable language_">self</span>._check(square, l, r):</span><br><span class="line">                    ans += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            seed += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_even_enlarge</span>(<span class="params">self, seed: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;将种子扩展为偶数长度回文数，如123→123321&quot;&quot;&quot;</span></span><br><span class="line">        ans = seed</span><br><span class="line">        temp = seed</span><br><span class="line">        <span class="keyword">while</span> temp != <span class="number">0</span>:</span><br><span class="line">            ans = ans * <span class="number">10</span> + temp % <span class="number">10</span></span><br><span class="line">            temp //= <span class="number">10</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_odd_enlarge</span>(<span class="params">self, seed: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;将种子扩展为奇数长度回文数，如123→12321&quot;&quot;&quot;</span></span><br><span class="line">        ans = seed</span><br><span class="line">        temp = seed // <span class="number">10</span></span><br><span class="line">        <span class="keyword">while</span> temp != <span class="number">0</span>:</span><br><span class="line">            ans = ans * <span class="number">10</span> + temp % <span class="number">10</span></span><br><span class="line">            temp //= <span class="number">10</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_check</span>(<span class="params">self, num: <span class="built_in">int</span>, l: <span class="built_in">int</span>, r: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;检查数字是否在范围内且为回文数&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> l &lt;= num &lt;= r <span class="keyword">and</span> <span class="variable language_">self</span>._is_palindrome_num(num)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_is_palindrome_num</span>(<span class="params">self, num: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断数字是否为回文数&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> num &lt; <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">if</span> num == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 双指针思想：同时从最高位和最低位比较</span></span><br><span class="line">        offset = <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> num // offset &gt;= <span class="number">10</span>:</span><br><span class="line">            offset *= <span class="number">10</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> num != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">if</span> num // offset != num % <span class="number">10</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            num = (num % offset) // <span class="number">10</span></span><br><span class="line">            offset //= <span class="number">100</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="方法二：打表法"><a href="#方法二：打表法" class="headerlink" title="方法二：打表法"></a>方法二：打表法</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="comment"># 预计算所有超级回文数</span></span><br><span class="line">    _record = [</span><br><span class="line">        <span class="number">1</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">121</span>, <span class="number">484</span>, <span class="number">10201</span>, <span class="number">12321</span>, <span class="number">14641</span>, <span class="number">40804</span>, <span class="number">44944</span>,</span><br><span class="line">        <span class="number">1002001</span>, <span class="number">1234321</span>, <span class="number">4008004</span>, <span class="number">100020001</span>, <span class="number">102030201</span>, <span class="number">104060401</span>,</span><br><span class="line">        <span class="comment"># ... 更多预计算的值</span></span><br><span class="line">        <span class="number">1234323468643234321</span>, <span class="number">4000000008000000004</span></span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">superpalindromesInRange2</span>(<span class="params">self, left: <span class="built_in">str</span>, right: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        打表法：预先计算好所有超级回文数，查询时直接范围查找</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        l, r = <span class="built_in">int</span>(left), <span class="built_in">int</span>(right)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 二分查找或线性扫描</span></span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> <span class="variable language_">self</span>._record:</span><br><span class="line">            <span class="keyword">if</span> l &lt;= num &lt;= r:</span><br><span class="line">                count += <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> num &gt; r:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> count</span><br></pre></td></tr></table></figure>
+
+<h3 id="案例三：回文数判断"><a href="#案例三：回文数判断" class="headerlink" title="案例三：回文数判断"></a>案例三：回文数判断</h3><h4 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h4><p>判断一个整数是否是回文数，不使用字符串转换。</p>
+<p><strong>测试链接：</strong> <a target="_blank" rel="noopener" href="https://leetcode.cn/problems/palindrome-number/">https://leetcode.cn/problems/palindrome-number/</a></p>
+<h4 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h4><ol>
+<li>负数不是回文数。</li>
+<li>计算出一个 <code>offset</code>，使其与 <code>num</code> 的位数相同（例如，num&#x3D;12321, offset&#x3D;10000）。<br> 这个 <code>offset</code> 可以用来取出最高位的数字 (<code>num // offset</code>)。</li>
+<li>循环比较最高位 (<code>num // offset</code>) 和最低位 (<code>num % 10</code>)。</li>
+<li>如果不相等，则不是回文数。</li>
+<li>如果相等，则去掉最高位和最低位，继续比较。<ul>
+<li>去掉最低位: <code>num % 10</code></li>
+<li>去掉最高位: <code>num % offset</code></li>
+<li>组合起来: <code>(num % offset) // 10</code></li>
+</ul>
+</li>
+<li>同时，<code>offset</code> 需要除以 100，因为我们一次处理了两位数。</li>
+</ol>
+<h4 id="算法实现-2"><a href="#算法实现-2" class="headerlink" title="算法实现"></a>算法实现</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isPalindrome</span>(<span class="params">self, num: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        不使用字符串转换判断回文数</span></span><br><span class="line"><span class="string">        核心思想：双指针，同时比较最高位和最低位</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> num &lt; <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 计算与num位数相同的offset</span></span><br><span class="line">        offset = <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> num // offset &gt;= <span class="number">10</span>:</span><br><span class="line">            offset *= <span class="number">10</span></span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 同时比较首尾数字</span></span><br><span class="line">        <span class="keyword">while</span> num != <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 比较最高位和最低位</span></span><br><span class="line">            <span class="keyword">if</span> num // offset != num % <span class="number">10</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 去掉首尾两位数字</span></span><br><span class="line">            num = (num % offset) // <span class="number">10</span></span><br><span class="line">            offset //= <span class="number">100</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="技巧应用步骤"><a href="#技巧应用步骤" class="headerlink" title="技巧应用步骤"></a>技巧应用步骤</h2><h3 id="1-分析数据规模"><a href="#1-分析数据规模" class="headerlink" title="1. 分析数据规模"></a>1. 分析数据规模</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 示例：看到题目约束</span></span><br><span class="line"><span class="comment"># n ≤ 10, m ≤ 10^6</span></span><br><span class="line"><span class="comment"># 立即想到：n很小，可以用指数级算法；m较大，需要高效处理</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-估算操作次数"><a href="#2-估算操作次数" class="headerlink" title="2. 估算操作次数"></a>2. 估算操作次数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 示例：全排列问题</span></span><br><span class="line"><span class="comment"># n ≤ 10 → n! ≤ 10! ≈ 3.6 × 10^6 &lt; 10^7 ✓ 可行</span></span><br><span class="line"><span class="comment"># n ≤ 15 → n! ≤ 15! ≈ 1.3 × 10^12 &gt; 10^8 ✗ 不可行</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-选择合适算法"><a href="#3-选择合适算法" class="headerlink" title="3. 选择合适算法"></a>3. 选择合适算法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 根据复杂度选择算法类型：</span></span><br><span class="line"><span class="comment"># O(1), O(logn) → 数学公式、二分查找</span></span><br><span class="line"><span class="comment"># O(n) → 线性扫描、简单遍历  </span></span><br><span class="line"><span class="comment"># O(n logn) → 排序、分治算法</span></span><br><span class="line"><span class="comment"># O(n²) → 双重循环、动态规划</span></span><br><span class="line"><span class="comment"># O(2^n) → 回溯、状态压缩DP</span></span><br><span class="line"><span class="comment"># O(n!) → 全排列、旅行商问题</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-考虑常数优化"><a href="#4-考虑常数优化" class="headerlink" title="4. 考虑常数优化"></a>4. 考虑常数优化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 即使复杂度合适，也要考虑：</span></span><br><span class="line"><span class="comment"># - 剪枝优化</span></span><br><span class="line"><span class="comment"># - 缓存计算结果</span></span><br><span class="line"><span class="comment"># - 避免重复计算</span></span><br><span class="line"><span class="comment"># - 选择高效的数据结构</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="常见复杂度模式"><a href="#常见复杂度模式" class="headerlink" title="常见复杂度模式"></a>常见复杂度模式</h2><h3 id="1-递归分治"><a href="#1-递归分治" class="headerlink" title="1. 递归分治"></a>1. 递归分治</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># T(n) = a × T(n/b) + O(n^c)</span></span><br><span class="line"><span class="comment"># 主定理：比较a与b^c的大小关系</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-动态规划"><a href="#2-动态规划" class="headerlink" title="2. 动态规划"></a>2. 动态规划</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 状态数 × 转移复杂度</span></span><br><span class="line"><span class="comment"># 一维DP: O(n)</span></span><br><span class="line"><span class="comment"># 二维DP: O(n²)  </span></span><br><span class="line"><span class="comment"># 区间DP: O(n³)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-图算法"><a href="#3-图算法" class="headerlink" title="3. 图算法"></a>3. 图算法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># BFS/DFS: O(V + E)</span></span><br><span class="line"><span class="comment"># 最短路径: O(V²) 或 O(E logV)</span></span><br><span class="line"><span class="comment"># 最小生成树: O(E logE)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-字符串算法"><a href="#4-字符串算法" class="headerlink" title="4. 字符串算法"></a>4. 字符串算法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 暴力匹配: O(n×m)</span></span><br><span class="line"><span class="comment"># KMP: O(n + m)</span></span><br><span class="line"><span class="comment"># 字典树: O(总长度)</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="学习建议"><a href="#学习建议" class="headerlink" title="学习建议"></a>学习建议</h2><h3 id="1-熟记基准值"><a href="#1-熟记基准值" class="headerlink" title="1. 熟记基准值"></a>1. 熟记基准值</h3><ul>
+<li><strong>核心记忆：10^7 ~ 10^8 操作&#x2F;秒</strong></li>
+<li>常见数据规模的复杂度上限</li>
+<li>不同语言的性能差异</li>
+</ul>
+<h3 id="2-积累经验"><a href="#2-积累经验" class="headerlink" title="2. 积累经验"></a>2. 积累经验</h3><ul>
+<li>多做题，培养对复杂度的直觉</li>
+<li>记录不同类型题目的常见数据规模</li>
+<li>总结复杂度估算的常见陷阱</li>
+</ul>
+<h3 id="3-实践验证"><a href="#3-实践验证" class="headerlink" title="3. 实践验证"></a>3. 实践验证</h3><ul>
+<li>实际提交验证时间复杂度估算</li>
+<li>对比不同算法的实际运行时间</li>
+<li>学会分析超时的原因</li>
+</ul>
+<h3 id="4-深入理解"><a href="#4-深入理解" class="headerlink" title="4. 深入理解"></a>4. 深入理解</h3><ul>
+<li>不仅要会算复杂度，还要理解为什么</li>
+<li>掌握各种算法的适用场景</li>
+<li>学会在时间和空间之间做权衡</li>
+</ul>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>“根据数据量猜解法”是算法竞赛和技术面试中极其重要的技巧：</p>
+<ol>
+<li><strong>核心原理</strong>：基于10^7~10^8操作&#x2F;秒的基准进行复杂度估算</li>
+<li><strong>应用场景</strong>：快速判断算法可行性，指导解题方向</li>
+<li><strong>关键要素</strong>：准确的复杂度分析 + 对数据规模的敏感度</li>
+<li><strong>实战价值</strong>：避免选择错误的算法方向，提高解题效率</li>
+</ol>
+<p>通过掌握这个技巧，我们可以在看到题目的第一时间就大致确定解题的复杂度范围，从而选择合适的算法策略，这对于在有限时间内解决算法问题具有重要意义。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95%E6%8A%80%E5%B7%A7/" rel="tag"># 算法技巧</a>
+              <a href="/tags/%E9%80%92%E5%BD%92/" rel="tag"># 递归</a>
+              <a href="/tags/%E5%9B%9E%E6%BA%AF/" rel="tag"># 回溯</a>
+              <a href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" rel="tag"># 时间复杂度</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/09/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8818%EF%BC%89-%20%E6%9C%80%E5%A4%A7%E5%85%AC%E7%BA%A6%E6%95%B0%E3%80%81%E5%90%8C%E4%BD%99%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AF%B9%E6%95%B0%E5%99%A8%E6%89%93%E8%A1%A8%E8%A7%84%E5%BE%8B/" rel="prev" title="数据结构与算法自学笔记（18）- 最大公约数、同余原理与对数器打表规律">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（18）- 最大公约数、同余原理与对数器打表规律
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/09/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8820%EF%BC%89-%20%E5%89%8D%E7%BC%80%E6%A0%91%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" rel="next" title="数据结构与算法自学笔记（20）- 前缀树的原理和相关题目">
+      数据结构与算法自学笔记（20）- 前缀树的原理和相关题目 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">核心原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BA%8B%E5%AE%9E"><span class="nav-number">1.2.1.</span> <span class="nav-text">基本事实</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%94%A8%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.2.2.</span> <span class="nav-text">运用条件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%84%E6%A8%A1%E4%B8%8E%E5%8F%AF%E7%94%A8%E7%AE%97%E6%B3%95%E5%AF%B9%E7%85%A7%E8%A1%A8"><span class="nav-number">1.3.</span> <span class="nav-text">问题规模与可用算法对照表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">1.3.1.</span> <span class="nav-text">说明</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#043%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E9%87%8F%E7%8C%9C%E8%A7%A3%E6%B3%95%E7%9A%84%E6%8A%80%E5%B7%A7-%E5%A4%A9%E5%AD%97%E7%AC%AC%E4%B8%80%E5%8F%B7%E9%87%8D%E8%A6%81%E6%8A%80%E5%B7%A7"><span class="nav-number">2.</span> <span class="nav-text">043【必备】根据数据量猜解法的技巧-天字第一号重要技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E6%A1%88%E4%BE%8B"><span class="nav-number">2.1.</span> <span class="nav-text">实战案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%80%EF%BC%9A%E6%9C%80%E4%BC%98%E7%9A%84%E6%8A%80%E8%83%BD%E9%87%8A%E6%94%BE%E9%A1%BA%E5%BA%8F"><span class="nav-number">2.1.1.</span> <span class="nav-text">案例一：最优的技能释放顺序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E7%89%88%E6%9C%AC%EF%BC%88%E5%89%AA%E6%9E%9D%EF%BC%89"><span class="nav-number">2.1.1.4.</span> <span class="nav-text">优化版本（剪枝）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E4%BA%8C%EF%BC%9A%E8%B6%85%E7%BA%A7%E5%9B%9E%E6%96%87%E6%95%B0%E7%9A%84%E6%95%B0%E7%9B%AE"><span class="nav-number">2.1.2.</span> <span class="nav-text">案例二：超级回文数的数目</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90-1"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">2.1.2.3.</span> <span class="nav-text">算法实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E6%9E%9A%E4%B8%BE%E5%9B%9E%E6%96%87%E6%95%B0%E7%9A%84%E6%A0%B9"><span class="nav-number">2.1.2.3.1.</span> <span class="nav-text">方法一：枚举回文数的根</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E6%89%93%E8%A1%A8%E6%B3%95"><span class="nav-number">2.1.2.3.2.</span> <span class="nav-text">方法二：打表法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%89%EF%BC%9A%E5%9B%9E%E6%96%87%E6%95%B0%E5%88%A4%E6%96%AD"><span class="nav-number">2.1.3.</span> <span class="nav-text">案例三：回文数判断</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">2.1.3.3.</span> <span class="nav-text">算法实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E5%B7%A7%E5%BA%94%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.2.</span> <span class="nav-text">技巧应用步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%86%E6%9E%90%E6%95%B0%E6%8D%AE%E8%A7%84%E6%A8%A1"><span class="nav-number">2.2.1.</span> <span class="nav-text">1. 分析数据规模</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BC%B0%E7%AE%97%E6%93%8D%E4%BD%9C%E6%AC%A1%E6%95%B0"><span class="nav-number">2.2.2.</span> <span class="nav-text">2. 估算操作次数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%AE%97%E6%B3%95"><span class="nav-number">2.2.3.</span> <span class="nav-text">3. 选择合适算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%80%83%E8%99%91%E5%B8%B8%E6%95%B0%E4%BC%98%E5%8C%96"><span class="nav-number">2.2.4.</span> <span class="nav-text">4. 考虑常数优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.3.</span> <span class="nav-text">常见复杂度模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%80%92%E5%BD%92%E5%88%86%E6%B2%BB"><span class="nav-number">2.3.1.</span> <span class="nav-text">1. 递归分治</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92"><span class="nav-number">2.3.2.</span> <span class="nav-text">2. 动态规划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9B%BE%E7%AE%97%E6%B3%95"><span class="nav-number">2.3.3.</span> <span class="nav-text">3. 图算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%AE%97%E6%B3%95"><span class="nav-number">2.3.4.</span> <span class="nav-text">4. 字符串算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.4.</span> <span class="nav-text">学习建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%86%9F%E8%AE%B0%E5%9F%BA%E5%87%86%E5%80%BC"><span class="nav-number">2.4.1.</span> <span class="nav-text">1. 熟记基准值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%A7%AF%E7%B4%AF%E7%BB%8F%E9%AA%8C"><span class="nav-number">2.4.2.</span> <span class="nav-text">2. 积累经验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AE%9E%E8%B7%B5%E9%AA%8C%E8%AF%81"><span class="nav-number">2.4.3.</span> <span class="nav-text">3. 实践验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3"><span class="nav-number">2.4.4.</span> <span class="nav-text">4. 深入理解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

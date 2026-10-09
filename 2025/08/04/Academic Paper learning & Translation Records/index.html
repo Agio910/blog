@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言本文档用于记录自己读过的学术论文和亲自翻译的论文内容。每篇论文包含简要说明和个人理解，部分论文附有飞书文档或doi链接  翻译论文记录P´olya’s Random Walk Theorem当时是为了随机过程的pre，然后翻译并推了一遍polya随机游走定理，记录一下。 原文标题：P´olya’s Random Walk Theorem作者：Jonathan Novak出处：The Ameri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Academic Paper learning &amp; Translation Records">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/08/04/Academic%20Paper%20learning%20&%20Translation%20Records/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言本文档用于记录自己读过的学术论文和亲自翻译的论文内容。每篇论文包含简要说明和个人理解，部分论文附有飞书文档或doi链接  翻译论文记录P´olya’s Random Walk Theorem当时是为了随机过程的pre，然后翻译并推了一遍polya随机游走定理，记录一下。 原文标题：P´olya’s Random Walk Theorem作者：Jonathan Novak出处：The Ameri">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-08-04T06:00:00.000Z">
+<meta property="article:modified_time" content="2025-08-05T08:19:16.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="Paper Reading">
+<meta property="article:tag" content="Translation">
+<meta property="article:tag" content="Academic">
+<meta property="article:tag" content="Learning">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/08/04/Academic%20Paper%20learning%20&%20Translation%20Records/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Academic Paper learning & Translation Records | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/08/04/Academic%20Paper%20learning%20&%20Translation%20Records/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Academic Paper learning & Translation Records
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-08-04 14:00:00" itemprop="dateCreated datePublished" datetime="2025-08-04T14:00:00+08:00">2025-08-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-08-05 16:19:16" itemprop="dateModified" datetime="2025-08-05T16:19:16+08:00">2025-08-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Review/" itemprop="url" rel="index"><span itemprop="name">Review</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Review/Translation/" itemprop="url" rel="index"><span itemprop="name">Translation</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>本文档用于记录自己读过的学术论文和亲自翻译的论文内容。每篇论文包含简要说明和个人理解，部分论文附有飞书文档或doi链接</p>
+<hr>
+<h1 id="翻译论文记录"><a href="#翻译论文记录" class="headerlink" title="翻译论文记录"></a>翻译论文记录</h1><h2 id="P´olya’s-Random-Walk-Theorem"><a href="#P´olya’s-Random-Walk-Theorem" class="headerlink" title="P´olya’s Random Walk Theorem"></a>P´olya’s Random Walk Theorem</h2><p>当时是为了随机过程的pre，然后翻译并推了一遍polya随机游走定理，记录一下。</p>
+<p><strong>原文标题</strong>：P´olya’s Random Walk Theorem<br><strong>作者</strong>：Jonathan Novak<br><strong>出处</strong>：The American Mathematical Monthly, 2014•Taylor &amp; Francis<br><strong>doi号</strong>：<a target="_blank" rel="noopener" href="https://doi.org/10.48550/arXiv.1301.3916">点此查看全文</a><br><strong>飞书链接</strong>：<a target="_blank" rel="noopener" href="https://cqpqhy5koc9.feishu.cn/docx/ILmQd6LHVoVouHxrqzbcUFLqnid?from=from_copylink">点此查看翻译版</a></p>
+<h2 id="MDS-TSNE-UMAP"><a href="#MDS-TSNE-UMAP" class="headerlink" title="MDS&#x2F;TSNE&#x2F;UMAP"></a>MDS&#x2F;TSNE&#x2F;UMAP</h2><p>longlongago之前把生物信息里比较常用的三种降维算法都学和推了一遍，分别是MDS（multidimensional scaling）多维尺度分析、t-SNE（t-distributed Stochastic Neighbor Embedding）和UMAP（Uniform Manifold Approximation and Projection），记录一下翻译版。</p>
+<p><strong>飞书链接</strong>：<a target="_blank" rel="noopener" href="https://cqpqhy5koc9.feishu.cn/docx/SP81dw744o2KXBxNtlkc8eXQnxo?from=from_copylink">点此查看整合的笔记</a></p>
+<h3 id="MDS"><a href="#MDS" class="headerlink" title="MDS"></a>MDS</h3><p>Multidimensional scaling，简称MDS，中文翻译成多维尺度分析。其原理是利用成对样本间的相似性，去构建合适的低维空间，使得样本在此空间的距离和在高维空间中的样本间的相似性尽可能的保持一致。我们可以用这种方式来可视化数据分布，PCA是MDS中特殊的一种。</p>
+<p>感觉有点像层次分析法，比较早用于心理学&amp;社会科学上的一些相似性分析。以下公式为简单的优化思想，理论上可以从欧式距离推广到各种距离如曼哈顿、马氏等等。</p>
+<p>原始文献有点太古老了，所以看的是csdn上的专栏：<a target="_blank" rel="noopener" href="https://blog.csdn.net/u010705209/article/details/53518772?utm_source=itdadao&utm_medium=referral">https://blog.csdn.net/u010705209/article/details/53518772?utm_source=itdadao&amp;utm_medium=referral</a></p>
+<ul>
+<li>Kruskal, J. B. (1964). “Multidimensional Scaling by Optimizing Goodness of Fit to a Nonmetric Hypothesis.” Psychometrika, 29(1), 1-27.</li>
+<li>Shepard, R. N. (1962). “The Analysis of Proximities: Multidimensional Scaling with an Unknown Distance Function.” Psychometrika, 27(2), 125-140.</li>
+</ul>
+<h3 id="TSNE"><a href="#TSNE" class="headerlink" title="TSNE"></a>TSNE</h3><p>t-sne感觉是比较fashion的概率方法，很有意思。找了一篇论文<a target="_blank" rel="noopener" href="https://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf">https://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf</a></p>
+<p><strong>原文标题</strong>：Visualizing Data using t-SNE<br><strong>作者</strong>：Laurens van der Maaten， Geoffrey Hinton<br><strong>出处</strong>：Journal of Machine Learning Research 9 (2008) 2579-2605<br><strong>doi号</strong>：<a target="_blank" rel="noopener" href="https://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf">点此查看全文</a></p>
+<h3 id="UMAP"><a href="#UMAP" class="headerlink" title="UMAP"></a>UMAP</h3><p>UMAP没有看太懂，主要是我没学过拓扑，但是其中模糊数学的部分很有意思，这篇论文刚刚发预印本的时候模糊数学还挺火的，现在不行了。</p>
+<p><strong>原文标题</strong>：Uniform manifold approximation and projection<br><strong>作者</strong>：John Healy， Leland McInnes<br><strong>出处</strong>：Nature Reviews Methods Primers volume 4, Article number: 82 (2024)<br><strong>doi号</strong>：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1802.03426">点此查看全文</a></p>
+<h2 id="注意力机制相关"><a href="#注意力机制相关" class="headerlink" title="注意力机制相关"></a>注意力机制相关</h2><p>包括注意力机制到transformer的自注意力及其后续的变体，还有ESM3几何注意力机制、rfdiffusion的IGSO3等等。</p>
+<h3 id="注意力机制的发展"><a href="#注意力机制的发展" class="headerlink" title="注意力机制的发展"></a>注意力机制的发展</h3><p>longlongago之前学深度学习补的：</p>
+<p><strong>飞书链接</strong>：<a target="_blank" rel="noopener" href="https://cqpqhy5koc9.feishu.cn/docx/ZhcAdjXrpoRE0exteQDc1WDZnDg?from=from_copylink">点此查看整合的笔记</a></p>
+<h3 id="几何注意力机制"><a href="#几何注意力机制" class="headerlink" title="几何注意力机制"></a>几何注意力机制</h3><p>ESM3有用到，ESM3模型处理蛋白质结构信息的两种主要方法：几何注意力（Geometric Attention）和结构标记（Structure Tokens）。</p>
+<p><strong>飞书链接</strong>：<a target="_blank" rel="noopener" href="https://cqpqhy5koc9.feishu.cn/docx/NvxrdQV10oc6dAxO58jcRg2mnud?from=from_copylink">点此查看整合的笔记</a></p>
+<h3 id="IGSO3"><a href="#IGSO3" class="headerlink" title="IGSO3"></a>IGSO3</h3><p>当时看rfdiffusion被吓坏了，这个证明真的很吓人</p>
+<p><strong>飞书链接</strong>：<a target="_blank" rel="noopener" href="https://cqpqhy5koc9.feishu.cn/docx/FSKFdRxOUoIyuWxeZ9DcizWfn9b?from=from_copylink">点此查看整合的笔记</a></p>
+<h2 id="倾向性得分在观察性研究中因果效应分析的核心作用"><a href="#倾向性得分在观察性研究中因果效应分析的核心作用" class="headerlink" title="倾向性得分在观察性研究中因果效应分析的核心作用"></a>倾向性得分在观察性研究中因果效应分析的核心作用</h2><p>文理学院统计系汇报的pre，看完了之后连统计学都不想学了，数学和统计完全是两个学科啊！感觉自己喜欢的是统计计算而不是数理统计和传统的统计inference，润了润了润去计算了</p>
+<p><strong>原文标题</strong>：The central role of the propensity score in observational studies for causal effect<br><strong>作者</strong>：PAUL R. ROSENBAUM, DONALD B. RUBIN<br><strong>出处</strong>：Biometrilca (1083), 70, 1, pp. 41-55<br><strong>doi号</strong>：<a target="_blank" rel="noopener" href="https://academic.oup.com/biomet/article-abstract/70/1/41/240879?login=false">点此查看全文</a><br><strong>飞书链接</strong>：<a target="_blank" rel="noopener" href="https://cqpqhy5koc9.feishu.cn/docx/Zp95d0fS6om1iexY3AqcibQCnyh?from=from_copylink">点此查看翻译版</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Paper-Reading/" rel="tag"># Paper Reading</a>
+              <a href="/tags/Translation/" rel="tag"># Translation</a>
+              <a href="/tags/Academic/" rel="tag"># Academic</a>
+              <a href="/tags/Learning/" rel="tag"># Learning</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/08/03/%E5%90%B4%E6%81%A9%E8%BE%BE%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%AF%BE%E4%BB%B6%E7%95%99%E6%A1%A3/" rel="prev" title="吴恩达机器学习课程资料归档">
+      <i class="fa fa-chevron-left"></i> 吴恩达机器学习课程资料归档
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/08/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%884%EF%BC%89-%20%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9B%B8%E5%85%B3/" rel="next" title="数据结构与算法自学笔记（4）- 二叉树相关">
+      数据结构与算法自学笔记（4）- 二叉树相关 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BF%BB%E8%AF%91%E8%AE%BA%E6%96%87%E8%AE%B0%E5%BD%95"><span class="nav-number">2.</span> <span class="nav-text">翻译论文记录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#P%C2%B4olya%E2%80%99s-Random-Walk-Theorem"><span class="nav-number">2.1.</span> <span class="nav-text">P´olya’s Random Walk Theorem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MDS-TSNE-UMAP"><span class="nav-number">2.2.</span> <span class="nav-text">MDS&#x2F;TSNE&#x2F;UMAP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MDS"><span class="nav-number">2.2.1.</span> <span class="nav-text">MDS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TSNE"><span class="nav-number">2.2.2.</span> <span class="nav-text">TSNE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UMAP"><span class="nav-number">2.2.3.</span> <span class="nav-text">UMAP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9B%B8%E5%85%B3"><span class="nav-number">2.3.</span> <span class="nav-text">注意力机制相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E5%8F%91%E5%B1%95"><span class="nav-number">2.3.1.</span> <span class="nav-text">注意力机制的发展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%A0%E4%BD%95%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6"><span class="nav-number">2.3.2.</span> <span class="nav-text">几何注意力机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IGSO3"><span class="nav-number">2.3.3.</span> <span class="nav-text">IGSO3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%80%BE%E5%90%91%E6%80%A7%E5%BE%97%E5%88%86%E5%9C%A8%E8%A7%82%E5%AF%9F%E6%80%A7%E7%A0%94%E7%A9%B6%E4%B8%AD%E5%9B%A0%E6%9E%9C%E6%95%88%E5%BA%94%E5%88%86%E6%9E%90%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BD%9C%E7%94%A8"><span class="nav-number">2.4.</span> <span class="nav-text">倾向性得分在观察性研究中因果效应分析的核心作用</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

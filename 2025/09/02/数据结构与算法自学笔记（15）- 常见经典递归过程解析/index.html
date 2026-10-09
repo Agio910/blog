@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是 038【必备】常见经典递归过程解析 的内容，总结了7道经典递归题目，涵盖了递归的核心思想和技巧，包括带路径的递归、不带路径的递归、回溯算法等重要概念。 前置知识在学习本节内容之前，建议先熟悉以下章节：  讲解017、020、021、023、0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（15）- 常见经典递归过程解析">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/09/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8815%EF%BC%89-%20%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是 038【必备】常见经典递归过程解析 的内容，总结了7道经典递归题目，涵盖了递归的核心思想和技巧，包括带路径的递归、不带路径的递归、回溯算法等重要概念。 前置知识在学习本节内容之前，建议先熟悉以下章节：  讲解017、020、021、023、0">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E5%AD%90%E5%BA%8F%E5%88%97%E5%8E%BB%E9%87%8D.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E7%94%9F%E6%88%90%E4%B8%8D%E5%90%8C%E7%9A%84%E7%BB%84%E5%90%88.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E5%85%A8%E6%8E%92%E5%88%97%EF%BC%881%EF%BC%89.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E5%85%A8%E6%8E%92%E5%88%97%EF%BC%882%EF%BC%89.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E9%80%86%E5%BA%8F%E6%A0%88bottom_out%E6%96%B9%E6%B3%95.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E9%80%86%E5%BA%8F%E6%A0%88reverse%E6%96%B9%E6%B3%95.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%8E%92%E5%88%97%E6%A0%88_%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%8E%92%E5%88%97%E6%A0%88_deep%E6%96%B9%E6%B3%95.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%8E%92%E5%88%97%E6%A0%88_max%E6%96%B9%E6%B3%95.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%8E%92%E5%88%97%E6%A0%88_times%E6%96%B9%E6%B3%95.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%8E%92%E5%88%97%E6%A0%88_down%E6%96%B9%E6%B3%95.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%B1%89%E8%AF%BA%E5%A1%94%E7%9A%84%E6%9C%80%E4%BC%98%E7%A7%BB%E5%8A%A8%E8%BD%A8%E8%BF%B9.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%B1%89%E8%AF%BA%E5%A1%94%E7%9A%84%E6%8A%BD%E8%B1%A1%E6%B5%81%E7%A8%8B.png">
+<meta property="article:published_time" content="2025-09-02T02:30:00.000Z">
+<meta property="article:modified_time" content="2025-09-08T10:27:10.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="递归">
+<meta property="article:tag" content="回溯">
+<meta property="article:tag" content="DFS">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E5%AD%90%E5%BA%8F%E5%88%97%E5%8E%BB%E9%87%8D.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/09/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8815%EF%BC%89-%20%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（15）- 常见经典递归过程解析 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/09/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8815%EF%BC%89-%20%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（15）- 常见经典递归过程解析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-09-02 10:30:00" itemprop="dateCreated datePublished" datetime="2025-09-02T10:30:00+08:00">2025-09-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-09-08 18:27:10" itemprop="dateModified" datetime="2025-09-08T18:27:10+08:00">2025-09-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a></p>
+<p>本笔记是 <strong>038【必备】常见经典递归过程解析</strong> 的内容，总结了7道经典递归题目，涵盖了递归的核心思想和技巧，包括带路径的递归、不带路径的递归、回溯算法等重要概念。</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>在学习本节内容之前，建议先熟悉以下章节：</p>
+<ul>
+<li>讲解017、020、021、023、036、037（这些章节都分析过递归）</li>
+</ul>
+<h2 id="重要概念"><a href="#重要概念" class="headerlink" title="重要概念"></a>重要概念</h2><h3 id="递归与回溯的关系"><a href="#递归与回溯的关系" class="headerlink" title="递归与回溯的关系"></a>递归与回溯的关系</h3><ul>
+<li><strong>任何递归都是DFS且非常灵活</strong></li>
+<li><strong>回溯这个术语并不重要</strong>，它只是递归过程中的恢复现场操作</li>
+<li><strong>带路径的递归 vs 不带路径的递归</strong>：大部分DP和状态压缩DP可以认为是路径简化了结构</li>
+</ul>
+<hr>
+<h1 id="038【必备】常见经典递归过程解析"><a href="#038【必备】常见经典递归过程解析" class="headerlink" title="038【必备】常见经典递归过程解析"></a>038【必备】常见经典递归过程解析</h1><h2 id="题目一：返回字符串全部子序列（去重）"><a href="#题目一：返回字符串全部子序列（去重）" class="headerlink" title="题目一：返回字符串全部子序列（去重）"></a>题目一：返回字符串全部子序列（去重）</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>返回字符串全部子序列，子序列要求去重。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://www.nowcoder.com/practice/92e6247998294f2c933906fdedbc6e6a">https://www.nowcoder.com/practice/92e6247998294f2c933906fdedbc6e6a</a></p>
+<h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>使用递归的方式，对于字符串中的每一个字符，我们都有两种选择：</p>
+<ol>
+<li>将该字符包含在当前子序列中</li>
+<li>不将该字符包含在当前子序列中</li>
+</ol>
+<p>通过递归遍历所有这些选择，就能得到所有可能的子序列。</p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E5%AD%90%E5%BA%8F%E5%88%97%E5%8E%BB%E9%87%8D.png" alt="子序列去重"></p>
+<h3 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h3><h4 id="方法一：使用列表作为路径"><a href="#方法一：使用列表作为路径" class="headerlink" title="方法一：使用列表作为路径"></a>方法一：使用列表作为路径</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">generatePermutation1</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">str</span>]:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        主函数，初始化并调用递归函数 f1</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 使用集合 set 来自动处理重复的子序列</span></span><br><span class="line">        result_set = <span class="built_in">set</span>()</span><br><span class="line">        <span class="comment"># path 使用列表来模拟 Java 的 StringBuilder，方便添加和删除字符</span></span><br><span class="line">        path = []</span><br><span class="line">        <span class="variable language_">self</span>._f1(s, <span class="number">0</span>, path, result_set)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">sorted</span>(<span class="built_in">list</span>(result_set))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f1</span>(<span class="params">self, s: <span class="built_in">str</span>, i: <span class="built_in">int</span>, path: <span class="type">List</span>[<span class="built_in">str</span>], result_set: <span class="type">Set</span>[<span class="built_in">str</span>]</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        递归函数，用于生成所有子序列</span></span><br><span class="line"><span class="string">        s[i...]，之前决定的路径path，set收集结果时去重</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># base case: 当索引 i 到达字符串末尾时，所有字符都已考虑完毕</span></span><br><span class="line">        <span class="keyword">if</span> i == <span class="built_in">len</span>(s):</span><br><span class="line">            result_set.add(<span class="string">&quot;&quot;</span>.join(path))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 决策1: 选择当前字符 s[i]</span></span><br><span class="line">            path.append(s[i])  <span class="comment"># 加到路径中去</span></span><br><span class="line">            <span class="variable language_">self</span>._f1(s, i + <span class="number">1</span>, path, result_set)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 回溯：撤销选择，为下一种决策做准备</span></span><br><span class="line">            path.pop()  <span class="comment"># 从路径中移除，删掉最后一个字符</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 决策2: 不选择当前字符 s[i]</span></span><br><span class="line">            <span class="variable language_">self</span>._f1(s, i + <span class="number">1</span>, path, result_set)</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法二：使用固定长度列表和size指针"><a href="#方法二：使用固定长度列表和size指针" class="headerlink" title="方法二：使用固定长度列表和size指针"></a>方法二：使用固定长度列表和size指针</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">generatePermutation2</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">str</span>]:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        主函数，初始化并调用递归函数 f2</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        result_set = <span class="built_in">set</span>()</span><br><span class="line">        <span class="comment"># 预先分配一个与原字符串等长的列表作为路径容器</span></span><br><span class="line">        path = [<span class="string">&#x27;&#x27;</span>] * <span class="built_in">len</span>(s)</span><br><span class="line">        <span class="variable language_">self</span>._f2(s, <span class="number">0</span>, path, <span class="number">0</span>, result_set)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">sorted</span>(<span class="built_in">list</span>(result_set))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f2</span>(<span class="params">self, s: <span class="built_in">str</span>, i: <span class="built_in">int</span>, path: <span class="type">List</span>[<span class="built_in">str</span>], size: <span class="built_in">int</span>, result_set: <span class="type">Set</span>[<span class="built_in">str</span>]</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        与f1思想相同，但使用不同的方式来维护路径</span></span><br><span class="line"><span class="string">        这方法不用回溯，因为path是固定长度的列表，size指针来表示有效字符长度</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> i == <span class="built_in">len</span>(s):</span><br><span class="line">            <span class="comment"># path[:size] 表示路径中的有效部分</span></span><br><span class="line">            result_set.add(<span class="string">&quot;&quot;</span>.join(path[:size]))</span><br><span class="line">            <span class="comment"># path[:size]: 取列表/序列 path 的前 size 个元素（左闭右开，不会越界，超过长度就取到末尾）</span></span><br><span class="line">            <span class="comment"># &quot;&quot;.join(...): 用空字符串作为分隔符，把可迭代对象里的“字符串元素”拼接成一个整体字符串</span></span><br><span class="line">            <span class="comment"># result_set.add(...): 将结果添加到集合中，自动去重</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 决策1: 选择当前字符 s[i]，将其放入 path 的 size 位置</span></span><br><span class="line">            path[size] = s[i]</span><br><span class="line">            <span class="variable language_">self</span>._f2(s, i + <span class="number">1</span>, path, size + <span class="number">1</span>, result_set) <span class="comment">#size+1表明有效字符长度+1，指针后移</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 决策2: 不选择当前字符 s[i]，直接进入下一层递归</span></span><br><span class="line">            <span class="variable language_">self</span>._f2(s, i + <span class="number">1</span>, path, size, result_set)</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(2^n × n)，子序列个数2^n，平均长度O(n)级别</li>
+<li><strong>空间复杂度</strong>：O(2^n × n)</li>
+<li><strong>核心技巧</strong>：递归选择 + set去重</li>
+</ul>
+<hr>
+<h2 id="题目二：返回数组的所有组合（去重）"><a href="#题目二：返回数组的所有组合（去重）" class="headerlink" title="题目二：返回数组的所有组合（去重）"></a>题目二：返回数组的所有组合（去重）</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个整数数组 nums，其中可能包含重复元素，请你返回该数组所有可能的组合。答案不能包含重复的组合。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/subsets-ii/">https://leetcode.cn/problems/subsets-ii/</a></p>
+<h3 id="核心思想-1"><a href="#核心思想-1" class="headerlink" title="核心思想"></a>核心思想</h3><p>与生成子序列（排列）不同，这里通过<strong>一次性决策一组相同数字</strong>的方式来避免重复。</p>
+<ol>
+<li>先对数组排序。</li>
+<li>在递归到位置 <code>i</code> 时，首先找到下一个与 <code>nums[i]</code> 不同的数的位置 <code>j</code>。<br> 这表示从 <code>i</code> 到 <code>j-1</code> 都是相同的数。</li>
+<li>决策1：这组相同的数一个都不要。直接从 <code>j</code> 位置继续递归。</li>
+<li>决策2：依次决策要1个、2个…直到 <code>j-i</code> 个相同的数。<br> 每做一次选择，就将数加入路径，然后从 <code>j</code> 位置继续递归。</li>
+</ol>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E7%94%9F%E6%88%90%E4%B8%8D%E5%90%8C%E7%9A%84%E7%BB%84%E5%90%88.png" alt="生成不同的组合"></p>
+<h3 id="算法实现-1"><a href="#算法实现-1" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">subsetsWithDup</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        主函数，初始化并调用递归函数</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        ans = []</span><br><span class="line">        <span class="comment"># 排序是关键，它使得相同的元素相邻，便于后续去重处理</span></span><br><span class="line">        nums.sort()</span><br><span class="line">        path = [<span class="number">0</span>] * <span class="built_in">len</span>(nums)</span><br><span class="line">        <span class="variable language_">self</span>._f(nums, <span class="number">0</span>, path, <span class="number">0</span>, ans)</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], i: <span class="built_in">int</span>, path: <span class="type">List</span>[<span class="built_in">int</span>], size: <span class="built_in">int</span>, ans: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        递归函数，生成不重复的组合</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># base case: 当 i 到达数组末尾时，形成一个组合</span></span><br><span class="line">        <span class="keyword">if</span> i == <span class="built_in">len</span>(nums):</span><br><span class="line">            ans.append(path[:size])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 找到下一个不同于 nums[i] 的元素的位置 j</span></span><br><span class="line">            j = i + <span class="number">1</span></span><br><span class="line">            <span class="keyword">while</span> j &lt; <span class="built_in">len</span>(nums) <span class="keyword">and</span> nums[j] == nums[i]:</span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 决策1: 当前数 nums[i] 一个都不要</span></span><br><span class="line">            <span class="variable language_">self</span>._f(nums, j, path, size, ans)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 决策2: 依次尝试要 1 个、2 个... k 个 nums[i]</span></span><br><span class="line">            <span class="comment"># 从这一段相同数字里，依次选择 1 个、2 个、…、(j-i) 个放入路径，然后递归从 j 开始，即处理下一组数去</span></span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(i, j):</span><br><span class="line">                path[size] = nums[k]</span><br><span class="line">                size += <span class="number">1</span></span><br><span class="line">                <span class="comment"># 每次选择后，都从下一个不同的数 j 开始继续递归</span></span><br><span class="line">                <span class="variable language_">self</span>._f(nums, j, path, size, ans)</span><br></pre></td></tr></table></figure>
+
+<h3 id="区别：set去重-vs-剪枝去重"><a href="#区别：set去重-vs-剪枝去重" class="headerlink" title="区别：set去重 vs 剪枝去重"></a>区别：set去重 vs 剪枝去重</h3><ul>
+<li><strong>剪枝去重</strong>：当有相同的元素时，不进入递归，直接跳过，避免重复计算。（本题有用到这方面的考虑）</li>
+<li><strong>set去重</strong>：当有相同的元素时，会进入递归，但最终结果会去重。（但是题目1没有）</li>
+</ul>
+<h3 id="算法分析-1"><a href="#算法分析-1" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(2^n × n)，所有不重复组合数量≤2^n</li>
+<li><strong>空间复杂度</strong>：O(2^n × n)</li>
+<li><strong>核心技巧</strong>：排序 + 剪枝去重</li>
+</ul>
+<hr>
+<h2 id="题目三：返回没有重复值数组的全部排列"><a href="#题目三：返回没有重复值数组的全部排列" class="headerlink" title="题目三：返回没有重复值数组的全部排列"></a>题目三：返回没有重复值数组的全部排列</h2><h3 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h3><p>没有重复项数字的全排列。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/permutations/">https://leetcode.cn/problems/permutations/</a></p>
+<h3 id="核心思想-2"><a href="#核心思想-2" class="headerlink" title="核心思想"></a>核心思想</h3><p>使用<strong>交换模型</strong>：</p>
+<ol>
+<li>递归函数 <code>_f(nums, i)</code> 的任务是确定数组中第 <code>i</code> 个位置应该放哪个数。</li>
+<li>我们可以从 <code>i</code> 到 <code>len(nums)-1</code> 的范围内选择一个数，将它与 <code>nums[i]</code> 交换，<br> 这样就确定了第 <code>i</code> 位。</li>
+<li>然后递归调用 <code>_f(nums, i+1)</code> 去确定第 <code>i+1</code> 位。</li>
+<li>当 <code>i</code> 到达数组末尾时，一个完整的排列就形成了。</li>
+<li>递归返回后，必须将之前交换的元素换回来（回溯），以确保不影响其他分支的决策。</li>
+</ol>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E5%85%A8%E6%8E%92%E5%88%97%EF%BC%881%EF%BC%89.png" alt="全排列（1）"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E5%85%A8%E6%8E%92%E5%88%97%EF%BC%882%EF%BC%89.png" alt="全排列（2）"></p>
+<h3 id="算法实现-2"><a href="#算法实现-2" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">permute</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        主函数，初始化并调用递归函数</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        ans = []</span><br><span class="line">        <span class="variable language_">self</span>._f(nums, <span class="number">0</span>, ans)  <span class="comment"># 复用了原数组做路径</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], i: <span class="built_in">int</span>, ans: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        递归函数，生成全排列</span></span><br><span class="line"><span class="string">        核心思想 (交换模型)</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># base case: 当 i 到达数组长度时，一个完整的排列就形成了</span></span><br><span class="line">        <span class="keyword">if</span> i == <span class="built_in">len</span>(nums):</span><br><span class="line">            ans.append(nums[:])  <span class="comment"># 将当前排列的副本加入结果列表</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 尝试将 i 到 len(nums)-1 的每个数放到 i 位置上</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i, <span class="built_in">len</span>(nums)):</span><br><span class="line">                <span class="comment"># 将 nums[j] 换到当前要确定的 i 位置</span></span><br><span class="line">                <span class="variable language_">self</span>._swap(nums, i, j)</span><br><span class="line">                <span class="comment"># 递归去确定下一个位置 i+1</span></span><br><span class="line">                <span class="variable language_">self</span>._f(nums, i + <span class="number">1</span>, ans)</span><br><span class="line">                <span class="comment"># 回溯：将数组恢复原样，以便 for 循环下一次迭代能正确执行</span></span><br><span class="line">                <span class="variable language_">self</span>._swap(nums, i, j)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_swap</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], i: <span class="built_in">int</span>, j: <span class="built_in">int</span></span>):</span><br><span class="line">        nums[i], nums[j] = nums[j], nums[i]</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-2"><a href="#算法分析-2" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n! × n)</li>
+<li><strong>空间复杂度</strong>：O(n!)</li>
+<li><strong>核心技巧</strong>：交换模型 + 回溯</li>
+</ul>
+<hr>
+<h2 id="题目四：返回可能有重复值数组的全部排列（去重）"><a href="#题目四：返回可能有重复值数组的全部排列（去重）" class="headerlink" title="题目四：返回可能有重复值数组的全部排列（去重）"></a>题目四：返回可能有重复值数组的全部排列（去重）</h2><h3 id="问题描述-3"><a href="#问题描述-3" class="headerlink" title="问题描述"></a>问题描述</h3><p>有重复项数组的去重全排列。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/permutations-ii/">https://leetcode.cn/problems/permutations-ii/</a></p>
+<h3 id="核心思想-3"><a href="#核心思想-3" class="headerlink" title="核心思想"></a>核心思想</h3><p>核心思想 (在交换模型基础上增加剪枝逻辑)：<br>与生成无重复数字的全排列思路基本一致，但增加了一个去重机制。</p>
+<ol>
+<li>在确定第 <code>i</code> 个位置的数时，我们遍历 <code>j</code> from <code>i</code> to <code>len-1</code>。</li>
+<li>为了防止产生重复排列，我们规定：在第 <code>i</code> 个位置，一个数只能被放一次。<br> 例如，对于 <code>[1, 2, 2]</code>，在确定第0位时，我们尝试放第一个 <code>2</code>，<br> 就不应该再尝试放第二个 <code>2</code>，因为这两种情况后续会产生完全相同的排列。</li>
+<li>使用一个集合 <code>seen</code> (或 <code>set</code>) 来记录在当前位置 <code>i</code> 已经尝试过的数字。<br> 如果 <code>nums[j]</code> 已经被放过，就跳过。</li>
+</ol>
+<h3 id="算法实现-3"><a href="#算法实现-3" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">permuteUnique</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        主函数，初始化并调用递归函数</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        ans = []</span><br><span class="line">        <span class="variable language_">self</span>._f(nums, <span class="number">0</span>, ans)</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], i: <span class="built_in">int</span>, ans: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        递归函数，生成不重复的全排列</span></span><br><span class="line"><span class="string">        在交换模型基础上增加剪枝逻辑</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> i == <span class="built_in">len</span>(nums):</span><br><span class="line">            ans.append(nums[:])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># seen 集合用于记录在当前 i 位置上已经尝试过的数字</span></span><br><span class="line">            seen: <span class="type">Set</span>[<span class="built_in">int</span>] = <span class="built_in">set</span>()</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i, <span class="built_in">len</span>(nums)):</span><br><span class="line">                <span class="comment"># nums[j]没有来到过i位置，才会去尝试</span></span><br><span class="line">                <span class="keyword">if</span> nums[j] <span class="keyword">not</span> <span class="keyword">in</span> seen:</span><br><span class="line">                    <span class="comment"># 记录下来，表示 nums[j] 这个值已经在 i 位置上用过了</span></span><br><span class="line">                    seen.add(nums[j])</span><br><span class="line">                    <span class="comment"># 交换，将 nums[j] 放到 i 位置</span></span><br><span class="line">                    <span class="variable language_">self</span>._swap(nums, i, j)</span><br><span class="line">                    <span class="comment"># 递归处理下一个位置</span></span><br><span class="line">                    <span class="variable language_">self</span>._f(nums, i + <span class="number">1</span>, ans)</span><br><span class="line">                    <span class="comment"># 回溯，恢复数组</span></span><br><span class="line">                    <span class="variable language_">self</span>._swap(nums, i, j)</span><br><span class="line">                    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_swap</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], i: <span class="built_in">int</span>, j: <span class="built_in">int</span></span>):</span><br><span class="line">        nums[i], nums[j] = nums[j], nums[i]</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-3"><a href="#算法分析-3" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n! × n)</li>
+<li><strong>空间复杂度</strong>：O(n!)</li>
+<li><strong>核心技巧</strong>：交换模型 + 集合去重</li>
+</ul>
+<hr>
+<h2 id="题目五：用递归逆序一个栈"><a href="#题目五：用递归逆序一个栈" class="headerlink" title="题目五：用递归逆序一个栈"></a>题目五：用递归逆序一个栈</h2><h3 id="问题描述-4"><a href="#问题描述-4" class="headerlink" title="问题描述"></a>问题描述</h3><p>用递归函数逆序栈，不能使用任何额外的数据结构。</p>
+<h3 id="核心思想-4"><a href="#核心思想-4" class="headerlink" title="核心思想"></a>核心思想</h3><p>需要两个递归函数：</p>
+<ol>
+<li><code>bottom_out</code>：移除并返回栈底元素，同时保持其他元素顺序不变</li>
+<li><code>reverse</code>：利用bottom_out函数来逆序整个栈</li>
+</ol>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E9%80%86%E5%BA%8F%E6%A0%88bottom_out%E6%96%B9%E6%B3%95.png" alt="逆序栈bottom_out方法"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E9%80%86%E5%BA%8F%E6%A0%88reverse%E6%96%B9%E6%B3%95.png" alt="逆序栈reverse方法"></p>
+<h3 id="算法实现-4"><a href="#算法实现-4" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reverse</span>(<span class="params">self, stack: <span class="type">List</span>[<span class="built_in">int</span>]</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        主递归函数，用于逆序整个栈。</span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        1. 假设有一个函数 `_bottom_out` 可以移除并返回栈底元素。</span></span><br><span class="line"><span class="string">        2. `reverse` 函数首先调用 `_bottom_out` 得到栈底元素 `num`。</span></span><br><span class="line"><span class="string">        3. 然后，递归调用 `reverse` 来逆序剩下的 n-1 个元素的栈。</span></span><br><span class="line"><span class="string">        4. 最后，将之前取出的栈底元素 `num` 压入已逆序的栈中，此时它就成了新的栈顶。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> stack:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 递归地移除并获取栈底元素</span></span><br><span class="line">        num = <span class="variable language_">self</span>._bottom_out(stack)</span><br><span class="line">        <span class="comment"># 递归地逆序剩余的栈</span></span><br><span class="line">        <span class="variable language_">self</span>.reverse(stack)</span><br><span class="line">        <span class="comment"># 将取出的栈底元素压入栈顶</span></span><br><span class="line">        stack.append(num)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_bottom_out</span>(<span class="params">self, stack: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        辅助递归函数，移除并返回栈底元素，同时保持其他元素顺序不变。</span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        1. 弹出栈顶元素 `ans`。</span></span><br><span class="line"><span class="string">        2. 如果栈空了，说明 `ans` 就是我们想要的栈底元素，返回它。</span></span><br><span class="line"><span class="string">        3. 如果栈不空，递归调用 `_bottom_out` 获取剩下部分的栈底元素 `last`。</span></span><br><span class="line"><span class="string">        4. 在递归返回的过程中，将之前弹出的 `ans` 重新压栈，以恢复栈的状态。</span></span><br><span class="line"><span class="string">        5. 将从递归深处得到的 `last` 一路返回上去。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        ans = stack.pop()</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> stack:</span><br><span class="line">            <span class="keyword">return</span> ans  <span class="comment"># 如果栈空了，说明ans就是栈底元素</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            last = <span class="variable language_">self</span>._bottom_out(stack)  <span class="comment"># 递归获取剩下部分的栈底元素</span></span><br><span class="line">            stack.append(ans)  <span class="comment"># 在递归返回过程中，将之前弹出的ans重新压栈</span></span><br><span class="line">            <span class="keyword">return</span> last  <span class="comment"># 将从递归深处得到的last一路返回上去</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="执行过程示例"><a href="#执行过程示例" class="headerlink" title="执行过程示例"></a>执行过程示例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">原栈: [1, 2, 3, 4, 5] (5在栈顶)</span><br><span class="line"></span><br><span class="line">第1次reverse调用:</span><br><span class="line">  bottom_out取出栈底1，栈变为[2, 3, 4, 5]</span><br><span class="line">  递归reverse([2, 3, 4, 5])</span><br><span class="line">  返回后将1压入栈顶</span><br><span class="line"></span><br><span class="line">第2次reverse调用:</span><br><span class="line">  bottom_out取出栈底2，栈变为[3, 4, 5]</span><br><span class="line">  递归reverse([3, 4, 5])</span><br><span class="line">  返回后将2压入栈顶</span><br><span class="line"></span><br><span class="line">...以此类推</span><br><span class="line"></span><br><span class="line">最终结果: [1, 2, 3, 4, 5] (1在栈顶)</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-4"><a href="#算法分析-4" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n²)</li>
+<li><strong>空间复杂度</strong>：O(n) (递归栈空间)</li>
+<li><strong>核心技巧</strong>：双递归函数配合</li>
+</ul>
+<hr>
+<h2 id="题目六：用递归排序一个栈"><a href="#题目六：用递归排序一个栈" class="headerlink" title="题目六：用递归排序一个栈"></a>题目六：用递归排序一个栈</h2><h3 id="问题描述-5"><a href="#问题描述-5" class="headerlink" title="问题描述"></a>问题描述</h3><p>用递归函数排序栈，只能使用栈提供的push、pop、isEmpty三个方法，以及递归函数。要求排完序后，从栈顶到栈底从小到大。</p>
+<p>除此之外不能使用任何的容器，数组也不行。就是排序过程中只能用：(1) 栈提供的push、pop、isEmpty三个方法，(2) 递归函数，并且返回值最多为单个整数</p>
+<h3 id="核心思想-5"><a href="#核心思想-5" class="headerlink" title="核心思想"></a>核心思想</h3><p>这是一个类似选择排序的递归实现。</p>
+<ol>
+<li>整个排序过程分为 <code>deep</code> 轮，<code>deep</code> 是当前未排序部分的栈深度。</li>
+<li>在每一轮中，目标是找出这 <code>deep</code> 个元素中的最大值（可能不止一个），并将它们“沉”到这 <code>deep</code> 个元素的最底部。</li>
+<li><code>_max()</code> 函数：递归地在 <code>deep</code> 层中找到最大值。</li>
+<li><code>_times()</code> 函数：递归地在 <code>deep</code> 层中统计这个最大值出现了几次 <code>k</code>。</li>
+<li><code>_down()</code> 函数：递归地将这 <code>k</code> 个最大值移动到 <code>deep</code> 层的底部，同时保持其他 <code>deep-k</code> 个元素的相对顺序。</li>
+<li>完成一轮后，未排序的深度减少 <code>k</code> (<code>deep -= k</code>)，然后对剩下的 <code>deep</code> 个元素重复此过程。</li>
+</ol>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%8E%92%E5%88%97%E6%A0%88_%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6.png" alt="排列栈_整体框架"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%8E%92%E5%88%97%E6%A0%88_deep%E6%96%B9%E6%B3%95.png" alt="排列栈_deep方法"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%8E%92%E5%88%97%E6%A0%88_max%E6%96%B9%E6%B3%95.png" alt="排列栈_max方法"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%8E%92%E5%88%97%E6%A0%88_times%E6%96%B9%E6%B3%95.png" alt="排列栈_times方法"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%8E%92%E5%88%97%E6%A0%88_down%E6%96%B9%E6%B3%95.png" alt="排列栈_down方法"></p>
+<h3 id="算法实现-5"><a href="#算法实现-5" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sort_stack</span>(<span class="params">self, stack: <span class="type">List</span>[<span class="built_in">int</span>]</span>):</span><br><span class="line">        deep = <span class="variable language_">self</span>._deep(stack)</span><br><span class="line">        <span class="keyword">while</span> deep &gt; <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 找到当前 deep 范围内的最大值</span></span><br><span class="line">            maximum = <span class="variable language_">self</span>._<span class="built_in">max</span>(stack, deep)</span><br><span class="line">            <span class="comment"># 统计最大值出现的次数</span></span><br><span class="line">            k = <span class="variable language_">self</span>._times(stack, deep, maximum)</span><br><span class="line">            <span class="comment"># 将这 k 个最大值沉底</span></span><br><span class="line">            <span class="variable language_">self</span>._down(stack, deep, maximum, k)</span><br><span class="line">            <span class="comment"># 待排序的深度减少 k</span></span><br><span class="line">            deep -= k</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_deep</span>(<span class="params">self, stack: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;返回栈的深度，不改变栈的数据状况&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> stack:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        num = stack.pop()</span><br><span class="line">        deep = <span class="variable language_">self</span>._deep(stack) + <span class="number">1</span></span><br><span class="line">        stack.append(num)  <span class="comment"># 恢复现场</span></span><br><span class="line">        <span class="keyword">return</span> deep</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_max</span>(<span class="params">self, stack: <span class="type">List</span>[<span class="built_in">int</span>], deep: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;从栈当前的顶部开始，往下数deep层，返回这deep层里的最大值&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> deep == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> -<span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>)  <span class="comment"># 返回一个极小值作为基准</span></span><br><span class="line">        num = stack.pop()</span><br><span class="line">        rest_max = <span class="variable language_">self</span>._<span class="built_in">max</span>(stack, deep - <span class="number">1</span>)</span><br><span class="line">        current_max = <span class="built_in">max</span>(num, rest_max)</span><br><span class="line">        stack.append(num)  <span class="comment"># 恢复现场</span></span><br><span class="line">        <span class="keyword">return</span> current_max</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_times</span>(<span class="params">self, stack: <span class="type">List</span>[<span class="built_in">int</span>], deep: <span class="built_in">int</span>, maximum: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;返回maximum在deep层中出现的次数，不改变栈的数据状况&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> deep == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        num = stack.pop()</span><br><span class="line">        rest_times = <span class="variable language_">self</span>._times(stack, deep - <span class="number">1</span>, maximum)</span><br><span class="line">        times = rest_times + (<span class="number">1</span> <span class="keyword">if</span> num == maximum <span class="keyword">else</span> <span class="number">0</span>)</span><br><span class="line">        stack.append(num)  <span class="comment"># 恢复现场</span></span><br><span class="line">        <span class="keyword">return</span> times</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_down</span>(<span class="params">self, stack: <span class="type">List</span>[<span class="built_in">int</span>], deep: <span class="built_in">int</span>, maximum: <span class="built_in">int</span>, k: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;将k个最大值沉到deep层的底部，剩下的数据状况不变&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> deep == <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 递归到底部时，先把k个最大值压入栈</span></span><br><span class="line">            <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(k):</span><br><span class="line">                stack.append(maximum)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            num = stack.pop()</span><br><span class="line">            <span class="variable language_">self</span>._down(stack, deep - <span class="number">1</span>, maximum, k)</span><br><span class="line">            <span class="comment"># 在递归返回时，只把非最大值的元素压回去</span></span><br><span class="line">            <span class="keyword">if</span> num != maximum:</span><br><span class="line">                stack.append(num)</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-5"><a href="#算法分析-5" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n²)</li>
+<li><strong>空间复杂度</strong>：O(n) (递归栈空间)</li>
+<li><strong>核心技巧</strong>：多递归函数配合 + 选择排序思想</li>
+</ul>
+<hr>
+<h2 id="题目七：打印n层汉诺塔问题的最优移动轨迹"><a href="#题目七：打印n层汉诺塔问题的最优移动轨迹" class="headerlink" title="题目七：打印n层汉诺塔问题的最优移动轨迹"></a>题目七：打印n层汉诺塔问题的最优移动轨迹</h2><h3 id="问题描述-6"><a href="#问题描述-6" class="headerlink" title="问题描述"></a>问题描述</h3><p>打印n层汉诺塔问题的最优移动轨迹。</p>
+<h3 id="核心思想-6"><a href="#核心思想-6" class="headerlink" title="核心思想"></a>核心思想</h3><p>这是一个经典的递归分治问题。要将 i 个盘子从 A 移动到 C：</p>
+<ol>
+<li>先将 i-1 个盘子从 A 移动到 B (辅助柱)。</li>
+<li>再将第 i 个盘子 (最大的那个) 从 A 移动到 C。</li>
+<li>最后将 i-1 个盘子从 B 移动到 C。<br>这个过程完美地将一个大问题分解为两个规模更小的相同问题和一个简单的单步操作。</li>
+</ol>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0.png" alt="汉诺塔问题描述"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%B1%89%E8%AF%BA%E5%A1%94%E7%9A%84%E6%9C%80%E4%BC%98%E7%A7%BB%E5%8A%A8%E8%BD%A8%E8%BF%B9.png" alt="汉诺塔的最优移动轨迹"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(15)/class38-%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/%E6%B1%89%E8%AF%BA%E5%A1%94%E7%9A%84%E6%8A%BD%E8%B1%A1%E6%B5%81%E7%A8%8B.png" alt="汉诺塔的抽象流程"></p>
+<h3 id="算法实现-6"><a href="#算法实现-6" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TowerOfHanoi</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">hanoi</span>(<span class="params">self, n: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        汉诺塔问题主函数入口</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> n &gt; <span class="number">0</span>:</span><br><span class="line">            <span class="variable language_">self</span>._f(n, <span class="string">&quot;左&quot;</span>, <span class="string">&quot;右&quot;</span>, <span class="string">&quot;中&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, i: <span class="built_in">int</span>, start: <span class="built_in">str</span>, end: <span class="built_in">str</span>, other: <span class="built_in">str</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        递归函数，解决将 i 个圆盘从 start 移动到 end 的问题</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># base case：如果只有一个圆盘，直接移动</span></span><br><span class="line">        <span class="keyword">if</span> i == <span class="number">1</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;移动圆盘 1 从 <span class="subst">&#123;start&#125;</span> 到 <span class="subst">&#123;end&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 步骤1: 将 i-1 个圆盘从 start 移动到 other</span></span><br><span class="line">            <span class="variable language_">self</span>._f(i - <span class="number">1</span>, start, other, end)</span><br><span class="line">            <span class="comment"># 步骤2: 移动第 i 个圆盘从 start 到 end</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;移动圆盘 <span class="subst">&#123;i&#125;</span> 从 <span class="subst">&#123;start&#125;</span> 到 <span class="subst">&#123;end&#125;</span>&quot;</span>)</span><br><span class="line">            <span class="comment"># 步骤3: 将 i-1 个圆盘从 other 移动到 end</span></span><br><span class="line">            <span class="variable language_">self</span>._f(i - <span class="number">1</span>, other, end, start)</span><br></pre></td></tr></table></figure>
+
+<h3 id="执行过程示例（n-3）"><a href="#执行过程示例（n-3）" class="headerlink" title="执行过程示例（n&#x3D;3）"></a>执行过程示例（n&#x3D;3）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">解决 3 层汉诺塔问题的步骤：</span><br><span class="line">移动圆盘 1 从 左 到 右</span><br><span class="line">移动圆盘 2 从 左 到 中</span><br><span class="line">移动圆盘 1 从 右 到 中</span><br><span class="line">移动圆盘 3 从 左 到 右</span><br><span class="line">移动圆盘 1 从 中 到 左</span><br><span class="line">移动圆盘 2 从 中 到 右</span><br><span class="line">移动圆盘 1 从 左 到 右</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-6"><a href="#算法分析-6" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(2^n)</li>
+<li><strong>空间复杂度</strong>：O(n) (递归栈空间)</li>
+<li><strong>核心技巧</strong>：递归分治</li>
+</ul>
+<hr>
+<h2 id="递归技巧总结"><a href="#递归技巧总结" class="headerlink" title="递归技巧总结"></a>递归技巧总结</h2><h3 id="1-递归模板"><a href="#1-递归模板" class="headerlink" title="1. 递归模板"></a>1. 递归模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">recursive_function</span>(<span class="params">parameters</span>):</span><br><span class="line">    <span class="comment"># base case: 递归终止条件</span></span><br><span class="line">    <span class="keyword">if</span> base_condition:</span><br><span class="line">        <span class="keyword">return</span> base_result</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 递归调用：分解问题</span></span><br><span class="line">    result = recursive_function(modified_parameters)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 处理当前层的逻辑</span></span><br><span class="line">    current_result = process(result)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> current_result</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-回溯模板"><a href="#2-回溯模板" class="headerlink" title="2. 回溯模板"></a>2. 回溯模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">backtrack</span>(<span class="params">path, choices</span>):</span><br><span class="line">    <span class="comment"># base case</span></span><br><span class="line">    <span class="keyword">if</span> satisfied:</span><br><span class="line">        result.append(path[:])  <span class="comment"># 收集结果</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> choice <span class="keyword">in</span> choices:</span><br><span class="line">        <span class="comment"># 做选择</span></span><br><span class="line">        path.append(choice)</span><br><span class="line">        backtrack(path, remaining_choices)</span><br><span class="line">        <span class="comment"># 撤销选择</span></span><br><span class="line">        path.pop()</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-常见递归模式"><a href="#3-常见递归模式" class="headerlink" title="3. 常见递归模式"></a>3. 常见递归模式</h3><h4 id="选择模式"><a href="#选择模式" class="headerlink" title="选择模式"></a>选择模式</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对每个元素有选择：要 or 不要</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">choose</span>(<span class="params">i, path</span>):</span><br><span class="line">    <span class="keyword">if</span> i == <span class="built_in">len</span>(arr):</span><br><span class="line">        process(path)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 要当前元素</span></span><br><span class="line">    path.append(arr[i])</span><br><span class="line">    choose(i + <span class="number">1</span>, path)</span><br><span class="line">    path.pop()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 不要当前元素</span></span><br><span class="line">    choose(i + <span class="number">1</span>, path)</span><br></pre></td></tr></table></figure>
+
+<h4 id="交换模式"><a href="#交换模式" class="headerlink" title="交换模式"></a>交换模式</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 全排列问题</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">permute</span>(<span class="params">arr, i</span>):</span><br><span class="line">    <span class="keyword">if</span> i == <span class="built_in">len</span>(arr):</span><br><span class="line">        process(arr)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i, <span class="built_in">len</span>(arr)):</span><br><span class="line">        swap(arr, i, j)</span><br><span class="line">        permute(arr, i + <span class="number">1</span>)</span><br><span class="line">        swap(arr, i, j)  <span class="comment"># 回溯</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="复杂度分析总结"><a href="#复杂度分析总结" class="headerlink" title="复杂度分析总结"></a>复杂度分析总结</h2><table>
+<thead>
+<tr>
+<th>题目</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>核心技巧</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>字符串子序列</td>
+<td>O(2^n × n)</td>
+<td>O(2^n × n)</td>
+<td>选择模式 + set去重</td>
+</tr>
+<tr>
+<td>数组组合</td>
+<td>O(2^n × n)</td>
+<td>O(2^n × n)</td>
+<td>排序 + 剪枝去重</td>
+</tr>
+<tr>
+<td>无重复全排列</td>
+<td>O(n! × n)</td>
+<td>O(n!)</td>
+<td>交换模式 + 回溯</td>
+</tr>
+<tr>
+<td>有重复全排列</td>
+<td>O(n! × n)</td>
+<td>O(n!)</td>
+<td>交换模式 + 集合去重</td>
+</tr>
+<tr>
+<td>递归逆序栈</td>
+<td>O(n²)</td>
+<td>O(n)</td>
+<td>双递归函数</td>
+</tr>
+<tr>
+<td>递归排序栈</td>
+<td>O(n²)</td>
+<td>O(n)</td>
+<td>多递归函数</td>
+</tr>
+<tr>
+<td>汉诺塔</td>
+<td>O(2^n)</td>
+<td>O(n)</td>
+<td>递归分治</td>
+</tr>
+</tbody></table>
+<h2 id="学习建议"><a href="#学习建议" class="headerlink" title="学习建议"></a>学习建议</h2><ol>
+<li><p><strong>理解递归本质</strong>：递归就是函数调用自己，关键在于找到递归关系和base case</p>
+</li>
+<li><p><strong>掌握常见模式</strong>：</p>
+<ul>
+<li>选择模式（子集、组合问题）</li>
+<li>交换模式（排列问题）</li>
+<li>分治模式（汉诺塔、归并排序等）</li>
+</ul>
+</li>
+<li><p><strong>注意回溯时机</strong>：</p>
+<ul>
+<li>何时需要回溯（恢复现场）</li>
+<li>何时不需要回溯（使用额外空间）</li>
+</ul>
+</li>
+<li><p><strong>优化技巧</strong>：</p>
+<ul>
+<li>剪枝去重 vs set去重</li>
+<li>空间复用（固定长度数组 + size指针）</li>
+<li>预处理（排序、哈希表等）</li>
+</ul>
+</li>
+<li><p><strong>递归栈深度</strong>：注意递归深度，避免栈溢出</p>
+</li>
+<li><p><strong>实践建议</strong>：</p>
+<ul>
+<li>多画递归树理解执行过程</li>
+<li>从简单案例开始推导</li>
+<li>注意边界条件的处理</li>
+</ul>
+</li>
+</ol>
+<p>递归是解决很多复杂问题的有力工具，掌握好递归的思想和常见模式，可以大大提升解决问题的能力。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E9%80%92%E5%BD%92/" rel="tag"># 递归</a>
+              <a href="/tags/%E5%9B%9E%E6%BA%AF/" rel="tag"># 回溯</a>
+              <a href="/tags/DFS/" rel="tag"># DFS</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/08/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8814%EF%BC%89-%20%E4%BA%8C%E5%8F%89%E6%A0%91%E9%AB%98%E9%A2%91%E9%A2%98%E7%9B%AE/" rel="prev" title="数据结构与算法自学笔记（14）- 二叉树高频题目">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（14）- 二叉树高频题目
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/09/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8816%EF%BC%89-%20%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/" rel="next" title="数据结构与算法自学笔记（16）- 嵌套类问题的递归解题套路">
+      数据结构与算法自学笔记（16）- 嵌套类问题的递归解题套路 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5"><span class="nav-number">1.2.</span> <span class="nav-text">重要概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E4%B8%8E%E5%9B%9E%E6%BA%AF%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.2.1.</span> <span class="nav-text">递归与回溯的关系</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#038%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">038【必备】常见经典递归过程解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%80%EF%BC%9A%E8%BF%94%E5%9B%9E%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%85%A8%E9%83%A8%E5%AD%90%E5%BA%8F%E5%88%97%EF%BC%88%E5%8E%BB%E9%87%8D%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">题目一：返回字符串全部子序列（去重）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">2.1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">2.1.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.1.3.</span> <span class="nav-text">算法实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E4%BD%BF%E7%94%A8%E5%88%97%E8%A1%A8%E4%BD%9C%E4%B8%BA%E8%B7%AF%E5%BE%84"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">方法一：使用列表作为路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E4%BD%BF%E7%94%A8%E5%9B%BA%E5%AE%9A%E9%95%BF%E5%BA%A6%E5%88%97%E8%A1%A8%E5%92%8Csize%E6%8C%87%E9%92%88"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">方法二：使用固定长度列表和size指针</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">2.1.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%8C%EF%BC%9A%E8%BF%94%E5%9B%9E%E6%95%B0%E7%BB%84%E7%9A%84%E6%89%80%E6%9C%89%E7%BB%84%E5%90%88%EF%BC%88%E5%8E%BB%E9%87%8D%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">题目二：返回数组的所有组合（去重）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">2.2.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB%EF%BC%9Aset%E5%8E%BB%E9%87%8D-vs-%E5%89%AA%E6%9E%9D%E5%8E%BB%E9%87%8D"><span class="nav-number">2.2.4.</span> <span class="nav-text">区别：set去重 vs 剪枝去重</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-1"><span class="nav-number">2.2.5.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%89%EF%BC%9A%E8%BF%94%E5%9B%9E%E6%B2%A1%E6%9C%89%E9%87%8D%E5%A4%8D%E5%80%BC%E6%95%B0%E7%BB%84%E7%9A%84%E5%85%A8%E9%83%A8%E6%8E%92%E5%88%97"><span class="nav-number">2.3.</span> <span class="nav-text">题目三：返回没有重复值数组的全部排列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">2.3.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-2"><span class="nav-number">2.3.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">2.3.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-2"><span class="nav-number">2.3.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%9B%9B%EF%BC%9A%E8%BF%94%E5%9B%9E%E5%8F%AF%E8%83%BD%E6%9C%89%E9%87%8D%E5%A4%8D%E5%80%BC%E6%95%B0%E7%BB%84%E7%9A%84%E5%85%A8%E9%83%A8%E6%8E%92%E5%88%97%EF%BC%88%E5%8E%BB%E9%87%8D%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">题目四：返回可能有重复值数组的全部排列（去重）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-3"><span class="nav-number">2.4.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-3"><span class="nav-number">2.4.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-3"><span class="nav-number">2.4.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-3"><span class="nav-number">2.4.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%94%EF%BC%9A%E7%94%A8%E9%80%92%E5%BD%92%E9%80%86%E5%BA%8F%E4%B8%80%E4%B8%AA%E6%A0%88"><span class="nav-number">2.5.</span> <span class="nav-text">题目五：用递归逆序一个栈</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-4"><span class="nav-number">2.5.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-4"><span class="nav-number">2.5.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-4"><span class="nav-number">2.5.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.5.4.</span> <span class="nav-text">执行过程示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-4"><span class="nav-number">2.5.5.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%85%AD%EF%BC%9A%E7%94%A8%E9%80%92%E5%BD%92%E6%8E%92%E5%BA%8F%E4%B8%80%E4%B8%AA%E6%A0%88"><span class="nav-number">2.6.</span> <span class="nav-text">题目六：用递归排序一个栈</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-5"><span class="nav-number">2.6.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-5"><span class="nav-number">2.6.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-5"><span class="nav-number">2.6.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-5"><span class="nav-number">2.6.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%83%EF%BC%9A%E6%89%93%E5%8D%B0n%E5%B1%82%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98%E7%9A%84%E6%9C%80%E4%BC%98%E7%A7%BB%E5%8A%A8%E8%BD%A8%E8%BF%B9"><span class="nav-number">2.7.</span> <span class="nav-text">题目七：打印n层汉诺塔问题的最优移动轨迹</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-6"><span class="nav-number">2.7.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-6"><span class="nav-number">2.7.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-6"><span class="nav-number">2.7.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B%EF%BC%88n-3%EF%BC%89"><span class="nav-number">2.7.4.</span> <span class="nav-text">执行过程示例（n&#x3D;3）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-6"><span class="nav-number">2.7.5.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93"><span class="nav-number">2.8.</span> <span class="nav-text">递归技巧总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%80%92%E5%BD%92%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.8.1.</span> <span class="nav-text">1. 递归模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%9B%9E%E6%BA%AF%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.8.2.</span> <span class="nav-text">2. 回溯模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%B8%B8%E8%A7%81%E9%80%92%E5%BD%92%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.8.3.</span> <span class="nav-text">3. 常见递归模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.8.3.1.</span> <span class="nav-text">选择模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.8.3.2.</span> <span class="nav-text">交换模式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90%E6%80%BB%E7%BB%93"><span class="nav-number">2.9.</span> <span class="nav-text">复杂度分析总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.10.</span> <span class="nav-text">学习建议</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

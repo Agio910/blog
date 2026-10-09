@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记内容囊括class41-class42，class41讲的是数学基础中的最大公约数、最小公倍数计算，以及同余原理的应用。此外class42讲了对数器打表找规律的技巧，通过暴力解小规模数据，观察输出规律，最终得到高效的数学解法。 重要说明这两个内容">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（18）- 最大公约数、同余原理与对数器打表规律">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/09/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8818%EF%BC%89-%20%E6%9C%80%E5%A4%A7%E5%85%AC%E7%BA%A6%E6%95%B0%E3%80%81%E5%90%8C%E4%BD%99%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AF%B9%E6%95%B0%E5%99%A8%E6%89%93%E8%A1%A8%E8%A7%84%E5%BE%8B/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记内容囊括class41-class42，class41讲的是数学基础中的最大公约数、最小公倍数计算，以及同余原理的应用。此外class42讲了对数器打表找规律的技巧，通过暴力解小规模数据，观察输出规律，最终得到高效的数学解法。 重要说明这两个内容">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-09-05T02:30:00.000Z">
+<meta property="article:modified_time" content="2025-09-06T01:35:16.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="递归">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="数论">
+<meta property="article:tag" content="二分搜索">
+<meta property="article:tag" content="容斥原理">
+<meta property="article:tag" content="打表器">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/09/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8818%EF%BC%89-%20%E6%9C%80%E5%A4%A7%E5%85%AC%E7%BA%A6%E6%95%B0%E3%80%81%E5%90%8C%E4%BD%99%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AF%B9%E6%95%B0%E5%99%A8%E6%89%93%E8%A1%A8%E8%A7%84%E5%BE%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（18）- 最大公约数、同余原理与对数器打表规律 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/09/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8818%EF%BC%89-%20%E6%9C%80%E5%A4%A7%E5%85%AC%E7%BA%A6%E6%95%B0%E3%80%81%E5%90%8C%E4%BD%99%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AF%B9%E6%95%B0%E5%99%A8%E6%89%93%E8%A1%A8%E8%A7%84%E5%BE%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（18）- 最大公约数、同余原理与对数器打表规律
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-09-05 10:30:00" itemprop="dateCreated datePublished" datetime="2025-09-05T10:30:00+08:00">2025-09-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-09-06 09:35:16" itemprop="dateModified" datetime="2025-09-06T09:35:16+08:00">2025-09-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a></p>
+<p>本笔记内容囊括class41-class42，class41讲的是数学基础中的最大公约数、最小公倍数计算，以及同余原理的应用。此外class42讲了对数器打表找规律的技巧，通过暴力解小规模数据，观察输出规律，最终得到高效的数学解法。</p>
+<h2 id="重要说明"><a href="#重要说明" class="headerlink" title="重要说明"></a>重要说明</h2><p>这两个内容都和数学比较相关，所以放在了一起。同余原理等等都是抽象代数的基本操作，对数器打表则需要我们观察数学规律，然后再高效求解。</p>
+<hr>
+<h1 id="041【必备】最大公约数、同余原理"><a href="#041【必备】最大公约数、同余原理" class="headerlink" title="041【必备】最大公约数、同余原理"></a>041【必备】最大公约数、同余原理</h1><h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>在学习本内容之前，需要掌握以下基础知识：</p>
+<ul>
+<li>基本的数学运算</li>
+<li>递归的概念</li>
+<li>二分查找的基本思想</li>
+</ul>
+<h2 id="重要说明-1"><a href="#重要说明-1" class="headerlink" title="重要说明"></a>重要说明</h2><ul>
+<li>本期内容涵盖欧几里得算法（辗转相除法）的原理与实现</li>
+<li>同余原理在防止大数溢出方面的应用</li>
+<li>二分答案法与容斥原理的简单应用</li>
+<li>更高效的Stein算法和裴蜀定理会在后续扩展课程中讲述</li>
+</ul>
+<h2 id="核心知识点一：最大公约数与最小公倍数"><a href="#核心知识点一：最大公约数与最小公倍数" class="headerlink" title="核心知识点一：最大公约数与最小公倍数"></a>核心知识点一：最大公约数与最小公倍数</h2><h3 id="欧几里得算法（辗转相除法）"><a href="#欧几里得算法（辗转相除法）" class="headerlink" title="欧几里得算法（辗转相除法）"></a>欧几里得算法（辗转相除法）</h3><h4 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h4><p>辗转相除法的核心是证明以下关系：<br>$$\gcd(a, b) &#x3D; \gcd(b, a \bmod b)$$</p>
+<p>其中 $a \bmod b$ 表示 $a$ 除以 $b$ 的余数。</p>
+<h4 id="正确性证明"><a href="#正确性证明" class="headerlink" title="正确性证明"></a>正确性证明</h4><p>设 $a \bmod b &#x3D; r$，即需要证明：$\gcd(a, b) &#x3D; \gcd(b, r)$</p>
+<p><strong>证明过程：</strong></p>
+<ol>
+<li><p>由 $a \bmod b &#x3D; r$ 可得：</p>
+<ul>
+<li>$a &#x3D; b \times q + r$（其中 $q$ 为商）</li>
+<li>$r &#x3D; a - b \times q$</li>
+</ul>
+</li>
+<li><p>设 $u$ 是 $a$ 和 $b$ 的公因子，则有：$a &#x3D; s \times u$，$b &#x3D; t \times u$</p>
+</li>
+<li><p>将上式代入得：$r &#x3D; s \times u - t \times u \times q &#x3D; (s - t \times q) \times u$</p>
+</li>
+<li><p>这说明：$u$ 如果是 $a$ 和 $b$ 的公因子，那么 $u$ 也是 $r$ 的因子</p>
+</li>
+<li><p>反之，设 $v$ 是 $b$ 和 $r$ 的公因子，则有：$b &#x3D; x \times v$，$r &#x3D; y \times v$</p>
+</li>
+<li><p>代入得：$a &#x3D; x \times v \times q + y \times v &#x3D; (x \times q + y) \times v$</p>
+</li>
+<li><p>这说明：$v$ 如果是 $b$ 和 $r$ 的公因子，那么 $v$ 也是 $a$ 的公因子</p>
+</li>
+</ol>
+<p><strong>结论：</strong> $a$ 和 $b$ 的全体公因子集合 &#x3D; $b$ 和 $r$ 的全体公因子集合，因此 $\gcd(a, b) &#x3D; \gcd(b, r)$</p>
+<h3 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MathUtils</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">gcd</span>(<span class="params">self, a: <span class="built_in">int</span>, b: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        使用辗转相除法（欧几里得算法）计算最大公约数。</span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        两个整数的最大公约数等于其中较小的数和两数相除余数的最大公约数。</span></span><br><span class="line"><span class="string">        递归的基准情况是当 b 为 0 时，最大公约数是 a。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> a <span class="keyword">if</span> b == <span class="number">0</span> <span class="keyword">else</span> <span class="variable language_">self</span>.gcd(b, a % b)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">lcm</span>(<span class="params">self, a: <span class="built_in">int</span>, b: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        计算最小公倍数。</span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        两个数的最小公倍数可以通过公式 `(a * b) / gcd(a, b)` 计算得出。</span></span><br><span class="line"><span class="string">        为了防止 `a * b` 在某些语言中溢出，可以写成 `a / gcd(a, b) * b`。</span></span><br><span class="line"><span class="string">        在 Python 中，整数支持任意精度，不存在溢出问题，但这种写法仍然是好习惯。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 使用 // 保证整数除法</span></span><br><span class="line">        <span class="keyword">return</span> (a // <span class="variable language_">self</span>.gcd(a, b)) * b</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：$O((\log a)^3)$，其中 $a &gt; b$</li>
+<li><strong>空间复杂度</strong>：$O(\log a)$（递归调用栈）</li>
+<li><strong>核心优势</strong>：算法简洁，效率高，易于实现</li>
+</ul>
+<h3 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">utils = MathUtils()</span><br><span class="line">a, b = <span class="number">48</span>, <span class="number">18</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;GCD of <span class="subst">&#123;a&#125;</span> and <span class="subst">&#123;b&#125;</span> is: <span class="subst">&#123;utils.gcd(a, b)&#125;</span>&quot;</span>)  <span class="comment"># 输出: 6</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;LCM of <span class="subst">&#123;a&#125;</span> and <span class="subst">&#123;b&#125;</span> is: <span class="subst">&#123;utils.lcm(a, b)&#125;</span>&quot;</span>)  <span class="comment"># 输出: 144</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="核心知识点二：神奇数问题（二分答案法-容斥原理）"><a href="#核心知识点二：神奇数问题（二分答案法-容斥原理）" class="headerlink" title="核心知识点二：神奇数问题（二分答案法 + 容斥原理）"></a>核心知识点二：神奇数问题（二分答案法 + 容斥原理）</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>一个正整数如果能被 $a$ 或 $b$ 整除，那么它是神奇的。给定三个整数 $n$, $a$, $b$，返回第 $n$ 个神奇的数字。因为答案可能很大，所以返回答案对 $10^9 + 7$ 取模后的值。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/nth-magical-number/">https://leetcode.cn/problems/nth-magical-number/</a></p>
+<h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>这个问题巧妙地结合了两个重要算法：</p>
+<ol>
+<li><strong>二分答案法</strong>：答案具有单调性，可以二分查找</li>
+<li><strong>容斥原理</strong>：计算能被 $a$ 或 $b$ 整除的数的个数</li>
+</ol>
+<h4 id="二分答案法分析"><a href="#二分答案法分析" class="headerlink" title="二分答案法分析"></a>二分答案法分析</h4><p>对于任意数字 $m$，小于等于 $m$ 的神奇数字个数具有单调性：$m$ 越大，神奇数字越多。因此可以二分查找第 $n$ 个神奇数字。</p>
+<h4 id="容斥原理应用"><a href="#容斥原理应用" class="headerlink" title="容斥原理应用"></a>容斥原理应用</h4><p>计算 $1$ 到 $m$ 中能被 $a$ 或 $b$ 整除的数的个数：</p>
+<p>$$\text{count} &#x3D; \lfloor\frac{m}{a}\rfloor + \lfloor\frac{m}{b}\rfloor - \lfloor\frac{m}{\text{lcm}(a,b)}\rfloor$$</p>
+<p>其中减去 $\lfloor\frac{m}{\text{lcm}(a,b)}\rfloor$ 是因为被 $a$ 和 $b$ 同时整除的数被重复计算了。</p>
+<h3 id="算法实现-1"><a href="#算法实现-1" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">nthMagicalNumber</span>(<span class="params">self, n: <span class="built_in">int</span>, a: <span class="built_in">int</span>, b: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        寻找第 n 个神奇数字。</span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        答案本身具有单调性（越大的数，它前面的神奇数字越多），因此可以使用二分查找来寻找答案。</span></span><br><span class="line"><span class="string">        1. 定义查找范围：下界 `l=0`，上界 `r` 可以是一个足够大的数，例如 `n * min(a, b)`。</span></span><br><span class="line"><span class="string">        2. 二分中点为 `m`，我们需要快速计算出 `1` 到 `m` 之间有多少个神奇数字。</span></span><br><span class="line"><span class="string">        3. 这个数量可以通过容斥原理计算：`count = m/a + m/b - m/lcm(a, b)`。</span></span><br><span class="line"><span class="string">           其中 `lcm` 是 a 和 b 的最小公倍数。</span></span><br><span class="line"><span class="string">        4. 如果 `count &gt;= n`，说明第 `n` 个神奇数字可能就是 `m` 或者更小，所以我们将 `m` 存为候选答案，并向左查找 `r = m - 1`。</span></span><br><span class="line"><span class="string">        5. 如果 `count &lt; n`，说明 `m` 太小了，第 `n` 个神奇数字在 `m` 的右边，所以向右查找 `l = m + 1`。</span></span><br><span class="line"><span class="string">        6. 二分结束后，候选答案即为所求，最后对结果取模。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        lcm_val = <span class="variable language_">self</span>._lcm(a, b)</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        mod = <span class="number">1000000007</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># l = 0, r = n * min(a, b) 是一个安全上界</span></span><br><span class="line">        l, r = <span class="number">0</span>, n * <span class="built_in">min</span>(a, b)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> l &lt;= r:</span><br><span class="line">            m = (l + r) // <span class="number">2</span></span><br><span class="line">            <span class="comment"># 计算 1...m 中有多少个数是 a 或 b 的倍数</span></span><br><span class="line">            <span class="comment"># 使用容斥原理：(m中a的倍数) + (m中b的倍数) - (m中a和b公倍数的个数)</span></span><br><span class="line">            <span class="keyword">if</span> m // a + m // b - m // lcm_val &gt;= n:</span><br><span class="line">                ans = m</span><br><span class="line">                r = m - <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                l = m + <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">        <span class="keyword">return</span> ans % mod</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_gcd</span>(<span class="params">self, a: <span class="built_in">int</span>, b: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="keyword">return</span> a <span class="keyword">if</span> b == <span class="number">0</span> <span class="keyword">else</span> <span class="variable language_">self</span>._gcd(b, a % b)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_lcm</span>(<span class="params">self, a: <span class="built_in">int</span>, b: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="keyword">return</span> (a * b) // <span class="variable language_">self</span>._gcd(a, b)</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-1"><a href="#算法分析-1" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：$O(\log(\text{n} \times \min(a, b)))$</li>
+<li><strong>空间复杂度</strong>：$O(\log(\min(a, b)))$（递归调用栈）</li>
+<li><strong>核心技巧</strong>：二分答案法 + 容斥原理</li>
+</ul>
+<hr>
+<h2 id="核心知识点三：同余原理"><a href="#核心知识点三：同余原理" class="headerlink" title="核心知识点三：同余原理"></a>核心知识点三：同余原理</h2><h3 id="基本公理"><a href="#基本公理" class="headerlink" title="基本公理"></a>基本公理</h3><p>设 $m$ 为正整数（模），若：</p>
+<ul>
+<li>$a \equiv b \pmod{m}$</li>
+<li>$c \equiv d \pmod{m}$</li>
+</ul>
+<p>则有：</p>
+<ul>
+<li><strong>加法</strong>：$a + c \equiv b + d \pmod{m}$</li>
+<li><strong>减法</strong>：$a - c \equiv b - d \pmod{m}$</li>
+<li><strong>乘法</strong>：$ac \equiv bd \pmod{m}$</li>
+</ul>
+<h3 id="核心思想-1"><a href="#核心思想-1" class="headerlink" title="核心思想"></a>核心思想</h3><p>在模运算中，我们可以在每一步计算后都取模，这样可以：</p>
+<ol>
+<li>防止中间结果溢出</li>
+<li>保持计算结果的正确性</li>
+<li>提高计算效率</li>
+</ol>
+<h3 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h3><h4 id="问题：计算-a-b-times-c-d-a-times-c-b-times-d-bmod-m"><a href="#问题：计算-a-b-times-c-d-a-times-c-b-times-d-bmod-m" class="headerlink" title="问题：计算 $((a + b) \times (c - d) + (a \times c - b \times d)) \bmod m$"></a>问题：计算 $((a + b) \times (c - d) + (a \times c - b \times d)) \bmod m$</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">f1</span>(<span class="params">self, a: <span class="built_in">int</span>, b: <span class="built_in">int</span>, c: <span class="built_in">int</span>, d: <span class="built_in">int</span>, mod: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        使用 Python 的原生大整数计算，等同于 Java 的 BigInteger 版本。</span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        直接进行数学运算，让语言自动处理中间过程中可能出现的巨大数值。</span></span><br><span class="line"><span class="string">        最后对最终结果取模。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        o5 = a + b</span><br><span class="line">        o6 = c - d</span><br><span class="line">        o7 = a * c</span><br><span class="line">        o8 = b * d</span><br><span class="line">        o9 = o5 * o6</span><br><span class="line">        o10 = o7 - o8</span><br><span class="line">        o11 = o9 + o10</span><br><span class="line">        <span class="comment"># (res % mod + mod) % mod 是一个确保结果为正的通用技巧。</span></span><br><span class="line">        <span class="keyword">return</span> (o11 % mod + mod) % mod</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">f2</span>(<span class="params">self, a: <span class="built_in">int</span>, b: <span class="built_in">int</span>, c: <span class="built_in">int</span>, d: <span class="built_in">int</span>, mod: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        使用同余原理在每一步运算后都取模。</span></span><br><span class="line"><span class="string">        核心思想 (同余原理)：</span></span><br><span class="line"><span class="string">        - (A + B) % M = ((A % M) + (B % M)) % M</span></span><br><span class="line"><span class="string">        - (A - B) % M = ((A % M) - (B % M) + M) % M  (加上M确保结果非负)</span></span><br><span class="line"><span class="string">        - (A * B) % M = ((A % M) * (B % M)) % M</span></span><br><span class="line"><span class="string">        这种方法可以保证所有中间计算结果都在一个可控的范围内，避免大数运算，效率更高。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        o1 = a % mod</span><br><span class="line">        o2 = b % mod</span><br><span class="line">        o3 = c % mod</span><br><span class="line">        o4 = d % mod</span><br><span class="line">        o5 = (o1 + o2) % mod</span><br><span class="line">        <span class="comment"># 加上 mod 再取模，是为了防止 o3 &lt; o4 时出现负数</span></span><br><span class="line">        o6 = (o3 - o4 + mod) % mod</span><br><span class="line">        o7 = (o1 * o3) % mod</span><br><span class="line">        o8 = (o2 * o4) % mod</span><br><span class="line">        o9 = (o5 * o6) % mod</span><br><span class="line">        o10 = (o7 - o8 + mod) % mod</span><br><span class="line">        ans = (o9 + o10) % mod</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="重要注意事项"><a href="#重要注意事项" class="headerlink" title="重要注意事项"></a>重要注意事项</h3><ol>
+<li><p><strong>减法处理</strong>：$(a - b) \bmod m &#x3D; ((a \bmod m) - (b \bmod m) + m) \bmod m$</p>
+<ul>
+<li>加上 $m$ 是为了确保结果非负</li>
+</ul>
+</li>
+<li><p><strong>除法同余</strong>：需要求逆元，比较复杂，会在后续课程中讲述</p>
+</li>
+<li><p><strong>数据类型</strong>：在需要防止溢出的语言中，乘法运算常用长整型做中间变量</p>
+</li>
+</ol>
+<h3 id="验证代码"><a href="#验证代码" class="headerlink" title="验证代码"></a>验证代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">random_long</span>():</span><br><span class="line">    <span class="keyword">return</span> random.randint(<span class="number">0</span>, sys.maxsize)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    s = Solution()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;测试开始&quot;</span>)</span><br><span class="line">    test_time = <span class="number">100000</span></span><br><span class="line">    mod = <span class="number">1000000007</span></span><br><span class="line">    all_passed = <span class="literal">True</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(test_time):</span><br><span class="line">        a = random_long()</span><br><span class="line">        b = random_long()</span><br><span class="line">        c = random_long()</span><br><span class="line">        d = random_long()</span><br><span class="line">        <span class="keyword">if</span> s.f1(a, b, c, d, mod) != s.f2(a, b, c, d, mod):</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;出错了!&quot;</span>)</span><br><span class="line">            all_passed = <span class="literal">False</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> all_passed:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;测试结束，全部通过!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="算法技巧总结"><a href="#算法技巧总结" class="headerlink" title="算法技巧总结"></a>算法技巧总结</h2><h3 id="1-欧几里得算法模板"><a href="#1-欧几里得算法模板" class="headerlink" title="1. 欧几里得算法模板"></a>1. 欧几里得算法模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gcd</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">return</span> a <span class="keyword">if</span> b == <span class="number">0</span> <span class="keyword">else</span> gcd(b, a % b)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lcm</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">return</span> (a * b) // gcd(a, b)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-二分答案法模板"><a href="#2-二分答案法模板" class="headerlink" title="2. 二分答案法模板"></a>2. 二分答案法模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">binary_search_answer</span>(<span class="params">check_function, left, right</span>):</span><br><span class="line">    ans = -<span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> left &lt;= right:</span><br><span class="line">        mid = (left + right) // <span class="number">2</span></span><br><span class="line">        <span class="keyword">if</span> check_function(mid):</span><br><span class="line">            ans = mid</span><br><span class="line">            right = mid - <span class="number">1</span>  <span class="comment"># 继续寻找更小的答案</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            left = mid + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-容斥原理（两个集合）"><a href="#3-容斥原理（两个集合）" class="headerlink" title="3. 容斥原理（两个集合）"></a>3. 容斥原理（两个集合）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># |A ∪ B| = |A| + |B| - |A ∩ B|</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">inclusion_exclusion_two_sets</span>(<span class="params">n, a, b</span>):</span><br><span class="line">    lcm_ab = lcm(a, b)</span><br><span class="line">    <span class="keyword">return</span> n // a + n // b - n // lcm_ab</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-同余运算模板"><a href="#4-同余运算模板" class="headerlink" title="4. 同余运算模板"></a>4. 同余运算模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">safe_mod_operations</span>(<span class="params">a, b, mod</span>):</span><br><span class="line">    <span class="comment"># 加法</span></span><br><span class="line">    add_result = (a + b) % mod</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 减法（确保非负）</span></span><br><span class="line">    sub_result = (a - b + mod) % mod</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 乘法</span></span><br><span class="line">    mul_result = (a * b) % mod</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> add_result, sub_result, mul_result</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析总结"><a href="#复杂度分析总结" class="headerlink" title="复杂度分析总结"></a>复杂度分析总结</h2><table>
+<thead>
+<tr>
+<th>算法</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>欧几里得算法</td>
+<td>$O(\log \min(a,b))$</td>
+<td>$O(\log \min(a,b))$</td>
+<td>求最大公约数</td>
+</tr>
+<tr>
+<td>神奇数问题</td>
+<td>$O(\log(n \times \min(a,b)))$</td>
+<td>$O(\log \min(a,b))$</td>
+<td>二分答案法</td>
+</tr>
+<tr>
+<td>同余运算</td>
+<td>$O(1)$</td>
+<td>$O(1)$</td>
+<td>防止溢出</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="学习建议"><a href="#学习建议" class="headerlink" title="学习建议"></a>学习建议</h2><h3 id="1-掌握数学基础"><a href="#1-掌握数学基础" class="headerlink" title="1. 掌握数学基础"></a>1. 掌握数学基础</h3><ul>
+<li>理解最大公约数和最小公倍数的定义</li>
+<li>掌握同余的概念和性质</li>
+<li>熟悉容斥原理的基本应用</li>
+</ul>
+<h3 id="2-算法思维训练"><a href="#2-算法思维训练" class="headerlink" title="2. 算法思维训练"></a>2. 算法思维训练</h3><ul>
+<li><strong>二分答案法</strong>：当答案具有单调性时考虑使用</li>
+<li><strong>容斥原理</strong>：处理集合交并关系的重要工具</li>
+<li><strong>同余优化</strong>：在模运算中防止溢出的关键技巧</li>
+</ul>
+<h3 id="3-实践要点"><a href="#3-实践要点" class="headerlink" title="3. 实践要点"></a>3. 实践要点</h3><ul>
+<li>欧几里得算法是最基础的数学算法，必须熟练掌握</li>
+<li>同余原理在竞赛和工程中都很重要，特别是处理大数时</li>
+<li>二分答案法是一种重要的算法思想，适用范围很广</li>
+</ul>
+<h3 id="4-扩展学习"><a href="#4-扩展学习" class="headerlink" title="4. 扩展学习"></a>4. 扩展学习</h3><ul>
+<li><strong>Stein算法</strong>：更高效的最大公约数算法</li>
+<li><strong>裴蜀定理</strong>：关于线性丢番图方程的重要定理</li>
+<li><strong>扩展欧几里得算法</strong>：求解模逆元的基础</li>
+<li><strong>中国剩余定理</strong>：处理多个同余方程组</li>
+</ul>
+<h3 id="5-注意事项"><a href="#5-注意事项" class="headerlink" title="5. 注意事项"></a>5. 注意事项</h3><ul>
+<li>在实现递归版本时注意栈溢出问题</li>
+<li>处理负数时要特别小心同余运算</li>
+<li>在竞赛中，往往需要对结果取模，要养成习惯</li>
+</ul>
+<p>通过掌握这些数学基础知识和算法技巧，可以为解决更复杂的数学相关算法问题打下坚实的基础。这些知识点不仅在算法竞赛中经常出现，在实际工程开发中也有重要应用价值。</p>
+<h1 id="042【必备】对数器打表找规律的技巧"><a href="#042【必备】对数器打表找规律的技巧" class="headerlink" title="042【必备】对数器打表找规律的技巧"></a>042【必备】对数器打表找规律的技巧</h1><h2 id="前置知识-1"><a href="#前置知识-1" class="headerlink" title="前置知识"></a>前置知识</h2><p>在学习本内容之前，需要掌握以下基础知识：</p>
+<ul>
+<li>基本递归能力（推荐讲解038-常见经典递归过程解析）</li>
+<li>动态规划的基本思想</li>
+<li>博弈论的基础概念</li>
+</ul>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>对数器打表找规律适用于：</p>
+<ul>
+<li>输入参数是简单类型</li>
+<li>返回值也是简单类型</li>
+<li>暴力解法可以处理小规模数据</li>
+<li>存在数学规律可以发现</li>
+</ul>
+<h2 id="方法论"><a href="#方法论" class="headerlink" title="方法论"></a>方法论</h2><ol>
+<li><strong>暴力实现</strong>：用最基本的递归实现求解小规模问题</li>
+<li><strong>打表观察</strong>：打印小规模输入的答案，寻找规律</li>
+<li><strong>规律验证</strong>：将观察到的规律转换为代码并验证</li>
+<li><strong>优化实现</strong>：基于规律得到最优解</li>
+</ol>
+<h2 id="问题一：使用规格8和规格6的袋子买苹果"><a href="#问题一：使用规格8和规格6的袋子买苹果" class="headerlink" title="问题一：使用规格8和规格6的袋子买苹果"></a>问题一：使用规格8和规格6的袋子买苹果</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p>有装下8个苹果的袋子、装下6个苹果的袋子，一定要保证买苹果时所有使用的袋子都装满。对于无法装满所有袋子的方案不予考虑，给定n个苹果，返回至少要多少个袋子。如果不存在每个袋子都装满的方案返回-1。</p>
+<h3 id="核心思想-2"><a href="#核心思想-2" class="headerlink" title="核心思想"></a>核心思想</h3><p>这是一个典型的<strong>整数规划问题</strong>，可以用动态规划或递归求解，也可以通过观察规律得到数学解法。</p>
+<h3 id="方法一：暴力递归（备忘录优化）"><a href="#方法一：暴力递归（备忘录优化）" class="headerlink" title="方法一：暴力递归（备忘录优化）"></a>方法一：暴力递归（备忘录优化）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">bags1</span>(<span class="params">self, apple: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        主函数，调用递归并处理无效解的返回值</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 使用 memoization (备忘录) 来优化递归，避免重复计算</span></span><br><span class="line">        memo = &#123;&#125;</span><br><span class="line">        ans = <span class="variable language_">self</span>._f(apple, memo)</span><br><span class="line">        <span class="comment"># 如果返回的是无穷大，说明无解，返回-1</span></span><br><span class="line">        <span class="keyword">return</span> ans <span class="keyword">if</span> ans != math.inf <span class="keyword">else</span> -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, rest: <span class="built_in">int</span>, memo: <span class="built_in">dict</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        递归函数，计算装下 rest 个苹果所需的最少袋子数</span></span><br><span class="line"><span class="string">        核心思想 (回溯/动态规划)：</span></span><br><span class="line"><span class="string">        对于 `rest` 个苹果，我们有两种选择：</span></span><br><span class="line"><span class="string">        1. 用一个8个装的袋子，问题变为求解 `f(rest - 8)`。</span></span><br><span class="line"><span class="string">        2. 用一个6个装的袋子，问题变为求解 `f(rest - 6)`。</span></span><br><span class="line"><span class="string">        我们需要在这两种选择中，选择总袋子数最少的那一个。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> rest <span class="keyword">in</span> memo: <span class="comment"># 如果之前已经算过当前 rest（还剩多少苹果）对应的最少袋子数</span></span><br><span class="line">            <span class="keyword">return</span> memo[rest] </span><br><span class="line">        </span><br><span class="line">        <span class="comment"># base case: 苹果数小于0，说明上一步的选择是无效的</span></span><br><span class="line">        <span class="keyword">if</span> rest &lt; <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> math.inf</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># base case: 苹果数为0，说明刚好装完，不再需要袋子</span></span><br><span class="line">        <span class="keyword">if</span> rest == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 尝试用一个8规格的袋子</span></span><br><span class="line">        p1 = <span class="variable language_">self</span>._f(rest - <span class="number">8</span>, memo)</span><br><span class="line">        <span class="comment"># 尝试用一个6规格的袋子</span></span><br><span class="line">        p2 = <span class="variable language_">self</span>._f(rest - <span class="number">6</span>, memo)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 在有效解的基础上加1 (代表当前用的这个袋子)</span></span><br><span class="line">        res = <span class="built_in">min</span>(p1, p2) + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        memo[rest] = res</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<h3 id="方法二：规律观察优化解"><a href="#方法二：规律观察优化解" class="headerlink" title="方法二：规律观察优化解"></a>方法二：规律观察优化解</h3><p>通过打表观察发现规律：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">bags2</span>(<span class="params">self, apple: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    通过暴力解的输出观察规律，得到的数学优化方法</span></span><br><span class="line"><span class="string">    核心思想：</span></span><br><span class="line"><span class="string">    - 苹果数必须是偶数，因为袋子规格6和8都是偶数。</span></span><br><span class="line"><span class="string">    - 观察小数据量的解，发现 apple &lt; 18 时情况比较特殊，可以直接列出。</span></span><br><span class="line"><span class="string">    - 当 apple &gt;= 18 时，规律出现。为了用最少的袋子，应尽可能多地使用8个装的袋子。</span></span><br><span class="line"><span class="string">      可以证明任何 &gt;= 18 的偶数 `apple` 都可以表示为 `8*k + c` 的形式，</span></span><br><span class="line"><span class="string">      其中 `c` 是一个可以用6和8凑出来的小数（比如18, 20, 22）。</span></span><br><span class="line"><span class="string">      `apple - 18` 的部分全部用8个装的袋子，剩下的18个苹果用3个6个装的袋子。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># base case:如果苹果数是奇数，无解</span></span><br><span class="line">    <span class="keyword">if</span> (apple &amp; <span class="number">1</span>) != <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># base case:处理18以下的特殊情况</span></span><br><span class="line">    <span class="keyword">if</span> apple &lt; <span class="number">18</span>:</span><br><span class="line">        <span class="keyword">if</span> apple == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> apple == <span class="number">6</span> <span class="keyword">or</span> apple == <span class="number">8</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> apple == <span class="number">12</span> <span class="keyword">or</span> apple == <span class="number">14</span> <span class="keyword">or</span> apple == <span class="number">16</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">2</span></span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 处理18及以上的情况</span></span><br><span class="line">    <span class="comment"># (apple - 18) 用8个装的袋子，18用3个6个装的袋子</span></span><br><span class="line">    <span class="keyword">return</span> (apple - <span class="number">18</span>) // <span class="number">8</span> + <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="规律分析"><a href="#规律分析" class="headerlink" title="规律分析"></a>规律分析</h3><p>通过打表观察，我们发现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">苹果数 : 最少袋子数</span><br><span class="line">0 : 0</span><br><span class="line">1 : -1 (奇数无解)</span><br><span class="line">2 : -1</span><br><span class="line">3 : -1 (奇数无解)</span><br><span class="line">4 : -1</span><br><span class="line">5 : -1 (奇数无解)</span><br><span class="line">6 : 1    (1个6袋)</span><br><span class="line">7 : -1 (奇数无解)</span><br><span class="line">8 : 1    (1个8袋)</span><br><span class="line">9 : -1 (奇数无解)</span><br><span class="line">10 : -1</span><br><span class="line">11 : -1 (奇数无解)</span><br><span class="line">12 : 2   (2个6袋)</span><br><span class="line">13 : -1 (奇数无解)</span><br><span class="line">14 : 2   (1个6袋+1个8袋)</span><br><span class="line">15 : -1 (奇数无解)</span><br><span class="line">16 : 2   (2个8袋)</span><br><span class="line">17 : -1 (奇数无解)</span><br><span class="line">18 : 3   (3个6袋)</span><br><span class="line">20 : 3   (1个6袋+1个8袋+1个6袋 或 其他组合)</span><br><span class="line">22 : 3   (1个6袋+2个8袋)</span><br><span class="line">24 : 3   (3个8袋)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>规律：当 <code>apple &gt;= 18</code> 且为偶数时，答案为 <code>(apple - 18) // 8 + 3</code></p>
+<h3 id="算法分析-2"><a href="#算法分析-2" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>暴力递归</strong>：时间复杂度 O(N)，空间复杂度 O(N)</li>
+<li><strong>规律优化</strong>：时间复杂度 O(1)，空间复杂度 O(1)</li>
+</ul>
+<hr>
+<h2 id="问题二：A和B轮流吃草博弈问题"><a href="#问题二：A和B轮流吃草博弈问题" class="headerlink" title="问题二：A和B轮流吃草博弈问题"></a>问题二：A和B轮流吃草博弈问题</h2><h3 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h3><p>草一共有n的重量，两只牛轮流吃草，A牛先吃，B牛后吃。每只牛在自己的回合，吃草的重量必须是4的幂，1、4、16、64…。谁在自己的回合正好把草吃完谁赢，根据输入的n，返回谁赢。</p>
+<h3 id="核心思想-3"><a href="#核心思想-3" class="headerlink" title="核心思想"></a>核心思想</h3><p>这是一个典型的<strong>博弈论问题</strong>，使用Min-Max算法求解。关键在于理解必胜态和必败态的概念。</p>
+<h3 id="方法一：暴力递归（博弈论）"><a href="#方法一：暴力递归（博弈论）" class="headerlink" title="方法一：暴力递归（博弈论）"></a>方法一：暴力递归（博弈论）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">win1</span>(<span class="params">self, n: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        主函数，启动递归</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 使用 memoization 优化</span></span><br><span class="line">        memo = &#123;&#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>._f(n, <span class="string">&quot;A&quot;</span>, memo)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, rest: <span class="built_in">int</span>, cur: <span class="built_in">str</span>, memo: <span class="built_in">dict</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        递归函数，模拟博弈过程</span></span><br><span class="line"><span class="string">        核心思想 (博弈论 Min-Max 思想):</span></span><br><span class="line"><span class="string">        - `cur` (当前玩家)能赢的条件是：`cur` 存在一种走法，使得走完后，`enemy` (对手)面对的局面是必败的。</span></span><br><span class="line"><span class="string">        - 必败态：无论怎么走，留给对手的都是必胜态。</span></span><br><span class="line"><span class="string">        - 必胜态：存在一种走法，留给对手的是必败态。</span></span><br><span class="line"><span class="string">        - 我们遍历当前玩家所有可能的吃草量 (4的幂)，如果吃完后留给对手的局面是对手必败（即当前玩家赢），</span></span><br><span class="line"><span class="string">          那么当前局面就是必胜态，`cur` 赢。</span></span><br><span class="line"><span class="string">        - 如果所有走法都无法让对手输，那么 `cur` 输。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> (rest, cur) <span class="keyword">in</span> memo:</span><br><span class="line">            <span class="keyword">return</span> memo[(rest, cur)]</span><br><span class="line"></span><br><span class="line">        enemy = <span class="string">&quot;B&quot;</span> <span class="keyword">if</span> cur == <span class="string">&quot;A&quot;</span> <span class="keyword">else</span> <span class="string">&quot;A&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># base case: 剩草小于5时，可以直接判断胜负</span></span><br><span class="line">        <span class="keyword">if</span> rest &lt; <span class="number">5</span>:</span><br><span class="line">            <span class="comment"># 剩0或2时，当前玩家没法一步吃完，所以对手赢</span></span><br><span class="line">            <span class="comment"># 剩1,3,4时，当前玩家可以一步吃完，所以当前玩家赢</span></span><br><span class="line">            winner = enemy <span class="keyword">if</span> (rest == <span class="number">0</span> <span class="keyword">or</span> rest == <span class="number">2</span>) <span class="keyword">else</span> cur</span><br><span class="line">            memo[(rest, cur)] = winner</span><br><span class="line">            <span class="keyword">return</span> winner</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># rest &gt;= 5</span></span><br><span class="line">        <span class="comment"># 遍历所有可能的吃草量</span></span><br><span class="line">        pick = <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> pick &lt;= rest:</span><br><span class="line">            <span class="comment"># `_f(rest - pick, enemy)` 返回的是：当剩下 `rest-pick` 的草，轮到 `enemy` 时，最终谁会赢。</span></span><br><span class="line">            <span class="comment"># 如果这个结果是 `cur` 赢，说明 `cur` 只要选择吃 `pick` 的草，就能锁定胜局。</span></span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>._f(rest - pick, enemy, memo) == cur:</span><br><span class="line">                memo[(rest, cur)] = cur</span><br><span class="line">                <span class="keyword">return</span> cur</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 防止 pick * 4 溢出 (在 Python 中不是问题，但在某些语言中需要注意)</span></span><br><span class="line">            <span class="keyword">if</span> pick &gt; rest // <span class="number">4</span>: <span class="comment">#先算//，再与pick比较</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            pick *= <span class="number">4</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 如果所有可能的走法都无法让 cur 赢，那么 enemy 赢</span></span><br><span class="line">        memo[(rest, cur)] = enemy</span><br><span class="line">        <span class="keyword">return</span> enemy</span><br></pre></td></tr></table></figure>
+
+<h3 id="方法二：规律观察优化解-1"><a href="#方法二：规律观察优化解-1" class="headerlink" title="方法二：规律观察优化解"></a>方法二：规律观察优化解</h3><p>通过打表发现胜负规律：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">win2</span>(<span class="params">self, n: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    通过暴力解的输出，发现胜负结果以5为周期循环</span></span><br><span class="line"><span class="string">    核心思想：</span></span><br><span class="line"><span class="string">    观察 `win1` 的输出，可以发现：</span></span><br><span class="line"><span class="string">    n=0 -&gt; B (先手输)</span></span><br><span class="line"><span class="string">    n=1 -&gt; A (先手赢)</span></span><br><span class="line"><span class="string">    n=2 -&gt; B (先手输)</span></span><br><span class="line"><span class="string">    n=3 -&gt; A (先手赢)</span></span><br><span class="line"><span class="string">    n=4 -&gt; A (先手赢)</span></span><br><span class="line"><span class="string">    n=5 -&gt; B (先手输)</span></span><br><span class="line"><span class="string">    ...</span></span><br><span class="line"><span class="string">    胜负状态是 (B, A, B, A, A)，以5为周期。</span></span><br><span class="line"><span class="string">    当 n % 5 的结果是 0 或 2 时，先手方 A 面对的是必败局面，所以 B 赢。</span></span><br><span class="line"><span class="string">    否则 A 赢。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> n % <span class="number">5</span> == <span class="number">0</span> <span class="keyword">or</span> n % <span class="number">5</span> == <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;B&quot;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;A&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="规律分析-1"><a href="#规律分析-1" class="headerlink" title="规律分析"></a>规律分析</h3><p>通过打表观察：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">草量 : 赢家</span><br><span class="line">0 : B</span><br><span class="line">1 : A</span><br><span class="line">2 : B</span><br><span class="line">3 : A</span><br><span class="line">4 : A</span><br><span class="line">5 : B</span><br><span class="line">6 : A</span><br><span class="line">7 : B</span><br><span class="line">8 : A</span><br><span class="line">9 : A</span><br><span class="line">10 : B</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>发现模式：<code>(B, A, B, A, A)</code> 以5为周期重复。</p>
+<h3 id="算法分析-3"><a href="#算法分析-3" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>暴力递归</strong>：时间复杂度 O(N×logN)，空间复杂度 O(N)</li>
+<li><strong>规律优化</strong>：时间复杂度 O(1)，空间复杂度 O(1)</li>
+</ul>
+<hr>
+<h2 id="问题三：判断连续正整数和"><a href="#问题三：判断连续正整数和" class="headerlink" title="问题三：判断连续正整数和"></a>问题三：判断连续正整数和</h2><h3 id="问题描述-3"><a href="#问题描述-3" class="headerlink" title="问题描述"></a>问题描述</h3><p>判断一个数字是否是若干数量(数量&gt;1)的连续正整数的和。</p>
+<h3 id="核心思想-4"><a href="#核心思想-4" class="headerlink" title="核心思想"></a>核心思想</h3><p>这是一个<strong>数论问题</strong>，可以通过数学推导得到简洁的判断条件。</p>
+<h3 id="方法一：暴力枚举"><a href="#方法一：暴力枚举" class="headerlink" title="方法一：暴力枚举"></a>方法一：暴力枚举</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">is1</span>(<span class="params">self, num: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        暴力尝试所有可能的连续正整数序列</span></span><br><span class="line"><span class="string">        核心思想：</span></span><br><span class="line"><span class="string">        - 从 1 开始，尝试每一个数 `start` 作为连续序列的起始点。</span></span><br><span class="line"><span class="string">        - 对于每一个 `start`，累加 `start, start+1, start+2, ...`</span></span><br><span class="line"><span class="string">        - 如果累加和等于 `num`，则找到了一个解，返回 True。</span></span><br><span class="line"><span class="string">        - 如果累加和大于 `num`，则以 `start` 为起点的序列不可能，跳出内层循环。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># start 是连续区间的开始</span></span><br><span class="line">        <span class="keyword">for</span> start <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, num + <span class="number">1</span>):</span><br><span class="line">            current_sum = start</span><br><span class="line">            <span class="comment"># 从 start+1 开始累加</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(start + <span class="number">1</span>, num + <span class="number">1</span>):</span><br><span class="line">                <span class="keyword">if</span> current_sum + j &gt; num:</span><br><span class="line">                    <span class="comment"># 累加和已超，后续不可能相等</span></span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                <span class="keyword">if</span> current_sum + j == num:</span><br><span class="line">                    <span class="comment"># 找到了一个解</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">                current_sum += j</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="方法二：数学规律"><a href="#方法二：数学规律" class="headerlink" title="方法二：数学规律"></a>方法二：数学规律</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">is2</span>(<span class="params">self, num: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    通过数学推导得出的结论</span></span><br><span class="line"><span class="string">    核心思想：</span></span><br><span class="line"><span class="string">    一个正整数 `num` 可以表示为连续k(k&gt;1)个正整数之和的充要条件是：`num` 不是2的幂。</span></span><br><span class="line"><span class="string">    证明：</span></span><br><span class="line"><span class="string">    1. 设 `num = a + (a+1) + ... + (a+k-1) = k*a + k*(k-1)/2`</span></span><br><span class="line"><span class="string">    2. `2*num = k*(2a + k - 1)`</span></span><br><span class="line"><span class="string">    3. `k` 和 `2a+k-1` 中一个是奇数，一个是偶数。</span></span><br><span class="line"><span class="string">    4. 如果 `num` 是2的幂，`num = 2^p`，那么 `2*num = 2^(p+1)`。</span></span><br><span class="line"><span class="string">       `2^(p+1)` 的所有因子都是2的幂（偶数），无法分解成一奇一偶的乘积</span></span><br><span class="line"><span class="string">       （除了 1*2^(p+1)，但这要求 k=1 或 2a+k-1=1，都与 k&gt;1, a&gt;=1 矛盾）。</span></span><br><span class="line"><span class="string">    5. 所以，如果 `num` 是2的幂，则无解。反之，如果 `num` 不是2的幂，则 `num` 必有奇数因子，可以构造出解。</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    判断一个数是否是2的幂，可以通过位运算 `num &amp; (num - 1) == 0` 来实现。</span></span><br><span class="line"><span class="string">    这是因为num的二进制表示只有一个1，所以num-1的二进制表示只有一个0，所以num &amp; (num - 1) == 0。</span></span><br><span class="line"><span class="string">    所以，判断一个数不是2的幂，就是 `(num &amp; (num - 1)) != 0`。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> num &lt; <span class="number">3</span>: <span class="comment"># 1和2不满足条件</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="comment"># 如果一个数是2的幂，它的二进制表示中只有一个1</span></span><br><span class="line">    <span class="comment"># num &amp; (num - 1) 的作用是消除最右边的1。</span></span><br><span class="line">    <span class="comment"># 如果结果为0，说明num只有一个1，是2的幂。</span></span><br><span class="line">    <span class="comment"># 如果结果不为0，说明num不是2的幂。</span></span><br><span class="line">    <span class="keyword">return</span> (num &amp; (num - <span class="number">1</span>)) != <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="数学推导详解"><a href="#数学推导详解" class="headerlink" title="数学推导详解"></a>数学推导详解</h3><p>对于连续k个正整数的和：<br>$$\text{sum} &#x3D; a + (a+1) + \ldots + (a+k-1) &#x3D; ka + \frac{k(k-1)}{2}$$</p>
+<p>整理得：<br>$$2 \times \text{sum} &#x3D; k(2a + k - 1)$$</p>
+<p>这说明 $2 \times \text{sum}$ 可以分解为两个因子的乘积，且一个是奇数，一个是偶数。</p>
+<p>如果 $\text{sum} &#x3D; 2^p$，则 $2 \times \text{sum} &#x3D; 2^{p+1}$，所有因子都是偶数，无法满足一奇一偶的要求。</p>
+<h3 id="算法分析-4"><a href="#算法分析-4" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>暴力枚举</strong>：时间复杂度 O(N²)，空间复杂度 O(1)</li>
+<li><strong>数学规律</strong>：时间复杂度 O(1)，空间复杂度 O(1)</li>
+</ul>
+<hr>
+<h2 id="问题四：RED字符串好串计数"><a href="#问题四：RED字符串好串计数" class="headerlink" title="问题四：RED字符串好串计数"></a>问题四：RED字符串好串计数</h2><h3 id="问题描述-4"><a href="#问题描述-4" class="headerlink" title="问题描述"></a>问题描述</h3><p>可以用r、e、d三种字符拼接字符串，如果拼出来的字符串中有且仅有1个长度&gt;&#x3D;2的回文子串，那么这个字符串定义为”好串”。返回长度为n的所有可能的字符串中，好串有多少个。结果对 1000000007 取模，1 &lt;&#x3D; n &lt;&#x3D; 10^9。</p>
+<h3 id="核心思想-5"><a href="#核心思想-5" class="headerlink" title="核心思想"></a>核心思想</h3><p>这是一个<strong>组合数学问题</strong>，通过暴力递归生成所有可能的字符串并检验，然后观察规律。</p>
+<h3 id="方法一：暴力递归"><a href="#方法一：暴力递归" class="headerlink" title="方法一：暴力递归"></a>方法一：暴力递归</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">num1</span>(<span class="params">self, n: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        主函数，启动暴力递归生成所有字符串并检查</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        path = [<span class="string">&#x27;&#x27;</span>] * n</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>._f(path, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, path: <span class="built_in">list</span>, i: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        递归函数，生成所有长度为n的字符串</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> i == <span class="built_in">len</span>(path): <span class="comment">#这就是base case</span></span><br><span class="line">            <span class="comment"># 字符串生成完毕，检查是否为&quot;好串&quot;</span></span><br><span class="line">            cnt = <span class="number">0</span></span><br><span class="line">            <span class="comment"># 遍历所有长度&gt;=2的子串</span></span><br><span class="line">            <span class="keyword">for</span> l <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(path)):</span><br><span class="line">                <span class="keyword">for</span> r <span class="keyword">in</span> <span class="built_in">range</span>(l + <span class="number">1</span>, <span class="built_in">len</span>(path)):</span><br><span class="line">                    <span class="keyword">if</span> <span class="variable language_">self</span>._is_palindrome(path, l, r):</span><br><span class="line">                        cnt += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> cnt &gt; <span class="number">1</span>:</span><br><span class="line">                        <span class="comment"># 超过1个回文子串，直接判定为非好串</span></span><br><span class="line">                        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">            <span class="comment"># 最终检查回文子串数量是否正好为1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span> <span class="keyword">if</span> cnt == <span class="number">1</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 在 i 位置尝试 &#x27;r&#x27;, &#x27;e&#x27;, &#x27;d&#x27; 三种字符</span></span><br><span class="line">            ans = <span class="number">0</span></span><br><span class="line">            path[i] = <span class="string">&#x27;r&#x27;</span></span><br><span class="line">            ans += <span class="variable language_">self</span>._f(path, i + <span class="number">1</span>)</span><br><span class="line">            path[i] = <span class="string">&#x27;e&#x27;</span></span><br><span class="line">            ans += <span class="variable language_">self</span>._f(path, i + <span class="number">1</span>)</span><br><span class="line">            path[i] = <span class="string">&#x27;d&#x27;</span></span><br><span class="line">            ans += <span class="variable language_">self</span>._f(path, i + <span class="number">1</span>)</span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_is_palindrome</span>(<span class="params">self, s: <span class="built_in">list</span>, l: <span class="built_in">int</span>, r: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        辅助函数，检查子串是否为回文</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">while</span> l &lt; r:</span><br><span class="line">            <span class="keyword">if</span> s[l] != s[r]:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            l += <span class="number">1</span></span><br><span class="line">            r -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="方法二：规律观察"><a href="#方法二：规律观察" class="headerlink" title="方法二：规律观察"></a>方法二：规律观察</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">num2</span>(<span class="params">self, n: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    通过暴力解的结果，发现数学规律</span></span><br><span class="line"><span class="string">    核心思想：</span></span><br><span class="line"><span class="string">    运行 `num1` 得到：</span></span><br><span class="line"><span class="string">    n=1: 0</span></span><br><span class="line"><span class="string">    n=2: 3   (rr, ee, dd)</span></span><br><span class="line"><span class="string">    n=3: 18  (rre, rrd, rer, der, ...)</span></span><br><span class="line"><span class="string">    n=4: 30</span></span><br><span class="line"><span class="string">    n=5: 36</span></span><br><span class="line"><span class="string">    ...</span></span><br><span class="line"><span class="string">    可以发现规律：</span></span><br><span class="line"><span class="string">    n=1 -&gt; 0</span></span><br><span class="line"><span class="string">    n=2 -&gt; 3</span></span><br><span class="line"><span class="string">    n=3 -&gt; 18</span></span><br><span class="line"><span class="string">    n&gt;3 -&gt; ans(n-1) + 6，即为一个等差数列，通项公式为 `18 + (n-3)*6 = 6*n`。</span></span><br><span class="line"><span class="string">    但题目中的答案是 `6*(n+1)`，我们来验证</span></span><br><span class="line"><span class="string">    n=4: 6*(4+1)=30.</span></span><br><span class="line"><span class="string">    n=5: 6*(5+1)=36.</span></span><br><span class="line"><span class="string">    这个规律是正确的。所以可以直接用公式计算。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    mod = <span class="number">1000000007</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">3</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">3</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">18</span></span><br><span class="line">    <span class="comment"># (6 * (n + 1)) % mod</span></span><br><span class="line">    <span class="keyword">return</span> (<span class="number">6</span> * (n + <span class="number">1</span>)) % mod</span><br></pre></td></tr></table></figure>
+
+<h3 id="规律分析-2"><a href="#规律分析-2" class="headerlink" title="规律分析"></a>规律分析</h3><p>通过打表观察：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">长度 : 好串数量</span><br><span class="line">1 : 0    (无法构成长度&gt;=2的回文)</span><br><span class="line">2 : 3    (rr, ee, dd)</span><br><span class="line">3 : 18   </span><br><span class="line">4 : 30   = 6×(4+1)</span><br><span class="line">5 : 36   = 6×(5+1)</span><br><span class="line">6 : 42   = 6×(6+1)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>发现规律：</p>
+<ul>
+<li>n&#x3D;1: 0</li>
+<li>n&#x3D;2: 3  </li>
+<li>n&#x3D;3: 18</li>
+<li>n≥4: 6×(n+1)</li>
+</ul>
+<h3 id="算法分析-5"><a href="#算法分析-5" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>暴力递归</strong>：时间复杂度 O(3^N × N³)，空间复杂度 O(N)</li>
+<li><strong>规律优化</strong>：时间复杂度 O(1)，空间复杂度 O(1)</li>
+</ul>
+<hr>
+<h2 id="核心技巧总结"><a href="#核心技巧总结" class="headerlink" title="核心技巧总结"></a>核心技巧总结</h2><h3 id="1-对数器打表的通用流程"><a href="#1-对数器打表的通用流程" class="headerlink" title="1. 对数器打表的通用流程"></a>1. 对数器打表的通用流程</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">solve_by_pattern_finding</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;对数器打表找规律的标准流程&quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 步骤1: 实现暴力解法</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">brute_force_solution</span>(<span class="params">n</span>):</span><br><span class="line">        <span class="comment"># 用最基本的递归或暴力方法实现</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 步骤2: 打表观察规律</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;输入 : 输出&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(small_range):</span><br><span class="line">        result = brute_force_solution(i)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;i&#125;</span> : <span class="subst">&#123;result&#125;</span>&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 步骤3: 根据观察到的规律实现优化解</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">optimized_solution</span>(<span class="params">n</span>):</span><br><span class="line">        <span class="comment"># 基于规律的O(1)或低复杂度解法</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> optimized_solution(n)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-递归-记忆化模板"><a href="#2-递归-记忆化模板" class="headerlink" title="2. 递归 + 记忆化模板"></a>2. 递归 + 记忆化模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">recursive_with_memo</span>(<span class="params">params</span>):</span><br><span class="line">    memo = &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">helper</span>(<span class="params">state</span>):</span><br><span class="line">        <span class="keyword">if</span> state <span class="keyword">in</span> memo:</span><br><span class="line">            <span class="keyword">return</span> memo[state]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># base case</span></span><br><span class="line">        <span class="keyword">if</span> is_base_case(state):</span><br><span class="line">            <span class="keyword">return</span> base_result</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 递归计算</span></span><br><span class="line">        result = calculate_from_subproblems(state)</span><br><span class="line">        memo[state] = result</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> helper(initial_state)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-博弈论问题模板"><a href="#3-博弈论问题模板" class="headerlink" title="3. 博弈论问题模板"></a>3. 博弈论问题模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">game_theory_solution</span>(<span class="params">state, current_player</span>):</span><br><span class="line">    memo = &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">can_win</span>(<span class="params">state, player</span>):</span><br><span class="line">        <span class="keyword">if</span> (state, player) <span class="keyword">in</span> memo:</span><br><span class="line">            <span class="keyword">return</span> memo[(state, player)]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># base case</span></span><br><span class="line">        <span class="keyword">if</span> is_terminal_state(state):</span><br><span class="line">            <span class="keyword">return</span> determine_winner(state, player)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 尝试所有可能的移动</span></span><br><span class="line">        <span class="keyword">for</span> move <span class="keyword">in</span> get_possible_moves(state):</span><br><span class="line">            new_state = apply_move(state, move)</span><br><span class="line">            opponent = get_opponent(player)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果存在一步移动使得对手必败，当前玩家必胜</span></span><br><span class="line">            <span class="keyword">if</span> can_win(new_state, opponent) == player:</span><br><span class="line">                memo[(state, player)] = player</span><br><span class="line">                <span class="keyword">return</span> player</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 所有移动都无法获胜，当前玩家必败</span></span><br><span class="line">        opponent = get_opponent(player)</span><br><span class="line">        memo[(state, player)] = opponent</span><br><span class="line">        <span class="keyword">return</span> opponent</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> can_win(state, current_player)</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-位运算判断2的幂"><a href="#4-位运算判断2的幂" class="headerlink" title="4. 位运算判断2的幂"></a>4. 位运算判断2的幂</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">is_power_of_two</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;判断n是否为2的幂&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> n &gt; <span class="number">0</span> <span class="keyword">and</span> (n &amp; (n - <span class="number">1</span>)) == <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">is_not_power_of_two</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;判断n是否不是2的幂&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> n &gt; <span class="number">0</span> <span class="keyword">and</span> (n &amp; (n - <span class="number">1</span>)) != <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析总结-1"><a href="#复杂度分析总结-1" class="headerlink" title="复杂度分析总结"></a>复杂度分析总结</h2><table>
+<thead>
+<tr>
+<th>问题类型</th>
+<th>暴力解复杂度</th>
+<th>优化解复杂度</th>
+<th>核心技巧</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>苹果袋子问题</td>
+<td>O(N)</td>
+<td>O(1)</td>
+<td>动态规划→数学规律</td>
+</tr>
+<tr>
+<td>吃草博弈</td>
+<td>O(N×logN)</td>
+<td>O(1)</td>
+<td>博弈论→周期性规律</td>
+</tr>
+<tr>
+<td>连续正整数和</td>
+<td>O(N²)</td>
+<td>O(1)</td>
+<td>数论→2的幂判断</td>
+</tr>
+<tr>
+<td>好串计数</td>
+<td>O(3^N×N³)</td>
+<td>O(1)</td>
+<td>穷举打表→发现数学规律</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="学习建议-1"><a href="#学习建议-1" class="headerlink" title="学习建议"></a>学习建议</h2><h3 id="1-掌握基础技能"><a href="#1-掌握基础技能" class="headerlink" title="1. 掌握基础技能"></a>1. 掌握基础技能</h3><ul>
+<li><strong>递归思维</strong>：熟练掌握递归的设计和实现</li>
+<li><strong>动态规划</strong>：理解状态转移和最优子结构</li>
+<li><strong>博弈论基础</strong>：了解必胜态和必败态的概念</li>
+<li><strong>数学基础</strong>：具备基本的数论和组合数学知识</li>
+</ul>
+<h3 id="2-培养观察能力"><a href="#2-培养观察能力" class="headerlink" title="2. 培养观察能力"></a>2. 培养观察能力</h3><ul>
+<li><strong>模式识别</strong>：善于从数据中发现周期性、递推性等规律</li>
+<li><strong>数学直觉</strong>：能够将观察到的规律转化为数学公式</li>
+<li><strong>验证习惯</strong>：发现规律后及时验证其正确性</li>
+</ul>
+<h3 id="3-实践要点-1"><a href="#3-实践要点-1" class="headerlink" title="3. 实践要点"></a>3. 实践要点</h3><ul>
+<li><strong>小数据打表</strong>：从小规模数据开始，逐步观察规律</li>
+<li><strong>多角度思考</strong>：尝试不同的观察角度和数学工具</li>
+<li><strong>渐进优化</strong>：从暴力解→记忆化→数学公式的渐进优化过程</li>
+</ul>
+<h3 id="4-常见规律类型"><a href="#4-常见规律类型" class="headerlink" title="4. 常见规律类型"></a>4. 常见规律类型</h3><ul>
+<li><strong>周期性规律</strong>：如博弈问题中的周期性胜负模式</li>
+<li><strong>递推关系</strong>：如斐波那契数列、等差数列等</li>
+<li><strong>数学性质</strong>：如2的幂的位运算性质</li>
+<li><strong>组合规律</strong>：如排列组合中的计数问题</li>
+</ul>
+<h3 id="5-注意事项-1"><a href="#5-注意事项-1" class="headerlink" title="5. 注意事项"></a>5. 注意事项</h3><ul>
+<li><strong>边界条件</strong>：特别注意小数据的边界情况</li>
+<li><strong>数据范围</strong>：考虑大数据下的溢出和效率问题</li>
+<li><strong>规律验证</strong>：确保发现的规律在所有情况下都成立</li>
+<li><strong>代码实现</strong>：将数学规律正确转化为代码逻辑</li>
+</ul>
+<p>通过掌握对数器打表找规律的技巧，可以将许多看似复杂的问题转化为简单的数学计算，大幅提升算法效率。这种方法在算法竞赛和实际工程中都有重要应用价值。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E9%80%92%E5%BD%92/" rel="tag"># 递归</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E6%95%B0%E8%AE%BA/" rel="tag"># 数论</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2/" rel="tag"># 二分搜索</a>
+              <a href="/tags/%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86/" rel="tag"># 容斥原理</a>
+              <a href="/tags/%E6%89%93%E8%A1%A8%E5%99%A8/" rel="tag"># 打表器</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/09/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8817%EF%BC%89-%20N%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98%E4%B8%8E%E4%BD%8D%E8%BF%90%E7%AE%97%E4%BC%98%E5%8C%96/" rel="prev" title="数据结构与算法自学笔记（17）- N皇后问题与位运算优化版本">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（17）- N皇后问题与位运算优化版本
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/09/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8819%EF%BC%89-%20%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E9%87%8F%E7%8C%9C%E8%A7%A3%E6%B3%95%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8A%80%E5%B7%A7/" rel="next" title="数据结构与算法自学笔记（19）- 根据数据量猜解法的核心技巧">
+      数据结构与算法自学笔记（19）- 根据数据量猜解法的核心技巧 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E8%AF%B4%E6%98%8E"><span class="nav-number">1.1.</span> <span class="nav-text">重要说明</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#041%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E6%9C%80%E5%A4%A7%E5%85%AC%E7%BA%A6%E6%95%B0%E3%80%81%E5%90%8C%E4%BD%99%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">041【必备】最大公约数、同余原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">2.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E8%AF%B4%E6%98%8E-1"><span class="nav-number">2.2.</span> <span class="nav-text">重要说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B8%80%EF%BC%9A%E6%9C%80%E5%A4%A7%E5%85%AC%E7%BA%A6%E6%95%B0%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%85%AC%E5%80%8D%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">核心知识点一：最大公约数与最小公倍数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97%E7%AE%97%E6%B3%95%EF%BC%88%E8%BE%97%E8%BD%AC%E7%9B%B8%E9%99%A4%E6%B3%95%EF%BC%89"><span class="nav-number">2.3.1.</span> <span class="nav-text">欧几里得算法（辗转相除法）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86"><span class="nav-number">2.3.1.1.</span> <span class="nav-text">算法原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E6%80%A7%E8%AF%81%E6%98%8E"><span class="nav-number">2.3.1.2.</span> <span class="nav-text">正确性证明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.3.2.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">2.3.3.</span> <span class="nav-text">算法分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.3.4.</span> <span class="nav-text">使用示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9%E4%BA%8C%EF%BC%9A%E7%A5%9E%E5%A5%87%E6%95%B0%E9%97%AE%E9%A2%98%EF%BC%88%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88%E6%B3%95-%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">核心知识点二：神奇数问题（二分答案法 + 容斥原理）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">2.4.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">2.4.2.</span> <span class="nav-text">核心思想</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">二分答案法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">容斥原理应用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">2.4.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-1"><span class="nav-number">2.4.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B8%89%EF%BC%9A%E5%90%8C%E4%BD%99%E5%8E%9F%E7%90%86"><span class="nav-number">2.5.</span> <span class="nav-text">核心知识点三：同余原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%85%AC%E7%90%86"><span class="nav-number">2.5.1.</span> <span class="nav-text">基本公理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-1"><span class="nav-number">2.5.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="nav-number">2.5.3.</span> <span class="nav-text">实际应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E8%AE%A1%E7%AE%97-a-b-times-c-d-a-times-c-b-times-d-bmod-m"><span class="nav-number">2.5.3.1.</span> <span class="nav-text">问题：计算 $((a + b) \times (c - d) + (a \times c - b \times d)) \bmod m$</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">2.5.4.</span> <span class="nav-text">重要注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81"><span class="nav-number">2.5.5.</span> <span class="nav-text">验证代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93"><span class="nav-number">2.6.</span> <span class="nav-text">算法技巧总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.6.1.</span> <span class="nav-text">1. 欧几里得算法模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88%E6%B3%95%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.6.2.</span> <span class="nav-text">2. 二分答案法模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86%EF%BC%88%E4%B8%A4%E4%B8%AA%E9%9B%86%E5%90%88%EF%BC%89"><span class="nav-number">2.6.3.</span> <span class="nav-text">3. 容斥原理（两个集合）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%90%8C%E4%BD%99%E8%BF%90%E7%AE%97%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.6.4.</span> <span class="nav-text">4. 同余运算模板</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90%E6%80%BB%E7%BB%93"><span class="nav-number">2.7.</span> <span class="nav-text">复杂度分析总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.8.</span> <span class="nav-text">学习建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%8E%8C%E6%8F%A1%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80"><span class="nav-number">2.8.1.</span> <span class="nav-text">1. 掌握数学基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%AE%97%E6%B3%95%E6%80%9D%E7%BB%B4%E8%AE%AD%E7%BB%83"><span class="nav-number">2.8.2.</span> <span class="nav-text">2. 算法思维训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AE%9E%E8%B7%B5%E8%A6%81%E7%82%B9"><span class="nav-number">2.8.3.</span> <span class="nav-text">3. 实践要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%89%A9%E5%B1%95%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.8.4.</span> <span class="nav-text">4. 扩展学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">2.8.5.</span> <span class="nav-text">5. 注意事项</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#042%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E5%AF%B9%E6%95%B0%E5%99%A8%E6%89%93%E8%A1%A8%E6%89%BE%E8%A7%84%E5%BE%8B%E7%9A%84%E6%8A%80%E5%B7%A7"><span class="nav-number">3.</span> <span class="nav-text">042【必备】对数器打表找规律的技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86-1"><span class="nav-number">3.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.2.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="nav-number">3.3.</span> <span class="nav-text">方法论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%80%EF%BC%9A%E4%BD%BF%E7%94%A8%E8%A7%84%E6%A0%BC8%E5%92%8C%E8%A7%84%E6%A0%BC6%E7%9A%84%E8%A2%8B%E5%AD%90%E4%B9%B0%E8%8B%B9%E6%9E%9C"><span class="nav-number">3.4.</span> <span class="nav-text">问题一：使用规格8和规格6的袋子买苹果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">3.4.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-2"><span class="nav-number">3.4.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E6%9A%B4%E5%8A%9B%E9%80%92%E5%BD%92%EF%BC%88%E5%A4%87%E5%BF%98%E5%BD%95%E4%BC%98%E5%8C%96%EF%BC%89"><span class="nav-number">3.4.3.</span> <span class="nav-text">方法一：暴力递归（备忘录优化）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E8%A7%84%E5%BE%8B%E8%A7%82%E5%AF%9F%E4%BC%98%E5%8C%96%E8%A7%A3"><span class="nav-number">3.4.4.</span> <span class="nav-text">方法二：规律观察优化解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%84%E5%BE%8B%E5%88%86%E6%9E%90"><span class="nav-number">3.4.5.</span> <span class="nav-text">规律分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-2"><span class="nav-number">3.4.6.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%BA%8C%EF%BC%9AA%E5%92%8CB%E8%BD%AE%E6%B5%81%E5%90%83%E8%8D%89%E5%8D%9A%E5%BC%88%E9%97%AE%E9%A2%98"><span class="nav-number">3.5.</span> <span class="nav-text">问题二：A和B轮流吃草博弈问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">3.5.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-3"><span class="nav-number">3.5.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E6%9A%B4%E5%8A%9B%E9%80%92%E5%BD%92%EF%BC%88%E5%8D%9A%E5%BC%88%E8%AE%BA%EF%BC%89"><span class="nav-number">3.5.3.</span> <span class="nav-text">方法一：暴力递归（博弈论）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E8%A7%84%E5%BE%8B%E8%A7%82%E5%AF%9F%E4%BC%98%E5%8C%96%E8%A7%A3-1"><span class="nav-number">3.5.4.</span> <span class="nav-text">方法二：规律观察优化解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%84%E5%BE%8B%E5%88%86%E6%9E%90-1"><span class="nav-number">3.5.5.</span> <span class="nav-text">规律分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-3"><span class="nav-number">3.5.6.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%89%EF%BC%9A%E5%88%A4%E6%96%AD%E8%BF%9E%E7%BB%AD%E6%AD%A3%E6%95%B4%E6%95%B0%E5%92%8C"><span class="nav-number">3.6.</span> <span class="nav-text">问题三：判断连续正整数和</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-3"><span class="nav-number">3.6.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-4"><span class="nav-number">3.6.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E6%9A%B4%E5%8A%9B%E6%9E%9A%E4%B8%BE"><span class="nav-number">3.6.3.</span> <span class="nav-text">方法一：暴力枚举</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E6%95%B0%E5%AD%A6%E8%A7%84%E5%BE%8B"><span class="nav-number">3.6.4.</span> <span class="nav-text">方法二：数学规律</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%A6%E6%8E%A8%E5%AF%BC%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.6.5.</span> <span class="nav-text">数学推导详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-4"><span class="nav-number">3.6.6.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%9B%9B%EF%BC%9ARED%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A5%BD%E4%B8%B2%E8%AE%A1%E6%95%B0"><span class="nav-number">3.7.</span> <span class="nav-text">问题四：RED字符串好串计数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-4"><span class="nav-number">3.7.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-5"><span class="nav-number">3.7.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E6%9A%B4%E5%8A%9B%E9%80%92%E5%BD%92"><span class="nav-number">3.7.3.</span> <span class="nav-text">方法一：暴力递归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E8%A7%84%E5%BE%8B%E8%A7%82%E5%AF%9F"><span class="nav-number">3.7.4.</span> <span class="nav-text">方法二：规律观察</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%84%E5%BE%8B%E5%88%86%E6%9E%90-2"><span class="nav-number">3.7.5.</span> <span class="nav-text">规律分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-5"><span class="nav-number">3.7.6.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93"><span class="nav-number">3.8.</span> <span class="nav-text">核心技巧总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AF%B9%E6%95%B0%E5%99%A8%E6%89%93%E8%A1%A8%E7%9A%84%E9%80%9A%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="nav-number">3.8.1.</span> <span class="nav-text">1. 对数器打表的通用流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%80%92%E5%BD%92-%E8%AE%B0%E5%BF%86%E5%8C%96%E6%A8%A1%E6%9D%BF"><span class="nav-number">3.8.2.</span> <span class="nav-text">2. 递归 + 记忆化模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%8D%9A%E5%BC%88%E8%AE%BA%E9%97%AE%E9%A2%98%E6%A8%A1%E6%9D%BF"><span class="nav-number">3.8.3.</span> <span class="nav-text">3. 博弈论问题模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%BD%8D%E8%BF%90%E7%AE%97%E5%88%A4%E6%96%AD2%E7%9A%84%E5%B9%82"><span class="nav-number">3.8.4.</span> <span class="nav-text">4. 位运算判断2的幂</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90%E6%80%BB%E7%BB%93-1"><span class="nav-number">3.9.</span> <span class="nav-text">复杂度分析总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE-1"><span class="nav-number">3.10.</span> <span class="nav-text">学习建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%8E%8C%E6%8F%A1%E5%9F%BA%E7%A1%80%E6%8A%80%E8%83%BD"><span class="nav-number">3.10.1.</span> <span class="nav-text">1. 掌握基础技能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%9F%B9%E5%85%BB%E8%A7%82%E5%AF%9F%E8%83%BD%E5%8A%9B"><span class="nav-number">3.10.2.</span> <span class="nav-text">2. 培养观察能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AE%9E%E8%B7%B5%E8%A6%81%E7%82%B9-1"><span class="nav-number">3.10.3.</span> <span class="nav-text">3. 实践要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%B8%B8%E8%A7%81%E8%A7%84%E5%BE%8B%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.10.4.</span> <span class="nav-text">4. 常见规律类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-1"><span class="nav-number">3.10.5.</span> <span class="nav-text">5. 注意事项</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

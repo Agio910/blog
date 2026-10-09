@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是class044和class045的内容，详细介绍了前缀树（Trie树）的原理和代码实现并总结了前缀树(Trie)在实际算法题目中的应用。前缀树是一种专门用于处理字符串前缀查询的高效数据结构，在搜索引擎、自动补全、拼写检查等场景中有广泛应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（20）- 前缀树的原理和相关题目">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/09/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8820%EF%BC%89-%20%E5%89%8D%E7%BC%80%E6%A0%91%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是class044和class045的内容，详细介绍了前缀树（Trie树）的原理和代码实现并总结了前缀树(Trie)在实际算法题目中的应用。前缀树是一种专门用于处理字符串前缀查询的高效数据结构，在搜索引擎、自动补全、拼写检查等场景中有广泛应用。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class44-%E5%89%8D%E7%BC%80%E6%A0%91%E6%A6%82%E5%BF%B5/%E5%89%8D%E7%BC%80%E6%A0%91%E5%BD%A2%E5%BC%8F.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class44-%E5%89%8D%E7%BC%80%E6%A0%91%E6%A6%82%E5%BF%B5/%E9%9D%99%E6%80%81%E5%89%8D%E7%BC%80%E6%A0%91.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class44-%E5%89%8D%E7%BC%80%E6%A0%91%E6%A6%82%E5%BF%B5/%E6%89%93%E6%95%A3%E4%BD%8D%E4%BF%A1%E6%81%AF.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class45%E5%89%8D%E7%BC%80%E6%A0%91%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E8%AF%86%E5%88%AB%E5%AD%97%E7%AC%A6%E4%B8%B2.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class45%E5%89%8D%E7%BC%80%E6%A0%91%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE2-%E5%BC%82%E6%88%96.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class45%E5%89%8D%E7%BC%80%E6%A0%91%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE2-hashset%E8%A7%A3%E6%B3%95.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class45%E5%89%8D%E7%BC%80%E6%A0%91%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE3-%E7%94%A8%E5%89%8D%E7%BC%80%E6%A0%91%E7%9A%84%E5%A5%BD%E5%A4%84.png">
+<meta property="article:published_time" content="2025-09-07T00:30:00.000Z">
+<meta property="article:modified_time" content="2025-09-08T11:38:48.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="DFS">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="前缀树">
+<meta property="article:tag" content="字符串匹配">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class44-%E5%89%8D%E7%BC%80%E6%A0%91%E6%A6%82%E5%BF%B5/%E5%89%8D%E7%BC%80%E6%A0%91%E5%BD%A2%E5%BC%8F.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/09/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8820%EF%BC%89-%20%E5%89%8D%E7%BC%80%E6%A0%91%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（20）- 前缀树的原理和相关题目 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/09/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8820%EF%BC%89-%20%E5%89%8D%E7%BC%80%E6%A0%91%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（20）- 前缀树的原理和相关题目
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-09-07 08:30:00" itemprop="dateCreated datePublished" datetime="2025-09-07T08:30:00+08:00">2025-09-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-09-08 19:38:48" itemprop="dateModified" datetime="2025-09-08T19:38:48+08:00">2025-09-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a></p>
+<p>本笔记是class044和class045的内容，详细介绍了前缀树（Trie树）的原理和代码实现并总结了前缀树(Trie)在实际算法题目中的应用。前缀树是一种专门用于处理字符串前缀查询的高效数据结构，在搜索引擎、自动补全、拼写检查等场景中有广泛应用。</p>
+<hr>
+<h1 id="044【必备】前缀树原理和代码详解"><a href="#044【必备】前缀树原理和代码详解" class="headerlink" title="044【必备】前缀树原理和代码详解"></a>044【必备】前缀树原理和代码详解</h1><h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>在学习前缀树之前，需要掌握以下基础知识：</p>
+<ul>
+<li>讲解008-数据结构分类</li>
+<li>讲解017-二叉树基本概念</li>
+<li>讲解019-处理输入和输出-推荐静态空间的实现</li>
+<li>讲解026-哈希表的使用</li>
+</ul>
+<h2 id="前缀树基本概念"><a href="#前缀树基本概念" class="headerlink" title="前缀树基本概念"></a>前缀树基本概念</h2><h3 id="什么是前缀树"><a href="#什么是前缀树" class="headerlink" title="什么是前缀树"></a>什么是前缀树</h3><p>前缀树（Trie Tree），又叫字典树，是一种树形数据结构：</p>
+<ul>
+<li><strong>每个样本都从头节点开始</strong>，根据前缀字符或前缀数字建出来的一棵大树</li>
+<li><strong>没有路就新建节点</strong>；已经有路了，就复用节点</li>
+<li>每个节点代表一个字符，从根到某个节点的路径构成一个前缀</li>
+</ul>
+<h3 id="前缀树的特点"><a href="#前缀树的特点" class="headerlink" title="前缀树的特点"></a>前缀树的特点</h3><p><strong>使用场景</strong>：需要根据前缀信息来查询的场景</p>
+<p><strong>优点</strong>：</p>
+<ul>
+<li>根据前缀信息选择树上的分支，可以节省大量的时间</li>
+<li>查询效率高，时间复杂度为O(m)，其中m为字符串长度</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>比较浪费空间，空间复杂度与总字符数量和字符种类相关</li>
+<li>需要预先知道字符集的范围</li>
+</ul>
+<p><strong>定制信息</strong>：</p>
+<ul>
+<li><code>pass</code>：有多少个单词经过了这个节点</li>
+<li><code>end</code>：有多少个单词以这个节点结尾</li>
+<li>节点的子节点可以用数组或哈希表&#x2F;字典来存储</li>
+</ul>
+<h2 id="核心节点结构"><a href="#核心节点结构" class="headerlink" title="核心节点结构"></a>核心节点结构</h2><p>每个前缀树节点通常包含以下信息：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TrieNode</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.<span class="keyword">pass</span> = <span class="number">0</span>    <span class="comment"># 有多少个单词经过了这个节点</span></span><br><span class="line">        <span class="variable language_">self</span>.end = <span class="number">0</span>     <span class="comment"># 有多少个单词以这个节点结尾</span></span><br><span class="line">        <span class="variable language_">self</span>.nexts = []  <span class="comment"># 指向子节点的链接（数组或字典）</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class44-%E5%89%8D%E7%BC%80%E6%A0%91%E6%A6%82%E5%BF%B5/%E5%89%8D%E7%BC%80%E6%A0%91%E5%BD%A2%E5%BC%8F.png" alt="前缀树形式"></p>
+<h2 id="实现方式一：用类描述（不推荐）"><a href="#实现方式一：用类描述（不推荐）" class="headerlink" title="实现方式一：用类描述（不推荐）"></a>实现方式一：用类描述（不推荐）</h2><h3 id="测试链接"><a href="#测试链接" class="headerlink" title="测试链接"></a>测试链接</h3><ul>
+<li>测试链接 : <a target="_blank" rel="noopener" href="https://leetcode.cn/problems/implement-trie-ii-prefix-tree/">https://leetcode.cn/problems/implement-trie-ii-prefix-tree/</a></li>
+</ul>
+<h3 id="子节点用数组实现"><a href="#子节点用数组实现" class="headerlink" title="子节点用数组实现"></a>子节点用数组实现</h3><p>适用于字符集固定且较小的情况（如26个小写英文字母）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Trie1</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    提交时把类名、构造方法改为Trie</span></span><br><span class="line"><span class="string">    Trie树的实现，子节点用固定长度的数组存储。</span></span><br><span class="line"><span class="string">    适用于字符集固定且较小的情况（如26个小写英文字母）。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">_TrieNode</span>:</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">            <span class="comment"># pass: 有多少个单词经过了这个节点</span></span><br><span class="line">            <span class="variable language_">self</span>.pas = <span class="number">0</span></span><br><span class="line">            <span class="comment"># end: 有多少个单词以这个节点结尾</span></span><br><span class="line">            <span class="variable language_">self</span>.end = <span class="number">0</span></span><br><span class="line">            <span class="comment"># nexts: 指向26个可能的子节点的链接,是一个小数组</span></span><br><span class="line">            <span class="variable language_">self</span>.nexts = [<span class="literal">None</span>] * <span class="number">26</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        初始化Trie树，创建一个空的根节点。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>._root = <span class="variable language_">self</span>._TrieNode()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">insert</span>(<span class="params">self, word: <span class="built_in">str</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        向前缀树中插入一个单词。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        node = <span class="variable language_">self</span>._root</span><br><span class="line">        node.pas += <span class="number">1</span></span><br><span class="line">        <span class="comment"># 从左往右遍历字符</span></span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">            <span class="comment"># 由字符，对应成走向哪条路 (0-25)</span></span><br><span class="line">            path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)  <span class="comment"># ord获取char的ASCII码,a的ASCII码是97</span></span><br><span class="line">            <span class="comment"># 检查这个字符的路径是否已经存在节点</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> node.nexts[path]:</span><br><span class="line">                node.nexts[path] = <span class="variable language_">self</span>._TrieNode()  <span class="comment"># 如果path位置为空，则创建一个新节点</span></span><br><span class="line">            node = node.nexts[path]</span><br><span class="line">            node.pas += <span class="number">1</span></span><br><span class="line">        node.end += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">erase</span>(<span class="params">self, word: <span class="built_in">str</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        如果之前word插入过前缀树，那么此时删掉一次。</span></span><br><span class="line"><span class="string">        如果之前word没有插入过前缀树，那么什么也不做。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.countWordsEqualTo(word) &gt; <span class="number">0</span>:  <span class="comment"># 先用countWordsEqualTo方法检查word是否存在</span></span><br><span class="line">            node = <span class="variable language_">self</span>._root</span><br><span class="line">            node.pas -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">                path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">                <span class="comment"># 如果删除后，路径上的节点的pass值为0，说明没有其他单词经过此路</span></span><br><span class="line">                <span class="comment"># 可以直接将后续节点删除（在Python中由垃圾回收处理）</span></span><br><span class="line">                node.nexts[path].pas -= <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> node.nexts[path].pas == <span class="number">0</span>:</span><br><span class="line">                    node.nexts[path] = <span class="literal">None</span></span><br><span class="line">                    <span class="keyword">return</span></span><br><span class="line">                node = node.nexts[path]</span><br><span class="line">            node.end -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">countWordsEqualTo</span>(<span class="params">self, word: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        查询前缀树里，word单词出现了几次。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        node = <span class="variable language_">self</span>._root</span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">            path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> node.nexts[path]:</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">            node = node.nexts[path]  <span class="comment"># 循环一次，node就走到下一个节点</span></span><br><span class="line">        <span class="keyword">return</span> node.end</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">countWordsStartingWith</span>(<span class="params">self, pre: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        查询前缀树里，有多少单词以pre做前缀。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        node = <span class="variable language_">self</span>._root</span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> pre:</span><br><span class="line">            path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> node.nexts[path]:</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">            node = node.nexts[path]</span><br><span class="line">        <span class="keyword">return</span> node.pas</span><br></pre></td></tr></table></figure>
+
+<h3 id="子节点用哈希表实现"><a href="#子节点用哈希表实现" class="headerlink" title="子节点用哈希表实现"></a>子节点用哈希表实现</h3><p>适用于字符集不固定或非常大的情况，更节省空间：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Trie2</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Trie树的实现，子节点用字典存储。</span></span><br><span class="line"><span class="string">    适用于字符集不固定或非常大的情况，更节省空间。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">_TrieNode</span>:</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">            <span class="variable language_">self</span>.pas = <span class="number">0</span></span><br><span class="line">            <span class="variable language_">self</span>.end = <span class="number">0</span></span><br><span class="line">            <span class="comment"># nexts: 存储字符到子节点的映射</span></span><br><span class="line">            <span class="variable language_">self</span>.nexts = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>._root = <span class="variable language_">self</span>._TrieNode()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">insert</span>(<span class="params">self, word: <span class="built_in">str</span></span>):</span><br><span class="line">        node = <span class="variable language_">self</span>._root</span><br><span class="line">        node.pas += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">            <span class="keyword">if</span> char <span class="keyword">not</span> <span class="keyword">in</span> node.nexts:</span><br><span class="line">                node.nexts[char] = <span class="variable language_">self</span>._TrieNode()</span><br><span class="line">            node = node.nexts[char]</span><br><span class="line">            node.pas += <span class="number">1</span></span><br><span class="line">        node.end += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">erase</span>(<span class="params">self, word: <span class="built_in">str</span></span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.countWordsEqualTo(word) &gt; <span class="number">0</span>:</span><br><span class="line">            node = <span class="variable language_">self</span>._root</span><br><span class="line">            node.pas -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">                next_node = node.nexts[char]</span><br><span class="line">                next_node.pas -= <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> next_node.pas == <span class="number">0</span>:</span><br><span class="line">                    <span class="comment"># 如果pass为0，直接从字典中移除该路径</span></span><br><span class="line">                    node.nexts.pop(char)</span><br><span class="line">                    <span class="keyword">return</span></span><br><span class="line">                node = next_node</span><br><span class="line">            node.end -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">countWordsEqualTo</span>(<span class="params">self, word: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        node = <span class="variable language_">self</span>._root</span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">            <span class="keyword">if</span> char <span class="keyword">not</span> <span class="keyword">in</span> node.nexts:</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">            node = node.nexts[char]</span><br><span class="line">        <span class="keyword">return</span> node.end</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">countWordsStartingWith</span>(<span class="params">self, pre: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        node = <span class="variable language_">self</span>._root</span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> pre:</span><br><span class="line">            <span class="keyword">if</span> char <span class="keyword">not</span> <span class="keyword">in</span> node.nexts:</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">            node = node.nexts[char]</span><br><span class="line">        <span class="keyword">return</span> node.pas</span><br></pre></td></tr></table></figure>
+
+<h2 id="实现方式二：静态数组实现（推荐）"><a href="#实现方式二：静态数组实现（推荐）" class="headerlink" title="实现方式二：静态数组实现（推荐）"></a>实现方式二：静态数组实现（推荐）</h2><h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>抛弃节点对象的概念，将所有节点信息存储在几个大的全局数组中：</p>
+<ul>
+<li>使用一个整数 <code>cnt</code> 作为节点编号或索引</li>
+<li><code>tree[i][j]</code>：表示编号为 i 的节点的第 j 条路（对应某个字符）指向的子节点的编号</li>
+<li><code>end[i]</code>：表示以编号为 i 的节点结尾的单词数量</li>
+<li><code>pas[i]</code>：表示经过编号为 i 的节点的单词数量</li>
+</ul>
+<p>这种方式内存是静态分配的，且数据在内存中连续，通常有更好的缓存性能。</p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class44-%E5%89%8D%E7%BC%80%E6%A0%91%E6%A6%82%E5%BF%B5/%E9%9D%99%E6%80%81%E5%89%8D%E7%BC%80%E6%A0%91.png" alt="静态前缀树"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class44-%E5%89%8D%E7%BC%80%E6%A0%91%E6%A6%82%E5%BF%B5/%E6%89%93%E6%95%A3%E4%BD%8D%E4%BF%A1%E6%81%AF.png" alt="打散位信息"></p>
+<h3 id="测试链接-1"><a href="#测试链接-1" class="headerlink" title="测试链接"></a>测试链接</h3><ul>
+<li>测试链接 : <a target="_blank" rel="noopener" href="https://www.nowcoder.com/practice/7f8a8553ddbf4eaab749ec988726702b">https://www.nowcoder.com/practice/7f8a8553ddbf4eaab749ec988726702b</a></li>
+</ul>
+<h3 id="完整实现"><a href="#完整实现" class="headerlink" title="完整实现"></a>完整实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果将来增加了数据量，就改大这个值</span></span><br><span class="line">MAXN = <span class="number">150001</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 全局变量模拟 Java 的静态变量</span></span><br><span class="line">tree = [[<span class="number">0</span>] * <span class="number">26</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(MAXN)]</span><br><span class="line">end = [<span class="number">0</span>] * MAXN</span><br><span class="line">pas = [<span class="number">0</span>] * MAXN</span><br><span class="line">cnt = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    初始化/重置Trie。根节点编号为1，总节点数从1开始。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">global</span> cnt</span><br><span class="line">    cnt = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">insert</span>(<span class="params">word: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    向前缀树中插入一个单词。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">global</span> cnt</span><br><span class="line">    cur = <span class="number">1</span></span><br><span class="line">    pas[cur] += <span class="number">1</span>  <span class="comment"># pas[cur]：节点 cur 被经过的次数</span></span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">        path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> tree[cur][path] == <span class="number">0</span>:  <span class="comment"># tree[cur][path]:邻接表的数组实现，记录了从节点 cur 出发，沿着字符 path 能到达的下一个节点</span></span><br><span class="line">            <span class="comment"># 如果路径不存在，创建一个新节点</span></span><br><span class="line">            cnt += <span class="number">1</span></span><br><span class="line">            tree[cur][path] = cnt</span><br><span class="line">        cur = tree[cur][path]</span><br><span class="line">        pas[cur] += <span class="number">1</span></span><br><span class="line">    end[cur] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">search</span>(<span class="params">word: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    查询一个单词在前缀树中出现的次数。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    cur = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">        path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> tree[cur][path] == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        cur = tree[cur][path]</span><br><span class="line">    <span class="keyword">return</span> end[cur]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">prefix_number</span>(<span class="params">pre: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    查询以 pre 为前缀的单词数量。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    cur = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> pre:</span><br><span class="line">        path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> tree[cur][path] == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        cur = tree[cur][path]</span><br><span class="line">    <span class="keyword">return</span> pas[cur]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">delete</span>(<span class="params">word: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    从前缀树中删除一个单词。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> search(word) &gt; <span class="number">0</span>:</span><br><span class="line">        cur = <span class="number">1</span></span><br><span class="line">        <span class="comment"># 根节点的 pass 值减1</span></span><br><span class="line">        pas[cur] -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">            path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            <span class="comment"># 路径上节点的 pass 值减1</span></span><br><span class="line">            pas[tree[cur][path]] -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> pas[tree[cur][path]] == <span class="number">0</span>:</span><br><span class="line">                <span class="comment"># 如果 pass 减到0，说明此路径不再被任何单词使用，可以删除</span></span><br><span class="line">                tree[cur][path] = <span class="number">0</span></span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            cur = tree[cur][path]</span><br><span class="line">        <span class="comment"># 最后一个节点的 end 值减1</span></span><br><span class="line">        end[cur] -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">clear</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    清空Trie树，为下一个测试用例做准备。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">global</span> tree, end, pas</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, cnt + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">            tree[i][j] = <span class="number">0</span></span><br><span class="line">        end[i] = <span class="number">0</span></span><br><span class="line">        pas[i] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    处理输入输出的主函数。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    lines = sys.stdin.readlines()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> lines:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">        </span><br><span class="line">    line_iter = <span class="built_in">iter</span>(lines)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 持续读取直到没有输入</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 为每个测试用例重置/构建Trie</span></span><br><span class="line">            build()</span><br><span class="line">            </span><br><span class="line">            m_line = <span class="built_in">next</span>(line_iter)  <span class="comment"># next获得迭代器里获得下一个对象</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> m_line: <span class="keyword">continue</span></span><br><span class="line">            m = <span class="built_in">int</span>(m_line.strip())</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">                splits = <span class="built_in">next</span>(line_iter).strip().split(<span class="string">&quot; &quot;</span>)</span><br><span class="line">                op = <span class="built_in">int</span>(splits[<span class="number">0</span>])</span><br><span class="line">                word = splits[<span class="number">1</span>]</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span> op == <span class="number">1</span>:</span><br><span class="line">                    insert(word)</span><br><span class="line">                <span class="keyword">elif</span> op == <span class="number">2</span>:</span><br><span class="line">                    delete(word)</span><br><span class="line">                <span class="keyword">elif</span> op == <span class="number">3</span>:</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">&quot;YES&quot;</span> <span class="keyword">if</span> search(word) &gt; <span class="number">0</span> <span class="keyword">else</span> <span class="string">&quot;NO&quot;</span>)</span><br><span class="line">                <span class="keyword">elif</span> op == <span class="number">4</span>:</span><br><span class="line">                    <span class="built_in">print</span>(prefix_number(word))</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 清理本次用例的数据（虽然对于某些OJ，不清理也行，因为是新进程）</span></span><br><span class="line">            clear()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">except</span> StopIteration:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h2 id="前缀树的基本操作"><a href="#前缀树的基本操作" class="headerlink" title="前缀树的基本操作"></a>前缀树的基本操作</h2><h3 id="1-插入操作-Insert"><a href="#1-插入操作-Insert" class="headerlink" title="1. 插入操作 (Insert)"></a>1. 插入操作 (Insert)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">insert</span>(<span class="params">word: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;插入一个单词到前缀树中&quot;&quot;&quot;</span></span><br><span class="line">    node = root</span><br><span class="line">    node.<span class="keyword">pass</span> += <span class="number">1</span>  <span class="comment"># 根节点被经过</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">        path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)  <span class="comment"># 计算字符对应的路径</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> node.nexts[path]:</span><br><span class="line">            node.nexts[path] = TrieNode()  <span class="comment"># 创建新节点</span></span><br><span class="line">        node = node.nexts[path]  <span class="comment"># 移动到下一个节点</span></span><br><span class="line">        node.<span class="keyword">pass</span> += <span class="number">1</span>  <span class="comment"># 更新经过次数</span></span><br><span class="line">    </span><br><span class="line">    node.end += <span class="number">1</span>  <span class="comment"># 标记单词结尾</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>时间复杂度</strong>：O(m)，其中m是单词长度<br><strong>空间复杂度</strong>：O(m)，最坏情况下需要创建m个新节点</p>
+<h3 id="2-查找操作-Search"><a href="#2-查找操作-Search" class="headerlink" title="2. 查找操作 (Search)"></a>2. 查找操作 (Search)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">search</span>(<span class="params">word: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;查找单词在前缀树中的出现次数&quot;&quot;&quot;</span></span><br><span class="line">    node = root</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">        path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> node.nexts[path]:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>  <span class="comment"># 路径不存在，单词不在树中</span></span><br><span class="line">        node = node.nexts[path]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> node.end  <span class="comment"># 返回以此节点结尾的单词数量</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>时间复杂度</strong>：O(m)<br><strong>空间复杂度</strong>：O(1)</p>
+<h3 id="3-前缀查询-Prefix-Search"><a href="#3-前缀查询-Prefix-Search" class="headerlink" title="3. 前缀查询 (Prefix Search)"></a>3. 前缀查询 (Prefix Search)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">countWordsStartingWith</span>(<span class="params">prefix: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;查询以prefix为前缀的单词数量&quot;&quot;&quot;</span></span><br><span class="line">    node = root</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> prefix:</span><br><span class="line">        path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> node.nexts[path]:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        node = node.nexts[path]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> node.<span class="keyword">pass</span>  <span class="comment"># 返回经过此节点的单词数量</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>时间复杂度</strong>：O(m)<br><strong>空间复杂度</strong>：O(1)</p>
+<h3 id="4-删除操作-Delete"><a href="#4-删除操作-Delete" class="headerlink" title="4. 删除操作 (Delete)"></a>4. 删除操作 (Delete)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">delete</span>(<span class="params">word: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;从前缀树中删除一个单词&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> search(word) == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span>  <span class="comment"># 单词不存在，无需删除</span></span><br><span class="line">    </span><br><span class="line">    node = root</span><br><span class="line">    node.<span class="keyword">pass</span> -= <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">        path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">        next_node = node.nexts[path]</span><br><span class="line">        next_node.<span class="keyword">pass</span> -= <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> next_node.<span class="keyword">pass</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 如果经过次数为0，删除整个分支</span></span><br><span class="line">            node.nexts[path] = <span class="literal">None</span></span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        </span><br><span class="line">        node = next_node</span><br><span class="line">    </span><br><span class="line">    node.end -= <span class="number">1</span>  <span class="comment"># 减少结尾标记</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>时间复杂度</strong>：O(m)<br><strong>空间复杂度</strong>：O(1)</p>
+<h2 id="前缀树的应用场景"><a href="#前缀树的应用场景" class="headerlink" title="前缀树的应用场景"></a>前缀树的应用场景</h2><h3 id="1-自动补全"><a href="#1-自动补全" class="headerlink" title="1. 自动补全"></a>1. 自动补全</h3><p>前缀树非常适合实现自动补全功能：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">autocomplete</span>(<span class="params">prefix: <span class="built_in">str</span>, max_suggestions: <span class="built_in">int</span> = <span class="number">10</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">str</span>]:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;根据前缀返回自动补全建议&quot;&quot;&quot;</span></span><br><span class="line">    node = root</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 找到前缀对应的节点</span></span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> prefix:</span><br><span class="line">        path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> node.nexts[path]:</span><br><span class="line">            <span class="keyword">return</span> []  <span class="comment"># 前缀不存在</span></span><br><span class="line">        node = node.nexts[path]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 从该节点开始收集所有单词</span></span><br><span class="line">    suggestions = []</span><br><span class="line">    _collect_words(node, prefix, suggestions, max_suggestions)</span><br><span class="line">    <span class="keyword">return</span> suggestions</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_collect_words</span>(<span class="params">node, current_prefix, suggestions, max_suggestions</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;递归收集以当前前缀开始的所有单词&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(suggestions) &gt;= max_suggestions:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> node.end &gt; <span class="number">0</span>:</span><br><span class="line">        suggestions.append(current_prefix)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">        <span class="keyword">if</span> node.nexts[i]:</span><br><span class="line">            next_char = <span class="built_in">chr</span>(i + <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line">            _collect_words(node.nexts[i], current_prefix + next_char, </span><br><span class="line">                          suggestions, max_suggestions)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-拼写检查"><a href="#2-拼写检查" class="headerlink" title="2. 拼写检查"></a>2. 拼写检查</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">spell_check</span>(<span class="params">word: <span class="built_in">str</span>, max_distance: <span class="built_in">int</span> = <span class="number">1</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">str</span>]:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;返回与给定单词编辑距离在max_distance内的所有单词&quot;&quot;&quot;</span></span><br><span class="line">    suggestions = []</span><br><span class="line">    _find_similar_words(root, <span class="string">&quot;&quot;</span>, word, <span class="number">0</span>, max_distance, suggestions)</span><br><span class="line">    <span class="keyword">return</span> suggestions</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_find_similar_words</span>(<span class="params">node, current_word, target, distance, max_distance, suggestions</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;使用动态规划找到相似单词&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> distance &gt; max_distance:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> node.end &gt; <span class="number">0</span> <span class="keyword">and</span> <span class="built_in">len</span>(current_word) == <span class="built_in">len</span>(target):</span><br><span class="line">        <span class="keyword">if</span> distance &lt;= max_distance:</span><br><span class="line">            suggestions.append(current_word)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 递归遍历所有可能的路径</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">        <span class="keyword">if</span> node.nexts[i]:</span><br><span class="line">            next_char = <span class="built_in">chr</span>(i + <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line">            <span class="comment"># 计算新的编辑距离</span></span><br><span class="line">            new_distance = distance</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(current_word) &lt; <span class="built_in">len</span>(target) <span class="keyword">and</span> target[<span class="built_in">len</span>(current_word)] != next_char:</span><br><span class="line">                new_distance += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            _find_similar_words(node.nexts[i], current_word + next_char, </span><br><span class="line">                              target, new_distance, max_distance, suggestions)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-单词频率统计"><a href="#3-单词频率统计" class="headerlink" title="3. 单词频率统计"></a>3. 单词频率统计</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_word_frequency_stats</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;获取前缀树中的单词频率统计&quot;&quot;&quot;</span></span><br><span class="line">    stats = &#123;&#125;</span><br><span class="line">    _collect_frequencies(root, <span class="string">&quot;&quot;</span>, stats)</span><br><span class="line">    <span class="keyword">return</span> stats</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_collect_frequencies</span>(<span class="params">node, current_word, stats</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;递归收集所有单词及其频率&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> node.end &gt; <span class="number">0</span>:</span><br><span class="line">        stats[current_word] = node.end</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">        <span class="keyword">if</span> node.nexts[i]:</span><br><span class="line">            next_char = <span class="built_in">chr</span>(i + <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line">            _collect_frequencies(node.nexts[i], current_word + next_char, stats)</span><br></pre></td></tr></table></figure>
+
+<h2 id="复杂度分析总结"><a href="#复杂度分析总结" class="headerlink" title="复杂度分析总结"></a>复杂度分析总结</h2><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>插入</td>
+<td>O(m)</td>
+<td>O(1)</td>
+<td>m为单词长度，使用预分配的静态数组</td>
+</tr>
+<tr>
+<td>查找</td>
+<td>O(m)</td>
+<td>O(1)</td>
+<td>m为单词长度</td>
+</tr>
+<tr>
+<td>前缀查询</td>
+<td>O(m)</td>
+<td>O(1)</td>
+<td>m为前缀长度</td>
+</tr>
+<tr>
+<td>删除</td>
+<td>O(m)</td>
+<td>O(1)</td>
+<td>m为单词长度</td>
+</tr>
+<tr>
+<td>自动补全</td>
+<td>O(m + k)</td>
+<td>O(h + k)</td>
+<td>m&#x3D;前缀长度，k&#x3D;返回结果总字符数，h&#x3D;树最大深度</td>
+</tr>
+</tbody></table>
+<p><strong>空间复杂度（整体）</strong>：O(ALPHABET_SIZE × N × M)</p>
+<ul>
+<li>ALPHABET_SIZE：字符集大小（如26）</li>
+<li>N：插入的单词数量</li>
+<li>M：平均单词长度</li>
+</ul>
+<h2 id="优化技巧和注意事项"><a href="#优化技巧和注意事项" class="headerlink" title="优化技巧和注意事项"></a>优化技巧和注意事项</h2><h3 id="1-内存优化"><a href="#1-内存优化" class="headerlink" title="1. 内存优化"></a>1. 内存优化</h3><p><strong>压缩前缀树（Compressed Trie）</strong>：</p>
+<ul>
+<li>将只有一个子节点的路径压缩成一条边</li>
+<li>节省空间，但增加了实现复杂度</li>
+</ul>
+<p><strong>数组 vs 哈希表选择</strong>：</p>
+<ul>
+<li>字符集固定且较小：使用数组</li>
+<li>字符集大或不确定：使用哈希表</li>
+</ul>
+<h3 id="2-性能优化"><a href="#2-性能优化" class="headerlink" title="2. 性能优化"></a>2. 性能优化</h3><p><strong>静态数组实现</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 推荐使用静态数组，避免频繁的内存分配</span></span><br><span class="line">MAXN = <span class="number">150001</span></span><br><span class="line">tree = [[<span class="number">0</span>] * <span class="number">26</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(MAXN)]</span><br></pre></td></tr></table></figure>
+
+<p><strong>批量操作</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">batch_insert</span>(<span class="params">words: <span class="type">List</span>[<span class="built_in">str</span>]</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;批量插入，减少函数调用开销&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">        insert(word)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-扩展功能"><a href="#3-扩展功能" class="headerlink" title="3. 扩展功能"></a>3. 扩展功能</h3><p><strong>支持通配符查询</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">wildcard_search</span>(<span class="params">pattern: <span class="built_in">str</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">str</span>]:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;支持&#x27;.&#x27;作为通配符的查询&quot;&quot;&quot;</span></span><br><span class="line">    results = []</span><br><span class="line">    _wildcard_dfs(root, pattern, <span class="number">0</span>, <span class="string">&quot;&quot;</span>, results)</span><br><span class="line">    <span class="keyword">return</span> results</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_wildcard_dfs</span>(<span class="params">node, pattern, index, current_word, results</span>):</span><br><span class="line">    <span class="keyword">if</span> index == <span class="built_in">len</span>(pattern):</span><br><span class="line">        <span class="keyword">if</span> node.end &gt; <span class="number">0</span>:</span><br><span class="line">            results.append(current_word)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    char = pattern[index]</span><br><span class="line">    <span class="keyword">if</span> char == <span class="string">&#x27;.&#x27;</span>:</span><br><span class="line">        <span class="comment"># 通配符，尝试所有可能的字符</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">            <span class="keyword">if</span> node.nexts[i]:</span><br><span class="line">                next_char = <span class="built_in">chr</span>(i + <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line">                _wildcard_dfs(node.nexts[i], pattern, index + <span class="number">1</span>, </span><br><span class="line">                            current_word + next_char, results)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># 普通字符</span></span><br><span class="line">        path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> node.nexts[path]:</span><br><span class="line">            _wildcard_dfs(node.nexts[path], pattern, index + <span class="number">1</span>, </span><br><span class="line">                        current_word + char, results)</span><br></pre></td></tr></table></figure>
+
+<h2 id="实战应用示例"><a href="#实战应用示例" class="headerlink" title="实战应用示例"></a>实战应用示例</h2><h3 id="LeetCode相关题目"><a href="#LeetCode相关题目" class="headerlink" title="LeetCode相关题目"></a>LeetCode相关题目</h3><ol>
+<li><strong>208. 实现 Trie (前缀树)</strong>：基础的前缀树实现</li>
+<li><strong>211. 添加与搜索单词</strong>：支持通配符的前缀树</li>
+<li><strong>212. 单词搜索 II</strong>：在二维网格中搜索单词</li>
+<li><strong>421. 数组中两个数的最大异或值</strong>：使用前缀树优化位运算</li>
+<li><strong>648. 单词替换</strong>：使用前缀树实现单词替换</li>
+</ol>
+<h3 id="工程实践建议"><a href="#工程实践建议" class="headerlink" title="工程实践建议"></a>工程实践建议</h3><ol>
+<li><p><strong>选择合适的实现方式</strong>：</p>
+<ul>
+<li>简单应用：使用类实现</li>
+<li>高性能要求：使用静态数组</li>
+<li>内存敏感：使用哈希表</li>
+</ul>
+</li>
+<li><p><strong>内存管理</strong>：</p>
+<ul>
+<li>及时清理不需要的节点</li>
+<li>考虑使用对象池减少GC压力</li>
+</ul>
+</li>
+<li><p><strong>并发安全</strong>：</p>
+<ul>
+<li>读写分离</li>
+<li>使用读写锁</li>
+<li>考虑无锁数据结构</li>
+</ul>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>前缀树是一种强大的字符串处理数据结构，特别适合：</p>
+<ul>
+<li><strong>前缀查询</strong>：快速找到所有具有特定前缀的字符串</li>
+<li><strong>自动补全</strong>：实现搜索建议功能</li>
+<li><strong>拼写检查</strong>：找到相似的单词</li>
+<li><strong>字符串匹配</strong>：高效的模式匹配</li>
+</ul>
+<p>通过合理选择实现方式和优化策略，前缀树可以在保持高效性能的同时，提供丰富的字符串操作功能。在实际应用中，需要根据具体的使用场景选择最适合的实现方案。</p>
+<hr>
+<h1 id="045【必备】前缀树的相关题目"><a href="#045【必备】前缀树的相关题目" class="headerlink" title="045【必备】前缀树的相关题目"></a>045【必备】前缀树的相关题目</h1><h2 id="前置知识-1"><a href="#前置知识-1" class="headerlink" title="前置知识"></a>前置知识</h2><p>在学习前缀树相关题目之前，需要掌握以下基础知识：</p>
+<ul>
+<li>讲解044：前缀树原理和代码详解-静态空间的方式实现</li>
+<li>基本的字符串操作和递归思想</li>
+<li>深度优先搜索(DFS)的基本概念</li>
+</ul>
+<h2 id="前缀树基础回顾"><a href="#前缀树基础回顾" class="headerlink" title="前缀树基础回顾"></a>前缀树基础回顾</h2><h3 id="核心数据结构"><a href="#核心数据结构" class="headerlink" title="核心数据结构"></a>核心数据结构</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 前缀树的全局变量设计</span></span><br><span class="line">MAXN = <span class="number">2000001</span>  <span class="comment"># 根据题目数据规模调整</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># tree[i][j] 表示编号为i的节点，走向字符j的下一个节点编号</span></span><br><span class="line">tree = [[<span class="number">0</span>] * 字符集大小 <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(MAXN)]</span><br><span class="line"><span class="comment"># pas[i] 表示编号为i的节点被多少个字符串经过</span></span><br><span class="line">pas = [<span class="number">0</span>] * MAXN</span><br><span class="line"><span class="comment"># end[i] 表示编号为i的节点是否为某个字符串的结尾</span></span><br><span class="line">end = [<span class="number">0</span>] * MAXN  <span class="comment"># 或存储具体的字符串</span></span><br><span class="line">cnt = <span class="number">0</span>  <span class="comment"># 节点计数器</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="基本操作模板"><a href="#基本操作模板" class="headerlink" title="基本操作模板"></a>基本操作模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">build</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;初始化Trie，根节点编号为1&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">global</span> cnt</span><br><span class="line">    cnt = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">insert</span>(<span class="params">word: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;将字符串插入Trie&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">global</span> cnt</span><br><span class="line">    cur = <span class="number">1</span></span><br><span class="line">    pas[cur] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">        path = get_path(char)  <span class="comment"># 将字符映射到路径索引</span></span><br><span class="line">        <span class="keyword">if</span> tree[cur][path] == <span class="number">0</span>:</span><br><span class="line">            cnt += <span class="number">1</span></span><br><span class="line">            tree[cur][path] = cnt</span><br><span class="line">        cur = tree[cur][path]</span><br><span class="line">        pas[cur] += <span class="number">1</span></span><br><span class="line">    end[cur] = word  <span class="comment"># 或设置为True</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">search</span>(<span class="params">word: <span class="built_in">str</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;搜索字符串是否存在&quot;&quot;&quot;</span></span><br><span class="line">    cur = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">        path = get_path(char)</span><br><span class="line">        <span class="keyword">if</span> tree[cur][path] == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        cur = tree[cur][path]</span><br><span class="line">    <span class="keyword">return</span> end[cur] <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count_prefix</span>(<span class="params">prefix: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算以prefix为前缀的字符串数量&quot;&quot;&quot;</span></span><br><span class="line">    cur = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> prefix:</span><br><span class="line">        path = get_path(char)</span><br><span class="line">        <span class="keyword">if</span> tree[cur][path] == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        cur = tree[cur][path]</span><br><span class="line">    <span class="keyword">return</span> pas[cur]</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="题目一：接头密匙（差值序列匹配）"><a href="#题目一：接头密匙（差值序列匹配）" class="headerlink" title="题目一：接头密匙（差值序列匹配）"></a>题目一：接头密匙（差值序列匹配）</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>牛牛和他的朋友们约定了一套接头密匙系统，用于确认彼此身份。密匙由一组数字序列表示，两个密匙被认为是一致的，如果满足以下条件：</p>
+<ul>
+<li>密匙 b 的长度不超过密匙 a 的长度</li>
+<li>对于任意 0 &lt;&#x3D; i &lt; length(b)，有 b[i+1] - b[i] &#x3D;&#x3D; a[i+1] - a[i]</li>
+</ul>
+<p>现在给定了m个密匙 b 的数组，以及n个密匙 a 的数组，请你返回一个长度为 m 的结果数组 ans，表示每个密匙b都有多少一致的密匙。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://www.nowcoder.com/practice/c552d3b4dfda49ccb883a6371d9a6932">https://www.nowcoder.com/practice/c552d3b4dfda49ccb883a6371d9a6932</a></p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class45%E5%89%8D%E7%BC%80%E6%A0%91%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E8%AF%86%E5%88%AB%E5%AD%97%E7%AC%A6%E4%B8%B2.png" alt="识别字符串"></p>
+<h3 id="核心思想-1"><a href="#核心思想-1" class="headerlink" title="核心思想"></a>核心思想</h3><p>问题的关键在于比较”差值序列”，而不是原始数字序列：</p>
+<ol>
+<li><strong>差值序列转换</strong>：将每个键 a (如 [3, 6, 50]) 转换为其差值字符串 (如 “3#44#”)</li>
+<li><strong>前缀树构建</strong>：将所有 a 的差值字符串插入到一个前缀树 (Trie) 中。每个节点记录有多少个字符串经过它 (pass计数)</li>
+<li><strong>前缀匹配查询</strong>：对于每个键 b，将其转换为差值字符串，在Trie中查询以此为前缀的字符串数量</li>
+<li><strong>一致性判定</strong>：这个数量就是与 b 一致的 a 的数量。因为如果 a 的差值序列以 b 的差值序列为前缀，就满足题目中的“一致”条件</li>
+</ol>
+<h3 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果将来增加了数据量，就改大这个值</span></span><br><span class="line">MAXN = <span class="number">2000001</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 全局变量模拟 Java 的静态变量</span></span><br><span class="line">tree = [[<span class="number">0</span>] * <span class="number">12</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(MAXN)]</span><br><span class="line">pas = [<span class="number">0</span>] * MAXN</span><br><span class="line">cnt = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;初始化Trie，根节点编号为1&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">global</span> cnt</span><br><span class="line">    cnt = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># &#x27;0&#x27;~&#x27;9&#x27; -&gt; 0~9, &#x27;#&#x27; -&gt; 10, &#x27;-&#x27; -&gt; 11 </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_path</span>(<span class="params">char: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;将字符映射到Trie的路径索引&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> char == <span class="string">&#x27;#&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">10</span></span><br><span class="line">    <span class="keyword">elif</span> char == <span class="string">&#x27;-&#x27;</span>:  <span class="comment"># - 是负差值</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">11</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">int</span>(char)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">insert</span>(<span class="params">word: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;将差值字符串插入Trie&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">global</span> cnt</span><br><span class="line">    cur = <span class="number">1</span></span><br><span class="line">    pas[cur] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">        path = get_path(char)</span><br><span class="line">        <span class="keyword">if</span> tree[cur][path] == <span class="number">0</span>:</span><br><span class="line">            cnt += <span class="number">1</span></span><br><span class="line">            tree[cur][path] = cnt</span><br><span class="line">        cur = tree[cur][path]</span><br><span class="line">        pas[cur] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count</span>(<span class="params">pre: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算以 pre 为前缀的字符串数量&quot;&quot;&quot;</span></span><br><span class="line">    cur = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> pre:</span><br><span class="line">        path = get_path(char)</span><br><span class="line">        <span class="keyword">if</span> tree[cur][path] == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        cur = tree[cur][path]</span><br><span class="line">    <span class="keyword">return</span> pas[cur]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count_consistent_keys</span>(<span class="params">b, a</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;主函数，处理接头密匙逻辑&quot;&quot;&quot;</span></span><br><span class="line">    build()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 将所有 a 的差值序列插入Trie</span></span><br><span class="line">    <span class="keyword">for</span> nums <span class="keyword">in</span> a:</span><br><span class="line">        diff_str_parts = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(nums)):</span><br><span class="line">            diff_str_parts.append(<span class="built_in">str</span>(nums[i] - nums[i-<span class="number">1</span>]))</span><br><span class="line">            diff_str_parts.append(<span class="string">&quot;#&quot;</span>)</span><br><span class="line">        insert(<span class="string">&quot;&quot;</span>.join(diff_str_parts))</span><br><span class="line">    </span><br><span class="line">    ans = [<span class="number">0</span>] * <span class="built_in">len</span>(b)</span><br><span class="line">    <span class="comment"># 查询每个 b 的差值序列在前缀树中的计数</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(b)):</span><br><span class="line">        nums = b[i]</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(nums) &lt;= <span class="number">1</span>:</span><br><span class="line">            <span class="comment"># 如果 b 只有一个或零个元素，差值序列为空</span></span><br><span class="line">            <span class="comment"># 空前缀匹配所有插入的 a，所以结果是 a 的总数</span></span><br><span class="line">            ans[i] = <span class="built_in">len</span>(a)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            diff_str_parts = []</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(nums)):</span><br><span class="line">                diff_str_parts.append(<span class="built_in">str</span>(nums[j] - nums[j-<span class="number">1</span>]))</span><br><span class="line">                diff_str_parts.append(<span class="string">&quot;#&quot;</span>)</span><br><span class="line">            ans[i] = count(<span class="string">&quot;&quot;</span>.join(diff_str_parts))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(a数组的数字个数 * 10) + O(b数组的数字个数 * 10)</li>
+<li><strong>空间复杂度</strong>：O(a数组的数字个数 * 10)，这是树上的节点数量</li>
+<li><strong>核心技巧</strong>：差值序列 + 前缀匹配</li>
+</ul>
+<hr>
+<h2 id="题目二：数组中两个数的最大异或值"><a href="#题目二：数组中两个数的最大异或值" class="headerlink" title="题目二：数组中两个数的最大异或值"></a>题目二：数组中两个数的最大异或值</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个整数数组 nums，返回 nums[i] XOR nums[j] 的最大运算结果，其中 0&lt;&#x3D;i&lt;&#x3D;j&lt;&#x3D;n。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/maximum-xor-of-two-numbers-in-an-array/">https://leetcode.cn/problems/maximum-xor-of-two-numbers-in-an-array/</a></p>
+<h3 id="算法实现-1"><a href="#算法实现-1" class="headerlink" title="算法实现"></a>算法实现</h3><h4 id="方法一：前缀树解法"><a href="#方法一：前缀树解法" class="headerlink" title="方法一：前缀树解法"></a>方法一：前缀树解法</h4><h5 id="核心思想-2"><a href="#核心思想-2" class="headerlink" title="核心思想"></a>核心思想</h5><p>使用前缀树存储所有数字的二进制表示，然后贪心地寻找最大异或值：</p>
+<ol>
+<li><strong>二进制Trie构建</strong>：将所有数字的二进制表示（从高位到低位）插入到一个Trie中</li>
+<li><strong>贪心搜索</strong>：遍历每个数字 <code>num</code>，然后在Trie中为它寻找一个最佳的配对 <code>x</code>，以最大化 <code>num XOR x</code></li>
+<li><strong>位级贪心</strong>：寻找最佳配对的过程是贪心的：从最高位开始，对于 <code>num</code> 的每一位，我们都期望在Trie中找到与之相反的位。如果Trie中存在相反位的路径，我们就走这条路，这会使结果的当前位为1。如果不存在，我们只能走相同位的路径，结果的当前位为0</li>
+<li><strong>最优解更新</strong>：遍历所有数字，找到全局最大异或值</li>
+</ol>
+<h5 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h5><p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class45%E5%89%8D%E7%BC%80%E6%A0%91%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE2-%E5%BC%82%E6%88%96.png" alt="题目2-异或"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">MAXN = <span class="number">3000001</span></span><br><span class="line">tree = [[<span class="number">0</span>] * <span class="number">2</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(MAXN)]</span><br><span class="line">cnt = <span class="number">0</span></span><br><span class="line">high = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build</span>(<span class="params">nums</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;构建Trie树，插入所有数字的二进制表示&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">global</span> cnt, high</span><br><span class="line">    cnt = <span class="number">1</span></span><br><span class="line">    <span class="comment"># 找到数组中的最大值，以确定需要处理的二进制位数</span></span><br><span class="line">    maximum = <span class="built_in">max</span>(nums) <span class="keyword">if</span> nums <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    <span class="comment"># high: 最高位的索引。例如，max=13(1101), bit_length=4, high=3</span></span><br><span class="line">    high = maximum.bit_length() - <span class="number">1</span> <span class="keyword">if</span> maximum &gt; <span class="number">0</span> <span class="keyword">else</span> -<span class="number">1</span> <span class="comment">#bit_length返回的是二进制所需的位数，maximum&gt;0表示没有有效位数</span></span><br><span class="line">    <span class="keyword">for</span> num <span class="keyword">in</span> nums:</span><br><span class="line">        insert(num)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">insert</span>(<span class="params">num</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;将一个数字的二进制位插入Trie&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">global</span> cnt</span><br><span class="line">    cur = <span class="number">1</span></span><br><span class="line">    <span class="comment"># 从最高有效位开始</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(high, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">        path = (num &gt;&gt; i) &amp; <span class="number">1</span> <span class="comment">#将 num 的二进制表示向右移动 i 位，结果只保留最低位（第0位）</span></span><br><span class="line">        <span class="keyword">if</span> tree[cur][path] == <span class="number">0</span>:</span><br><span class="line">            cnt += <span class="number">1</span></span><br><span class="line">            tree[cur][path] = cnt</span><br><span class="line">        cur = tree[cur][path]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">max_xor</span>(<span class="params">num</span>): <span class="comment">#就前缀树的这个</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;对于给定的num，在Trie中寻找能使其异或结果最大的数&quot;&quot;&quot;</span></span><br><span class="line">    ans = <span class="number">0</span></span><br><span class="line">    cur = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(high, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">        <span class="comment"># status: num 在第 i 位的状态 (0 or 1)</span></span><br><span class="line">        status = (num &gt;&gt; i) &amp; <span class="number">1</span> </span><br><span class="line">        <span class="comment"># want: 希望遇到的对方路径，即与 status相反的位，这样异或结果在该位上是1</span></span><br><span class="line">        want = <span class="number">1</span> - status</span><br><span class="line">        <span class="comment"># 检查Trie中是否存在期望的路径</span></span><br><span class="line">        <span class="keyword">if</span> tree[cur][want] == <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 如果期望的路径不存在，只能走另一条路</span></span><br><span class="line">            want = <span class="number">1</span> - want</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># (status ^ want) 是当前位实际的异或结果</span></span><br><span class="line">        <span class="comment"># 将其左移 i 位，加到 ans 中</span></span><br><span class="line">        ans |= (status ^ want) &lt;&lt; i <span class="comment">#计算当前位的异或结果，将结果左移到正确的位置，累加到最终答案中</span></span><br><span class="line">        cur = tree[cur][want] <span class="comment">#在Trie树中移动到下一个节点</span></span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">clear</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;清空Trie&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, cnt + <span class="number">1</span>):</span><br><span class="line">        tree[i][<span class="number">0</span>] = tree[i][<span class="number">1</span>] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">findMaximumXOR1</span>(<span class="params">nums</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Trie解法主函数</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> nums <span class="keyword">or</span> <span class="built_in">len</span>(nums) &lt; <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    build(nums)</span><br><span class="line">    ans = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> num <span class="keyword">in</span> nums:</span><br><span class="line">        ans = <span class="built_in">max</span>(ans, max_xor(num))</span><br><span class="line">    clear()</span><br><span class="line">    <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法二：哈希表解法"><a href="#方法二：哈希表解法" class="headerlink" title="方法二：哈希表解法"></a>方法二：哈希表解法</h4><h5 id="核心思想-3"><a href="#核心思想-3" class="headerlink" title="核心思想"></a>核心思想</h5><p>使用前缀树存储所有数字的二进制表示，然后贪心地寻找最大异或值：</p>
+<ol>
+<li>假设我们已经确定了最大值的前k位（从高到低），结果是 <code>ans</code>。</li>
+<li>现在我们来确定第 i 位。我们贪心地希望第 i 位是 1。<br> 令我们的目标 <code>better = ans | (1 &lt;&lt; i)</code>。</li>
+<li>问题转化为：是否存在两个数 <code>p</code> 和 <code>q</code>，使得 <code>(p XOR q)</code> 的前缀等于 <code>better</code>？<br> 这等价于 <code>p</code> 的前缀等于 <code>better</code> 的前缀 <code>XOR</code> <code>q</code> 的前缀。</li>
+<li>我们将所有数字的前缀（保留高位，低位置0）放入一个哈希集合 <code>set</code> 中。</li>
+<li>然后遍历这个集合，对于每个前缀 <code>p_prefix</code>，检查 <code>better ^ p_prefix</code> 是否也在集合中。</li>
+<li>如果在，说明 <code>better</code> 这个目标是可以达成的，我们就更新 <code>ans = better</code>。<br> 否则，第 i 位只能是 0，<code>ans</code> 保持不变。</li>
+<li>重复此过程直到最低位。</li>
+</ol>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class45%E5%89%8D%E7%BC%80%E6%A0%91%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE2-hashset%E8%A7%A3%E6%B3%95.png" alt="题目2-hashset解法"></p>
+<h5 id="具体实现-1"><a href="#具体实现-1" class="headerlink" title="具体实现"></a>具体实现</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">findMaximumXOR2</span>(<span class="params">nums</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    哈希表解法主函数</span></span><br><span class="line"><span class="string">    核心思想：</span></span><br><span class="line"><span class="string">    从最高位向最低位，一位一位地确定最大异或值的可能值。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> nums <span class="keyword">or</span> <span class="built_in">len</span>(nums) &lt; <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    maximum = <span class="built_in">max</span>(nums)</span><br><span class="line">    high_bit = maximum.bit_length() - <span class="number">1</span> <span class="keyword">if</span> maximum &gt; <span class="number">0</span> <span class="keyword">else</span> -<span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    ans = <span class="number">0</span></span><br><span class="line">    seen_prefixes = <span class="built_in">set</span>()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(high_bit, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">        <span class="comment"># 贪心目标：尝试让第 i 位为 1</span></span><br><span class="line">        better = ans | (<span class="number">1</span> &lt;&lt; i)</span><br><span class="line">        seen_prefixes.clear() <span class="comment"># 先clear掉hashset里的所有元素</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 将所有数字的 i-位前缀放入集合</span></span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> nums:</span><br><span class="line">            seen_prefixes.add(num &gt;&gt; i)</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 检查 better 这个前缀是否可以由集合中的某两个数异或得到</span></span><br><span class="line">        <span class="comment"># a ^ b = c  &lt;=&gt;  a ^ c = b</span></span><br><span class="line">        found = <span class="literal">False</span></span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> seen_prefixes: <span class="comment">#遍历hashset里的所有元素</span></span><br><span class="line">            <span class="keyword">if</span> (better &gt;&gt; i) ^ p <span class="keyword">in</span> seen_prefixes:</span><br><span class="line">                ans = better</span><br><span class="line">                found = <span class="literal">True</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="comment"># if any(((better &gt;&gt; i) ^ p) in seen_prefixes for p in seen_prefixes):</span></span><br><span class="line">        <span class="comment">#     ans = better</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-1"><a href="#算法分析-1" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n * logV)，V是数值范围</li>
+<li><strong>空间复杂度</strong>：O(n * logV)</li>
+<li><strong>核心技巧</strong>：二进制前缀树 + 贪心搜索</li>
+</ul>
+<hr>
+<h2 id="题目三：在二维字符数组中搜索可能的单词"><a href="#题目三：在二维字符数组中搜索可能的单词" class="headerlink" title="题目三：在二维字符数组中搜索可能的单词"></a>题目三：在二维字符数组中搜索可能的单词</h2><h3 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定一个 m x n 二维字符网格 board 和一个单词（字符串）列表 words，返回所有二维网格上的单词。单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中”相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母在一个单词中不允许被重复使用。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/word-search-ii/">https://leetcode.cn/problems/word-search-ii/</a></p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(20)/class45%E5%89%8D%E7%BC%80%E6%A0%91%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/%E9%A2%98%E7%9B%AE3-%E7%94%A8%E5%89%8D%E7%BC%80%E6%A0%91%E7%9A%84%E5%A5%BD%E5%A4%84.png" alt="题目3-用前缀树的好处"></p>
+<h3 id="核心思想-4"><a href="#核心思想-4" class="headerlink" title="核心思想"></a>核心思想</h3><p>结合前缀树和深度优先搜索，实现高效的多单词同时搜索：</p>
+<ol>
+<li><strong>前缀树构建</strong>：将所有 <code>words</code> 构建成一棵前缀树。这使得我们可以同时搜索所有的单词。</li>
+<li><strong>DFS</strong>：从 <code>board</code> 的每一个单元格出发，进行深度优先搜索（DFS）。</li>
+<li><strong>Trie同步</strong>：DFS 的每一步不仅在 <code>board</code> 上移动，也同步在前缀树上移动。</li>
+<li>如果在 <code>board</code> 上的路径能在前缀树中走通，说明这个路径是一个或多个单词的前缀。</li>
+<li>如果走到了一个前缀树的 <code>end</code> 节点，说明找到了一个单词，将其加入结果集。</li>
+<li><strong>剪枝优化</strong>：<br> a. 在DFS中，如果前缀树的某个路径后续没有单词了（pass计数为0），则停止该方向的搜索。<br> b. 找到一个单词后，将其从前缀树中“逻辑删除”（如将end设为None），并更新pass计数，避免重复查找和无效搜索。</li>
+<li><strong>回溯处理</strong>：使用哨兵值标记已访问格子，回溯时恢复现场</li>
+</ol>
+<h3 id="算法实现-2"><a href="#算法实现-2" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 全局变量模拟静态数组</span></span><br><span class="line">MAXN = <span class="number">30001</span>  <span class="comment"># words.length * words[i].length</span></span><br><span class="line">tree = [[<span class="number">0</span>] * <span class="number">26</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(MAXN)]</span><br><span class="line">pas = [<span class="number">0</span>] * MAXN</span><br><span class="line">end = [<span class="literal">None</span>] * MAXN</span><br><span class="line">cnt = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build</span>(<span class="params">words: <span class="type">List</span>[<span class="built_in">str</span>]</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;将所有待查单词构建成一棵Trie树&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">global</span> cnt</span><br><span class="line">    cnt = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">        cur = <span class="number">1</span></span><br><span class="line">        pas[cur] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">            path = <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            <span class="keyword">if</span> tree[cur][path] == <span class="number">0</span>:</span><br><span class="line">                cnt += <span class="number">1</span></span><br><span class="line">                tree[cur][path] = cnt <span class="comment"># 把当前节点 cur 在这条路径 path 上的“指针”设为新节点编号</span></span><br><span class="line">            cur = tree[cur][path] <span class="comment"># 在Trie树中移动到下一个节点</span></span><br><span class="line">            pas[cur] += <span class="number">1</span></span><br><span class="line">        end[cur] = word</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">clear</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;清理Trie树&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, cnt + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">            tree[i][j] = <span class="number">0</span></span><br><span class="line">        pas[i] = <span class="number">0</span></span><br><span class="line">        end[i] = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">board: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]], i: <span class="built_in">int</span>, j: <span class="built_in">int</span>, t: <span class="built_in">int</span>, ans: <span class="type">List</span>[<span class="built_in">str</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    深度优先搜索函数</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    board: 二维网格</span></span><br><span class="line"><span class="string">    i, j: 当前格子位置</span></span><br><span class="line"><span class="string">    t: 当前在前缀树中的节点编号</span></span><br><span class="line"><span class="string">    ans: 结果列表，里面是收集到的字符串</span></span><br><span class="line"><span class="string">    返回值: 从 (i,j) 出发，新收集到了几个字符串</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 大剪枝：i，j越界 或 走了回头路(board[i][j] == 0，即ascii码=0)，直接返回</span></span><br><span class="line">    <span class="keyword">if</span> i &lt; <span class="number">0</span> <span class="keyword">or</span> i == <span class="built_in">len</span>(board) <span class="keyword">or</span> j &lt; <span class="number">0</span> <span class="keyword">or</span> j == <span class="built_in">len</span>(board[<span class="number">0</span>]) <span class="keyword">or</span> board[i][j] == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    tmp = board[i][j]</span><br><span class="line">    road = <span class="built_in">ord</span>(tmp) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) <span class="comment">#路的编号而不是节点的编号</span></span><br><span class="line">    <span class="comment"># t: 当前节点, tree[t][road]: 下一节点</span></span><br><span class="line">    t_next = tree[t][road]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 剪枝：如果后续路径上没有任何单词（t_next == 0）或者结果已经收集全了(pas[t_next] == 0)，则无需继续搜索。不过其实这两个条件是等价的</span></span><br><span class="line">    <span class="keyword">if</span> t_next == <span class="number">0</span>: <span class="comment"># or pas[t_next] == 0:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># fix: 从当前 (i, j) 位置出发，总共收集到了几个新字符串</span></span><br><span class="line">    fix = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 如果当前Trie节点是一个单词的结尾</span></span><br><span class="line">    <span class="keyword">if</span> end[t_next] <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        fix += <span class="number">1</span></span><br><span class="line">        ans.append(end[t_next]) <span class="comment"># 前缀树的尽头</span></span><br><span class="line">        <span class="comment"># 防止重复添加</span></span><br><span class="line">        end[t_next] = <span class="literal">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 标记当前位置已访问</span></span><br><span class="line">    board[i][j] = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 向上、下、左、右四个方向递归搜索</span></span><br><span class="line">    fix += dfs(board, i - <span class="number">1</span>, j, t_next, ans)</span><br><span class="line">    fix += dfs(board, i + <span class="number">1</span>, j, t_next, ans)</span><br><span class="line">    fix += dfs(board, i, j - <span class="number">1</span>, t_next, ans)</span><br><span class="line">    fix += dfs(board, i, j + <span class="number">1</span>, t_next, ans)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 剪枝优化：回溯时，更新Trie树的pass计数。</span></span><br><span class="line">    <span class="comment"># fix是本次DFS调用中找到的单词总数。</span></span><br><span class="line">    <span class="comment"># 将这些单词从后续的搜索路径中“移除”，避免不必要的搜索。</span></span><br><span class="line">    pas[t_next] -= fix <span class="comment"># 把本次从 t_next 开始的 DFS 一共找到的单词数 fix，从该 Trie 节点的经过计数 pas[t_next] 中减掉</span></span><br><span class="line">    <span class="comment"># 回溯：恢复现场。过程：进入格子前保存字符到 tmp → 标记已访问为 0（哨兵，避免重复走）→ 递归结束后把 board[i][j] 设回 tmp，这样其他路径还能正常使用该格子。</span></span><br><span class="line">    board[i][j] = tmp</span><br><span class="line">    <span class="keyword">return</span> fix</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">findWords</span>(<span class="params">board: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]], words: <span class="type">List</span>[<span class="built_in">str</span>]</span>) -&gt; <span class="type">List</span>[<span class="built_in">str</span>]:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    主函数</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    build(words)</span><br><span class="line">    ans = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(board)):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(board[<span class="number">0</span>])):</span><br><span class="line">            dfs(board, i, j, <span class="number">1</span>, ans) <span class="comment"># 根节点编号为1</span></span><br><span class="line">    clear()</span><br><span class="line">    <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-2"><a href="#算法分析-2" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(m * n * 4^L)，L是最长单词长度</li>
+<li><strong>空间复杂度</strong>：O(总字符数)</li>
+<li><strong>核心技巧</strong>：前缀树 + DFS + 动态剪枝</li>
+</ul>
+<hr>
+<h2 id="前缀树应用总结"><a href="#前缀树应用总结" class="headerlink" title="前缀树应用总结"></a>前缀树应用总结</h2><h3 id="1-适用场景分析"><a href="#1-适用场景分析" class="headerlink" title="1. 适用场景分析"></a>1. 适用场景分析</h3><table>
+<thead>
+<tr>
+<th>场景类型</th>
+<th>典型特征</th>
+<th>前缀树优势</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>前缀匹配</td>
+<td>查询以某字符串为前缀的内容</td>
+<td>O(L)查询，支持前缀计数</td>
+</tr>
+<tr>
+<td>多模式匹配</td>
+<td>同时搜索多个字符串</td>
+<td>共享前缀，减少重复搜索</td>
+</tr>
+<tr>
+<td>字符串编码</td>
+<td>处理字符到数字的映射</td>
+<td>灵活的路径编码方案</td>
+</tr>
+<tr>
+<td>动态剪枝</td>
+<td>搜索过程中动态优化</td>
+<td>pass计数支持智能剪枝</td>
+</tr>
+</tbody></table>
+<h3 id="2-设计要点"><a href="#2-设计要点" class="headerlink" title="2. 设计要点"></a>2. 设计要点</h3><h4 id="字符映射策略"><a href="#字符映射策略" class="headerlink" title="字符映射策略"></a>字符映射策略</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 根据字符集选择合适的映射方案</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_path</span>(<span class="params">char</span>):</span><br><span class="line">    <span class="keyword">if</span> char.isdigit():</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">int</span>(char)  <span class="comment"># 数字字符</span></span><br><span class="line">    <span class="keyword">elif</span> char.isalpha():</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)  <span class="comment"># 字母字符</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> 特殊字符映射  <span class="comment"># 如&#x27;#&#x27;-&gt;10, &#x27;-&#x27;-&gt;11</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="节点信息设计"><a href="#节点信息设计" class="headerlink" title="节点信息设计"></a>节点信息设计</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 根据需求选择节点存储的信息</span></span><br><span class="line">pas[i] = 经过次数      <span class="comment"># 支持前缀计数</span></span><br><span class="line">end[i] = 是否结尾      <span class="comment"># 支持单词判定</span></span><br><span class="line">end[i] = 完整单词      <span class="comment"># 支持单词返回</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="剪枝优化策略"><a href="#剪枝优化策略" class="headerlink" title="剪枝优化策略"></a>剪枝优化策略</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 多种剪枝技巧组合使用</span></span><br><span class="line"><span class="keyword">if</span> tree[cur][path] == <span class="number">0</span>:    <span class="comment"># 路径不存在剪枝</span></span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"><span class="keyword">if</span> pas[cur] == <span class="number">0</span>:           <span class="comment"># 无有效单词剪枝</span></span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">pas[cur] -= found_count     <span class="comment"># 动态更新剪枝</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-性能优化技巧"><a href="#3-性能优化技巧" class="headerlink" title="3. 性能优化技巧"></a>3. 性能优化技巧</h3><h4 id="空间优化"><a href="#空间优化" class="headerlink" title="空间优化"></a>空间优化</h4><ul>
+<li>合理评估MAXN大小，避免内存浪费</li>
+<li>及时清理无用节点，重复利用空间</li>
+<li>考虑使用哈希表替代数组（适用于稀疏情况）</li>
+</ul>
+<h4 id="时间优化"><a href="#时间优化" class="headerlink" title="时间优化"></a>时间优化</h4><ul>
+<li>预计算字符映射函数，避免重复计算</li>
+<li>使用位运算优化二进制操作</li>
+<li>合理设计剪枝条件，减少无效搜索</li>
+</ul>
+<h4 id="代码优化"><a href="#代码优化" class="headerlink" title="代码优化"></a>代码优化</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通用的前缀树工具类设计</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TrieTree</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, charset_size=<span class="number">26</span></span>):</span><br><span class="line">        <span class="variable language_">self</span>.MAXN = <span class="number">100001</span></span><br><span class="line">        <span class="variable language_">self</span>.tree = [[<span class="number">0</span>] * charset_size <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="variable language_">self</span>.MAXN)]</span><br><span class="line">        <span class="variable language_">self</span>.pas = [<span class="number">0</span>] * <span class="variable language_">self</span>.MAXN</span><br><span class="line">        <span class="variable language_">self</span>.end = [<span class="literal">False</span>] * <span class="variable language_">self</span>.MAXN</span><br><span class="line">        <span class="variable language_">self</span>.cnt = <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">clear</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="variable language_">self</span>.cnt + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(<span class="variable language_">self</span>.tree[i])):</span><br><span class="line">                <span class="variable language_">self</span>.tree[i][j] = <span class="number">0</span></span><br><span class="line">            <span class="variable language_">self</span>.pas[i] = <span class="number">0</span></span><br><span class="line">            <span class="variable language_">self</span>.end[i] = <span class="literal">False</span></span><br><span class="line">        <span class="variable language_">self</span>.cnt = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-常见错误避免"><a href="#4-常见错误避免" class="headerlink" title="4. 常见错误避免"></a>4. 常见错误避免</h3><h4 id="边界处理"><a href="#边界处理" class="headerlink" title="边界处理"></a>边界处理</h4><ul>
+<li>空字符串的处理</li>
+<li>单字符串的特殊情况</li>
+<li>数组越界检查</li>
+</ul>
+<h4 id="状态管理"><a href="#状态管理" class="headerlink" title="状态管理"></a>状态管理</h4><ul>
+<li>全局变量的正确初始化和清理</li>
+<li>递归过程中状态的正确传递</li>
+<li>回溯时现场的完整恢复</li>
+</ul>
+<h4 id="逻辑正确性"><a href="#逻辑正确性" class="headerlink" title="逻辑正确性"></a>逻辑正确性</h4><ul>
+<li>前缀匹配 vs 完全匹配的区别</li>
+<li>路径索引映射的一致性</li>
+<li>剪枝条件的准确性</li>
+</ul>
+<h2 id="学习建议"><a href="#学习建议" class="headerlink" title="学习建议"></a>学习建议</h2><h3 id="1-掌握基础操作"><a href="#1-掌握基础操作" class="headerlink" title="1. 掌握基础操作"></a>1. 掌握基础操作</h3><ul>
+<li>熟练掌握前缀树的构建、插入、查询操作</li>
+<li>理解pass计数和end标记的作用</li>
+<li>练习不同字符集的映射方案</li>
+</ul>
+<h3 id="2-理解应用场景"><a href="#2-理解应用场景" class="headerlink" title="2. 理解应用场景"></a>2. 理解应用场景</h3><ul>
+<li>识别哪些问题适合用前缀树解决</li>
+<li>学会将复杂问题转化为前缀匹配问题</li>
+<li>掌握前缀树与其他算法的结合使用</li>
+</ul>
+<h3 id="3-优化思维培养"><a href="#3-优化思维培养" class="headerlink" title="3. 优化思维培养"></a>3. 优化思维培养</h3><ul>
+<li>学会分析时间空间复杂度</li>
+<li>掌握各种剪枝优化技巧</li>
+<li>培养动态调整搜索策略的能力</li>
+</ul>
+<h3 id="4-实战经验积累"><a href="#4-实战经验积累" class="headerlink" title="4. 实战经验积累"></a>4. 实战经验积累</h3><ul>
+<li>多做不同类型的前缀树题目</li>
+<li>总结常见的代码模板和套路</li>
+<li>练习在限时条件下的快速实现</li>
+</ul>
+<p>通过系统学习前缀树的这些经典应用，可以很好地理解前缀树在实际算法问题中的强大作用，为解决更复杂的字符串和搜索问题打下坚实基础。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/DFS/" rel="tag"># DFS</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E5%89%8D%E7%BC%80%E6%A0%91/" rel="tag"># 前缀树</a>
+              <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D/" rel="tag"># 字符串匹配</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/09/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8819%EF%BC%89-%20%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E9%87%8F%E7%8C%9C%E8%A7%A3%E6%B3%95%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8A%80%E5%B7%A7/" rel="prev" title="数据结构与算法自学笔记（19）- 根据数据量猜解法的核心技巧">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（19）- 根据数据量猜解法的核心技巧
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/09/09/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8821%EF%BC%89-%20%E6%9E%84%E5%BB%BA%E5%89%8D%E7%BC%80%E4%BF%A1%E6%81%AF%E7%9A%84%E6%8A%80%E5%B7%A7-%E8%A7%A3%E5%86%B3%E5%AD%90%E6%95%B0%E7%BB%84%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" rel="next" title="数据结构与算法自学笔记（21）- 构建前缀信息的技巧-解决子数组相关问题">
+      数据结构与算法自学笔记（21）- 构建前缀信息的技巧-解决子数组相关问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#044%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E5%89%8D%E7%BC%80%E6%A0%91%E5%8E%9F%E7%90%86%E5%92%8C%E4%BB%A3%E7%A0%81%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">044【必备】前缀树原理和代码详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">2.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E6%A0%91%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">2.2.</span> <span class="nav-text">前缀树基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%89%8D%E7%BC%80%E6%A0%91"><span class="nav-number">2.2.1.</span> <span class="nav-text">什么是前缀树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E6%A0%91%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">2.2.2.</span> <span class="nav-text">前缀树的特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E8%8A%82%E7%82%B9%E7%BB%93%E6%9E%84"><span class="nav-number">2.3.</span> <span class="nav-text">核心节点结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E7%94%A8%E7%B1%BB%E6%8F%8F%E8%BF%B0%EF%BC%88%E4%B8%8D%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">实现方式一：用类描述（不推荐）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E9%93%BE%E6%8E%A5"><span class="nav-number">2.4.1.</span> <span class="nav-text">测试链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E8%8A%82%E7%82%B9%E7%94%A8%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.4.2.</span> <span class="nav-text">子节点用数组实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E8%8A%82%E7%82%B9%E7%94%A8%E5%93%88%E5%B8%8C%E8%A1%A8%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.4.3.</span> <span class="nav-text">子节点用哈希表实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E9%9D%99%E6%80%81%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">实现方式二：静态数组实现（推荐）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">2.5.1.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E9%93%BE%E6%8E%A5-1"><span class="nav-number">2.5.2.</span> <span class="nav-text">测试链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.5.3.</span> <span class="nav-text">完整实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E6%A0%91%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">2.6.</span> <span class="nav-text">前缀树的基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%8F%92%E5%85%A5%E6%93%8D%E4%BD%9C-Insert"><span class="nav-number">2.6.1.</span> <span class="nav-text">1. 插入操作 (Insert)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%9F%A5%E6%89%BE%E6%93%8D%E4%BD%9C-Search"><span class="nav-number">2.6.2.</span> <span class="nav-text">2. 查找操作 (Search)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%89%8D%E7%BC%80%E6%9F%A5%E8%AF%A2-Prefix-Search"><span class="nav-number">2.6.3.</span> <span class="nav-text">3. 前缀查询 (Prefix Search)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%88%A0%E9%99%A4%E6%93%8D%E4%BD%9C-Delete"><span class="nav-number">2.6.4.</span> <span class="nav-text">4. 删除操作 (Delete)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E6%A0%91%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.7.</span> <span class="nav-text">前缀树的应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8"><span class="nav-number">2.7.1.</span> <span class="nav-text">1. 自动补全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%8B%BC%E5%86%99%E6%A3%80%E6%9F%A5"><span class="nav-number">2.7.2.</span> <span class="nav-text">2. 拼写检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%8D%95%E8%AF%8D%E9%A2%91%E7%8E%87%E7%BB%9F%E8%AE%A1"><span class="nav-number">2.7.3.</span> <span class="nav-text">3. 单词频率统计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90%E6%80%BB%E7%BB%93"><span class="nav-number">2.8.</span> <span class="nav-text">复杂度分析总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%8A%80%E5%B7%A7%E5%92%8C%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">2.9.</span> <span class="nav-text">优化技巧和注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96"><span class="nav-number">2.9.1.</span> <span class="nav-text">1. 内存优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">2.9.2.</span> <span class="nav-text">2. 性能优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%89%A9%E5%B1%95%E5%8A%9F%E8%83%BD"><span class="nav-number">2.9.3.</span> <span class="nav-text">3. 扩展功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%BA%94%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.10.</span> <span class="nav-text">实战应用示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LeetCode%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE"><span class="nav-number">2.10.1.</span> <span class="nav-text">LeetCode相关题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.10.2.</span> <span class="nav-text">工程实践建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.11.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#045%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E5%89%8D%E7%BC%80%E6%A0%91%E7%9A%84%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE"><span class="nav-number">3.</span> <span class="nav-text">045【必备】前缀树的相关题目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86-1"><span class="nav-number">3.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E6%A0%91%E5%9F%BA%E7%A1%80%E5%9B%9E%E9%A1%BE"><span class="nav-number">3.2.</span> <span class="nav-text">前缀树基础回顾</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">3.2.1.</span> <span class="nav-text">核心数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E6%A8%A1%E6%9D%BF"><span class="nav-number">3.2.2.</span> <span class="nav-text">基本操作模板</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%80%EF%BC%9A%E6%8E%A5%E5%A4%B4%E5%AF%86%E5%8C%99%EF%BC%88%E5%B7%AE%E5%80%BC%E5%BA%8F%E5%88%97%E5%8C%B9%E9%85%8D%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">题目一：接头密匙（差值序列匹配）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">3.3.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-1"><span class="nav-number">3.3.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.3.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">3.3.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%8C%EF%BC%9A%E6%95%B0%E7%BB%84%E4%B8%AD%E4%B8%A4%E4%B8%AA%E6%95%B0%E7%9A%84%E6%9C%80%E5%A4%A7%E5%BC%82%E6%88%96%E5%80%BC"><span class="nav-number">3.4.</span> <span class="nav-text">题目二：数组中两个数的最大异或值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">3.4.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">3.4.2.</span> <span class="nav-text">算法实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%89%8D%E7%BC%80%E6%A0%91%E8%A7%A3%E6%B3%95"><span class="nav-number">3.4.2.1.</span> <span class="nav-text">方法一：前缀树解法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-2"><span class="nav-number">3.4.2.1.1.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.4.2.1.2.</span> <span class="nav-text">具体实现</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E5%93%88%E5%B8%8C%E8%A1%A8%E8%A7%A3%E6%B3%95"><span class="nav-number">3.4.2.2.</span> <span class="nav-text">方法二：哈希表解法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-3"><span class="nav-number">3.4.2.2.1.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">3.4.2.2.2.</span> <span class="nav-text">具体实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-1"><span class="nav-number">3.4.3.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%89%EF%BC%9A%E5%9C%A8%E4%BA%8C%E7%BB%B4%E5%AD%97%E7%AC%A6%E6%95%B0%E7%BB%84%E4%B8%AD%E6%90%9C%E7%B4%A2%E5%8F%AF%E8%83%BD%E7%9A%84%E5%8D%95%E8%AF%8D"><span class="nav-number">3.5.</span> <span class="nav-text">题目三：在二维字符数组中搜索可能的单词</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">3.5.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-4"><span class="nav-number">3.5.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">3.5.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-2"><span class="nav-number">3.5.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E6%A0%91%E5%BA%94%E7%94%A8%E6%80%BB%E7%BB%93"><span class="nav-number">3.6.</span> <span class="nav-text">前缀树应用总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%88%86%E6%9E%90"><span class="nav-number">3.6.1.</span> <span class="nav-text">1. 适用场景分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%AE%BE%E8%AE%A1%E8%A6%81%E7%82%B9"><span class="nav-number">3.6.2.</span> <span class="nav-text">2. 设计要点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E6%98%A0%E5%B0%84%E7%AD%96%E7%95%A5"><span class="nav-number">3.6.2.1.</span> <span class="nav-text">字符映射策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.6.2.2.</span> <span class="nav-text">节点信息设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%AA%E6%9E%9D%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="nav-number">3.6.2.3.</span> <span class="nav-text">剪枝优化策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8A%80%E5%B7%A7"><span class="nav-number">3.6.3.</span> <span class="nav-text">3. 性能优化技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E4%BC%98%E5%8C%96"><span class="nav-number">3.6.3.1.</span> <span class="nav-text">空间优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E4%BC%98%E5%8C%96"><span class="nav-number">3.6.3.2.</span> <span class="nav-text">时间优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96"><span class="nav-number">3.6.3.3.</span> <span class="nav-text">代码优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E9%81%BF%E5%85%8D"><span class="nav-number">3.6.4.</span> <span class="nav-text">4. 常见错误避免</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%B9%E7%95%8C%E5%A4%84%E7%90%86"><span class="nav-number">3.6.4.1.</span> <span class="nav-text">边界处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86"><span class="nav-number">3.6.4.2.</span> <span class="nav-text">状态管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E6%AD%A3%E7%A1%AE%E6%80%A7"><span class="nav-number">3.6.4.3.</span> <span class="nav-text">逻辑正确性</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">3.7.</span> <span class="nav-text">学习建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%8E%8C%E6%8F%A1%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C"><span class="nav-number">3.7.1.</span> <span class="nav-text">1. 掌握基础操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%90%86%E8%A7%A3%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.7.2.</span> <span class="nav-text">2. 理解应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BC%98%E5%8C%96%E6%80%9D%E7%BB%B4%E5%9F%B9%E5%85%BB"><span class="nav-number">3.7.3.</span> <span class="nav-text">3. 优化思维培养</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AE%9E%E6%88%98%E7%BB%8F%E9%AA%8C%E7%A7%AF%E7%B4%AF"><span class="nav-number">3.7.4.</span> <span class="nav-text">4. 实战经验积累</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

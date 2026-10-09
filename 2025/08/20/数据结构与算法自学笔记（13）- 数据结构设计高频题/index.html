@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是class035的内容，总结了数据结构设计类题目的高频考点，包含7道经典数据结构设计题目的详细解析。这些题目主要基于哈希表的O(1)操作时间复杂度特性。 前置知识在学习数据结构设计高频题之前，需要掌握以下基础知识：  动态数组和扩容分析（007">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（13）- 数据结构设计高频题">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/08/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8813%EF%BC%89-%20%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是class035的内容，总结了数据结构设计类题目的高频考点，包含7道经典数据结构设计题目的详细解析。这些题目主要基于哈希表的O(1)操作时间复杂度特性。 前置知识在学习数据结构设计高频题之前，需要掌握以下基础知识：  动态数组和扩容分析（007">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/%E4%B8%BAhash%E8%A1%A8%E8%AE%BE%E7%BD%AEsetall%E6%96%B9%E6%B3%95.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/lru%E7%BB%93%E6%9E%84%E7%9A%84%E5%AE%9E%E7%8E%B0.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/hash%E8%A1%A8%E5%8A%A0%E5%85%A5%E7%A7%BB%E9%99%A4%E5%92%8C%E5%BE%97%E5%88%B0%E9%9A%8F%E6%9C%BA%E7%B4%A2%E5%BC%95.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/%E6%89%BE%E4%B8%AD%E4%BD%8D%E6%95%B0.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/%E6%9C%80%E9%AB%98%E9%A2%91%E7%8E%87%E6%A0%88.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/all1%E7%B1%BB.png">
+<meta property="article:published_time" content="2025-08-20T02:30:00.000Z">
+<meta property="article:modified_time" content="2025-08-20T05:39:16.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="LRU">
+<meta property="article:tag" content="堆">
+<meta property="article:tag" content="双向链表">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/%E4%B8%BAhash%E8%A1%A8%E8%AE%BE%E7%BD%AEsetall%E6%96%B9%E6%B3%95.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/08/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8813%EF%BC%89-%20%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（13）- 数据结构设计高频题 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/08/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8813%EF%BC%89-%20%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（13）- 数据结构设计高频题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-08-20 10:30:00 / Modified: 13:39:16" itemprop="dateCreated datePublished" datetime="2025-08-20T10:30:00+08:00">2025-08-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a></p>
+<p>本笔记是class035的内容，总结了数据结构设计类题目的高频考点，包含7道经典数据结构设计题目的详细解析。这些题目主要基于哈希表的O(1)操作时间复杂度特性。</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>在学习数据结构设计高频题之前，需要掌握以下基础知识：</p>
+<ul>
+<li>动态数组和扩容分析（007讲）</li>
+<li>链表入门内容（009~012讲）</li>
+<li>堆结构（025讲）</li>
+<li>哈希表、有序表、比较器的使用（026讲）</li>
+</ul>
+<h2 id="重要说明"><a href="#重要说明" class="headerlink" title="重要说明"></a>重要说明</h2><p>本节以数据结构设计高频题为主，并不涉及太难的数据结构设计题目，很多题的原理都是基于哈希表的O(1)时间复杂度。数据结构设计的更难题目，需要学习更多数据结构之后才能解决，如前缀树、并查集、线段树等。</p>
+<h1 id="035【必备】数据结构设计高频题"><a href="#035【必备】数据结构设计高频题" class="headerlink" title="035【必备】数据结构设计高频题"></a>035【必备】数据结构设计高频题</h1><h2 id="题目一：setAll功能的哈希表"><a href="#题目一：setAll功能的哈希表" class="headerlink" title="题目一：setAll功能的哈希表"></a>题目一：setAll功能的哈希表</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>哈希表常见的三个操作是put、get和containsKey，而且这三个操作的时间复杂度为O(1)。现在想加一个setAll功能，就是把所有记录value都设成统一的值。请设计并实现这种有setAll功能的哈希表，并且put、get、containsKey和setAll四个操作的时间复杂度都为O(1)。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://www.nowcoder.com/practice/7c4559f138e74ceb9ba57d76fd169967">https://www.nowcoder.com/practice/7c4559f138e74ceb9ba57d76fd169967</a></p>
+<h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>采用”懒更新”(Lazy Update)策略，setAll操作只记录一个全局值和当前时间戳，并不实际修改数据。当get一个键时，通过比较该键自身的时间戳和全局setAll的时间戳，来实时决定返回它自己的值还是全局的值。</p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/%E4%B8%BAhash%E8%A1%A8%E8%AE%BE%E7%BD%AEsetall%E6%96%B9%E6%B3%95.png" alt="为hash表设置setall方法"></p>
+<h3 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SetAllHashMap</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 核心数据结构，存储键和它对应的值与时间戳</span></span><br><span class="line">        <span class="comment"># 格式为: &#123; key: [value, time] &#125;</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">map</span> = &#123;&#125;</span><br><span class="line">        <span class="comment"># setAll操作设定的统一值</span></span><br><span class="line">        <span class="variable language_">self</span>.set_all_value = <span class="number">0</span></span><br><span class="line">        <span class="comment"># setAll操作发生的时间戳</span></span><br><span class="line">        <span class="variable language_">self</span>.set_all_time = -<span class="number">1</span></span><br><span class="line">        <span class="comment"># 全局时间戳，用于记录每次操作的顺序</span></span><br><span class="line">        <span class="variable language_">self</span>.cnt = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">put</span>(<span class="params">self, k, v</span>):</span><br><span class="line">        <span class="comment"># 核心思想：为每个put操作记录一个独立的时间戳</span></span><br><span class="line">        <span class="keyword">if</span> k <span class="keyword">in</span> <span class="variable language_">self</span>.<span class="built_in">map</span>:</span><br><span class="line">            <span class="comment"># 如果键已存在，更新其值和时间戳</span></span><br><span class="line">            value = <span class="variable language_">self</span>.<span class="built_in">map</span>[k]</span><br><span class="line">            value[<span class="number">0</span>] = v</span><br><span class="line">            value[<span class="number">1</span>] = <span class="variable language_">self</span>.cnt</span><br><span class="line">            <span class="variable language_">self</span>.cnt += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 如果键不存在，创建新的条目</span></span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">map</span>[k] = [v, <span class="variable language_">self</span>.cnt]</span><br><span class="line">            <span class="variable language_">self</span>.cnt += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">set_all</span>(<span class="params">self, v</span>):</span><br><span class="line">        <span class="comment"># 核心思想：只记录setAll的值和时间戳，不实际遍历map</span></span><br><span class="line">        <span class="comment"># 这是一个懒更新策略，只有在get的时候才根据时间戳判断</span></span><br><span class="line">        <span class="variable language_">self</span>.set_all_value = v</span><br><span class="line">        <span class="variable language_">self</span>.set_all_time = <span class="variable language_">self</span>.cnt</span><br><span class="line">        <span class="variable language_">self</span>.cnt += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get</span>(<span class="params">self, k</span>):</span><br><span class="line">        <span class="comment"># 核心思想：比较单个key的更新时间和全局setAll的更新时间</span></span><br><span class="line">        <span class="keyword">if</span> k <span class="keyword">not</span> <span class="keyword">in</span> <span class="variable language_">self</span>.<span class="built_in">map</span>:</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        value = <span class="variable language_">self</span>.<span class="built_in">map</span>[k]</span><br><span class="line">        <span class="comment"># 如果这个key的最后更新时间晚于setAll的时间，说明它的值是有效的</span></span><br><span class="line">        <span class="keyword">if</span> value[<span class="number">1</span>] &gt; <span class="variable language_">self</span>.set_all_time:</span><br><span class="line">            <span class="keyword">return</span> value[<span class="number">0</span>]</span><br><span class="line">        <span class="comment"># 否则，它的值已经被setAll覆盖了，应返回setAll的值</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">self</span>.set_all_value</span><br></pre></td></tr></table></figure>
+
+<p><strong>高效读写</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># 创建一个SetAllHashMap对象，模拟带有setAll操作的哈希表，模拟牛客网的输入输出处理</span></span><br><span class="line">    solution = SetAllHashMap()</span><br><span class="line">    <span class="comment"># 读取所有输入行（提高输入效率）</span></span><br><span class="line">    lines = sys.stdin.readlines()</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(lines): <span class="comment"># 遍历所有行</span></span><br><span class="line">        line = lines[i].strip()</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> line:</span><br><span class="line">            <span class="comment"># 跳过空行</span></span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 读取本组操作数n</span></span><br><span class="line">        n = <span class="built_in">int</span>(line)</span><br><span class="line">        <span class="comment"># 每个测试用例开始前重置数据结构</span></span><br><span class="line">        solution.__init__()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 连续读取n行操作</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">            <span class="comment"># 解析当前操作的所有参数，map是把字符串转换成列表，int指明了列表的元素类型</span></span><br><span class="line">            parts = <span class="built_in">list</span>(<span class="built_in">map</span>(<span class="built_in">int</span>, lines[i].strip().split()))</span><br><span class="line">            op = parts[<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">if</span> op == <span class="number">1</span>:</span><br><span class="line">                <span class="comment"># op=1，put操作，后面有两个参数a, b</span></span><br><span class="line">                a, b = parts[<span class="number">1</span>], parts[<span class="number">2</span>]</span><br><span class="line">                solution.put(a, b)</span><br><span class="line">            <span class="keyword">elif</span> op == <span class="number">2</span>:</span><br><span class="line">                <span class="comment"># op=2，get操作，后面一个参数a</span></span><br><span class="line">                a = parts[<span class="number">1</span>]</span><br><span class="line">                <span class="built_in">print</span>(solution.get(a))</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># op=3，setAll操作，后面一个参数a</span></span><br><span class="line">                a = parts[<span class="number">1</span>]</span><br><span class="line">                solution.set_all(a)</span><br><span class="line">        <span class="comment"># 处理完一组数据，i+1进入下一组或结束</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="comment"># 在提交时，类名需要改为 Main</span></span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：所有操作都是O(1)</li>
+<li><strong>空间复杂度</strong>：O(N)，N为键的数量</li>
+<li><strong>核心技巧</strong>：时间戳比较 + 懒更新策略</li>
+</ul>
+<h2 id="题目二：实现LRU结构"><a href="#题目二：实现LRU结构" class="headerlink" title="题目二：实现LRU结构"></a>题目二：实现LRU结构</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p>实现 LRUCache 类：</p>
+<ul>
+<li><code>LRUCache(int capacity)</code> 以正整数作为容量capacity初始化LRU缓存</li>
+<li><code>int get(int key)</code> 如果关键字key存在于缓存中，则返回关键字的值，否则返回-1</li>
+<li><code>void put(int key, int value)</code> 如果关键字key已经存在，则变更其数据值value；如果不存在，则向缓存中插入该组key-value。如果插入操作导致关键字数量超过capacity，则应该逐出最久未使用的关键字</li>
+</ul>
+<p>函数get和put必须以O(1)的平均时间复杂度运行。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/lru-cache/">https://leetcode.cn/problems/lru-cache/</a></p>
+<h3 id="核心思想-1"><a href="#核心思想-1" class="headerlink" title="核心思想"></a>核心思想</h3><p>结合了哈希表和双向链表：哈希表提供了对任意键的O(1)快速访问，而双向链表则负责维护数据的访问顺序，使其能在O(1)时间内将最新访问的节点移到队尾，并在容量满时淘汰队首的最久未使用节点。</p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/lru%E7%BB%93%E6%9E%84%E7%9A%84%E5%AE%9E%E7%8E%B0.png" alt="lru结构的实现"></p>
+<h3 id="算法实现-1"><a href="#算法实现-1" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LRUCache</span>:</span><br><span class="line">    <span class="comment"># 内部类，定义双向链表节点</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">DoubleNode</span>:</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, key=<span class="number">0</span>, val=<span class="number">0</span></span>):</span><br><span class="line">            <span class="variable language_">self</span>.key = key</span><br><span class="line">            <span class="variable language_">self</span>.val = val</span><br><span class="line">            <span class="variable language_">self</span>.last = <span class="literal">None</span></span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">next</span> = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 内部类，实现双向链表，用于维护节点的访问顺序</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">DoubleList</span>:</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">            <span class="comment"># 哨兵节点，简化边界条件处理</span></span><br><span class="line">            <span class="variable language_">self</span>.head = <span class="variable language_">self</span>.DoubleNode() <span class="comment">#头节点</span></span><br><span class="line">            <span class="variable language_">self</span>.tail = <span class="variable language_">self</span>.DoubleNode() <span class="comment">#尾节点</span></span><br><span class="line">            <span class="variable language_">self</span>.head.<span class="built_in">next</span> = <span class="variable language_">self</span>.tail <span class="comment">#头节点的下一个节点是尾节点</span></span><br><span class="line">            <span class="variable language_">self</span>.tail.last = <span class="variable language_">self</span>.head <span class="comment">#尾节点的上一个节点是头节点</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 将一个节点添加到链表尾部（表示最近使用）</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">add_node_to_tail</span>(<span class="params">self, node</span>):</span><br><span class="line">            node.<span class="built_in">next</span> = <span class="variable language_">self</span>.tail <span class="comment"># 将新节点添加到尾节点的前一个位置</span></span><br><span class="line">            node.last = <span class="variable language_">self</span>.tail.last <span class="comment"># 将新节点的上一个节点设置为尾节点的前一个节点</span></span><br><span class="line">            <span class="variable language_">self</span>.tail.last.<span class="built_in">next</span> = node <span class="comment"># 将尾节点的前一个节点的下一个节点设置为新节点</span></span><br><span class="line">            <span class="variable language_">self</span>.tail.last = node <span class="comment"># 将尾节点的前一个节点设置为新节点</span></span><br><span class="line">            <span class="comment"># 这样设置是为了把尾节点和前一个节点的两条指针变成四条指针</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 将指定节点移动到链表尾部</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">move_node_to_tail</span>(<span class="params">self, node</span>):</span><br><span class="line">            <span class="comment"># 先将节点从原位置断开</span></span><br><span class="line">            node.last.<span class="built_in">next</span> = node.<span class="built_in">next</span></span><br><span class="line">            node.<span class="built_in">next</span>.last = node.last</span><br><span class="line">            <span class="comment"># 再将节点添加到尾部</span></span><br><span class="line">            <span class="variable language_">self</span>.add_node_to_tail(node)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 移除链表头部节点（最久未使用的节点）并返回</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">remove_head</span>(<span class="params">self</span>):</span><br><span class="line">            <span class="comment"># 如果链表为空（只有哨兵节点），则无法移除</span></span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>.head.<span class="built_in">next</span> == <span class="variable language_">self</span>.tail:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">            node_to_remove = <span class="variable language_">self</span>.head.<span class="built_in">next</span></span><br><span class="line">            <span class="comment"># 从链表中移除</span></span><br><span class="line">            node_to_remove.last.<span class="built_in">next</span> = node_to_remove.<span class="built_in">next</span></span><br><span class="line">            node_to_remove.<span class="built_in">next</span>.last = node_to_remove.last</span><br><span class="line">            <span class="keyword">return</span> node_to_remove</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, capacity: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="comment"># 核心思想：使用哈希表实现O(1)查找，使用双向链表实现O(1)的节点移动（更新访问顺序）</span></span><br><span class="line">        <span class="comment"># 哈希表，存储 key -&gt; DoubleNode 的映射</span></span><br><span class="line">        <span class="variable language_">self</span>.key_node_map = &#123;&#125;</span><br><span class="line">        <span class="comment"># 双向链表实例，维护节点的LRU顺序</span></span><br><span class="line">        <span class="variable language_">self</span>.node_list = <span class="variable language_">self</span>.DoubleList()</span><br><span class="line">        <span class="comment"># 缓存的容量</span></span><br><span class="line">        <span class="variable language_">self</span>.capacity = capacity</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get</span>(<span class="params">self, key: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 如果key存在</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> <span class="variable language_">self</span>.key_node_map:</span><br><span class="line">            <span class="comment"># 获取节点</span></span><br><span class="line">            node = <span class="variable language_">self</span>.key_node_map[key]</span><br><span class="line">            <span class="comment"># 将该节点移动到链表尾部，表示最近被访问</span></span><br><span class="line">            <span class="variable language_">self</span>.node_list.move_node_to_tail(node)</span><br><span class="line">            <span class="keyword">return</span> node.val</span><br><span class="line">        <span class="comment"># 如果key不存在，返回-1</span></span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">put</span>(<span class="params">self, key: <span class="built_in">int</span>, value: <span class="built_in">int</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># 如果key已存在</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> <span class="variable language_">self</span>.key_node_map:</span><br><span class="line">            <span class="comment"># 更新节点的值</span></span><br><span class="line">            node = <span class="variable language_">self</span>.key_node_map[key]</span><br><span class="line">            node.val = value</span><br><span class="line">            <span class="comment"># 将该节点移动到链表尾部</span></span><br><span class="line">            <span class="variable language_">self</span>.node_list.move_node_to_tail(node)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 如果缓存已满</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(<span class="variable language_">self</span>.key_node_map) == <span class="variable language_">self</span>.capacity:</span><br><span class="line">                <span class="comment"># 移除链表头部的最久未使用节点，之后会再把新节点添加到尾部</span></span><br><span class="line">                removed_node = <span class="variable language_">self</span>.node_list.remove_head()</span><br><span class="line">                <span class="comment"># 从哈希表中删除对应的key</span></span><br><span class="line">                <span class="keyword">del</span> <span class="variable language_">self</span>.key_node_map[removed_node.key]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 创建新节点</span></span><br><span class="line">            new_node = <span class="variable language_">self</span>.DoubleNode(key, value)</span><br><span class="line">            <span class="comment"># 存入哈希表</span></span><br><span class="line">            <span class="variable language_">self</span>.key_node_map[key] = new_node</span><br><span class="line">            <span class="comment"># 将新节点添加到链表尾部</span></span><br><span class="line">            <span class="variable language_">self</span>.node_list.add_node_to_tail(new_node)</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-1"><a href="#算法分析-1" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：get和put操作都是O(1)</li>
+<li><strong>空间复杂度</strong>：O(capacity)</li>
+<li><strong>核心技巧</strong>：哈希表 + 双向链表</li>
+</ul>
+<h2 id="题目三：插入、删除和获取随机元素O-1-时间的结构"><a href="#题目三：插入、删除和获取随机元素O-1-时间的结构" class="headerlink" title="题目三：插入、删除和获取随机元素O(1)时间的结构"></a>题目三：插入、删除和获取随机元素O(1)时间的结构</h2><h3 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h3><p>设计一个支持在平均时间复杂度O(1)下，执行以下操作的数据结构：</p>
+<ul>
+<li><code>insert(val)</code>：当元素val不存在时，向集合中插入该项</li>
+<li><code>remove(val)</code>：元素val存在时，从集合中移除该项</li>
+<li><code>getRandom()</code>：随机返回现有集合中的一项</li>
+</ul>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/insert-delete-getrandom-o1/">https://leetcode.cn/problems/insert-delete-getrandom-o1/</a></p>
+<h3 id="核心思想-2"><a href="#核心思想-2" class="headerlink" title="核心思想"></a>核心思想</h3><p>结合了动态数组与哈希表，数组负责存储元素以实现O(1)的随机获取，哈希表则存储”值到数组索引”的映射以实现O(1)的查找。其remove操作的精髓在于：将待删除元素与数组的最后一个元素交换，然后直接删除数组末尾。</p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/hash%E8%A1%A8%E5%8A%A0%E5%85%A5%E7%A7%BB%E9%99%A4%E5%92%8C%E5%BE%97%E5%88%B0%E9%9A%8F%E6%9C%BA%E7%B4%A2%E5%BC%95.png" alt="hash表加入移除和得到随机索引"></p>
+<h3 id="算法实现-2"><a href="#算法实现-2" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RandomizedSet</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 核心思想：</span></span><br><span class="line">        <span class="comment"># 1. 使用哈希表（字典）存储 值 -&gt; 索引 的映射，实现O(1)的查找。</span></span><br><span class="line">        <span class="comment"># 2. 使用动态数组（列表）存储值，实现O(1)的随机访问。</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">map</span> = &#123;&#125;  </span><br><span class="line">        <span class="variable language_">self</span>.arr = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">insert</span>(<span class="params">self, val: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="comment"># 如果值已存在，直接返回False</span></span><br><span class="line">        <span class="keyword">if</span> val <span class="keyword">in</span> <span class="variable language_">self</span>.<span class="built_in">map</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="comment"># 将值添加到数组末尾</span></span><br><span class="line">        <span class="variable language_">self</span>.arr.append(val)</span><br><span class="line">        <span class="comment"># 在哈希表中记录新值及其索引,map[val]返回val在数组中的索引</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">map</span>[val] = <span class="built_in">len</span>(<span class="variable language_">self</span>.arr) - <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">remove</span>(<span class="params">self, val: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="comment"># 如果值不存在，直接返回False</span></span><br><span class="line">        <span class="keyword">if</span> val <span class="keyword">not</span> <span class="keyword">in</span> <span class="variable language_">self</span>.<span class="built_in">map</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 核心步骤：为了实现O(1)删除，将被删除元素与数组末尾元素交换，然后删除末尾元素。</span></span><br><span class="line">        <span class="comment"># 获取待删除元素的索引</span></span><br><span class="line">        val_index = <span class="variable language_">self</span>.<span class="built_in">map</span>[val]</span><br><span class="line">        <span class="comment"># 获取数组末尾的元素</span></span><br><span class="line">        end_value = <span class="variable language_">self</span>.arr[-<span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 将末尾元素放到待删除元素的位置</span></span><br><span class="line">        <span class="variable language_">self</span>.arr[val_index] = end_value</span><br><span class="line">        <span class="comment"># 更新哈希表中末尾元素的索引，只更新索引不更新值</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">map</span>[end_value] = val_index</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 从哈希表中删除目标值</span></span><br><span class="line">        <span class="keyword">del</span> <span class="variable language_">self</span>.<span class="built_in">map</span>[val]</span><br><span class="line">        <span class="comment"># 从数组中删除末尾元素，两者同步更新</span></span><br><span class="line">        <span class="variable language_">self</span>.arr.pop()</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getRandom</span>(<span class="params">self</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 利用数组的特性，随机选择一个索引并返回对应的值</span></span><br><span class="line">        <span class="keyword">return</span> random.choice(<span class="variable language_">self</span>.arr)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-2"><a href="#算法分析-2" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：所有操作都是O(1)</li>
+<li><strong>空间复杂度</strong>：O(N)</li>
+<li><strong>核心技巧</strong>：数组末尾交换删除</li>
+</ul>
+<h2 id="题目四：插入、删除和获取随机元素O-1-时间且允许重复数字的结构"><a href="#题目四：插入、删除和获取随机元素O-1-时间且允许重复数字的结构" class="headerlink" title="题目四：插入、删除和获取随机元素O(1)时间且允许重复数字的结构"></a>题目四：插入、删除和获取随机元素O(1)时间且允许重复数字的结构</h2><h3 id="问题描述-3"><a href="#问题描述-3" class="headerlink" title="问题描述"></a>问题描述</h3><p>设计一个支持在平均时间复杂度O(1)下，执行以下操作的数据结构，且允许有重复数字：</p>
+<ul>
+<li><code>insert(val)</code>：向集合中插入元素val</li>
+<li><code>remove(val)</code>：从集合中移除元素val的一个实例</li>
+<li><code>getRandom()</code>：随机返回现有集合中的一项</li>
+</ul>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/insert-delete-getrandom-o1-duplicates-allowed/">https://leetcode.cn/problems/insert-delete-getrandom-o1-duplicates-allowed/</a></p>
+<h3 id="核心思想-3"><a href="#核心思想-3" class="headerlink" title="核心思想"></a>核心思想</h3><p>与不允许重复的版本类似，但哈希表需要存储一个值所有出现位置的索引集合。</p>
+<h3 id="算法实现-3"><a href="#算法实现-3" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RandomizedCollection</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 核心思想：与不允许重复的版本类似，但哈希表需要存储一个值所有出现位置的索引集合。</span></span><br><span class="line">        <span class="comment"># 注意：字典中每个key指向的是不同的集合(set)，而不是同一个数组</span></span><br><span class="line">        <span class="comment"># 字典：存储 值 -&gt; 索引集合 的映射</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">map</span> = defaultdict(<span class="built_in">set</span>)</span><br><span class="line">        <span class="comment"># 列表：存储所有值</span></span><br><span class="line">        <span class="variable language_">self</span>.arr = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">insert</span>(<span class="params">self, val: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="comment"># 判断是否是第一次插入该值</span></span><br><span class="line">        is_new = val <span class="keyword">not</span> <span class="keyword">in</span> <span class="variable language_">self</span>.<span class="built_in">map</span></span><br><span class="line">        <span class="comment"># 将值添加到数组末尾</span></span><br><span class="line">        <span class="variable language_">self</span>.arr.append(val)</span><br><span class="line">        <span class="comment"># 在哈希表中记录新值的索引</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">map</span>[val].add(<span class="built_in">len</span>(<span class="variable language_">self</span>.arr) - <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> is_new</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">remove</span>(<span class="params">self, val: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="comment"># 如果值不存在，无法删除</span></span><br><span class="line">        <span class="keyword">if</span> val <span class="keyword">not</span> <span class="keyword">in</span> <span class="variable language_">self</span>.<span class="built_in">map</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 核心步骤：同样是与末尾元素交换以实现O(1)删除</span></span><br><span class="line">        <span class="comment"># 获取待删除值的一个索引</span></span><br><span class="line">        val_index = <span class="variable language_">self</span>.<span class="built_in">map</span>[val].pop()</span><br><span class="line">        <span class="comment"># 获取末尾元素的值和索引</span></span><br><span class="line">        end_value = <span class="variable language_">self</span>.arr[-<span class="number">1</span>]</span><br><span class="line">        end_index = <span class="built_in">len</span>(<span class="variable language_">self</span>.arr) - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 如果待删除的元素恰好是末尾元素，则不需要交换</span></span><br><span class="line">        <span class="keyword">if</span> val_index != end_index:</span><br><span class="line">            <span class="comment"># 用末尾元素覆盖待删除元素的位置</span></span><br><span class="line">            <span class="variable language_">self</span>.arr[val_index] = end_value</span><br><span class="line">            <span class="comment"># 更新末尾元素在哈希表中的索引记录</span></span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">map</span>[end_value].remove(end_index) </span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">map</span>[end_value].add(val_index)</span><br><span class="line">            <span class="comment">#这里的 map 是一个存储集合的集合，所以需要通过 map[key] 先获取到集合，然后对集合调用 remove() 和 add() 方法。这是 Python 中嵌套数据结构的常见操作模式。</span></span><br><span class="line">        <span class="comment"># 从数组中移除末尾元素</span></span><br><span class="line">        <span class="variable language_">self</span>.arr.pop()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 如果移除后，某个值的索引集合为空，则从哈希表中彻底删除该值</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="variable language_">self</span>.<span class="built_in">map</span>[val]:</span><br><span class="line">            <span class="keyword">del</span> <span class="variable language_">self</span>.<span class="built_in">map</span>[val]</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getRandom</span>(<span class="params">self</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 随机获取一个元素</span></span><br><span class="line">        <span class="keyword">return</span> random.choice(<span class="variable language_">self</span>.arr)</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-3"><a href="#算法分析-3" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：所有操作都是O(1)</li>
+<li><strong>空间复杂度</strong>：O(N)</li>
+<li><strong>核心技巧</strong>：索引集合管理</li>
+</ul>
+<h2 id="题目五：快速获得数据流的中位数的结构"><a href="#题目五：快速获得数据流的中位数的结构" class="headerlink" title="题目五：快速获得数据流的中位数的结构"></a>题目五：快速获得数据流的中位数的结构</h2><h3 id="问题描述-4"><a href="#问题描述-4" class="headerlink" title="问题描述"></a>问题描述</h3><p>中位数是有序列表中间的数。如果列表长度是偶数，中位数则是中间两个数的平均值。</p>
+<p>例如，[2,3,4]的中位数是3，[2,3]的中位数是(2 + 3) &#x2F; 2 &#x3D; 2.5</p>
+<p>设计一个支持以下两个操作的数据结构：</p>
+<ul>
+<li><code>void addNum(int num)</code> - 从数据流中添加一个整数到数据结构中</li>
+<li><code>double findMedian()</code> - 返回目前所有元素的中位数</li>
+</ul>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-median-from-data-stream/">https://leetcode.cn/problems/find-median-from-data-stream/</a></p>
+<h3 id="核心思想-4"><a href="#核心思想-4" class="headerlink" title="核心思想"></a>核心思想</h3><p>使用两个堆来维护数据流，一个大顶堆和一个小顶堆。大顶堆存储数据流中较小的一半数字，小顶堆存储数据流中较大的一半数字。这样，中位数总是可以通过两个堆的堆顶元素快速得到。</p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/%E6%89%BE%E4%B8%AD%E4%BD%8D%E6%95%B0.png" alt="找中位数"></p>
+<h3 id="算法实现-4"><a href="#算法实现-4" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> heapq</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MedianFinder</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 核心思想：使用两个堆来维护数据流，一个大顶堆和一个小顶堆。</span></span><br><span class="line">        <span class="comment"># 大顶堆 (max_heap) 存储数据流中较小的一半数字。</span></span><br><span class="line">        <span class="comment"># 小顶堆 (min_heap) 存储数据流中较大的一半数字。</span></span><br><span class="line">        <span class="comment"># 这样，中位数总是可以通过两个堆的堆顶元素快速得到。</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Python的heapq是小顶堆，为了实现大顶堆，我们存入元素的相反数。</span></span><br><span class="line">        <span class="variable language_">self</span>.max_heap = []</span><br><span class="line">        <span class="variable language_">self</span>.min_heap = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">addNum</span>(<span class="params">self, num: <span class="built_in">int</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># 步骤1: 决定将新元素添加到哪个堆。</span></span><br><span class="line">        <span class="comment"># 如果大顶堆为空，或者新元素小于等于大顶堆的堆顶，则放入大顶堆。</span></span><br><span class="line">        <span class="comment"># 否则，放入小顶堆。</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="variable language_">self</span>.max_heap <span class="keyword">or</span> -<span class="variable language_">self</span>.max_heap[<span class="number">0</span>] &gt;= num:</span><br><span class="line">            heapq.heappush(<span class="variable language_">self</span>.max_heap, -num)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            heapq.heappush(<span class="variable language_">self</span>.min_heap, num)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤2: 平衡两个堆的大小，确保它们的size之差不超过1。</span></span><br><span class="line">        <span class="variable language_">self</span>._balance()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">findMedian</span>(<span class="params">self</span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">        <span class="comment"># 根据两个堆的大小来计算中位数。</span></span><br><span class="line">        <span class="comment"># 如果大小相等（总元素为偶数），中位数是两个堆顶的平均值。</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(<span class="variable language_">self</span>.max_heap) == <span class="built_in">len</span>(<span class="variable language_">self</span>.min_heap):</span><br><span class="line">            <span class="comment"># 注意从大顶堆取值时要取反，恢复其原始值。</span></span><br><span class="line">            <span class="keyword">return</span> (-<span class="variable language_">self</span>.max_heap[<span class="number">0</span>] + <span class="variable language_">self</span>.min_heap[<span class="number">0</span>]) / <span class="number">2.0</span></span><br><span class="line">        <span class="comment"># 如果大小不等（总元素为奇数），中位数就是那个size更大的堆的堆顶。</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> -<span class="variable language_">self</span>.max_heap[<span class="number">0</span>] <span class="keyword">if</span> <span class="built_in">len</span>(<span class="variable language_">self</span>.max_heap) &gt; <span class="built_in">len</span>(<span class="variable language_">self</span>.min_heap) <span class="keyword">else</span> <span class="variable language_">self</span>.min_heap[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 私有辅助方法，用于平衡两个堆</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_balance</span>(<span class="params">self</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># 当两个堆的大小差距为2时，需要从元素多的堆移动一个到元素少的堆。</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">abs</span>(<span class="built_in">len</span>(<span class="variable language_">self</span>.max_heap) - <span class="built_in">len</span>(<span class="variable language_">self</span>.min_heap)) == <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(<span class="variable language_">self</span>.max_heap) &gt; <span class="built_in">len</span>(<span class="variable language_">self</span>.min_heap):</span><br><span class="line">                heapq.heappush(<span class="variable language_">self</span>.min_heap, -heapq.heappop(<span class="variable language_">self</span>.max_heap))</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                heapq.heappush(<span class="variable language_">self</span>.max_heap, -heapq.heappop(<span class="variable language_">self</span>.min_heap))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-4"><a href="#算法分析-4" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：addNum为O(logN)，findMedian为O(1)</li>
+<li><strong>空间复杂度</strong>：O(N)</li>
+<li><strong>核心技巧</strong>：双堆平衡</li>
+</ul>
+<h2 id="题目六：最大频率栈"><a href="#题目六：最大频率栈" class="headerlink" title="题目六：最大频率栈"></a>题目六：最大频率栈</h2><h3 id="问题描述-5"><a href="#问题描述-5" class="headerlink" title="问题描述"></a>问题描述</h3><p>设计一个类似堆栈的数据结构，将元素推入堆栈，并从堆栈中弹出出现频率最高的元素。</p>
+<p>实现 FreqStack 类：</p>
+<ul>
+<li><code>FreqStack()</code> 构造一个空的堆栈</li>
+<li><code>void push(int val)</code> 将一个整数val压入栈顶</li>
+<li><code>int pop()</code> 删除并返回堆栈中出现频率最高的元素</li>
+</ul>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/maximum-frequency-stack/">https://leetcode.cn/problems/maximum-frequency-stack/</a></p>
+<h3 id="核心思想-5"><a href="#核心思想-5" class="headerlink" title="核心思想"></a>核心思想</h3><p>使用一个哈希表记录每个值出现的频率，使用另一个哈希表将频率映射到一个栈，这个栈存储了所有出现该频率的数字。使用一个变量实时追踪当前的最大频率。</p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/%E6%9C%80%E9%AB%98%E9%A2%91%E7%8E%87%E6%A0%88.png" alt="最高频率栈"></p>
+<h3 id="算法实现-5"><a href="#算法实现-5" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">FreqStack</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>): <span class="comment">#这个初始化的是hashmap</span></span><br><span class="line">        <span class="comment"># 核心思想:</span></span><br><span class="line">        <span class="comment"># 1. 使用一个哈希表 (value_times) 记录每个值出现的频率。</span></span><br><span class="line">        <span class="comment"># 2. 使用另一个哈希表 (cnt_values) 将频率映射到一个栈（列表），这个栈存储了所有出现该频率的数字。</span></span><br><span class="line">        <span class="comment"># 3. 使用一个变量 (top_times) 实时追踪当前的最大频率。</span></span><br><span class="line">        <span class="comment"># pop操作总是从最大频率对应的栈中弹出元素，这保证了既是最高频也是最“新”的。</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 出现的最大次数</span></span><br><span class="line">        <span class="variable language_">self</span>.top_times = <span class="number">0</span></span><br><span class="line">        <span class="comment"># 每层节点 (每个频率有哪些数)</span></span><br><span class="line">        <span class="comment"># defaultdict(list) 会在key不存在时自动创建一个空列表</span></span><br><span class="line">        <span class="variable language_">self</span>.cnt_values = defaultdict(<span class="built_in">list</span>) </span><br><span class="line">        <span class="comment"># 每一个数出现了几次</span></span><br><span class="line">        <span class="comment"># defaultdict(int) 会在key不存在时自动创建一个0</span></span><br><span class="line">        <span class="variable language_">self</span>.value_times = defaultdict(<span class="built_in">int</span>) </span><br><span class="line">        <span class="comment">#实际上，cnt_values和value_times是两个哈希表，一个存储频率，一个存储频率对应的数</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">push</span>(<span class="params">self, val: <span class="built_in">int</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># 步骤1: 更新该值的频率</span></span><br><span class="line">        <span class="variable language_">self</span>.value_times[val] += <span class="number">1</span></span><br><span class="line">        current_freq = <span class="variable language_">self</span>.value_times[val]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤2: 将该值压入其新频率对应的栈中</span></span><br><span class="line">        <span class="variable language_">self</span>.cnt_values[current_freq].append(val)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤3: 更新全局最大频率</span></span><br><span class="line">        <span class="variable language_">self</span>.top_times = <span class="built_in">max</span>(<span class="variable language_">self</span>.top_times, current_freq)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">pop</span>(<span class="params">self</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 步骤1: 从最大频率对应的栈中弹出最近压入的元素</span></span><br><span class="line">        ans = <span class="variable language_">self</span>.cnt_values[<span class="variable language_">self</span>.top_times].pop()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤2: 如果弹出后，该频率的栈为空了，说明最大频率需要降低</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="variable language_">self</span>.cnt_values[<span class="variable language_">self</span>.top_times]:</span><br><span class="line">            <span class="variable language_">self</span>.top_times -= <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤3: 更新被弹出元素自身的频率记录</span></span><br><span class="line">        <span class="variable language_">self</span>.value_times[ans] -= <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-5"><a href="#算法分析-5" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：push和pop操作都是O(1)</li>
+<li><strong>空间复杂度</strong>：O(N)</li>
+<li><strong>核心技巧</strong>：频率分层存储</li>
+</ul>
+<h2 id="题目七：全O-1-的数据结构"><a href="#题目七：全O-1-的数据结构" class="headerlink" title="题目七：全O(1)的数据结构"></a>题目七：全O(1)的数据结构</h2><h3 id="问题描述-6"><a href="#问题描述-6" class="headerlink" title="问题描述"></a>问题描述</h3><p>请你实现一个数据结构支持以下操作：</p>
+<ul>
+<li><code>Inc(key)</code> - 插入一个新的值为1的key，或者使一个存在的key增加一，保证key不为空字符串</li>
+<li><code>Dec(key)</code> - 如果这个key的值是1，那么把他从数据结构中移除掉。否则使一个存在的key值减一。如果这个key不存在，这个函数不做任何事情。key保证不为空字符串</li>
+<li><code>GetMaxKey()</code> - 返回key中值最大的任意一个。如果没有元素存在，返回一个空字符串””</li>
+<li><code>GetMinKey()</code> - 返回key中值最小的任意一个。如果没有元素存在，返回一个空字符串””</li>
+</ul>
+<p>挑战：以O(1)的时间复杂度实现所有操作。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/all-oone-data-structure/">https://leetcode.cn/problems/all-oone-data-structure/</a></p>
+<h3 id="核心思想-6"><a href="#核心思想-6" class="headerlink" title="核心思想"></a>核心思想</h3><p>使用一个双向链表来组织桶(Bucket)，链表按桶的计数值(cnt)升序排列。每个桶包含一个集合，存储所有计数值等于该桶cnt的key。使用一个哈希表来存储key -&gt; Bucket的映射，实现O(1)的key定位。</p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(13)/class35-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98/all1%E7%B1%BB.png" alt="all1类"></p>
+<h3 id="算法实现-6"><a href="#算法实现-6" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AllOne</span>:</span><br><span class="line">    <span class="comment"># 内部类，定义双向链表的节点，也叫“桶”</span></span><br><span class="line">    <span class="comment"># 每个桶存储具有相同计数值的所有key</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Bucket</span>:</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, cnt</span>):</span><br><span class="line">            <span class="variable language_">self</span>.cnt = cnt</span><br><span class="line">            <span class="variable language_">self</span>.keys = <span class="built_in">set</span>()</span><br><span class="line">            <span class="variable language_">self</span>.last = <span class="literal">None</span></span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">next</span> = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 核心思想:</span></span><br><span class="line">        <span class="comment"># 1. 使用一个双向链表来组织桶(Bucket)，链表按桶的计数值(cnt)升序排列。</span></span><br><span class="line">        <span class="comment"># 2. 每个桶(Bucket)包含一个集合(set)，存储所有计数值等于该桶cnt的key。</span></span><br><span class="line">        <span class="comment"># 3. 使用一个哈希表(map)来存储 key -&gt; Bucket 的映射，实现O(1)的key定位。</span></span><br><span class="line">        <span class="comment"># inc/dec操作本质上是将key从一个桶移动到相邻的下一个/上一个桶。</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 创建头尾哨兵节点，简化边界处理</span></span><br><span class="line">        <span class="variable language_">self</span>.head = <span class="variable language_">self</span>.Bucket(<span class="number">0</span>)</span><br><span class="line">        <span class="variable language_">self</span>.tail = <span class="variable language_">self</span>.Bucket(<span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>))</span><br><span class="line">        <span class="comment"># 将头节点的下一个指针指向尾节点，尾节点的上一个指针指向头节点，这样操作后，双向链表形成了一个初始的空结构：head &lt;-&gt; tail</span></span><br><span class="line">        <span class="variable language_">self</span>.head.<span class="built_in">next</span> = <span class="variable language_">self</span>.tail</span><br><span class="line">        <span class="variable language_">self</span>.tail.last = <span class="variable language_">self</span>.head</span><br><span class="line">        <span class="comment"># 存储 key 到其所在 Bucket 的映射</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">map</span> = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 辅助函数：在指定位置(prev_bucket)后插入一个新桶(new_bucket)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_insert_after</span>(<span class="params">self, prev_bucket, new_bucket</span>):</span><br><span class="line">        new_bucket.<span class="built_in">next</span> = prev_bucket.<span class="built_in">next</span></span><br><span class="line">        new_bucket.last = prev_bucket</span><br><span class="line">        prev_bucket.<span class="built_in">next</span>.last = new_bucket</span><br><span class="line">        prev_bucket.<span class="built_in">next</span> = new_bucket</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 辅助函数：从链表中移除一个桶，让前后的指针跳过当前桶</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_remove_bucket</span>(<span class="params">self, bucket</span>):</span><br><span class="line">        bucket.last.<span class="built_in">next</span> = bucket.<span class="built_in">next</span></span><br><span class="line">        bucket.<span class="built_in">next</span>.last = bucket.last</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inc</span>(<span class="params">self, key: <span class="built_in">str</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># 核心步骤：将key从当前桶移动到cnt+1的桶</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">not</span> <span class="keyword">in</span> <span class="variable language_">self</span>.<span class="built_in">map</span>:</span><br><span class="line">            <span class="comment"># case 1: 新key，计数值为1</span></span><br><span class="line">            <span class="comment"># 找到或创建cnt=1的桶</span></span><br><span class="line">            target_bucket = <span class="variable language_">self</span>.head.<span class="built_in">next</span> <span class="comment">#定位到第一个桶</span></span><br><span class="line">            <span class="keyword">if</span> target_bucket.cnt != <span class="number">1</span>:</span><br><span class="line">                target_bucket = <span class="variable language_">self</span>.Bucket(<span class="number">1</span>)</span><br><span class="line">                <span class="variable language_">self</span>._insert_after(<span class="variable language_">self</span>.head, target_bucket)</span><br><span class="line">            <span class="comment"># 将key加入桶和map</span></span><br><span class="line">            target_bucket.keys.add(key)</span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">map</span>[key] = target_bucket</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># case 2: key已存在</span></span><br><span class="line">            current_bucket = <span class="variable language_">self</span>.<span class="built_in">map</span>[key] <span class="comment">#map是双向的</span></span><br><span class="line">            new_cnt = current_bucket.cnt + <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 找到或创建cnt=new_cnt的桶</span></span><br><span class="line">            target_bucket = current_bucket.<span class="built_in">next</span></span><br><span class="line">            <span class="keyword">if</span> target_bucket.cnt != new_cnt:</span><br><span class="line">                target_bucket = <span class="variable language_">self</span>.Bucket(new_cnt)</span><br><span class="line">                <span class="variable language_">self</span>._insert_after(current_bucket, target_bucket)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 移动key</span></span><br><span class="line">            target_bucket.keys.add(key)</span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">map</span>[key] = target_bucket</span><br><span class="line">            current_bucket.keys.remove(key)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果原桶变空，则移除</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> current_bucket.keys:</span><br><span class="line">                <span class="variable language_">self</span>._remove_bucket(current_bucket)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dec</span>(<span class="params">self, key: <span class="built_in">str</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">not</span> <span class="keyword">in</span> <span class="variable language_">self</span>.<span class="built_in">map</span>:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 核心步骤：将key从当前桶移动到cnt-1的桶</span></span><br><span class="line">        current_bucket = <span class="variable language_">self</span>.<span class="built_in">map</span>[key]</span><br><span class="line">        current_bucket.keys.remove(key)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> current_bucket.cnt &gt; <span class="number">1</span>:</span><br><span class="line">            new_cnt = current_bucket.cnt - <span class="number">1</span></span><br><span class="line">            <span class="comment"># 找到或创建cnt=new_cnt的桶</span></span><br><span class="line">            target_bucket = current_bucket.last</span><br><span class="line">            <span class="keyword">if</span> target_bucket.cnt != new_cnt:</span><br><span class="line">                target_bucket = <span class="variable language_">self</span>.Bucket(new_cnt)</span><br><span class="line">                <span class="variable language_">self</span>._insert_after(current_bucket.last, target_bucket)</span><br><span class="line">            <span class="comment"># 移动key</span></span><br><span class="line">            target_bucket.keys.add(key)</span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">map</span>[key] = target_bucket</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 如果cnt为1，dec后直接从map中移除</span></span><br><span class="line">            <span class="keyword">del</span> <span class="variable language_">self</span>.<span class="built_in">map</span>[key]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 如果原桶变空，则移除</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> current_bucket.keys:</span><br><span class="line">            <span class="variable language_">self</span>._remove_bucket(current_bucket)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getMaxKey</span>(<span class="params">self</span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="comment"># 最大计数值的桶在tail哨兵节点的前面</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.tail.last == <span class="variable language_">self</span>.head:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 从桶的集合中任意取一个key即可</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">next</span>(<span class="built_in">iter</span>(<span class="variable language_">self</span>.tail.last.keys)) </span><br><span class="line">        <span class="comment"># self.tail.last - 获取尾哨兵节点的前一个节点，也就是链表中最后一个实际的桶</span></span><br><span class="line">        <span class="comment"># .keys - 这个桶中存储的键的集合（set）</span></span><br><span class="line">        <span class="comment"># iter(...) - 将集合转换为迭代器</span></span><br><span class="line">        <span class="comment"># next(...) - 从迭代器中获取第一个元</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getMinKey</span>(<span class="params">self</span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="comment"># 最小计数值的桶在head哨兵节点的后面</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.head.<span class="built_in">next</span> == <span class="variable language_">self</span>.tail:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 从桶的集合中任意取一个key即可</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">next</span>(<span class="built_in">iter</span>(<span class="variable language_">self</span>.head.<span class="built_in">next</span>.keys))</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-6"><a href="#算法分析-6" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：所有操作都是O(1)</li>
+<li><strong>空间复杂度</strong>：O(N)</li>
+<li><strong>核心技巧</strong>：双向链表 + 桶分组</li>
+</ul>
+<h2 id="数据结构设计核心技巧总结"><a href="#数据结构设计核心技巧总结" class="headerlink" title="数据结构设计核心技巧总结"></a>数据结构设计核心技巧总结</h2><h3 id="1-哈希表的O-1-特性"><a href="#1-哈希表的O-1-特性" class="headerlink" title="1. 哈希表的O(1)特性"></a>1. 哈希表的O(1)特性</h3><p>大部分设计题都基于哈希表的O(1)查找、插入、删除特性：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基本哈希表操作</span></span><br><span class="line">hash_map = &#123;&#125;</span><br><span class="line">hash_map[key] = value  <span class="comment"># O(1) 插入</span></span><br><span class="line">val = hash_map[key]    <span class="comment"># O(1) 查找</span></span><br><span class="line"><span class="keyword">del</span> hash_map[key]      <span class="comment"># O(1) 删除</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-时间戳技巧"><a href="#2-时间戳技巧" class="headerlink" title="2. 时间戳技巧"></a>2. 时间戳技巧</h3><p>用于实现懒更新策略：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 时间戳比较</span></span><br><span class="line"><span class="keyword">if</span> operation_time &gt; global_time:</span><br><span class="line">    <span class="keyword">return</span> local_value</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">return</span> global_value</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-双向链表维护顺序"><a href="#3-双向链表维护顺序" class="headerlink" title="3. 双向链表维护顺序"></a>3. 双向链表维护顺序</h3><p>适用于需要频繁移动元素位置的场景：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 双向链表节点移动</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">move_to_tail</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="comment"># 断开原连接</span></span><br><span class="line">    node.prev.<span class="built_in">next</span> = node.<span class="built_in">next</span></span><br><span class="line">    node.<span class="built_in">next</span>.prev = node.prev</span><br><span class="line">    <span class="comment"># 插入到尾部</span></span><br><span class="line">    node.<span class="built_in">next</span> = tail</span><br><span class="line">    node.prev = tail.prev</span><br><span class="line">    tail.prev.<span class="built_in">next</span> = node</span><br><span class="line">    tail.prev = node</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-数组末尾交换删除"><a href="#4-数组末尾交换删除" class="headerlink" title="4. 数组末尾交换删除"></a>4. 数组末尾交换删除</h3><p>实现O(1)删除的经典技巧：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将待删除元素与末尾元素交换</span></span><br><span class="line">arr[del_index] = arr[-<span class="number">1</span>]</span><br><span class="line"><span class="built_in">map</span>[arr[-<span class="number">1</span>]] = del_index  <span class="comment"># 更新索引映射</span></span><br><span class="line">arr.pop()  <span class="comment"># 删除末尾元素</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-双堆维护极值"><a href="#5-双堆维护极值" class="headerlink" title="5. 双堆维护极值"></a>5. 双堆维护极值</h3><p>适用于动态维护中位数或其他统计量：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 维护两个堆的平衡</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">abs</span>(<span class="built_in">len</span>(max_heap) - <span class="built_in">len</span>(min_heap)) &gt; <span class="number">1</span>:</span><br><span class="line">    <span class="comment"># 从大的堆移动元素到小的堆</span></span><br><span class="line">    balance_heaps()</span><br></pre></td></tr></table></figure>
+
+<h2 id="复杂度分析总结"><a href="#复杂度分析总结" class="headerlink" title="复杂度分析总结"></a>复杂度分析总结</h2><table>
+<thead>
+<tr>
+<th>题目</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>核心数据结构</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>setAll哈希表</td>
+<td>O(1)</td>
+<td>O(N)</td>
+<td>哈希表+时间戳</td>
+</tr>
+<tr>
+<td>LRU缓存</td>
+<td>O(1)</td>
+<td>O(capacity)</td>
+<td>哈希表+双向链表</td>
+</tr>
+<tr>
+<td>随机数据结构</td>
+<td>O(1)</td>
+<td>O(N)</td>
+<td>哈希表+动态数组</td>
+</tr>
+<tr>
+<td>随机数据结构(重复)</td>
+<td>O(1)</td>
+<td>O(N)</td>
+<td>哈希表+集合+数组</td>
+</tr>
+<tr>
+<td>中位数查找</td>
+<td>O(logN)&#x2F;O(1)</td>
+<td>O(N)</td>
+<td>双堆</td>
+</tr>
+<tr>
+<td>最大频率栈</td>
+<td>O(1)</td>
+<td>O(N)</td>
+<td>哈希表+栈数组</td>
+</tr>
+<tr>
+<td>全O(1)数据结构</td>
+<td>O(1)</td>
+<td>O(N)</td>
+<td>哈希表+双向链表+桶</td>
+</tr>
+</tbody></table>
+<h2 id="学习建议"><a href="#学习建议" class="headerlink" title="学习建议"></a>学习建议</h2><ol>
+<li><p><strong>理解O(1)的本质</strong>：大多数设计题的核心是利用哈希表的O(1)特性</p>
+</li>
+<li><p><strong>掌握组合数据结构</strong>：</p>
+<ul>
+<li>哈希表 + 双向链表（LRU）</li>
+<li>哈希表 + 动态数组（随机访问）</li>
+<li>双堆（维护极值）</li>
+<li>时间戳（懒更新）</li>
+</ul>
+</li>
+<li><p><strong>注意边界条件</strong>：</p>
+<ul>
+<li>空数据结构</li>
+<li>容量限制</li>
+<li>重复元素处理</li>
+</ul>
+</li>
+<li><p><strong>理解权衡取舍</strong>：</p>
+<ul>
+<li>时间复杂度 vs 空间复杂度</li>
+<li>实现复杂度 vs 运行效率</li>
+</ul>
+</li>
+<li><p><strong>多练习组合技巧</strong>：数据结构设计题往往需要组合多种基础数据结构</p>
+</li>
+</ol>
+<p>数据结构设计题考察的是对基础数据结构的深入理解和灵活运用能力。通过掌握这些经典模式和技巧，可以应对大多数设计类问题。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag"># 哈希表</a>
+              <a href="/tags/LRU/" rel="tag"># LRU</a>
+              <a href="/tags/%E5%A0%86/" rel="tag"># 堆</a>
+              <a href="/tags/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/" rel="tag"># 双向链表</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/08/17/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8812%EF%BC%89-%20%E9%93%BE%E8%A1%A8%E9%AB%98%E9%A2%91%E9%A2%98%E7%9B%AE%E5%92%8C%E5%BF%85%E5%A4%87%E6%8A%80%E5%B7%A7/" rel="prev" title="数据结构与算法自学笔记（12）- 链表高频题目和必备技巧">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（12）- 链表高频题目和必备技巧
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/08/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8814%EF%BC%89-%20%E4%BA%8C%E5%8F%89%E6%A0%91%E9%AB%98%E9%A2%91%E9%A2%98%E7%9B%AE/" rel="next" title="数据结构与算法自学笔记（14）- 二叉树高频题目">
+      数据结构与算法自学笔记（14）- 二叉树高频题目 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E8%AF%B4%E6%98%8E"><span class="nav-number">1.2.</span> <span class="nav-text">重要说明</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#035%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%AB%98%E9%A2%91%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">035【必备】数据结构设计高频题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%80%EF%BC%9AsetAll%E5%8A%9F%E8%83%BD%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8"><span class="nav-number">2.1.</span> <span class="nav-text">题目一：setAll功能的哈希表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">2.1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">2.1.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.1.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">2.1.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%8C%EF%BC%9A%E5%AE%9E%E7%8E%B0LRU%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">题目二：实现LRU结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">2.2.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-1"><span class="nav-number">2.2.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%89%EF%BC%9A%E6%8F%92%E5%85%A5%E3%80%81%E5%88%A0%E9%99%A4%E5%92%8C%E8%8E%B7%E5%8F%96%E9%9A%8F%E6%9C%BA%E5%85%83%E7%B4%A0O-1-%E6%97%B6%E9%97%B4%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">2.3.</span> <span class="nav-text">题目三：插入、删除和获取随机元素O(1)时间的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">2.3.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-2"><span class="nav-number">2.3.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">2.3.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-2"><span class="nav-number">2.3.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%9B%9B%EF%BC%9A%E6%8F%92%E5%85%A5%E3%80%81%E5%88%A0%E9%99%A4%E5%92%8C%E8%8E%B7%E5%8F%96%E9%9A%8F%E6%9C%BA%E5%85%83%E7%B4%A0O-1-%E6%97%B6%E9%97%B4%E4%B8%94%E5%85%81%E8%AE%B8%E9%87%8D%E5%A4%8D%E6%95%B0%E5%AD%97%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">2.4.</span> <span class="nav-text">题目四：插入、删除和获取随机元素O(1)时间且允许重复数字的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-3"><span class="nav-number">2.4.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-3"><span class="nav-number">2.4.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-3"><span class="nav-number">2.4.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-3"><span class="nav-number">2.4.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%94%EF%BC%9A%E5%BF%AB%E9%80%9F%E8%8E%B7%E5%BE%97%E6%95%B0%E6%8D%AE%E6%B5%81%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">2.5.</span> <span class="nav-text">题目五：快速获得数据流的中位数的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-4"><span class="nav-number">2.5.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-4"><span class="nav-number">2.5.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-4"><span class="nav-number">2.5.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-4"><span class="nav-number">2.5.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%85%AD%EF%BC%9A%E6%9C%80%E5%A4%A7%E9%A2%91%E7%8E%87%E6%A0%88"><span class="nav-number">2.6.</span> <span class="nav-text">题目六：最大频率栈</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-5"><span class="nav-number">2.6.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-5"><span class="nav-number">2.6.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-5"><span class="nav-number">2.6.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-5"><span class="nav-number">2.6.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%83%EF%BC%9A%E5%85%A8O-1-%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">2.7.</span> <span class="nav-text">题目七：全O(1)的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-6"><span class="nav-number">2.7.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-6"><span class="nav-number">2.7.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-6"><span class="nav-number">2.7.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-6"><span class="nav-number">2.7.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A0%B8%E5%BF%83%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93"><span class="nav-number">2.8.</span> <span class="nav-text">数据结构设计核心技巧总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%93%88%E5%B8%8C%E8%A1%A8%E7%9A%84O-1-%E7%89%B9%E6%80%A7"><span class="nav-number">2.8.1.</span> <span class="nav-text">1. 哈希表的O(1)特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%97%B6%E9%97%B4%E6%88%B3%E6%8A%80%E5%B7%A7"><span class="nav-number">2.8.2.</span> <span class="nav-text">2. 时间戳技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8%E7%BB%B4%E6%8A%A4%E9%A1%BA%E5%BA%8F"><span class="nav-number">2.8.3.</span> <span class="nav-text">3. 双向链表维护顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%95%B0%E7%BB%84%E6%9C%AB%E5%B0%BE%E4%BA%A4%E6%8D%A2%E5%88%A0%E9%99%A4"><span class="nav-number">2.8.4.</span> <span class="nav-text">4. 数组末尾交换删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%8F%8C%E5%A0%86%E7%BB%B4%E6%8A%A4%E6%9E%81%E5%80%BC"><span class="nav-number">2.8.5.</span> <span class="nav-text">5. 双堆维护极值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90%E6%80%BB%E7%BB%93"><span class="nav-number">2.9.</span> <span class="nav-text">复杂度分析总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.10.</span> <span class="nav-text">学习建议</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series本笔记包括了栈和队列的基础实现、相互转换以及最小栈等核心内容，涵盖了链表实现、数组实现、循环队列等多种实现方式,包括了class013 -&gt; class016的内容。  013【入门】队列和栈-链表、数组实现队列的基本概念队列（Queue）是一种先">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（3）- 队列和栈相关">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/08/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%883%EF%BC%89-%20%E9%98%9F%E5%88%97%E5%92%8C%E6%A0%88%E7%9B%B8%E5%85%B3/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series本笔记包括了栈和队列的基础实现、相互转换以及最小栈等核心内容，涵盖了链表实现、数组实现、循环队列等多种实现方式,包括了class013 -&gt; class016的内容。  013【入门】队列和栈-链表、数组实现队列的基本概念队列（Queue）是一种先">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-08-02T06:42:46.000Z">
+<meta property="article:modified_time" content="2025-08-05T08:02:10.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="节点遍历">
+<meta property="article:tag" content="队列">
+<meta property="article:tag" content="栈">
+<meta property="article:tag" content="列表">
+<meta property="article:tag" content="数组">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/08/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%883%EF%BC%89-%20%E9%98%9F%E5%88%97%E5%92%8C%E6%A0%88%E7%9B%B8%E5%85%B3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（3）- 队列和栈相关 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/08/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%883%EF%BC%89-%20%E9%98%9F%E5%88%97%E5%92%8C%E6%A0%88%E7%9B%B8%E5%85%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（3）- 队列和栈相关
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-08-02 14:42:46" itemprop="dateCreated datePublished" datetime="2025-08-02T14:42:46+08:00">2025-08-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-08-05 16:02:10" itemprop="dateModified" datetime="2025-08-05T16:02:10+08:00">2025-08-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a><br>本笔记包括了栈和队列的基础实现、相互转换以及最小栈等核心内容，涵盖了链表实现、数组实现、循环队列等多种实现方式,包括了class013 -&gt; class016的内容。</p>
+<hr>
+<h1 id="013【入门】队列和栈-链表、数组实现"><a href="#013【入门】队列和栈-链表、数组实现" class="headerlink" title="013【入门】队列和栈-链表、数组实现"></a>013【入门】队列和栈-链表、数组实现</h1><h2 id="队列的基本概念"><a href="#队列的基本概念" class="headerlink" title="队列的基本概念"></a>队列的基本概念</h2><p>队列（Queue）是一种先进先出（FIFO, First In First Out）的线性数据结构。元素从队尾（rear）插入，从队首（front）删除。</p>
+<h3 id="队列的基本操作"><a href="#队列的基本操作" class="headerlink" title="队列的基本操作"></a>队列的基本操作</h3><ul>
+<li><strong>enqueue&#x2F;offer</strong>: 入队，将元素添加到队尾</li>
+<li><strong>dequeue&#x2F;poll</strong>: 出队，从队首移除元素</li>
+<li><strong>front&#x2F;peek</strong>: 查看队首元素，但不移除</li>
+<li><strong>isEmpty</strong>: 判断队列是否为空</li>
+<li><strong>size</strong>: 获取队列中元素个数</li>
+</ul>
+<h2 id="队列的实现方式"><a href="#队列的实现方式" class="headerlink" title="队列的实现方式"></a>队列的实现方式</h2><h3 id="方式一：基于双端队列（deque）实现"><a href="#方式一：基于双端队列（deque）实现" class="headerlink" title="方式一：基于双端队列（deque）实现"></a>方式一：基于双端队列（deque）实现</h3><p>Python内置的<code>collections.deque</code>提供了高效的双端操作，但常数时间较慢。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Queue1</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    基于Python内置deque实现的队列</span></span><br><span class="line"><span class="string">    内部使用双向链表，常数操作较慢但使用简单</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.queue = deque()  <span class="comment"># 内部存储使用deque（双端队列）</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">is_empty</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断队列是否为空&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">not</span> <span class="variable language_">self</span>.queue</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">offer</span>(<span class="params">self, num</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;向队列中加入元素，加到队尾&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.queue.append(num)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">poll</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;从队列头部弹出元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.queue.popleft()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">peek</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;返回队列头的元素但不弹出&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.queue[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">size</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;返回队列中元素个数&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(<span class="variable language_">self</span>.queue)</span><br></pre></td></tr></table></figure>
+
+<h3 id="方式二：基于固定数组实现"><a href="#方式二：基于固定数组实现" class="headerlink" title="方式二：基于固定数组实现"></a>方式二：基于固定数组实现</h3><p>在已知操作次数上限的情况下，使用固定数组实现具有更好的常数时间性能。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Queue2</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    基于固定数组实现的队列</span></span><br><span class="line"><span class="string">    适用于已知加入操作总次数上限的场景</span></span><br><span class="line"><span class="string">    常数时间性能更好，是实际刷题中最常用的方式</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        初始化队列</span></span><br><span class="line"><span class="string">        参数: n - 加入操作的总次数上限</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.queue = [<span class="number">0</span>] * n  <span class="comment"># 固定大小数组</span></span><br><span class="line">        <span class="variable language_">self</span>.l = <span class="number">0</span>  <span class="comment"># 队首指针</span></span><br><span class="line">        <span class="variable language_">self</span>.r = <span class="number">0</span>  <span class="comment"># 队尾指针</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">is_empty</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断队列是否为空&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.l == <span class="variable language_">self</span>.r</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">offer</span>(<span class="params">self, num</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;入队操作&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.queue[<span class="variable language_">self</span>.r] = num  <span class="comment"># 在队尾位置插入元素</span></span><br><span class="line">        <span class="variable language_">self</span>.r += <span class="number">1</span>  <span class="comment"># 队尾指针后移</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">poll</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;出队操作&quot;&quot;&quot;</span></span><br><span class="line">        num = <span class="variable language_">self</span>.queue[<span class="variable language_">self</span>.l]  <span class="comment"># 取队首元素</span></span><br><span class="line">        <span class="variable language_">self</span>.l += <span class="number">1</span>  <span class="comment"># 队首指针后移</span></span><br><span class="line">        <span class="keyword">return</span> num</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">head</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;返回队首元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.queue[<span class="variable language_">self</span>.l]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">tail</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;返回队尾元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.queue[<span class="variable language_">self</span>.r - <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">size</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;队列当前元素个数，区间[l, r)&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.r - <span class="variable language_">self</span>.l</span><br></pre></td></tr></table></figure>
+
+<h2 id="栈的基本概念"><a href="#栈的基本概念" class="headerlink" title="栈的基本概念"></a>栈的基本概念</h2><p>栈（Stack）是一种后进先出（LIFO, Last In First Out）的线性数据结构。元素只能从栈顶插入和删除。</p>
+<h3 id="栈的基本操作"><a href="#栈的基本操作" class="headerlink" title="栈的基本操作"></a>栈的基本操作</h3><ul>
+<li><strong>push</strong>: 压栈，将元素添加到栈顶</li>
+<li><strong>pop</strong>: 弹栈，从栈顶移除元素</li>
+<li><strong>peek&#x2F;top</strong>: 查看栈顶元素，但不移除</li>
+<li><strong>isEmpty</strong>: 判断栈是否为空</li>
+<li><strong>size</strong>: 获取栈中元素个数</li>
+</ul>
+<h2 id="栈的实现方式"><a href="#栈的实现方式" class="headerlink" title="栈的实现方式"></a>栈的实现方式</h2><h3 id="方式一：基于动态数组实现"><a href="#方式一：基于动态数组实现" class="headerlink" title="方式一：基于动态数组实现"></a>方式一：基于动态数组实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Stack1</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    基于Python内置列表实现的栈</span></span><br><span class="line"><span class="string">    使用动态数组，常数时间不是最优但使用简单</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.stack = []  <span class="comment"># 用列表模拟栈</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">is_empty</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断栈是否为空&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(<span class="variable language_">self</span>.stack) == <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">push</span>(<span class="params">self, num</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;压栈操作&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.stack.append(num)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">pop</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;弹栈操作&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.stack.pop()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">peek</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;返回栈顶元素但不弹出&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.stack[-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">size</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;返回栈的大小&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(<span class="variable language_">self</span>.stack)</span><br></pre></td></tr></table></figure>
+
+<h3 id="方式二：基于固定数组实现-1"><a href="#方式二：基于固定数组实现-1" class="headerlink" title="方式二：基于固定数组实现"></a>方式二：基于固定数组实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Stack2</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    基于固定数组实现的栈</span></span><br><span class="line"><span class="string">    适用于已知同时在栈里元素个数上限的场景</span></span><br><span class="line"><span class="string">    常数时间性能更好，空间可以复用</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        初始化栈</span></span><br><span class="line"><span class="string">        参数: n - 同时在栈里的元素个数上限</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.stack = [<span class="number">0</span>] * n  <span class="comment"># 固定大小数组</span></span><br><span class="line">        <span class="variable language_">self</span>.size_ = <span class="number">0</span>  <span class="comment"># 当前栈元素个数</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">is_empty</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断栈是否为空&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.size_ == <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">push</span>(<span class="params">self, num</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;压栈操作&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.stack[<span class="variable language_">self</span>.size_] = num  <span class="comment"># 在当前size位置插入</span></span><br><span class="line">        <span class="variable language_">self</span>.size_ += <span class="number">1</span>  <span class="comment"># 元素个数+1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">pop</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;弹栈操作&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.size_ -= <span class="number">1</span>  <span class="comment"># 元素个数-1，先减后取值</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.stack[<span class="variable language_">self</span>.size_]  <span class="comment"># 返回弹出的元素</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">peek</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;返回栈顶元素但不弹出&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.stack[<span class="variable language_">self</span>.size_ - <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">size</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;返回栈大小&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.size_</span><br></pre></td></tr></table></figure>
+
+<h2 id="循环队列"><a href="#循环队列" class="headerlink" title="循环队列"></a>循环队列</h2><p>循环队列是队列的一种特殊实现，通过循环使用固定大小的数组来避免空间浪费。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyCircularQueue</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    循环队列实现</span></span><br><span class="line"><span class="string">    测试链接: https://leetcode.cn/problems/design-circular-queue/</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, k</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        初始化循环队列</span></span><br><span class="line"><span class="string">        参数: k - 队列容量上限</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.queue = [<span class="number">0</span>] * k  <span class="comment"># 固定大小数组</span></span><br><span class="line">        <span class="variable language_">self</span>.l = <span class="number">0</span>  <span class="comment"># 队首指针</span></span><br><span class="line">        <span class="variable language_">self</span>.r = <span class="number">0</span>  <span class="comment"># 队尾指针</span></span><br><span class="line">        <span class="variable language_">self</span>.size = <span class="number">0</span>  <span class="comment"># 当前元素个数</span></span><br><span class="line">        <span class="variable language_">self</span>.limit = k  <span class="comment"># 容量上限</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">enQueue</span>(<span class="params">self, value</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        入队操作</span></span><br><span class="line"><span class="string">        返回: 成功返回True，队列满返回False</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isFull():</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span>  <span class="comment"># 队列已满</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="variable language_">self</span>.queue[<span class="variable language_">self</span>.r] = value  <span class="comment"># 队尾插入元素</span></span><br><span class="line">            <span class="comment"># 队尾指针循环移动</span></span><br><span class="line">            <span class="variable language_">self</span>.r = <span class="number">0</span> <span class="keyword">if</span> <span class="variable language_">self</span>.r == <span class="variable language_">self</span>.limit - <span class="number">1</span> <span class="keyword">else</span> <span class="variable language_">self</span>.r + <span class="number">1</span></span><br><span class="line">            <span class="variable language_">self</span>.size += <span class="number">1</span>  <span class="comment"># 元素个数+1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deQueue</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        出队操作</span></span><br><span class="line"><span class="string">        返回: 成功返回True，队列空返回False</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span>  <span class="comment"># 队列为空</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 队首指针循环移动</span></span><br><span class="line">            <span class="variable language_">self</span>.l = <span class="number">0</span> <span class="keyword">if</span> <span class="variable language_">self</span>.l == <span class="variable language_">self</span>.limit - <span class="number">1</span> <span class="keyword">else</span> <span class="variable language_">self</span>.l + <span class="number">1</span></span><br><span class="line">            <span class="variable language_">self</span>.size -= <span class="number">1</span>  <span class="comment"># 元素个数-1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">Front</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;返回队首元素，队列为空返回-1&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">self</span>.queue[<span class="variable language_">self</span>.l]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">Rear</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;返回队尾元素，队列为空返回-1&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 计算队尾指针的实际位置</span></span><br><span class="line">            last = <span class="variable language_">self</span>.limit - <span class="number">1</span> <span class="keyword">if</span> <span class="variable language_">self</span>.r == <span class="number">0</span> <span class="keyword">else</span> <span class="variable language_">self</span>.r - <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">self</span>.queue[last]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isEmpty</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断队列是否为空&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.size == <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isFull</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断队列是否已满&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.size == <span class="variable language_">self</span>.limit</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="014【入门】队列和栈入门题目-栈和队列相互实现"><a href="#014【入门】队列和栈入门题目-栈和队列相互实现" class="headerlink" title="014【入门】队列和栈入门题目-栈和队列相互实现"></a>014【入门】队列和栈入门题目-栈和队列相互实现</h1><h2 id="用栈实现队列"><a href="#用栈实现队列" class="headerlink" title="用栈实现队列"></a>用栈实现队列</h2><p>队列是先进先出（FIFO），而栈是后进先出（LIFO）。要用栈实现队列，需要使用两个栈来模拟队列的行为。</p>
+<h3 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h3><p>使用两个栈：</p>
+<ul>
+<li><strong>输入栈（in_stack）</strong>：负责接收新元素的push操作</li>
+<li><strong>输出栈（out_stack）</strong>：负责输出元素的pop和peek操作</li>
+</ul>
+<h3 id="关键规则"><a href="#关键规则" class="headerlink" title="关键规则"></a>关键规则</h3><ol>
+<li><strong>倒数据条件</strong>：只有当输出栈为空时，才能从输入栈倒数据</li>
+<li><strong>倒数据原则</strong>：如果要倒数据，必须将输入栈的数据全部倒完</li>
+<li><strong>时间复杂度</strong>：虽然单次操作可能是O(n)，但均摊时间复杂度是O(1)</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyQueue</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    用栈实现队列</span></span><br><span class="line"><span class="string">    测试链接: https://leetcode.cn/problems/implement-queue-using-stacks/</span></span><br><span class="line"><span class="string">    时间复杂度: 均摊O(1)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.in_stack = []     <span class="comment"># 输入栈，负责push</span></span><br><span class="line">        <span class="variable language_">self</span>.out_stack = []    <span class="comment"># 输出栈，负责pop/peek</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inToOut</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        倒数据操作：从输入栈将数据倒入输出栈</span></span><br><span class="line"><span class="string">        核心规则：</span></span><br><span class="line"><span class="string">        1) 输出栈空了，才能倒数据</span></span><br><span class="line"><span class="string">        2) 如果倒数据，输入栈必须倒完</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="variable language_">self</span>.out_stack:                     <span class="comment"># 只有输出栈为空才能倒</span></span><br><span class="line">            <span class="keyword">while</span> <span class="variable language_">self</span>.in_stack:                   <span class="comment"># 输入栈必须倒完</span></span><br><span class="line">                <span class="variable language_">self</span>.out_stack.append(<span class="variable language_">self</span>.in_stack.pop())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">push</span>(<span class="params">self, x: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;入队操作：新元素加入输入栈&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.in_stack.append(x)                    <span class="comment"># 新元素压入输入栈</span></span><br><span class="line">        <span class="variable language_">self</span>.inToOut()                             <span class="comment"># 检查是否需要倒数据</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">pop</span>(<span class="params">self</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;出队操作：从输出栈弹出元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.inToOut()                             <span class="comment"># 确保输出栈有数据</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.out_stack.pop()                <span class="comment"># 弹出队首元素</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">peek</span>(<span class="params">self</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;查看队首元素：不移除，只查看&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.inToOut()                             <span class="comment"># 确保输出栈有数据</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.out_stack[-<span class="number">1</span>]                  <span class="comment"># 返回栈顶即队首</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">empty</span>(<span class="params">self</span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断队列是否为空&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">not</span> <span class="variable language_">self</span>.in_stack <span class="keyword">and</span> <span class="keyword">not</span> <span class="variable language_">self</span>.out_stack  <span class="comment"># 两个栈都空才是空队列</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="时间复杂度分析"><a href="#时间复杂度分析" class="headerlink" title="时间复杂度分析"></a>时间复杂度分析</h3><p>虽然<code>inToOut()</code>操作在最坏情况下需要O(n)时间，但通过均摊分析：</p>
+<ul>
+<li>每个元素最多被移动两次（输入栈→输出栈→出队列）</li>
+<li>n次操作的总时间复杂度为O(n)</li>
+<li>均摊时间复杂度为O(1)</li>
+</ul>
+<h2 id="用队列实现栈"><a href="#用队列实现栈" class="headerlink" title="用队列实现栈"></a>用队列实现栈</h2><p>栈是后进先出（LIFO），队列是先进先出（FIFO）。要用队列实现栈，需要在每次push操作后重新排列队列中的元素。</p>
+<h3 id="算法思想-1"><a href="#算法思想-1" class="headerlink" title="算法思想"></a>算法思想</h3><p>使用一个双端队列（deque），在每次push新元素后，将队列中原有的元素依次移动到新元素后面，确保新元素总是在队首位置。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyStack</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    用双端队列实现栈</span></span><br><span class="line"><span class="string">    测试链接: https://leetcode.cn/problems/implement-stack-using-queues/</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.queue = deque()                       <span class="comment"># 用deque实现队列</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">push</span>(<span class="params">self, x: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        压栈操作</span></span><br><span class="line"><span class="string">        时间复杂度: O(n)</span></span><br><span class="line"><span class="string">        核心思想: 新元素入队后，将前面所有元素重新排列到新元素后面</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(<span class="variable language_">self</span>.queue)                        <span class="comment"># 记录当前队列长度</span></span><br><span class="line">        <span class="variable language_">self</span>.queue.append(x)                       <span class="comment"># 新元素加入队尾</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 将前面的n个元素依次移动到队尾</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="variable language_">self</span>.queue.append(<span class="variable language_">self</span>.queue.popleft())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">pop</span>(<span class="params">self</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;弹栈操作：弹出队首元素，即栈顶元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.queue.popleft()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">top</span>(<span class="params">self</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;查看栈顶元素：返回队首元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.queue[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">empty</span>(<span class="params">self</span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断栈是否为空&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">not</span> <span class="variable language_">self</span>.queue</span><br></pre></td></tr></table></figure>
+
+<h3 id="操作示例"><a href="#操作示例" class="headerlink" title="操作示例"></a>操作示例</h3><p>假设依次push元素1, 2, 3：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">初始状态: []</span><br><span class="line"></span><br><span class="line">push(1): [1]</span><br><span class="line"></span><br><span class="line">push(2): [2] -&gt; [2,1] (将1移动到2后面)</span><br><span class="line"></span><br><span class="line">push(3): [3,2,1] -&gt; [3,2,1] (将2,1依次移动到3后面)</span><br></pre></td></tr></table></figure>
+
+<p>最终队列状态为<code>[3,2,1]</code>，队首元素3就是栈顶元素，符合LIFO特性。</p>
+<hr>
+<h1 id="015【入门】栈的入门题目-最小栈"><a href="#015【入门】栈的入门题目-最小栈" class="headerlink" title="015【入门】栈的入门题目-最小栈"></a>015【入门】栈的入门题目-最小栈</h1><h2 id="最小栈问题"><a href="#最小栈问题" class="headerlink" title="最小栈问题"></a>最小栈问题</h2><p>最小栈要求实现一个栈，除了基本的栈操作外，还要能够在O(1)时间内获取栈中的最小元素。</p>
+<h3 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h3><p>核心挑战是如何在保持基本栈操作O(1)时间复杂度的同时，追踪当前栈中的最小值。当栈顶元素（恰好是最小值）被弹出时，需要快速知道剩余元素中的最小值。</p>
+<h3 id="解决方案：辅助栈法"><a href="#解决方案：辅助栈法" class="headerlink" title="解决方案：辅助栈法"></a>解决方案：辅助栈法</h3><p>使用两个栈：</p>
+<ul>
+<li><strong>数据栈（data）</strong>：存储实际数据</li>
+<li><strong>最小值栈（min）</strong>：存储对应位置的最小值</li>
+</ul>
+<h2 id="实现方法一：基于列表"><a href="#实现方法一：基于列表" class="headerlink" title="实现方法一：基于列表"></a>实现方法一：基于列表</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MinStack1</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    最小栈实现方法一：使用Python列表</span></span><br><span class="line"><span class="string">    测试链接: https://leetcode.cn/problems/min-stack/</span></span><br><span class="line"><span class="string">    时间复杂度: 所有操作均为O(1)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.data = []  <span class="comment"># 数据栈，存储实际元素</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">min</span> = []   <span class="comment"># 最小值栈，存储对应位置的最小值</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">push</span>(<span class="params">self, val</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        压栈操作</span></span><br><span class="line"><span class="string">        核心思想: 每次压栈时，同时在最小值栈中记录当前的最小值</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.data.append(val)  <span class="comment"># 将val压入数据栈</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="variable language_">self</span>.<span class="built_in">min</span> <span class="keyword">or</span> val &lt;= <span class="variable language_">self</span>.<span class="built_in">min</span>[-<span class="number">1</span>]:  <span class="comment"># 如果最小栈为空或val是新的最小值</span></span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">min</span>.append(val)  <span class="comment"># 将val压入最小栈</span></span><br><span class="line">        <span class="keyword">else</span>:  <span class="comment"># 否则val不是最小值</span></span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">min</span>.append(<span class="variable language_">self</span>.<span class="built_in">min</span>[-<span class="number">1</span>])  <span class="comment"># 将当前最小值再次压入最小栈</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">pop</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;弹栈操作：同时弹出两个栈的栈顶元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.data.pop()  <span class="comment"># 弹出数据栈栈顶</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">min</span>.pop()   <span class="comment"># 弹出最小栈栈顶</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">top</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;获取栈顶元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.data[-<span class="number">1</span>]  <span class="comment"># 返回数据栈栈顶元素</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getMin</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;获取栈中最小元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.<span class="built_in">min</span>[-<span class="number">1</span>]   <span class="comment"># 返回最小栈栈顶元素</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="工作原理示例"><a href="#工作原理示例" class="headerlink" title="工作原理示例"></a>工作原理示例</h3><p>假设依次压入元素：5, 2, 7, 1, 3</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>数据栈</th>
+<th>最小栈</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>push(5)</td>
+<td>[5]</td>
+<td>[5]</td>
+<td>5是第一个元素，也是最小值</td>
+</tr>
+<tr>
+<td>push(2)</td>
+<td>[5,2]</td>
+<td>[5,2]</td>
+<td>2比5小，成为新的最小值</td>
+</tr>
+<tr>
+<td>push(7)</td>
+<td>[5,2,7]</td>
+<td>[5,2,2]</td>
+<td>7比2大，最小值仍是2</td>
+</tr>
+<tr>
+<td>push(1)</td>
+<td>[5,2,7,1]</td>
+<td>[5,2,2,1]</td>
+<td>1比2小，成为新的最小值</td>
+</tr>
+<tr>
+<td>push(3)</td>
+<td>[5,2,7,1,3]</td>
+<td>[5,2,2,1,1]</td>
+<td>3比1大，最小值仍是1</td>
+</tr>
+</tbody></table>
+<h2 id="实现方法二：基于固定数组"><a href="#实现方法二：基于固定数组" class="headerlink" title="实现方法二：基于固定数组"></a>实现方法二：基于固定数组</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MinStack2</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    最小栈实现方法二：使用固定大小数组</span></span><br><span class="line"><span class="string">    适用于已知最大容量的场景，常数时间性能更好</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 根据leetcode测试数据实验得出的容量上限</span></span><br><span class="line">        <span class="comment"># 如果测试数据增加导致溢出，需要调大此值</span></span><br><span class="line">        <span class="variable language_">self</span>.MAXN = <span class="number">8001</span></span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.data = [<span class="number">0</span>] * <span class="variable language_">self</span>.MAXN  <span class="comment"># 数据数组</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">min</span> = [<span class="number">0</span>] * <span class="variable language_">self</span>.MAXN   <span class="comment"># 最小值数组</span></span><br><span class="line">        <span class="variable language_">self</span>.size = <span class="number">0</span>  <span class="comment"># 当前栈大小</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">push</span>(<span class="params">self, val</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;压栈操作&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.data[<span class="variable language_">self</span>.size] = val  <span class="comment"># 在size位置存储val</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.size == <span class="number">0</span> <span class="keyword">or</span> val &lt;= <span class="variable language_">self</span>.<span class="built_in">min</span>[<span class="variable language_">self</span>.size - <span class="number">1</span>]:  <span class="comment"># 第一个元素或新的最小值</span></span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">min</span>[<span class="variable language_">self</span>.size] = val  <span class="comment"># 存储val作为最小值</span></span><br><span class="line">        <span class="keyword">else</span>:  <span class="comment"># val不是最小值</span></span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">min</span>[<span class="variable language_">self</span>.size] = <span class="variable language_">self</span>.<span class="built_in">min</span>[<span class="variable language_">self</span>.size - <span class="number">1</span>]  <span class="comment"># 复制前一个最小值</span></span><br><span class="line">        </span><br><span class="line">        <span class="variable language_">self</span>.size += <span class="number">1</span>  <span class="comment"># 栈大小加1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">pop</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;弹栈操作：只需将size减1，不需要实际删除数据&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.size -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">top</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;获取栈顶元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.data[<span class="variable language_">self</span>.size - <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getMin</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;获取栈中最小元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.<span class="built_in">min</span>[<span class="variable language_">self</span>.size - <span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><h3 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h3><ul>
+<li><strong>push操作</strong>：O(1) - 只需要常数次比较和赋值</li>
+<li><strong>pop操作</strong>：O(1) - 只需要移动指针或减少计数</li>
+<li><strong>top操作</strong>：O(1) - 直接访问数组元素</li>
+<li><strong>getMin操作</strong>：O(1) - 直接访问最小值栈顶</li>
+</ul>
+<h3 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h3><ul>
+<li><strong>总空间复杂度</strong>：O(n) - 需要两个栈存储数据</li>
+<li><strong>额外空间</strong>：O(n) - 最小值栈的空间开销</li>
+</ul>
+<h3 id="优化思考"><a href="#优化思考" class="headerlink" title="优化思考"></a>优化思考</h3><p>虽然辅助栈法简单易懂，但存在空间冗余。可以考虑以下优化：</p>
+<ol>
+<li><strong>稀疏存储</strong>：最小值栈只在最小值更新时才压入新值</li>
+<li><strong>差值存储</strong>：存储与最小值的差值而非绝对值</li>
+<li><strong>链表实现</strong>：在节点中直接存储当前最小值</li>
+</ol>
+<hr>
+<h1 id="数据结构选择指南"><a href="#数据结构选择指南" class="headerlink" title="数据结构选择指南"></a>数据结构选择指南</h1><h2 id="性能对比"><a href="#性能对比" class="headerlink" title="性能对比"></a>性能对比</h2><table>
+<thead>
+<tr>
+<th>实现方式</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>常数因子</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Python内置容器</td>
+<td>O(1)均摊</td>
+<td>O(n)</td>
+<td>较大</td>
+<td>快速原型，不追求极致性能</td>
+</tr>
+<tr>
+<td>固定数组</td>
+<td>O(1)</td>
+<td>O(n)</td>
+<td>较小</td>
+<td>已知容量上限，追求性能</td>
+</tr>
+<tr>
+<td>双栈&#x2F;双队列</td>
+<td>O(1)均摊</td>
+<td>O(n)</td>
+<td>中等</td>
+<td>功能转换，教学示例</td>
+</tr>
+</tbody></table>
+<h1 id="016【入门】双端队列-双链表和固定数组实现"><a href="#016【入门】双端队列-双链表和固定数组实现" class="headerlink" title="016【入门】双端队列-双链表和固定数组实现"></a>016【入门】双端队列-双链表和固定数组实现</h1><h2 id="双端队列的基本概念"><a href="#双端队列的基本概念" class="headerlink" title="双端队列的基本概念"></a>双端队列的基本概念</h2><p>双端队列（Deque，Double-ended Queue）是一种特殊的线性数据结构，允许在队列的两端进行插入和删除操作。与普通队列只能在一端插入、另一端删除不同，双端队列提供了更大的灵活性。</p>
+<h3 id="双端队列的基本操作"><a href="#双端队列的基本操作" class="headerlink" title="双端队列的基本操作"></a>双端队列的基本操作</h3><ul>
+<li><strong>insertFront</strong>: 在队首插入元素</li>
+<li><strong>insertLast</strong>: 在队尾插入元素  </li>
+<li><strong>deleteFront</strong>: 删除队首元素</li>
+<li><strong>deleteLast</strong>: 删除队尾元素</li>
+<li><strong>getFront</strong>: 获取队首元素</li>
+<li><strong>getRear</strong>: 获取队尾元素</li>
+<li><strong>isEmpty</strong>: 判断队列是否为空</li>
+<li><strong>isFull</strong>: 判断队列是否已满</li>
+</ul>
+<h2 id="循环双端队列的实现"><a href="#循环双端队列的实现" class="headerlink" title="循环双端队列的实现"></a>循环双端队列的实现</h2><p>循环双端队列是双端队列的一种特殊实现，使用固定大小的数组并通过循环索引来管理队列的边界。</p>
+<h3 id="实现方式一：基于Python列表"><a href="#实现方式一：基于Python列表" class="headerlink" title="实现方式一：基于Python列表"></a>实现方式一：基于Python列表</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyCircularDeque1</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    基于Python列表实现的循环双端队列</span></span><br><span class="line"><span class="string">    内部使用动态数组，操作简单但常数时间较慢</span></span><br><span class="line"><span class="string">    测试链接: https://leetcode.cn/problems/design-circular-deque/</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, k</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        初始化循环双端队列</span></span><br><span class="line"><span class="string">        参数: k - 队列容量上限</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.deque = []  <span class="comment"># 用列表模拟双端队列</span></span><br><span class="line">        <span class="variable language_">self</span>.size = <span class="number">0</span>    <span class="comment"># 当前队列大小</span></span><br><span class="line">        <span class="variable language_">self</span>.limit = k   <span class="comment"># 队列容量</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">insertFront</span>(<span class="params">self, value</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        在队首插入元素</span></span><br><span class="line"><span class="string">        时间复杂度: O(n) - 需要移动所有现有元素</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isFull():</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="variable language_">self</span>.deque.insert(<span class="number">0</span>, value)  <span class="comment"># 在索引0位置插入，其他元素后移</span></span><br><span class="line">            <span class="variable language_">self</span>.size += <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">insertLast</span>(<span class="params">self, value</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        在队尾插入元素</span></span><br><span class="line"><span class="string">        时间复杂度: O(1)均摊</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isFull():</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="variable language_">self</span>.deque.append(value)  <span class="comment"># 直接添加到列表末尾</span></span><br><span class="line">            <span class="variable language_">self</span>.size += <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deleteFront</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        删除队首元素</span></span><br><span class="line"><span class="string">        时间复杂度: O(n) - 需要移动所有剩余元素</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="variable language_">self</span>.size -= <span class="number">1</span></span><br><span class="line">            <span class="variable language_">self</span>.deque.pop(<span class="number">0</span>)  <span class="comment"># 删除索引0的元素，其他元素前移</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deleteLast</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        删除队尾元素</span></span><br><span class="line"><span class="string">        时间复杂度: O(1)</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="variable language_">self</span>.size -= <span class="number">1</span></span><br><span class="line">            <span class="variable language_">self</span>.deque.pop()  <span class="comment"># 删除列表末尾元素</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getFront</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;获取队首元素，队列为空返回-1&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">self</span>.deque[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getRear</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;获取队尾元素，队列为空返回-1&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">self</span>.deque[-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isEmpty</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断队列是否为空&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.size == <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isFull</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断队列是否已满&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.size == <span class="variable language_">self</span>.limit</span><br></pre></td></tr></table></figure>
+
+<h3 id="实现方式二：基于固定数组"><a href="#实现方式二：基于固定数组" class="headerlink" title="实现方式二：基于固定数组"></a>实现方式二：基于固定数组</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyCircularDeque2</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    基于固定数组实现的循环双端队列</span></span><br><span class="line"><span class="string">    使用循环索引管理队列边界，常数时间性能更好</span></span><br><span class="line"><span class="string">    适用于已知容量上限的场景</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, k</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        初始化循环双端队列</span></span><br><span class="line"><span class="string">        参数: k - 队列容量上限</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.deque = [<span class="number">0</span>] * k  <span class="comment"># 固定长度数组</span></span><br><span class="line">        <span class="variable language_">self</span>.l = <span class="number">0</span>            <span class="comment"># 队首指针</span></span><br><span class="line">        <span class="variable language_">self</span>.r = <span class="number">0</span>            <span class="comment"># 队尾指针</span></span><br><span class="line">        <span class="variable language_">self</span>.size = <span class="number">0</span>         <span class="comment"># 当前队列大小</span></span><br><span class="line">        <span class="variable language_">self</span>.limit = k        <span class="comment"># 队列容量</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">insertFront</span>(<span class="params">self, value</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        在队首插入元素</span></span><br><span class="line"><span class="string">        时间复杂度: O(1)</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isFull():</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">                <span class="comment"># 空队列情况，队首和队尾指针都指向同一位置</span></span><br><span class="line">                <span class="variable language_">self</span>.l = <span class="variable language_">self</span>.r = <span class="number">0</span></span><br><span class="line">                <span class="variable language_">self</span>.deque[<span class="number">0</span>] = value</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 队首指针向前移动（循环）</span></span><br><span class="line">                <span class="variable language_">self</span>.l = <span class="variable language_">self</span>.l - <span class="number">1</span> <span class="keyword">if</span> <span class="variable language_">self</span>.l != <span class="number">0</span> <span class="keyword">else</span> <span class="variable language_">self</span>.limit - <span class="number">1</span></span><br><span class="line">                <span class="variable language_">self</span>.deque[<span class="variable language_">self</span>.l] = value</span><br><span class="line">            <span class="variable language_">self</span>.size += <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">insertLast</span>(<span class="params">self, value</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        在队尾插入元素</span></span><br><span class="line"><span class="string">        时间复杂度: O(1)</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isFull():</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">                <span class="comment"># 空队列情况</span></span><br><span class="line">                <span class="variable language_">self</span>.l = <span class="variable language_">self</span>.r = <span class="number">0</span></span><br><span class="line">                <span class="variable language_">self</span>.deque[<span class="number">0</span>] = value</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 队尾指针向后移动（循环）</span></span><br><span class="line">                <span class="variable language_">self</span>.r = <span class="number">0</span> <span class="keyword">if</span> <span class="variable language_">self</span>.r == <span class="variable language_">self</span>.limit - <span class="number">1</span> <span class="keyword">else</span> <span class="variable language_">self</span>.r + <span class="number">1</span></span><br><span class="line">                <span class="variable language_">self</span>.deque[<span class="variable language_">self</span>.r] = value</span><br><span class="line">            <span class="variable language_">self</span>.size += <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deleteFront</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        删除队首元素</span></span><br><span class="line"><span class="string">        时间复杂度: O(1)</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>.size == <span class="number">1</span>:</span><br><span class="line">                <span class="comment"># 删除后队列变空，可选择重置指针</span></span><br><span class="line">                <span class="keyword">pass</span>  <span class="comment"># 这里不重置l和r，因为逻辑上没有影响</span></span><br><span class="line">            <span class="comment"># 队首指针向后移动（循环）</span></span><br><span class="line">            <span class="variable language_">self</span>.l = <span class="number">0</span> <span class="keyword">if</span> <span class="variable language_">self</span>.l == <span class="variable language_">self</span>.limit - <span class="number">1</span> <span class="keyword">else</span> <span class="variable language_">self</span>.l + <span class="number">1</span></span><br><span class="line">            <span class="variable language_">self</span>.size -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deleteLast</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        删除队尾元素</span></span><br><span class="line"><span class="string">        时间复杂度: O(1)</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>.size == <span class="number">1</span>:</span><br><span class="line">                <span class="comment"># 删除后队列变空</span></span><br><span class="line">                <span class="keyword">pass</span>  <span class="comment"># 不重置指针</span></span><br><span class="line">            <span class="comment"># 队尾指针向前移动（循环）</span></span><br><span class="line">            <span class="variable language_">self</span>.r = <span class="variable language_">self</span>.limit - <span class="number">1</span> <span class="keyword">if</span> <span class="variable language_">self</span>.r == <span class="number">0</span> <span class="keyword">else</span> <span class="variable language_">self</span>.r - <span class="number">1</span></span><br><span class="line">            <span class="variable language_">self</span>.size -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getFront</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;获取队首元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">self</span>.deque[<span class="variable language_">self</span>.l]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getRear</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;获取队尾元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.isEmpty():</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">self</span>.deque[<span class="variable language_">self</span>.r]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isEmpty</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断队列是否为空&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.size == <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isFull</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断队列是否已满&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.size == <span class="variable language_">self</span>.limit</span><br></pre></td></tr></table></figure>
+
+<h2 id="循环索引的关键理解"><a href="#循环索引的关键理解" class="headerlink" title="循环索引的关键理解"></a>循环索引的关键理解</h2><h3 id="指针移动规律"><a href="#指针移动规律" class="headerlink" title="指针移动规律"></a>指针移动规律</h3><p>在固定数组实现中，关键是理解循环索引的移动：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 向后移动（队尾插入，队首删除）</span></span><br><span class="line">next_index = <span class="number">0</span> <span class="keyword">if</span> current_index == limit - <span class="number">1</span> <span class="keyword">else</span> current_index + <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 向前移动（队首插入，队尾删除）  </span></span><br><span class="line">prev_index = limit - <span class="number">1</span> <span class="keyword">if</span> current_index == <span class="number">0</span> <span class="keyword">else</span> current_index - <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="边界情况处理"><a href="#边界情况处理" class="headerlink" title="边界情况处理"></a>边界情况处理</h3><ol>
+<li><strong>空队列插入</strong>：第一个元素插入时，队首和队尾指针都指向同一位置</li>
+<li><strong>单元素删除</strong>：删除唯一元素后队列变空，但指针位置不需要重置</li>
+<li><strong>满队列检测</strong>：通过size变量而非指针位置来判断队列是否已满</li>
+</ol>
+<h2 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h2><h3 id="时间复杂度对比"><a href="#时间复杂度对比" class="headerlink" title="时间复杂度对比"></a>时间复杂度对比</h3><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>列表实现</th>
+<th>数组实现</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>insertFront</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>列表需要移动所有元素</td>
+</tr>
+<tr>
+<td>insertLast</td>
+<td>O(1)均摊</td>
+<td>O(1)</td>
+<td>列表可能需要扩容</td>
+</tr>
+<tr>
+<td>deleteFront</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>列表需要移动所有元素</td>
+</tr>
+<tr>
+<td>deleteLast</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>两种实现都是常数时间</td>
+</tr>
+<tr>
+<td>getFront&#x2F;getRear</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>直接索引访问</td>
+</tr>
+</tbody></table>
+<h3 id="空间复杂度-1"><a href="#空间复杂度-1" class="headerlink" title="空间复杂度"></a>空间复杂度</h3><ul>
+<li><strong>列表实现</strong>：O(k)，但可能因为动态扩容导致额外开销</li>
+<li><strong>数组实现</strong>：O(k)，固定空间，无额外开销</li>
+</ul>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><h3 id="双端队列的典型应用"><a href="#双端队列的典型应用" class="headerlink" title="双端队列的典型应用"></a>双端队列的典型应用</h3><ol>
+<li><strong>滑动窗口问题</strong>：需要在窗口两端进行操作</li>
+<li><strong>回文检测</strong>：从两端向中间检查字符</li>
+<li><strong>撤销&#x2F;重做功能</strong>：需要在两端添加和删除操作记录</li>
+<li><strong>广度优先搜索变种</strong>：某些图算法需要双向扩展</li>
+</ol>
+<h2 id="与其他数据结构的对比"><a href="#与其他数据结构的对比" class="headerlink" title="与其他数据结构的对比"></a>与其他数据结构的对比</h2><table>
+<thead>
+<tr>
+<th>数据结构</th>
+<th>队首操作</th>
+<th>队尾操作</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>普通队列</td>
+<td>删除O(1)</td>
+<td>插入O(1)</td>
+<td>FIFO场景</td>
+</tr>
+<tr>
+<td>栈</td>
+<td>插入&#x2F;删除O(1)</td>
+<td>无操作</td>
+<td>LIFO场景</td>
+</tr>
+<tr>
+<td>双端队列</td>
+<td>插入&#x2F;删除O(1)</td>
+<td>插入&#x2F;删除O(1)</td>
+<td>需要两端操作</td>
+</tr>
+<tr>
+<td>动态数组</td>
+<td>插入O(n)，删除O(n)</td>
+<td>插入O(1)均摊，删除O(1)</td>
+<td>随机访问</td>
+</tr>
+</tbody></table>
+<p>双端队列提供了比普通队列和栈更大的灵活性，在需要两端操作的算法中具有重要作用。固定数组的循环实现虽然代码复杂度稍高，但提供了最优的时间和空间性能。刷题中优先选择固定数组实现，性能更好，实际工程中如果容量不确定，可以考虑列表实现或者动态扩容的数组；此外，固定数据能使得内存使用更可控。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E8%8A%82%E7%82%B9%E9%81%8D%E5%8E%86/" rel="tag"># 节点遍历</a>
+              <a href="/tags/%E9%98%9F%E5%88%97/" rel="tag"># 队列</a>
+              <a href="/tags/%E6%A0%88/" rel="tag"># 栈</a>
+              <a href="/tags/%E5%88%97%E8%A1%A8/" rel="tag"># 列表</a>
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/08/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%882%EF%BC%89-%20%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3/" rel="prev" title="数据结构与算法自学笔记（2）- 链表相关">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（2）- 链表相关
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/08/03/%E5%90%B4%E6%81%A9%E8%BE%BE%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%AF%BE%E4%BB%B6%E7%95%99%E6%A1%A3/" rel="next" title="吴恩达机器学习课程资料归档">
+      吴恩达机器学习课程资料归档 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#013%E3%80%90%E5%85%A5%E9%97%A8%E3%80%91%E9%98%9F%E5%88%97%E5%92%8C%E6%A0%88-%E9%93%BE%E8%A1%A8%E3%80%81%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">013【入门】队列和栈-链表、数组实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%9F%E5%88%97%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.</span> <span class="nav-text">队列的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%9F%E5%88%97%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">2.1.1.</span> <span class="nav-text">队列的基本操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%9F%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-number">2.2.</span> <span class="nav-text">队列的实现方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97%EF%BC%88deque%EF%BC%89%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.2.1.</span> <span class="nav-text">方式一：基于双端队列（deque）实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%9B%BA%E5%AE%9A%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.2.2.</span> <span class="nav-text">方式二：基于固定数组实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">2.3.</span> <span class="nav-text">栈的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">2.3.1.</span> <span class="nav-text">栈的基本操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-number">2.4.</span> <span class="nav-text">栈的实现方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.4.1.</span> <span class="nav-text">方式一：基于动态数组实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%9B%BA%E5%AE%9A%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">2.4.2.</span> <span class="nav-text">方式二：基于固定数组实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E9%98%9F%E5%88%97"><span class="nav-number">2.5.</span> <span class="nav-text">循环队列</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#014%E3%80%90%E5%85%A5%E9%97%A8%E3%80%91%E9%98%9F%E5%88%97%E5%92%8C%E6%A0%88%E5%85%A5%E9%97%A8%E9%A2%98%E7%9B%AE-%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97%E7%9B%B8%E4%BA%92%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">014【入门】队列和栈入门题目-栈和队列相互实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%A0%88%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97"><span class="nav-number">3.1.</span> <span class="nav-text">用栈实现队列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%80%9D%E6%83%B3"><span class="nav-number">3.1.1.</span> <span class="nav-text">算法思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%A7%84%E5%88%99"><span class="nav-number">3.1.2.</span> <span class="nav-text">关键规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">3.1.3.</span> <span class="nav-text">时间复杂度分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0%E6%A0%88"><span class="nav-number">3.2.</span> <span class="nav-text">用队列实现栈</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%80%9D%E6%83%B3-1"><span class="nav-number">3.2.1.</span> <span class="nav-text">算法思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.2.2.</span> <span class="nav-text">操作示例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#015%E3%80%90%E5%85%A5%E9%97%A8%E3%80%91%E6%A0%88%E7%9A%84%E5%85%A5%E9%97%A8%E9%A2%98%E7%9B%AE-%E6%9C%80%E5%B0%8F%E6%A0%88"><span class="nav-number">4.</span> <span class="nav-text">015【入门】栈的入门题目-最小栈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%B0%8F%E6%A0%88%E9%97%AE%E9%A2%98"><span class="nav-number">4.1.</span> <span class="nav-text">最小栈问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="nav-number">4.1.1.</span> <span class="nav-text">问题分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E8%BE%85%E5%8A%A9%E6%A0%88%E6%B3%95"><span class="nav-number">4.1.2.</span> <span class="nav-text">解决方案：辅助栈法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%88%97%E8%A1%A8"><span class="nav-number">4.2.</span> <span class="nav-text">实现方法一：基于列表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E7%A4%BA%E4%BE%8B"><span class="nav-number">4.2.1.</span> <span class="nav-text">工作原理示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%9B%BA%E5%AE%9A%E6%95%B0%E7%BB%84"><span class="nav-number">4.3.</span> <span class="nav-text">实现方法二：基于固定数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">4.4.</span> <span class="nav-text">复杂度分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">4.4.1.</span> <span class="nav-text">时间复杂度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">4.4.2.</span> <span class="nav-text">空间复杂度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%80%9D%E8%80%83"><span class="nav-number">4.4.3.</span> <span class="nav-text">优化思考</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E9%80%89%E6%8B%A9%E6%8C%87%E5%8D%97"><span class="nav-number">5.</span> <span class="nav-text">数据结构选择指南</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="nav-number">5.1.</span> <span class="nav-text">性能对比</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#016%E3%80%90%E5%85%A5%E9%97%A8%E3%80%91%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97-%E5%8F%8C%E9%93%BE%E8%A1%A8%E5%92%8C%E5%9B%BA%E5%AE%9A%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">6.</span> <span class="nav-text">016【入门】双端队列-双链表和固定数组实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">6.1.</span> <span class="nav-text">双端队列的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">6.1.1.</span> <span class="nav-text">双端队列的基本操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">6.2.</span> <span class="nav-text">循环双端队列的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E5%9F%BA%E4%BA%8EPython%E5%88%97%E8%A1%A8"><span class="nav-number">6.2.1.</span> <span class="nav-text">实现方式一：基于Python列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%9B%BA%E5%AE%9A%E6%95%B0%E7%BB%84"><span class="nav-number">6.2.2.</span> <span class="nav-text">实现方式二：基于固定数组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E7%B4%A2%E5%BC%95%E7%9A%84%E5%85%B3%E9%94%AE%E7%90%86%E8%A7%A3"><span class="nav-number">6.3.</span> <span class="nav-text">循环索引的关键理解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E7%A7%BB%E5%8A%A8%E8%A7%84%E5%BE%8B"><span class="nav-number">6.3.1.</span> <span class="nav-text">指针移动规律</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%B9%E7%95%8C%E6%83%85%E5%86%B5%E5%A4%84%E7%90%86"><span class="nav-number">6.3.2.</span> <span class="nav-text">边界情况处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90"><span class="nav-number">6.4.</span> <span class="nav-text">性能分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%AF%B9%E6%AF%94"><span class="nav-number">6.4.1.</span> <span class="nav-text">时间复杂度对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6-1"><span class="nav-number">6.4.2.</span> <span class="nav-text">空间复杂度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">6.5.</span> <span class="nav-text">应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97%E7%9A%84%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8"><span class="nav-number">6.5.1.</span> <span class="nav-text">双端队列的典型应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E5%85%B6%E4%BB%96%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">6.6.</span> <span class="nav-text">与其他数据结构的对比</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

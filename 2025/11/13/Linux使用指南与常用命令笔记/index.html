@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言本笔记总结了Linux操作系统的基础知识和实用技巧，涵盖远程连接工具、常用命令、系统设置、定时任务、用户管理、文件权限等内容。 前置知识在学习本笔记内容之前，建议具备以下基础：  基本的计算机操作知识 了解操作系统的基本概念 熟悉命令行界面的使用方式 建议购买云服务器进行实践操作   Linux使用总结1. Linux介绍历史背景Linux，全称GNU&#x2F;Linux，是一套免费使用和自">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux使用指南与常用命令笔记">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/11/13/Linux%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言本笔记总结了Linux操作系统的基础知识和实用技巧，涵盖远程连接工具、常用命令、系统设置、定时任务、用户管理、文件权限等内容。 前置知识在学习本笔记内容之前，建议具备以下基础：  基本的计算机操作知识 了解操作系统的基本概念 熟悉命令行界面的使用方式 建议购买云服务器进行实践操作   Linux使用总结1. Linux介绍历史背景Linux，全称GNU&#x2F;Linux，是一套免费使用和自">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-13T00:30:00.000Z">
+<meta property="article:modified_time" content="2025-11-15T07:14:56.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/11/13/Linux%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Linux使用指南与常用命令笔记 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/11/13/Linux%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux使用指南与常用命令笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-11-13 08:30:00" itemprop="dateCreated datePublished" datetime="2025-11-13T08:30:00+08:00">2025-11-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-11-15 15:14:56" itemprop="dateModified" datetime="2025-11-15T15:14:56+08:00">2025-11-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Other/" itemprop="url" rel="index"><span itemprop="name">Other</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>本笔记总结了Linux操作系统的基础知识和实用技巧，涵盖远程连接工具、常用命令、系统设置、定时任务、用户管理、文件权限等内容。</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>在学习本笔记内容之前，建议具备以下基础：</p>
+<ul>
+<li>基本的计算机操作知识</li>
+<li>了解操作系统的基本概念</li>
+<li>熟悉命令行界面的使用方式</li>
+<li>建议购买云服务器进行实践操作</li>
+</ul>
+<hr>
+<h1 id="Linux使用总结"><a href="#Linux使用总结" class="headerlink" title="Linux使用总结"></a>Linux使用总结</h1><h2 id="1-Linux介绍"><a href="#1-Linux介绍" class="headerlink" title="1. Linux介绍"></a>1. Linux介绍</h2><h3 id="历史背景"><a href="#历史背景" class="headerlink" title="历史背景"></a>历史背景</h3><p>Linux，全称GNU&#x2F;Linux，是一套免费使用和自由传播的类UNIX操作系统。其内核由<strong>林纳斯·本纳第克特·托瓦兹</strong>（Linus Torvalds）于1991年第一次释出。它主要受到Minix和Unix思想的启发，是一个基于POSIX和Unix的多用户、多任务、支持多线程和多CPU的操作系统。</p>
+<p><strong>核心特点：</strong></p>
+<ul>
+<li>Linux内核kernel最初由芬兰人李纳斯·托瓦兹在赫尔辛基大学上学时出于个人爱好编写</li>
+<li>1991年10月5日第一次正式向外公布</li>
+<li>Linux借鉴了Unix的思想，但没有一行Unix的代码</li>
+<li>Linux英文解释：<strong>Linux is not Unix</strong>，业界称为”类Unix”系统</li>
+</ul>
+<h3 id="Linux构成"><a href="#Linux构成" class="headerlink" title="Linux构成"></a>Linux构成</h3><p>Linux系统由以下部分组成：</p>
+<ul>
+<li><strong>Linux Kernel</strong>（内核）：系统的核心部分</li>
+<li><strong>软件包</strong>：各种应用程序和工具</li>
+</ul>
+<h3 id="主流发行版本"><a href="#主流发行版本" class="headerlink" title="主流发行版本"></a>主流发行版本</h3><p>目前市面上比较知名的Linux发行版有：</p>
+<ul>
+<li><strong>RedHat</strong>：企业级商业发行版</li>
+<li><strong>CentOS</strong>：社区企业操作系统（常用于Web服务器）</li>
+<li><strong>Ubuntu</strong>：用户友好的桌面和服务器版本</li>
+<li><strong>Fedora</strong>：RedHat的社区版本</li>
+<li><strong>Debian</strong>：稳定性强的发行版</li>
+<li><strong>Aliyun Linux</strong>：阿里云定制版本</li>
+<li><strong>SUSE Linux</strong>：企业级发行版</li>
+<li><strong>Open SUSE</strong>：SUSE的社区版本</li>
+<li><strong>CoreOS</strong>：容器化操作系统</li>
+<li><strong>FreeBSD</strong>：类Unix系统</li>
+</ul>
+<p><strong>应用场景选择：</strong></p>
+<ul>
+<li>Web应用（Java、PHP等）→ 选择<strong>CentOS</strong></li>
+<li>微软技术栈（ASP、.NET、SQL Server）→ 选择<strong>Windows Server</strong></li>
+</ul>
+<hr>
+<h2 id="2-Linux常用远程连接工具"><a href="#2-Linux常用远程连接工具" class="headerlink" title="2. Linux常用远程连接工具"></a>2. Linux常用远程连接工具</h2><blockquote>
+<p><strong>建议</strong>：购买云服务器（阿里云、华为云等）进行实践，多练习才能熟练掌握Linux。</p>
+</blockquote>
+<h3 id="推荐工具组合"><a href="#推荐工具组合" class="headerlink" title="推荐工具组合"></a>推荐工具组合</h3><p><strong>最佳组合：Xshell + WinSCP</strong></p>
+<h3 id="主流远程连接工具"><a href="#主流远程连接工具" class="headerlink" title="主流远程连接工具"></a>主流远程连接工具</h3><h4 id="1-SecureCRT"><a href="#1-SecureCRT" class="headerlink" title="1. SecureCRT"></a>1. SecureCRT</h4><ul>
+<li><strong>功能</strong>：可直接连接并上传文件</li>
+<li><strong>下载地址</strong>：<a target="_blank" rel="noopener" href="https://www.vandyke.com/">https://www.vandyke.com</a></li>
+<li><strong>特点</strong>：集成度高，功能全面</li>
+</ul>
+<h4 id="2-XShell"><a href="#2-XShell" class="headerlink" title="2. XShell"></a>2. XShell</h4><ul>
+<li><strong>功能</strong>：终端连接工具</li>
+<li><strong>下载地址</strong>：<a target="_blank" rel="noopener" href="https://www.netsarang.com/zh/xshell/">https://www.netsarang.com/zh/xshell/</a></li>
+<li><strong>特点</strong>：界面友好，功能强大</li>
+</ul>
+<h4 id="3-Putty"><a href="#3-Putty" class="headerlink" title="3. Putty"></a>3. Putty</h4><ul>
+<li><strong>功能</strong>：轻量级SSH客户端</li>
+<li><strong>下载地址</strong>：<a target="_blank" rel="noopener" href="https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html">https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html</a></li>
+<li><strong>特点</strong>：小巧免费，适合快速连接</li>
+</ul>
+<h4 id="4-XFTP"><a href="#4-XFTP" class="headerlink" title="4. XFTP"></a>4. XFTP</h4><ul>
+<li><strong>功能</strong>：文件传输工具</li>
+<li><strong>下载地址</strong>：<a target="_blank" rel="noopener" href="https://www.netsarang.com/zh/xftp/">https://www.netsarang.com/zh/xftp/</a></li>
+<li><strong>特点</strong>：上传速度快，界面直观</li>
+</ul>
+<h4 id="5-WinSCP"><a href="#5-WinSCP" class="headerlink" title="5. WinSCP"></a>5. WinSCP</h4><ul>
+<li><strong>功能</strong>：SFTP和FTP客户端</li>
+<li><strong>下载地址</strong>：<a target="_blank" rel="noopener" href="https://winscp.net/eng/download.php">https://winscp.net/eng/download.php</a></li>
+<li><strong>特点</strong>：支持多种协议，操作便捷</li>
+</ul>
+<hr>
+<h2 id="3-Linux常用命令总结"><a href="#3-Linux常用命令总结" class="headerlink" title="3. Linux常用命令总结"></a>3. Linux常用命令总结</h2><h3 id="3-1-Linux特色目录符号"><a href="#3-1-Linux特色目录符号" class="headerlink" title="3.1 Linux特色目录符号"></a>3.1 Linux特色目录符号</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.      <span class="comment"># 当前目录</span></span><br><span class="line">..     <span class="comment"># 上一级目录</span></span><br><span class="line">-      <span class="comment"># 上一个工作目录（配合cd使用）</span></span><br><span class="line">~      <span class="comment"># 用户根目录（/root）</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>使用示例：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> -   <span class="comment"># 返回上一个工作目录</span></span><br><span class="line"><span class="built_in">cd</span> ~   <span class="comment"># 返回用户根目录</span></span><br><span class="line"><span class="built_in">cd</span> ..  <span class="comment"># 返回上一级目录</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-2-磁盘管理"><a href="#3-2-磁盘管理" class="headerlink" title="3.2 磁盘管理"></a>3.2 磁盘管理</h3><h4 id="目录切换与查看"><a href="#目录切换与查看" class="headerlink" title="目录切换与查看"></a>目录切换与查看</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入目录</span></span><br><span class="line"><span class="built_in">cd</span> 目录名              <span class="comment"># 进入某个目录</span></span><br><span class="line"><span class="built_in">cd</span> /info/a           <span class="comment"># 进入多级目录</span></span><br><span class="line"><span class="built_in">cd</span> ..               <span class="comment"># 返回上一级目录</span></span><br><span class="line"><span class="built_in">cd</span> /                <span class="comment"># 返回根目录</span></span><br><span class="line"><span class="built_in">cd</span> -                <span class="comment"># 返回上一个工作目录</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示当前目录</span></span><br><span class="line"><span class="built_in">pwd</span>                 <span class="comment"># 显示当前完整路径</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分区</span></span><br><span class="line">fdisk -l            <span class="comment"># 查看新的分区</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="列出文件和目录"><a href="#列出文件和目录" class="headerlink" title="列出文件和目录"></a>列出文件和目录</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基本列出命令</span></span><br><span class="line">ll                  <span class="comment"># 纵向列出（含详细信息）</span></span><br><span class="line">ll -a              <span class="comment"># 额外展示隐藏文件</span></span><br><span class="line">ll -h              <span class="comment"># 人性化显示大小（KB、MB、GB）</span></span><br><span class="line"><span class="built_in">ls</span>                  <span class="comment"># 横向列出</span></span><br><span class="line"><span class="built_in">ls</span> -a              <span class="comment"># 额外展示隐藏文件</span></span><br><span class="line"><span class="built_in">dir</span>                 <span class="comment"># 列出当前目录内容</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ll vs ls 区别</span></span><br><span class="line"><span class="comment"># ll：纵向展示，显示权限、所有者、组、大小等详细信息</span></span><br><span class="line"><span class="comment"># ls：横向简洁展示</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="磁盘空间查看"><a href="#磁盘空间查看" class="headerlink" title="磁盘空间查看"></a>磁盘空间查看</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># df 命令 - 查看文件系统级别的磁盘使用</span></span><br><span class="line"><span class="built_in">df</span>                  <span class="comment"># 查看磁盘空间使用情况</span></span><br><span class="line"><span class="built_in">df</span> -h              <span class="comment"># 人性化显示（GB、MB格式）</span></span><br><span class="line"><span class="built_in">df</span> -T              <span class="comment"># 显示文件系统类型</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>df 输出字段说明：</strong></p>
+<ul>
+<li><strong>Filesystem</strong>：文件系统</li>
+<li><strong>Size</strong>：总容量</li>
+<li><strong>Used</strong>：已使用</li>
+<li><strong>Avail</strong>：可用空间</li>
+<li><strong>Use%</strong>：使用百分比</li>
+<li><strong>Mounted on</strong>：挂载点</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># du 命令 - 查看文件/目录级别的磁盘使用</span></span><br><span class="line"><span class="built_in">du</span>                  <span class="comment"># 查看文件和目录大小</span></span><br><span class="line"><span class="built_in">du</span> -h              <span class="comment"># 人性化显示大小</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>使用场景：</strong></p>
+<ul>
+<li><code>df</code>：查看磁盘分区整体使用情况</li>
+<li><code>du</code>：查看具体文件和文件夹占用空间</li>
+</ul>
+<hr>
+<h3 id="3-3-文件管理"><a href="#3-3-文件管理" class="headerlink" title="3.3 文件管理"></a>3.3 文件管理</h3><h4 id="创建目录"><a href="#创建目录" class="headerlink" title="创建目录"></a>创建目录</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基本创建</span></span><br><span class="line"><span class="built_in">mkdir</span> 目录名                          <span class="comment"># 创建单个目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p file1/file2                <span class="comment"># 递归创建多级目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -v file4                      <span class="comment"># 显示创建信息</span></span><br><span class="line"><span class="built_in">mkdir</span> -vp &#123;hello/,maven/&#125;          <span class="comment"># 一次创建多个目录结构</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 参数说明</span></span><br><span class="line"><span class="comment"># -p, --parents  : 自动创建父目录</span></span><br><span class="line"><span class="comment"># -v, --verbose  : 显示详细信息</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建文件</span></span><br><span class="line"><span class="built_in">touch</span> 文件名                         <span class="comment"># 创建空文件或更新修改时间</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除操作</span></span><br><span class="line"><span class="built_in">rm</span> -f 文件                          <span class="comment"># 强制删除文件</span></span><br><span class="line"><span class="built_in">rm</span> -rf 目录                         <span class="comment"># 递归删除目录及内容</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 移动/重命名</span></span><br><span class="line"><span class="built_in">mv</span> 源文件 目标文件                   <span class="comment"># 移动或重命名</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># mv 常用参数</span></span><br><span class="line"><span class="comment"># -b : 覆盖前先备份</span></span><br><span class="line"><span class="comment"># -f : 强制覆盖</span></span><br><span class="line"><span class="comment"># -i : 覆盖前询问</span></span><br><span class="line"><span class="comment"># -u : 仅当源文件较新时才更新</span></span><br><span class="line"><span class="comment"># -t : 指定目标目录</span></span><br><span class="line"><span class="comment"># -v : 显示过程</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="查看文件内容"><a href="#查看文件内容" class="headerlink" title="查看文件内容"></a>查看文件内容</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> 文件名                          <span class="comment"># 一次性输出全部内容</span></span><br><span class="line">more 文件名                         <span class="comment"># 逐屏输出（空格翻页）</span></span><br><span class="line">less 文件名                         <span class="comment"># 逐屏输出（PgUp/PgDn翻页，q退出）</span></span><br><span class="line"><span class="built_in">head</span> 文件名                         <span class="comment"># 显示前10行</span></span><br><span class="line"><span class="built_in">tail</span> 文件名                         <span class="comment"># 显示后10行</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="复制与查找"><a href="#复制与查找" class="headerlink" title="复制与查找"></a>复制与查找</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 复制</span></span><br><span class="line"><span class="built_in">cp</span> 源文件 目标文件                   <span class="comment"># 复制文件</span></span><br><span class="line"><span class="built_in">cp</span> -rf 源目录 目标目录               <span class="comment"># 递归复制目录</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找文件</span></span><br><span class="line">find ./ -name 文件名                <span class="comment"># 按名称查找</span></span><br><span class="line">find ./ -mtime +5                  <span class="comment"># 查找5天前修改的文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找命令</span></span><br><span class="line"><span class="built_in">which</span> 命令                          <span class="comment"># 查找命令位置（PATH中）</span></span><br><span class="line">whereis 程序名                      <span class="comment"># 查找程序相关文件</span></span><br><span class="line"><span class="comment"># whereis 参数：</span></span><br><span class="line"><span class="comment"># -b : 只搜索二进制文件</span></span><br><span class="line"><span class="comment"># -m : 只搜索man说明文件</span></span><br><span class="line"><span class="comment"># -s : 只搜索源代码文件</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-4-系统设置"><a href="#3-4-系统设置" class="headerlink" title="3.4 系统设置"></a>3.4 系统设置</h3><h4 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看进程</span></span><br><span class="line">ps -aux                            <span class="comment"># 查看所有进程（BSD风格）</span></span><br><span class="line">ps -ef                             <span class="comment"># 查看所有进程（标准风格）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 终止进程</span></span><br><span class="line"><span class="built_in">kill</span> PID                           <span class="comment"># 正常终止进程</span></span><br><span class="line"><span class="built_in">kill</span> -9 PID                        <span class="comment"># 强制终止进程</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="系统信息"><a href="#系统信息" class="headerlink" title="系统信息"></a>系统信息</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 日期时间</span></span><br><span class="line"><span class="built_in">date</span>                               <span class="comment"># 显示/设置系统日期时间</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 语言环境</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$LANG</span>                         <span class="comment"># 显示当前语言环境</span></span><br><span class="line">locale                             <span class="comment"># 查看语言包</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 系统信息</span></span><br><span class="line"><span class="built_in">uname</span>                              <span class="comment"># 查看系统信息</span></span><br><span class="line"><span class="built_in">cat</span> /etc/centos-release           <span class="comment"># 查看CentOS版本</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 用户信息</span></span><br><span class="line"><span class="built_in">who</span>                                <span class="comment"># 显示已登录用户</span></span><br><span class="line"><span class="built_in">whoami</span>                             <span class="comment"># 显示当前用户</span></span><br><span class="line">su 用户名                          <span class="comment"># 切换用户</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="系统操作"><a href="#系统操作" class="headerlink" title="系统操作"></a>系统操作</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">shutdown -h now                    <span class="comment"># 立即关机</span></span><br><span class="line">reboot                            <span class="comment"># 重启系统</span></span><br><span class="line">clear                             <span class="comment"># 清屏（内容上移）</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>实用技巧：</strong></p>
+<ul>
+<li>按 <strong>Tab</strong> 键自动补全命令或文件名</li>
+</ul>
+<h4 id="系统负载监控"><a href="#系统负载监控" class="headerlink" title="系统负载监控"></a>系统负载监控</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># top 命令 - 实时监控系统</span></span><br><span class="line">top                               <span class="comment"># 动态显示系统资源使用情况</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>top 可查看信息：</strong></p>
+<ul>
+<li>CPU使用率</li>
+<li>内存使用情况</li>
+<li>系统运行时间</li>
+<li>进程线程信息</li>
+<li>交换分区使用情况</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># uptime 命令 - 系统负载概览</span></span><br><span class="line"><span class="built_in">uptime</span>                            <span class="comment"># 显示系统运行时长和负载</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>系统负载解读：</strong></p>
+<ul>
+<li>系统平均负载：特定时间间隔内运行队列中的平均进程数</li>
+<li>每个CPU核心活动进程数 ≤ 3：系统运行良好</li>
+<li>四核CPU：负载 &lt; 12 为正常</li>
+<li>负载达到20：系统负载严重</li>
+</ul>
+<p><strong>进程进入运行队列的条件：</strong></p>
+<ul>
+<li>没有在等待I&#x2F;O操作</li>
+<li>没有主动进入等待状态</li>
+<li>没有被停止</li>
+</ul>
+<h4 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">free                              <span class="comment"># 显示内存使用（KB）</span></span><br><span class="line">free -m                          <span class="comment"># 显示内存使用（MB）</span></span><br><span class="line">free -h                          <span class="comment"># 显示内存使用（GB，人性化）</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-5-Linux定时任务"><a href="#3-5-Linux定时任务" class="headerlink" title="3.5 Linux定时任务"></a>3.5 Linux定时任务</h3><blockquote>
+<p><strong>详细教程</strong>：可参考博文《Linux crontab 命令详细使用》</p>
+</blockquote>
+<h4 id="Crontab-基本命令"><a href="#Crontab-基本命令" class="headerlink" title="Crontab 基本命令"></a>Crontab 基本命令</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">crontab -e                        <span class="comment"># 创建或编辑定时任务</span></span><br><span class="line">crontab -l                        <span class="comment"># 查看当前定时任务</span></span><br><span class="line">crontab -r                        <span class="comment"># 删除所有定时任务（慎用）</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Crontab-语法格式"><a href="#Crontab-语法格式" class="headerlink" title="Crontab 语法格式"></a>Crontab 语法格式</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">* * * * * command</span><br><span class="line">│ │ │ │ │</span><br><span class="line">│ │ │ │ └─── 星期 (0-7, 0和7都表示周日)</span><br><span class="line">│ │ │ └───── 月份 (1-12)</span><br><span class="line">│ │ └─────── 日期 (1-31)</span><br><span class="line">│ └───────── 小时 (0-23)</span><br><span class="line">└─────────── 分钟 (0-59)</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每分钟执行一次</span></span><br><span class="line">*/1 * * * * <span class="built_in">echo</span> <span class="string">&quot;hello world&quot;</span> &gt;&gt; /opt/crontab.log</span><br><span class="line"></span><br><span class="line"><span class="comment"># 每天凌晨2点执行</span></span><br><span class="line">0 2 * * * /path/to/script.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 每周一上午9点执行</span></span><br><span class="line">0 9 * * 1 /path/to/script.sh</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看执行日志"><a href="#查看执行日志" class="headerlink" title="查看执行日志"></a>查看执行日志</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">tail</span> -f /var/log/cron             <span class="comment"># 实时查看定时任务执行情况</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="重定向符号说明"><a href="#重定向符号说明" class="headerlink" title="重定向符号说明"></a>重定向符号说明</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;  a.log                          <span class="comment"># 重定向覆盖输出</span></span><br><span class="line">&gt;&gt; a.log                          <span class="comment"># 重定向追加输出</span></span><br><span class="line">|                                 <span class="comment"># 管道符，左边输出作为右边输入</span></span><br><span class="line">&gt; a.log                           <span class="comment"># 清空日志文件</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>常用组合：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep tomcat              <span class="comment"># 查找tomcat进程</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>扩展阅读</strong>：重定向详解参考博文 <a target="_blank" rel="noopener" href="https://blog.csdn.net/smilehappiness/article/details/105181739">https://blog.csdn.net/smilehappiness/article/details/105181739</a></p>
+</blockquote>
+<hr>
+<h3 id="3-6-用户管理"><a href="#3-6-用户管理" class="headerlink" title="3.6 用户管理"></a>3.6 用户管理</h3><blockquote>
+<p><strong>详细教程</strong>：<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-user-manage.html">https://www.runoob.com/linux/linux-user-manage.html</a></p>
+</blockquote>
+<h4 id="用户操作"><a href="#用户操作" class="headerlink" title="用户操作"></a>用户操作</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加用户</span></span><br><span class="line">useradd 用户名                     <span class="comment"># 创建新用户</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除用户</span></span><br><span class="line">userdel -r zhangsan              <span class="comment"># 删除用户及主目录</span></span><br><span class="line"><span class="comment"># -r 参数：同时删除用户主目录</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改密码</span></span><br><span class="line">passwd                           <span class="comment"># 修改当前用户密码</span></span><br><span class="line">passwd zhangsan                  <span class="comment"># 修改指定用户密码（需root权限）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看用户信息</span></span><br><span class="line"><span class="built_in">id</span> 用户名                         <span class="comment"># 查看用户ID信息</span></span><br><span class="line"><span class="comment"># 输出示例: uid=1001(用户名) gid=1002(组名) groups=1002(组名)</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="用户组操作"><a href="#用户组操作" class="headerlink" title="用户组操作"></a>用户组操作</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看用户和组</span></span><br><span class="line"><span class="built_in">cat</span> /etc/passwd                   <span class="comment"># 查看所有用户</span></span><br><span class="line"><span class="built_in">cat</span> /etc/group                    <span class="comment"># 查看所有用户组</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建和删除组</span></span><br><span class="line">groupadd 组名                     <span class="comment"># 创建用户组</span></span><br><span class="line">groupdel 组名                     <span class="comment"># 删除用户组</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看用户所属组</span></span><br><span class="line"><span class="built_in">groups</span>                           <span class="comment"># 查看当前用户所在组</span></span><br><span class="line"><span class="built_in">groups</span> 用户名                     <span class="comment"># 查看指定用户所在组</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 用户加入组</span></span><br><span class="line">usermod -g 组名 用户名            <span class="comment"># 修改用户主组</span></span><br><span class="line">gpasswd -a 用户名 组名            <span class="comment"># 将用户添加到附加组</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 从组中移除用户</span></span><br><span class="line">gpasswd -d 用户名 组名            <span class="comment"># 将用户从组中删除</span></span><br><span class="line"><span class="comment"># 注意：组名不能是用户的主组</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-7-文件权限"><a href="#3-7-文件权限" class="headerlink" title="3.7 文件权限"></a>3.7 文件权限</h3><h4 id="文件类型识别"><a href="#文件类型识别" class="headerlink" title="文件类型识别"></a>文件类型识别</h4><p>使用 <code>ll</code> 命令查看文件权限信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ll                               <span class="comment"># 显示详细文件信息</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Linux 7种文件类型：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-rw-rw-rw   -  普通文件</span><br><span class="line">drw-rw-rw   d  目录（Directory）</span><br><span class="line">srw-rw-rw   s  套接字文件（Socket）</span><br><span class="line">brw-rw-rw   b  块设备（Block device）</span><br><span class="line">crw-rw-rw   c  字符设备（Character device）</span><br><span class="line">lrw-rw-rw   l  符号链接（Link）</span><br><span class="line">prw-rw-rw   p  管道文件（Pipe）</span><br></pre></td></tr></table></figure>
+
+<h4 id="权限详解"><a href="#权限详解" class="headerlink" title="权限详解"></a>权限详解</h4><p><strong>权限表示：</strong></p>
+<ul>
+<li><strong>r</strong>（read）：读权限，值&#x3D;4</li>
+<li><strong>w</strong>（write）：写权限，值&#x3D;2</li>
+<li><strong>x</strong>（execute）：执行权限，值&#x3D;1</li>
+<li><strong>rwx</strong>：所有权限，值&#x3D;7（4+2+1）</li>
+</ul>
+<p><strong>常见权限值：</strong></p>
+<ul>
+<li><strong>644</strong>：rw-r–r–（文件常用）</li>
+<li><strong>755</strong>：rwxr-xr-x（目录常用）</li>
+<li><strong>777</strong>：rwxrwxrwx（完全开放，不推荐）</li>
+</ul>
+<h4 id="权限结构解析"><a href="#权限结构解析" class="headerlink" title="权限结构解析"></a>权限结构解析</h4><p>以 <code>drwxr-xr-x</code> 为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">d rwx r-x r-x</span><br><span class="line">│  │   │   │</span><br><span class="line">│  │   │   └─ 其他用户权限（Others）</span><br><span class="line">│  │   └───── 用户组权限（Group）</span><br><span class="line">│  └───────── 文件所有者权限（Owner）</span><br><span class="line">└──────────── 文件类型</span><br></pre></td></tr></table></figure>
+
+<p><strong>位置说明：</strong></p>
+<ul>
+<li><strong>第1位</strong>：文件类型</li>
+<li><strong>第2-4位</strong>：属主权限（创建者）</li>
+<li><strong>第5-7位</strong>：属组权限（所属组）</li>
+<li><strong>第8-10位</strong>：其他用户权限</li>
+</ul>
+<h4 id="文件中rwx的含义"><a href="#文件中rwx的含义" class="headerlink" title="文件中rwx的含义"></a>文件中rwx的含义</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">r : 可查看文件内容（如 <span class="built_in">cat</span> 命令）</span><br><span class="line">w : 可编辑或删除文件</span><br><span class="line">x : 可作为命令执行</span><br></pre></td></tr></table></figure>
+
+<h4 id="目录中rwx的含义"><a href="#目录中rwx的含义" class="headerlink" title="目录中rwx的含义"></a>目录中rwx的含义</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">r : 可列出目录内容（<span class="built_in">ls</span> 命令）</span><br><span class="line">w : 可在目录中创建文件</span><br><span class="line">x : 可切换进入目录（<span class="built_in">cd</span> 命令）+ 查看详细信息（<span class="built_in">ls</span> -l）</span><br></pre></td></tr></table></figure>
+
+<h4 id="权限修改命令"><a href="#权限修改命令" class="headerlink" title="权限修改命令"></a>权限修改命令</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改权限</span></span><br><span class="line"><span class="built_in">chmod</span> 640 aa.txt                 <span class="comment"># 设置文件权限为640</span></span><br><span class="line"><span class="built_in">chmod</span> -R 755 /usr/local         <span class="comment"># 递归设置目录权限</span></span><br><span class="line"><span class="comment"># -R : 递归应用到子文件和子目录</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改所有者</span></span><br><span class="line"><span class="built_in">chown</span> centos aa.txt             <span class="comment"># 修改文件所有者</span></span><br><span class="line"><span class="built_in">chown</span> -R centos /usr/local      <span class="comment"># 递归修改所有者</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改所属组</span></span><br><span class="line"><span class="built_in">chgrp</span> centos aa.txt             <span class="comment"># 修改文件所属组</span></span><br><span class="line"><span class="built_in">chgrp</span> -R centos /usr/local      <span class="comment"># 递归修改所属组</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 同时修改所有者和所属组</span></span><br><span class="line"><span class="built_in">chown</span> centos:centos aa.txt      <span class="comment"># 一次性修改</span></span><br><span class="line"><span class="built_in">chown</span> -R centos:centos /usr/local  <span class="comment"># 递归修改</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前用户所在组</span></span><br><span class="line"><span class="built_in">groups</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-8-文档处理"><a href="#3-8-文档处理" class="headerlink" title="3.8 文档处理"></a>3.8 文档处理</h3><h4 id="文本搜索与处理"><a href="#文本搜索与处理" class="headerlink" title="文本搜索与处理"></a>文本搜索与处理</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 文本搜索</span></span><br><span class="line">grep <span class="string">&#x27;keyword&#x27;</span> 文件名            <span class="comment"># 搜索包含关键词的行</span></span><br><span class="line">ps -ef | grep tomcat            <span class="comment"># 查找进程</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 排序和去重</span></span><br><span class="line"><span class="built_in">sort</span> 文件名                      <span class="comment"># 排序输出</span></span><br><span class="line"><span class="built_in">cat</span> aa.log | <span class="built_in">sort</span>               <span class="comment"># 排序日志内容</span></span><br><span class="line"><span class="built_in">uniq</span>                            <span class="comment"># 去除相邻重复行</span></span><br><span class="line"><span class="built_in">cat</span> aa.txt | <span class="built_in">sort</span> | <span class="built_in">uniq</span>        <span class="comment"># 排序后去重</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 统计</span></span><br><span class="line"><span class="built_in">wc</span> 文件名                        <span class="comment"># 统计行数、单词数、字符数</span></span><br><span class="line"><span class="built_in">cat</span> aa.txt | <span class="built_in">wc</span>                 <span class="comment"># 输出格式：行数 单词数 字符数</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="日志查看与分析"><a href="#日志查看与分析" class="headerlink" title="日志查看与分析"></a>日志查看与分析</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关键词上下文查看</span></span><br><span class="line">grep -A 100 <span class="string">&#x27;Exception&#x27;</span> catalina.out    <span class="comment"># 关键词后100行（After）</span></span><br><span class="line">grep -B 100 <span class="string">&#x27;Exception&#x27;</span> catalina.out    <span class="comment"># 关键词前100行（Before）</span></span><br><span class="line">grep -C 100 <span class="string">&#x27;Exception&#x27;</span> catalina.out    <span class="comment"># 关键词上下100行（Center）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 管道方式</span></span><br><span class="line"><span class="built_in">cat</span> catalina.out | grep -C 100 <span class="string">&#x27;Exception&#x27;</span></span><br><span class="line"><span class="built_in">cat</span> catalina.out | grep -A 100 <span class="string">&#x27;Exception&#x27;</span></span><br><span class="line"><span class="built_in">cat</span> catalina.out | grep -B 100 <span class="string">&#x27;Exception&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 实时查看日志</span></span><br><span class="line"><span class="built_in">tail</span> -f catalina.out                    <span class="comment"># 实时查看日志</span></span><br><span class="line"><span class="built_in">tail</span> -100f catalina.out                 <span class="comment"># 实时查看最后100行</span></span><br><span class="line"><span class="built_in">tail</span> -f -n 100 catalina.out             <span class="comment"># 同上</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-9-网络通讯"><a href="#3-9-网络通讯" class="headerlink" title="3.9 网络通讯"></a>3.9 网络通讯</h3><h4 id="网络工具"><a href="#网络工具" class="headerlink" title="网络工具"></a>网络工具</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 网页抓取</span></span><br><span class="line">curl https://example.com         <span class="comment"># 抓取网页内容</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件下载</span></span><br><span class="line">wget https://example.com/file    <span class="comment"># 下载文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 命令确认</span></span><br><span class="line"><span class="built_in">yes</span>                             <span class="comment"># 自动输入y确认</span></span><br><span class="line">y                               <span class="comment"># 输入y确认</span></span><br><span class="line">no 或 n                          <span class="comment"># 输入no或n拒绝</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="网络配置与测试"><a href="#网络配置与测试" class="headerlink" title="网络配置与测试"></a>网络配置与测试</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># IP查看</span></span><br><span class="line">ifconfig                        <span class="comment"># 查看本机IP配置</span></span><br><span class="line">curl ipinfo.io/ip              <span class="comment"># 查看外网IP</span></span><br><span class="line">curl ifconfig.me               <span class="comment"># 查看外网IP（备选）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 连通性测试</span></span><br><span class="line">ping 域名或IP                   <span class="comment"># 测试网络连通性</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="端口与进程查看"><a href="#端口与进程查看" class="headerlink" title="端口与进程查看"></a>端口与进程查看</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 端口占用查看</span></span><br><span class="line">lsof -i 端口号                  <span class="comment"># 查看端口占用情况</span></span><br><span class="line">lsof -i 8000                   <span class="comment"># 查看8000端口使用情况</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装lsof（如未安装）</span></span><br><span class="line">yum -y install lsof</span><br><span class="line"></span><br><span class="line"><span class="comment"># 网络连接查看</span></span><br><span class="line">netstat                        <span class="comment"># 查看所有网络端口</span></span><br><span class="line">netstat -nlp                   <span class="comment"># 查看监听端口</span></span><br><span class="line">netstat -tunlp | grep 8000     <span class="comment"># 查看指定端口</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>netstat 参数说明：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-t (tcp)    : 仅显示tcp相关选项</span><br><span class="line">-u (udp)    : 仅显示udp相关选项</span><br><span class="line">-n          : 拒绝显示别名，全部转化为数字</span><br><span class="line">-l          : 仅列出在监听(Listen)的服务</span><br><span class="line">-p          : 显示建立连接的程序名</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-10-备份压缩"><a href="#3-10-备份压缩" class="headerlink" title="3.10 备份压缩"></a>3.10 备份压缩</h3><h4 id="tar-压缩与解压"><a href="#tar-压缩与解压" class="headerlink" title="tar 压缩与解压"></a>tar 压缩与解压</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解压命令</span></span><br><span class="line">tar -zxvf xxx.tar.gz                    <span class="comment"># 解压.tar.gz文件</span></span><br><span class="line">tar -zxvf xxx.tar.gz -C /usr/local      <span class="comment"># 解压到指定目录</span></span><br><span class="line">tar -xvf xxx.tar                        <span class="comment"># 解压.tar文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 压缩命令</span></span><br><span class="line">tar -zcvf xxx.tar.gz ./file/*           <span class="comment"># 压缩为.tar.gz</span></span><br><span class="line">tar -cvf xxx.tar ./file/*               <span class="comment"># 压缩为.tar</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不同格式压缩（压缩率递增，速度递减）</span></span><br><span class="line">tar -zcvf file.tar.gz 目录               <span class="comment"># .tar.gz格式</span></span><br><span class="line">tar -jcvf file.tar.bz2 目录              <span class="comment"># .tar.bz2格式</span></span><br><span class="line">tar -Jcvf file.tar.xz 目录               <span class="comment"># .tar.xz格式</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通用解压</span></span><br><span class="line">tar -xvf 压缩文件                        <span class="comment"># 自动识别格式解压</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>压缩格式对比：</strong></p>
+<ul>
+<li><strong>tar.gz</strong>：常用，压缩适中</li>
+<li><strong>tar.bz2</strong>：压缩率高，速度较慢</li>
+<li><strong>tar.xz</strong>：压缩率最高，速度最慢</li>
+</ul>
+<h4 id="zip-压缩与解压"><a href="#zip-压缩与解压" class="headerlink" title="zip 压缩与解压"></a>zip 压缩与解压</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 压缩</span></span><br><span class="line">zip a.zip a.txt                         <span class="comment"># 压缩为zip格式</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压</span></span><br><span class="line">unzip a.zip                             <span class="comment"># 解压zip文件</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-11-Linux上rz和sz的使用"><a href="#3-11-Linux上rz和sz的使用" class="headerlink" title="3.11 Linux上rz和sz的使用"></a>3.11 Linux上rz和sz的使用</h3><p>对于小文件传输，可以使用rz&#x2F;sz命令，无需XFTP或WinSCP。</p>
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install lrzsz</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rz                              <span class="comment"># 上传文件到服务器</span></span><br><span class="line">sz 文件名                        <span class="comment"># 下载文件到本地</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>使用场景：</strong></p>
+<ul>
+<li>小文件快速传输</li>
+<li>临时文件上传下载</li>
+<li>配合Xshell等终端使用</li>
+</ul>
+<hr>
+<h2 id="Shell重定向详解"><a href="#Shell重定向详解" class="headerlink" title="Shell重定向详解"></a>Shell重定向详解</h2><h3 id="标准文件描述符"><a href="#标准文件描述符" class="headerlink" title="标准文件描述符"></a>标准文件描述符</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0 : 标准输入（stdin）  - 键盘</span><br><span class="line">1 : 标准输出（stdout） - 屏幕</span><br><span class="line">2 : 错误输出（stderr） - 屏幕</span><br></pre></td></tr></table></figure>
+
+<h3 id="dev-null-黑洞设备"><a href="#dev-null-黑洞设备" class="headerlink" title="&#x2F;dev&#x2F;null 黑洞设备"></a>&#x2F;dev&#x2F;null 黑洞设备</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/dev/null                       <span class="comment"># Linux空设备文件</span></span><br><span class="line">                                <span class="comment"># 所有写入内容都会被丢弃</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="常用重定向组合"><a href="#常用重定向组合" class="headerlink" title="常用重定向组合"></a>常用重定向组合</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">command</span> &gt; file                  <span class="comment"># 标准输出重定向到文件</span></span><br><span class="line"><span class="built_in">command</span> 2&gt; file                 <span class="comment"># 错误输出重定向到文件</span></span><br><span class="line"><span class="built_in">command</span> &gt; file 2&gt;&amp;1             <span class="comment"># 标准输出和错误输出都重定向到文件</span></span><br><span class="line"><span class="built_in">command</span> &amp;&gt; file                 <span class="comment"># 同上（简写）</span></span><br><span class="line"><span class="built_in">command</span> &gt;&gt; file                 <span class="comment"># 追加标准输出到文件</span></span><br><span class="line"><span class="built_in">command</span> 2&gt;&gt; file                <span class="comment"># 追加错误输出到文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 丢弃所有输出</span></span><br><span class="line"><span class="built_in">command</span> &gt; /dev/null 2&gt;&amp;1        <span class="comment"># 标准输出和错误输出都丢弃</span></span><br><span class="line"><span class="built_in">command</span> &amp;&gt; /dev/null            <span class="comment"># 同上（简写）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 后台运行</span></span><br><span class="line"><span class="built_in">nohup</span> <span class="built_in">command</span> &gt; /dev/null 2&gt;&amp;1 &amp;   <span class="comment"># 后台运行并丢弃所有输出</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="重定向顺序的重要性"><a href="#重定向顺序的重要性" class="headerlink" title="重定向顺序的重要性"></a>重定向顺序的重要性</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 正确写法</span></span><br><span class="line">&gt;/dev/null 2&gt;&amp;1</span><br><span class="line"><span class="comment"># 执行顺序：</span></span><br><span class="line"><span class="comment"># 1. 标准输出重定向到/dev/null</span></span><br><span class="line"><span class="comment"># 2. 错误输出重定向到标准输出（即/dev/null）</span></span><br><span class="line"><span class="comment"># 结果：两者都被丢弃</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 错误写法</span></span><br><span class="line">2&gt;&amp;1 &gt;/dev/null</span><br><span class="line"><span class="comment"># 执行顺序：</span></span><br><span class="line"><span class="comment"># 1. 错误输出绑定到当前标准输出（屏幕）</span></span><br><span class="line"><span class="comment"># 2. 标准输出重定向到/dev/null</span></span><br><span class="line"><span class="comment"># 结果：标准输出被丢弃，错误输出仍显示在屏幕</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="nohup-命令详解"><a href="#nohup-命令详解" class="headerlink" title="nohup 命令详解"></a>nohup 命令详解</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">nohup</span> <span class="built_in">command</span> &amp;                     <span class="comment"># 后台运行，输出到nohup.out</span></span><br><span class="line"><span class="built_in">nohup</span> <span class="built_in">command</span> &gt; log.txt 2&gt;&amp;1 &amp;     <span class="comment"># 后台运行，输出到log.txt</span></span><br><span class="line"><span class="built_in">nohup</span> <span class="built_in">command</span> &gt; /dev/null 2&gt;&amp;1 &amp;   <span class="comment"># 后台运行，不产生任何输出</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 常用于启动Java服务</span></span><br><span class="line"><span class="built_in">nohup</span> java -jar xxxx.jar &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="重点建议"><a href="#重点建议" class="headerlink" title="重点建议"></a>重点建议</h2><h3 id="1-实践为主"><a href="#1-实践为主" class="headerlink" title="1. 实践为主"></a>1. 实践为主</h3><ul>
+<li>购买云服务器进行实际操作</li>
+<li>每个命令都亲自尝试</li>
+<li>出错是正常的，重要的是理解为什么出错</li>
+</ul>
+<h3 id="2-循序渐进"><a href="#2-循序渐进" class="headerlink" title="2. 循序渐进"></a>2. 循序渐进</h3><ul>
+<li>先掌握基础命令</li>
+<li>再学习高级特性</li>
+<li>最后进行综合应用</li>
+</ul>
+<h3 id="3-善用帮助"><a href="#3-善用帮助" class="headerlink" title="3. 善用帮助"></a>3. 善用帮助</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">man 命令                        <span class="comment"># 查看命令手册</span></span><br><span class="line"><span class="built_in">command</span> --<span class="built_in">help</span>                 <span class="comment"># 查看命令帮助</span></span><br><span class="line">whatis 命令                     <span class="comment"># 查看命令简介</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-命令组合"><a href="#4-命令组合" class="headerlink" title="4. 命令组合"></a>4. 命令组合</h3><ul>
+<li>熟练使用管道符 <code>|</code></li>
+<li>掌握重定向符号 <code>&gt;</code> <code>&gt;&gt;</code></li>
+<li>学会使用 <code>&amp;&amp;</code> 和 <code>||</code> 连接命令</li>
+</ul>
+<h3 id="5-安全意识"><a href="#5-安全意识" class="headerlink" title="5. 安全意识"></a>5. 安全意识</h3><ul>
+<li>谨慎使用 <code>rm -rf</code> 命令</li>
+<li>修改系统文件前做好备份</li>
+<li>使用非root用户进行日常操作</li>
+<li>定期备份重要数据</li>
+</ul>
+<h3 id="6-效率提升"><a href="#6-效率提升" class="headerlink" title="6. 效率提升"></a>6. 效率提升</h3><ul>
+<li>使用Tab键自动补全</li>
+<li>使用历史命令（↑↓方向键）</li>
+<li>学习vim或nano编辑器</li>
+<li>掌握快捷键（Ctrl+C、Ctrl+Z等）</li>
+</ul>
+<h3 id="7-日志管理"><a href="#7-日志管理" class="headerlink" title="7. 日志管理"></a>7. 日志管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看系统日志</span></span><br><span class="line"><span class="built_in">tail</span> -f /var/log/messages      <span class="comment"># 系统日志</span></span><br><span class="line"><span class="built_in">tail</span> -f /var/log/secure        <span class="comment"># 安全日志</span></span><br><span class="line"><span class="built_in">tail</span> -f /var/log/cron          <span class="comment"># 定时任务日志</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/09/13/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8823%EF%BC%89-%20%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C%E3%80%81%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86%E3%80%81%E7%A6%BB%E6%95%A3%E5%8C%96%E6%8A%80%E5%B7%A7/" rel="prev" title="数据结构与算法自学笔记（23）- 二维前缀和、二维差分、离散化技巧">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（23）- 二维前缀和、二维差分、离散化技巧
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/12/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8824%EF%BC%89-%20%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%8A%80%E5%B7%A7%E4%B8%8E%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" rel="next" title="数据结构与算法自学笔记（24）- 滑动窗口技巧详解">
+      数据结构与算法自学笔记（24）- 滑动窗口技巧详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">前置知识</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93"><span class="nav-number">2.</span> <span class="nav-text">Linux使用总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Linux%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.1.</span> <span class="nav-text">1. Linux介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%86%E5%8F%B2%E8%83%8C%E6%99%AF"><span class="nav-number">2.1.1.</span> <span class="nav-text">历史背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux%E6%9E%84%E6%88%90"><span class="nav-number">2.1.2.</span> <span class="nav-text">Linux构成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E6%B5%81%E5%8F%91%E8%A1%8C%E7%89%88%E6%9C%AC"><span class="nav-number">2.1.3.</span> <span class="nav-text">主流发行版本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Linux%E5%B8%B8%E7%94%A8%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%E5%B7%A5%E5%85%B7"><span class="nav-number">2.2.</span> <span class="nav-text">2. Linux常用远程连接工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E5%B7%A5%E5%85%B7%E7%BB%84%E5%90%88"><span class="nav-number">2.2.1.</span> <span class="nav-text">推荐工具组合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E6%B5%81%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%E5%B7%A5%E5%85%B7"><span class="nav-number">2.2.2.</span> <span class="nav-text">主流远程连接工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-SecureCRT"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">1. SecureCRT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-XShell"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">2. XShell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Putty"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">3. Putty</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-XFTP"><span class="nav-number">2.2.2.4.</span> <span class="nav-text">4. XFTP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-WinSCP"><span class="nav-number">2.2.2.5.</span> <span class="nav-text">5. WinSCP</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93"><span class="nav-number">2.3.</span> <span class="nav-text">3. Linux常用命令总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Linux%E7%89%B9%E8%89%B2%E7%9B%AE%E5%BD%95%E7%AC%A6%E5%8F%B7"><span class="nav-number">2.3.1.</span> <span class="nav-text">3.1 Linux特色目录符号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86"><span class="nav-number">2.3.2.</span> <span class="nav-text">3.2 磁盘管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E5%88%87%E6%8D%A2%E4%B8%8E%E6%9F%A5%E7%9C%8B"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">目录切换与查看</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%97%E5%87%BA%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">列出文件和目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E6%9F%A5%E7%9C%8B"><span class="nav-number">2.3.2.3.</span> <span class="nav-text">磁盘空间查看</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="nav-number">2.3.3.</span> <span class="nav-text">3.3 文件管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%9B%AE%E5%BD%95"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">创建目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="nav-number">2.3.3.2.</span> <span class="nav-text">文件操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="nav-number">2.3.3.3.</span> <span class="nav-text">查看文件内容</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E4%B8%8E%E6%9F%A5%E6%89%BE"><span class="nav-number">2.3.3.4.</span> <span class="nav-text">复制与查找</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.3.4.</span> <span class="nav-text">3.4 系统设置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-number">2.3.4.1.</span> <span class="nav-text">进程管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF"><span class="nav-number">2.3.4.2.</span> <span class="nav-text">系统信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C"><span class="nav-number">2.3.4.3.</span> <span class="nav-text">系统操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD%E7%9B%91%E6%8E%A7"><span class="nav-number">2.3.4.4.</span> <span class="nav-text">系统负载监控</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">2.3.4.5.</span> <span class="nav-text">内存管理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-Linux%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="nav-number">2.3.5.</span> <span class="nav-text">3.5 Linux定时任务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Crontab-%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="nav-number">2.3.5.1.</span> <span class="nav-text">Crontab 基本命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Crontab-%E8%AF%AD%E6%B3%95%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.3.5.2.</span> <span class="nav-text">Crontab 语法格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.3.5.3.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%89%A7%E8%A1%8C%E6%97%A5%E5%BF%97"><span class="nav-number">2.3.5.4.</span> <span class="nav-text">查看执行日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E7%AC%A6%E5%8F%B7%E8%AF%B4%E6%98%8E"><span class="nav-number">2.3.5.5.</span> <span class="nav-text">重定向符号说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="nav-number">2.3.6.</span> <span class="nav-text">3.6 用户管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%93%8D%E4%BD%9C"><span class="nav-number">2.3.6.1.</span> <span class="nav-text">用户操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%BB%84%E6%93%8D%E4%BD%9C"><span class="nav-number">2.3.6.2.</span> <span class="nav-text">用户组操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90"><span class="nav-number">2.3.7.</span> <span class="nav-text">3.7 文件权限</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E8%AF%86%E5%88%AB"><span class="nav-number">2.3.7.1.</span> <span class="nav-text">文件类型识别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.3.7.2.</span> <span class="nav-text">权限详解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90"><span class="nav-number">2.3.7.3.</span> <span class="nav-text">权限结构解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%ADrwx%E7%9A%84%E5%90%AB%E4%B9%89"><span class="nav-number">2.3.7.4.</span> <span class="nav-text">文件中rwx的含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E4%B8%ADrwx%E7%9A%84%E5%90%AB%E4%B9%89"><span class="nav-number">2.3.7.5.</span> <span class="nav-text">目录中rwx的含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E4%BF%AE%E6%94%B9%E5%91%BD%E4%BB%A4"><span class="nav-number">2.3.7.6.</span> <span class="nav-text">权限修改命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-8-%E6%96%87%E6%A1%A3%E5%A4%84%E7%90%86"><span class="nav-number">2.3.8.</span> <span class="nav-text">3.8 文档处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E6%90%9C%E7%B4%A2%E4%B8%8E%E5%A4%84%E7%90%86"><span class="nav-number">2.3.8.1.</span> <span class="nav-text">文本搜索与处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B%E4%B8%8E%E5%88%86%E6%9E%90"><span class="nav-number">2.3.8.2.</span> <span class="nav-text">日志查看与分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-9-%E7%BD%91%E7%BB%9C%E9%80%9A%E8%AE%AF"><span class="nav-number">2.3.9.</span> <span class="nav-text">3.9 网络通讯</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%B7%A5%E5%85%B7"><span class="nav-number">2.3.9.1.</span> <span class="nav-text">网络工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%B5%8B%E8%AF%95"><span class="nav-number">2.3.9.2.</span> <span class="nav-text">网络配置与测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3%E4%B8%8E%E8%BF%9B%E7%A8%8B%E6%9F%A5%E7%9C%8B"><span class="nav-number">2.3.9.3.</span> <span class="nav-text">端口与进程查看</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-10-%E5%A4%87%E4%BB%BD%E5%8E%8B%E7%BC%A9"><span class="nav-number">2.3.10.</span> <span class="nav-text">3.10 备份压缩</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#tar-%E5%8E%8B%E7%BC%A9%E4%B8%8E%E8%A7%A3%E5%8E%8B"><span class="nav-number">2.3.10.1.</span> <span class="nav-text">tar 压缩与解压</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#zip-%E5%8E%8B%E7%BC%A9%E4%B8%8E%E8%A7%A3%E5%8E%8B"><span class="nav-number">2.3.10.2.</span> <span class="nav-text">zip 压缩与解压</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-11-Linux%E4%B8%8Arz%E5%92%8Csz%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">2.3.11.</span> <span class="nav-text">3.11 Linux上rz和sz的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.3.11.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">2.3.11.2.</span> <span class="nav-text">使用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shell%E9%87%8D%E5%AE%9A%E5%90%91%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.4.</span> <span class="nav-text">Shell重定向详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="nav-number">2.4.1.</span> <span class="nav-text">标准文件描述符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dev-null-%E9%BB%91%E6%B4%9E%E8%AE%BE%E5%A4%87"><span class="nav-number">2.4.2.</span> <span class="nav-text">&#x2F;dev&#x2F;null 黑洞设备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E9%87%8D%E5%AE%9A%E5%90%91%E7%BB%84%E5%90%88"><span class="nav-number">2.4.3.</span> <span class="nav-text">常用重定向组合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E9%A1%BA%E5%BA%8F%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="nav-number">2.4.4.</span> <span class="nav-text">重定向顺序的重要性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nohup-%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.4.5.</span> <span class="nav-text">nohup 命令详解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E7%82%B9%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.5.</span> <span class="nav-text">重点建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%9E%E8%B7%B5%E4%B8%BA%E4%B8%BB"><span class="nav-number">2.5.1.</span> <span class="nav-text">1. 实践为主</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%BE%AA%E5%BA%8F%E6%B8%90%E8%BF%9B"><span class="nav-number">2.5.2.</span> <span class="nav-text">2. 循序渐进</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%96%84%E7%94%A8%E5%B8%AE%E5%8A%A9"><span class="nav-number">2.5.3.</span> <span class="nav-text">3. 善用帮助</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%91%BD%E4%BB%A4%E7%BB%84%E5%90%88"><span class="nav-number">2.5.4.</span> <span class="nav-text">4. 命令组合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%AE%89%E5%85%A8%E6%84%8F%E8%AF%86"><span class="nav-number">2.5.5.</span> <span class="nav-text">5. 安全意识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%95%88%E7%8E%87%E6%8F%90%E5%8D%87"><span class="nav-number">2.5.6.</span> <span class="nav-text">6. 效率提升</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86"><span class="nav-number">2.5.7.</span> <span class="nav-text">7. 日志管理</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

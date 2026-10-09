@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是class40的内容，基于N皇后问题Python实现，分析了经典回溯算法和位运算优化版本的原理与实现。N皇后问题是回溯算法的经典应用，也是展示位运算巧妙应用的绝佳案例。 040【必备】N皇后问题-重点是位运算的版本 问题描述N皇后问题是在N×N">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（17）- N皇后问题与位运算优化版本">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/09/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8817%EF%BC%89-%20N%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98%E4%B8%8E%E4%BD%8D%E8%BF%90%E7%AE%97%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是class40的内容，基于N皇后问题Python实现，分析了经典回溯算法和位运算优化版本的原理与实现。N皇后问题是回溯算法的经典应用，也是展示位运算巧妙应用的绝佳案例。 040【必备】N皇后问题-重点是位运算的版本 问题描述N皇后问题是在N×N">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(17)/class40-n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98/n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(17)/class40-n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98/%E5%85%AC%E5%85%B1%E5%AF%B9%E8%A7%92%E7%BA%BF%E7%9A%84%E5%88%A4%E6%96%AD.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(17)/class40-n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98/col%E5%8F%98%E9%87%8F.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(17)/class40-n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98/left%E5%8F%98%E9%87%8F.png">
+<meta property="article:published_time" content="2025-09-04T00:30:00.000Z">
+<meta property="article:modified_time" content="2025-09-08T10:38:58.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="位运算">
+<meta property="article:tag" content="递归">
+<meta property="article:tag" content="回溯">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="N皇后">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(17)/class40-n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98/n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/09/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8817%EF%BC%89-%20N%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98%E4%B8%8E%E4%BD%8D%E8%BF%90%E7%AE%97%E4%BC%98%E5%8C%96/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（17）- N皇后问题与位运算优化版本 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/09/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8817%EF%BC%89-%20N%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98%E4%B8%8E%E4%BD%8D%E8%BF%90%E7%AE%97%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（17）- N皇后问题与位运算优化版本
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-09-04 08:30:00" itemprop="dateCreated datePublished" datetime="2025-09-04T08:30:00+08:00">2025-09-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-09-08 18:38:58" itemprop="dateModified" datetime="2025-09-08T18:38:58+08:00">2025-09-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a></p>
+<p>本笔记是class40的内容，基于N皇后问题Python实现，分析了经典回溯算法和位运算优化版本的原理与实现。N皇后问题是回溯算法的经典应用，也是展示位运算巧妙应用的绝佳案例。</p>
+<h1 id="040【必备】N皇后问题-重点是位运算的版本"><a href="#040【必备】N皇后问题-重点是位运算的版本" class="headerlink" title="040【必备】N皇后问题-重点是位运算的版本"></a>040【必备】N皇后问题-重点是位运算的版本</h1><p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(17)/class40-n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98/n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0.png" alt="n皇后问题描述"></p>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>N皇后问题是在N×N的棋盘上放置N个皇后，使得任意两个皇后都不能相互攻击的问题。皇后可以攻击同一行、同一列或同一对角线上的任何棋子。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/n-queens-ii/">https://leetcode.cn/problems/n-queens-ii/</a></p>
+<h2 id="核心挑战"><a href="#核心挑战" class="headerlink" title="核心挑战"></a>核心挑战</h2><p>N皇后问题的时间复杂度是O(N!)，这意味着随着N的增长，计算量会急剧增加。因此，优化常数时间和进行有效剪枝变得尤为重要。</p>
+<hr>
+<h2 id="方法一：数组表示路径（经典回溯）"><a href="#方法一：数组表示路径（经典回溯）" class="headerlink" title="方法一：数组表示路径（经典回溯）"></a>方法一：数组表示路径（经典回溯）</h2><h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>使用数组 <code>path[i] = j</code> 表示第i行的皇后放在第j列。对于每一行，尝试所有可能的列位置，通过冲突检测函数判断是否可以放置皇后。</p>
+<p>具体实现流程：</p>
+<ol>
+<li>在每一行，<code>ban = col | left | right</code> 计算出所有被攻击的位置。（共同的限制）</li>
+<li><code>candidate = limit &amp; (~ban)</code> 找出所有可以放置皇后的候选位置（列）。</li>
+<li>循环遍历 <code>candidate</code> 中的每一个 <code>1</code>（代表一个可行的列）。<br> <code>place = candidate &amp; (-candidate)</code> 是一个巧妙的技巧，用于分离出最右边的 <code>1</code>。</li>
+<li>对于每一个可行的 <code>place</code>，递归到下一行，并更新三个位掩码：<ul>
+<li>列限制: <code>col | place</code></li>
+<li>左对角线限制: <code>(left | place) &gt;&gt; 1</code> (下一行，对角线向右移一位)</li>
+<li>右对角线限制: <code>(right | place) &lt;&lt; 1</code> (下一行，对角线向左移一位)</li>
+</ul>
+</li>
+</ol>
+<h3 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">totalNQueens1</span>(<span class="params">self, n: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    主函数，初始化路径数组并启动递归</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="comment"># path[i] = j 表示第 i 行的皇后放在了第 j 列</span></span><br><span class="line">    path = [-<span class="number">1</span>] * n</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">self</span>._f1(<span class="number">0</span>, path, n)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_f1</span>(<span class="params">self, i: <span class="built_in">int</span>, path: <span class="built_in">list</span>, n: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    递归函数，尝试在第 i 行放置皇后</span></span><br><span class="line"><span class="string">    核心思想 (经典回溯法):</span></span><br><span class="line"><span class="string">    1. 递归地为每一行选择一个列来放置皇后。 </span></span><br><span class="line"><span class="string">    2. 当处理第 `i` 行时，遍历所有列 `j`。</span></span><br><span class="line"><span class="string">    3. 对于每个位置 `(i, j)`，检查是否与之前 `0` 到 `i-1` 行已放置的皇后冲突。</span></span><br><span class="line"><span class="string">    4. 如果不冲突，则将皇后放置在 `(i, j)`，然后递归到下一行 `i+1`。</span></span><br><span class="line"><span class="string">    5. 递归返回后，隐式地&quot;撤销&quot;选择（因为下一次循环会覆盖 `path[i]`），继续尝试当前行的下一列。</span></span><br><span class="line"><span class="string">    6. 当 `i` 到达 `n` 时，说明所有 `n` 个皇后都成功放置，找到一个解，返回 1。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> i == n:</span><br><span class="line">        <span class="comment"># 所有行都成功放置了皇后，找到一个有效的解</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    ans = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 遍历当前 i 行的所有列 j</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        <span class="comment"># 检查在 (i, j) 位置放皇后是否与之前的皇后冲突</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>._check(path, i, j):</span><br><span class="line">            <span class="comment"># 如果不冲突，记录位置</span></span><br><span class="line">            path[i] = j</span><br><span class="line">            <span class="comment"># 递归到下一行</span></span><br><span class="line">            ans += <span class="variable language_">self</span>._f1(i + <span class="number">1</span>, path, n)</span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_check</span>(<span class="params">self, path: <span class="built_in">list</span>, i: <span class="built_in">int</span>, j: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    检查在(i,j)位置放置皇后是否会与之前的皇后冲突</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 遍历 0 到 i-1 行，检查冲突</span></span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(i):</span><br><span class="line">        <span class="comment"># path[k] 是第 k 行皇后的列位置</span></span><br><span class="line">        <span class="comment"># 检查列冲突: j == path[k]</span></span><br><span class="line">        <span class="comment"># 检查对角线冲突: abs(i - k) == abs(j - path[k])</span></span><br><span class="line">        <span class="keyword">if</span> j == path[k] <span class="keyword">or</span> <span class="built_in">abs</span>(i - k) == <span class="built_in">abs</span>(j - path[k]):</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(17)/class40-n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98/%E5%85%AC%E5%85%B1%E5%AF%B9%E8%A7%92%E7%BA%BF%E7%9A%84%E5%88%A4%E6%96%AD.png" alt="公共对角线的判断"></p>
+<h3 id="冲突检测详解"><a href="#冲突检测详解" class="headerlink" title="冲突检测详解"></a>冲突检测详解</h3><ol>
+<li><strong>列冲突</strong>：<code>j == path[k]</code> - 同一列不能有两个皇后</li>
+<li><strong>对角线冲突</strong>：<code>abs(i - k) == abs(j - path[k])</code> - 对角线上行差的绝对值等于列差的绝对值</li>
+</ol>
+<h3 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(N! × N)，每个位置需要O(N)时间检查冲突</li>
+<li><strong>空间复杂度</strong>：O(N)</li>
+<li><strong>优缺点</strong>：思路清晰但效率较低</li>
+</ul>
+<hr>
+<h2 id="方法二：位运算优化（推荐）"><a href="#方法二：位运算优化（推荐）" class="headerlink" title="方法二：位运算优化（推荐）"></a>方法二：位运算优化（推荐）</h2><h3 id="核心思想-1"><a href="#核心思想-1" class="headerlink" title="核心思想"></a>核心思想</h3><p>使用三个整数的位信息来表示所有被占用的位置，从而极大地加速冲突检测：</p>
+<ul>
+<li><strong>col</strong>：第k位为1表示第k列被占用</li>
+<li><strong>left</strong>：第k位为1表示左上到右下对角线被占用</li>
+<li><strong>right</strong>：第k位为1表示右上到左下对角线被占用</li>
+</ul>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(17)/class40-n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98/col%E5%8F%98%E9%87%8F.png" alt="col变量"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(17)/class40-n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98/left%E5%8F%98%E9%87%8F.png" alt="left变量"></p>
+<h3 id="对角线映射规律"><a href="#对角线映射规律" class="headerlink" title="对角线映射规律"></a>对角线映射规律</h3><h4 id="左上到右下对角线（left）"><a href="#左上到右下对角线（left）" class="headerlink" title="左上到右下对角线（left）"></a>左上到右下对角线（left）</h4><ul>
+<li>特点：行-列的值相同</li>
+<li>下一行时：对角线向右移动一位，用右移操作 <code>&gt;&gt; 1</code></li>
+</ul>
+<h4 id="右上到左下对角线（right）"><a href="#右上到左下对角线（right）" class="headerlink" title="右上到左下对角线（right）"></a>右上到左下对角线（right）</h4><ul>
+<li>特点：行+列的值相同</li>
+<li>下一行时：对角线向左移动一位，用左移操作 <code>&lt;&lt; 1</code></li>
+</ul>
+<h3 id="算法实现-1"><a href="#算法实现-1" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">totalNQueens2</span>(<span class="params">self, n: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    主函数，初始化 limit 并启动位运算递归</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">1</span> <span class="keyword">or</span> n &gt; <span class="number">32</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="comment"># n = 5 -&gt; limit = 0b11111</span></span><br><span class="line">    <span class="comment"># limit 用于标记棋盘的有效列范围</span></span><br><span class="line">    limit = (<span class="number">1</span> &lt;&lt; n) - <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">self</span>._f2(limit, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_f2</span>(<span class="params">self, limit: <span class="built_in">int</span>, col: <span class="built_in">int</span>, left: <span class="built_in">int</span>, right: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    位运算递归函数</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    参数说明：</span></span><br><span class="line"><span class="string">    - limit: 标记棋盘大小的掩码</span></span><br><span class="line"><span class="string">    - col: 列占用情况</span></span><br><span class="line"><span class="string">    - left: 左上到右下对角线占用情况  </span></span><br><span class="line"><span class="string">    - right: 右上到左下对角线占用情况</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> col == limit:</span><br><span class="line">        <span class="comment"># 所有列都被占用，意味着所有皇后都已成功放置，找到一个解</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 总限制，合并所有被占用的列和对角线，limit表示是几皇后问题</span></span><br><span class="line">    ban = col | left | right</span><br><span class="line">    <span class="comment"># ~ban : 1可放皇后，0不能放</span></span><br><span class="line">    <span class="comment"># limit &amp; (~ban) 得到当前行所有可以放置皇后的位置</span></span><br><span class="line">    candidate = limit &amp; (~ban)   <span class="comment">#Python 的整数是无限位的，~ban 会把高位也翻成 1，需要用 limit 把有效的 n 位以外的位裁掉。</span></span><br><span class="line">    </span><br><span class="line">    ans = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 当还有候选位置时</span></span><br><span class="line">    <span class="keyword">while</span> candidate != <span class="number">0</span>:</span><br><span class="line">        <span class="comment"># 提取出最右侧的1，代表本次尝试要放置皇后的位置</span></span><br><span class="line">        <span class="comment"># 例如 candidate = 0b010100, -candidate = 0b101100</span></span><br><span class="line">        <span class="comment"># place = 0b000100</span></span><br><span class="line">        place = candidate &amp; (-candidate)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 从候选位置中移除刚刚选择的位置</span></span><br><span class="line">        candidate ^= place</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 递归到下一行，并更新限制</span></span><br><span class="line">        ans += <span class="variable language_">self</span>._f2(limit, col | place, (left | place) &gt;&gt; <span class="number">1</span>, (right | place) &lt;&lt; <span class="number">1</span>) <span class="comment">#最终返回的 ans 是：该 n 皇后问题的解的总数</span></span><br><span class="line">        <span class="comment"># col | place: 更新占用列；| 为按位或，把新放皇后的位置并入列占用。</span></span><br><span class="line">        <span class="comment"># (left | place) &gt;&gt; 1: 更新左对角占用；当前行对角占用并上新位置后，右移一位表示到下一行左对角“向右移”。</span></span><br><span class="line">        <span class="comment"># (right | place) &lt;&lt; 1: 更新右对角占用；到下一行右对角“向左移”，用左移一位表示。</span></span><br><span class="line">                    </span><br><span class="line">    <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="关键位运算技巧"><a href="#关键位运算技巧" class="headerlink" title="关键位运算技巧"></a>关键位运算技巧</h3><h4 id="1-提取最右边的1"><a href="#1-提取最右边的1" class="headerlink" title="1. 提取最右边的1"></a>1. 提取最右边的1</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">place = candidate &amp; (-candidate)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>原理：<code>-candidate</code> 是 <code>candidate</code> 的补码，两者相与得到最右边的1</li>
+<li>例子：<code>candidate = 0b010100</code>, <code>-candidate = 0b101100</code>, <code>place = 0b000100</code></li>
+</ul>
+<h4 id="2-移除已选择的位"><a href="#2-移除已选择的位" class="headerlink" title="2. 移除已选择的位"></a>2. 移除已选择的位</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">candidate ^= place</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用异或操作移除已经选择的位置</li>
+</ul>
+<h4 id="3-计算有效候选位置"><a href="#3-计算有效候选位置" class="headerlink" title="3. 计算有效候选位置"></a>3. 计算有效候选位置</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">candidate = limit &amp; (~ban)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>~ban</code>：翻转ban得到可放置的位置</li>
+<li><code>limit</code>：确保只考虑有效的n位棋盘范围</li>
+</ul>
+<h3 id="执行过程示例"><a href="#执行过程示例" class="headerlink" title="执行过程示例"></a>执行过程示例</h3><p>以4皇后问题为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">初始状态：</span><br><span class="line">limit = 0b1111 (4位棋盘)</span><br><span class="line">col = 0, left = 0, right = 0</span><br><span class="line"></span><br><span class="line">第1行：</span><br><span class="line">ban = 0, candidate = 0b1111</span><br><span class="line">可选位置：第0,1,2,3列</span><br><span class="line"></span><br><span class="line">选择第0列 (place = 0b0001)：</span><br><span class="line">下一行状态：col=0b0001, left=0b0010, right=0b0010</span><br><span class="line"></span><br><span class="line">第2行：</span><br><span class="line">ban = 0b0001 | 0b0010 | 0b0010 = 0b0011</span><br><span class="line">candidate = 0b1111 &amp; 0b1100 = 0b1100</span><br><span class="line">可选位置：第2,3列</span><br><span class="line"></span><br><span class="line">... 继续递归</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-1"><a href="#算法分析-1" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(N!)，但常数时间大幅优化</li>
+<li><strong>空间复杂度</strong>：O(N)</li>
+<li><strong>优势</strong>：位运算操作极快，适合大规模问题</li>
+</ul>
+<hr>
+<h2 id="性能对比"><a href="#性能对比" class="headerlink" title="性能对比"></a>性能对比</h2><p>根据代码测试结果：（测试电脑：联想ThinkBook 16+）</p>
+<table>
+<thead>
+<tr>
+<th>N值</th>
+<th>数组方法</th>
+<th>位运算方法</th>
+<th>性能提升</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>14</td>
+<td>188224</td>
+<td>9011</td>
+<td>约10倍</td>
+</tr>
+<tr>
+<td>14</td>
+<td>超时</td>
+<td>~10秒内</td>
+<td>数十倍</td>
+</tr>
+</tbody></table>
+<h3 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    s = Solution()</span><br><span class="line">    n = <span class="number">14</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 测试方法1</span></span><br><span class="line">    start_time = time.time()</span><br><span class="line">    ans1 = s.totalNQueens1(n)</span><br><span class="line">    end_time = time.time()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;方法1答案 : <span class="subst">&#123;ans1&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;方法1运行时间 : <span class="subst">&#123;<span class="built_in">int</span>((end_time - start_time) * <span class="number">1000</span>)&#125;</span> 毫秒&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 测试方法2</span></span><br><span class="line">    start_time = time.time()</span><br><span class="line">    ans2 = s.totalNQueens2(n)</span><br><span class="line">    end_time = time.time()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;方法2答案 : <span class="subst">&#123;ans2&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;方法2运行时间 : <span class="subst">&#123;<span class="built_in">int</span>((end_time - start_time) * <span class="number">1000</span>)&#125;</span> 毫秒&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="位运算核心技巧总结"><a href="#位运算核心技巧总结" class="headerlink" title="位运算核心技巧总结"></a>位运算核心技巧总结</h2><h3 id="1-基本位操作"><a href="#1-基本位操作" class="headerlink" title="1. 基本位操作"></a>1. 基本位操作</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置第i位为1</span></span><br><span class="line">num |= (<span class="number">1</span> &lt;&lt; i)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清除第i位</span></span><br><span class="line">num &amp;= ~(<span class="number">1</span> &lt;&lt; i)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查第i位是否为1</span></span><br><span class="line"><span class="keyword">if</span> num &amp; (<span class="number">1</span> &lt;&lt; i):</span><br><span class="line"></span><br><span class="line"><span class="comment"># 翻转第i位</span></span><br><span class="line">num ^= (<span class="number">1</span> &lt;&lt; i)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-高级位技巧"><a href="#2-高级位技巧" class="headerlink" title="2. 高级位技巧"></a>2. 高级位技巧</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 提取最右边的1</span></span><br><span class="line">rightmost_one = num &amp; (-num)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清除最右边的1</span></span><br><span class="line">num &amp;= (num - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建n位全1的掩码</span></span><br><span class="line">mask = (<span class="number">1</span> &lt;&lt; n) - <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-对角线映射"><a href="#3-对角线映射" class="headerlink" title="3. 对角线映射"></a>3. 对角线映射</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 左上到右下：下一行右移</span></span><br><span class="line">left_diag = (left_diag | place) &gt;&gt; <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 右上到左下：下一行左移  </span></span><br><span class="line">right_diag = (right_diag | place) &lt;&lt; <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="优化策略总结"><a href="#优化策略总结" class="headerlink" title="优化策略总结"></a>优化策略总结</h2><h3 id="1-数据结构选择"><a href="#1-数据结构选择" class="headerlink" title="1. 数据结构选择"></a>1. 数据结构选择</h3><ul>
+<li><strong>数组方法</strong>：直观但需要O(N)时间检查冲突</li>
+<li><strong>位运算方法</strong>：用位信息表示状态，O(1)时间冲突检测</li>
+</ul>
+<h3 id="2-状态表示优化"><a href="#2-状态表示优化" class="headerlink" title="2. 状态表示优化"></a>2. 状态表示优化</h3><ul>
+<li>用整数的二进制位表示多个布尔状态</li>
+<li>利用位运算的并行性处理多个位</li>
+</ul>
+<h3 id="3-算法剪枝"><a href="#3-算法剪枝" class="headerlink" title="3. 算法剪枝"></a>3. 算法剪枝</h3><ul>
+<li>早期冲突检测</li>
+<li>状态压缩减少内存访问</li>
+</ul>
+<h3 id="4-常数优化"><a href="#4-常数优化" class="headerlink" title="4. 常数优化"></a>4. 常数优化</h3><ul>
+<li>位运算替代数组操作</li>
+<li>减少函数调用开销</li>
+</ul>
+<hr>
+<h2 id="学习要点"><a href="#学习要点" class="headerlink" title="学习要点"></a>学习要点</h2><h3 id="1-回溯算法模板"><a href="#1-回溯算法模板" class="headerlink" title="1. 回溯算法模板"></a>1. 回溯算法模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">backtrack</span>(<span class="params">state</span>):</span><br><span class="line">    <span class="keyword">if</span> is_solution(state):</span><br><span class="line">        record_solution(state)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> choice <span class="keyword">in</span> get_choices(state):</span><br><span class="line">        <span class="keyword">if</span> is_valid(choice, state):</span><br><span class="line">            make_choice(choice, state)</span><br><span class="line">            backtrack(state)</span><br><span class="line">            undo_choice(choice, state)  <span class="comment"># 回溯</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-位运算在算法中的应用"><a href="#2-位运算在算法中的应用" class="headerlink" title="2. 位运算在算法中的应用"></a>2. 位运算在算法中的应用</h3><ul>
+<li>状态压缩</li>
+<li>集合操作</li>
+<li>快速计算</li>
+<li>空间优化</li>
+</ul>
+<h3 id="3-性能优化思路"><a href="#3-性能优化思路" class="headerlink" title="3. 性能优化思路"></a>3. 性能优化思路</h3><ul>
+<li>算法层面：减少时间复杂度</li>
+<li>实现层面：优化常数因子</li>
+<li>数据结构层面：选择合适的表示方式</li>
+</ul>
+<h3 id="4-问题分析方法"><a href="#4-问题分析方法" class="headerlink" title="4. 问题分析方法"></a>4. 问题分析方法</h3><ul>
+<li>理解问题约束</li>
+<li>识别状态表示</li>
+<li>设计状态转移</li>
+<li>考虑优化空间</li>
+</ul>
+<hr>
+<h2 id="实际应用场景"><a href="#实际应用场景" class="headerlink" title="实际应用场景"></a>实际应用场景</h2><h3 id="1-约束满足问题（CSP）"><a href="#1-约束满足问题（CSP）" class="headerlink" title="1. 约束满足问题（CSP）"></a>1. 约束满足问题（CSP）</h3><ul>
+<li>数独求解</li>
+<li>图着色问题</li>
+<li>任务调度</li>
+</ul>
+<h3 id="2-位运算优化适用场景"><a href="#2-位运算优化适用场景" class="headerlink" title="2. 位运算优化适用场景"></a>2. 位运算优化适用场景</h3><ul>
+<li>状态空间较小（通常≤64位）</li>
+<li>需要频繁的集合操作</li>
+<li>对性能要求极高的场景</li>
+</ul>
+<h3 id="3-工程实践建议"><a href="#3-工程实践建议" class="headerlink" title="3. 工程实践建议"></a>3. 工程实践建议</h3><ul>
+<li>先实现清晰版本，再考虑优化</li>
+<li>位运算虽快但可读性差，需要充分注释</li>
+<li>在性能关键路径上应用位运算优化</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>N皇后问题展示了从经典回溯算法到位运算优化的完整演进过程。位运算版本虽然理解难度较高，但在性能上有显著提升，特别适合处理大规模问题。掌握这种优化思路对于解决其他状态空间搜索问题具有重要意义。</p>
+<p>通过对比两种方法，我们可以看到算法优化的不同层次：算法设计层面的改进和实现技巧层面的优化。在实际工程中，应该根据具体需求在代码可读性和执行效率之间做出合理权衡。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" rel="tag"># 位运算</a>
+              <a href="/tags/%E9%80%92%E5%BD%92/" rel="tag"># 递归</a>
+              <a href="/tags/%E5%9B%9E%E6%BA%AF/" rel="tag"># 回溯</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/N%E7%9A%87%E5%90%8E/" rel="tag"># N皇后</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/09/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8816%EF%BC%89-%20%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/" rel="prev" title="数据结构与算法自学笔记（16）- 嵌套类问题的递归解题套路">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（16）- 嵌套类问题的递归解题套路
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/09/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8818%EF%BC%89-%20%E6%9C%80%E5%A4%A7%E5%85%AC%E7%BA%A6%E6%95%B0%E3%80%81%E5%90%8C%E4%BD%99%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AF%B9%E6%95%B0%E5%99%A8%E6%89%93%E8%A1%A8%E8%A7%84%E5%BE%8B/" rel="next" title="数据结构与算法自学笔记（18）- 最大公约数、同余原理与对数器打表规律">
+      数据结构与算法自学笔记（18）- 最大公约数、同余原理与对数器打表规律 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#040%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91N%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98-%E9%87%8D%E7%82%B9%E6%98%AF%E4%BD%8D%E8%BF%90%E7%AE%97%E7%9A%84%E7%89%88%E6%9C%AC"><span class="nav-number">2.</span> <span class="nav-text">040【必备】N皇后问题-重点是位运算的版本</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">2.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8C%91%E6%88%98"><span class="nav-number">2.2.</span> <span class="nav-text">核心挑战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E6%95%B0%E7%BB%84%E8%A1%A8%E7%A4%BA%E8%B7%AF%E5%BE%84%EF%BC%88%E7%BB%8F%E5%85%B8%E5%9B%9E%E6%BA%AF%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">方法一：数组表示路径（经典回溯）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">2.3.1.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.3.2.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%B2%E7%AA%81%E6%A3%80%E6%B5%8B%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.3.3.</span> <span class="nav-text">冲突检测详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">2.3.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E4%BD%8D%E8%BF%90%E7%AE%97%E4%BC%98%E5%8C%96%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">方法二：位运算优化（推荐）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-1"><span class="nav-number">2.4.1.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%A7%92%E7%BA%BF%E6%98%A0%E5%B0%84%E8%A7%84%E5%BE%8B"><span class="nav-number">2.4.2.</span> <span class="nav-text">对角线映射规律</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%A6%E4%B8%8A%E5%88%B0%E5%8F%B3%E4%B8%8B%E5%AF%B9%E8%A7%92%E7%BA%BF%EF%BC%88left%EF%BC%89"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">左上到右下对角线（left）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%B3%E4%B8%8A%E5%88%B0%E5%B7%A6%E4%B8%8B%E5%AF%B9%E8%A7%92%E7%BA%BF%EF%BC%88right%EF%BC%89"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">右上到左下对角线（right）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">2.4.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E4%BD%8D%E8%BF%90%E7%AE%97%E6%8A%80%E5%B7%A7"><span class="nav-number">2.4.4.</span> <span class="nav-text">关键位运算技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%8F%90%E5%8F%96%E6%9C%80%E5%8F%B3%E8%BE%B9%E7%9A%841"><span class="nav-number">2.4.4.1.</span> <span class="nav-text">1. 提取最右边的1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E7%A7%BB%E9%99%A4%E5%B7%B2%E9%80%89%E6%8B%A9%E7%9A%84%E4%BD%8D"><span class="nav-number">2.4.4.2.</span> <span class="nav-text">2. 移除已选择的位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E8%AE%A1%E7%AE%97%E6%9C%89%E6%95%88%E5%80%99%E9%80%89%E4%BD%8D%E7%BD%AE"><span class="nav-number">2.4.4.3.</span> <span class="nav-text">3. 计算有效候选位置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.4.5.</span> <span class="nav-text">执行过程示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-1"><span class="nav-number">2.4.6.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="nav-number">2.5.</span> <span class="nav-text">性能对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="nav-number">2.5.1.</span> <span class="nav-text">测试代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E8%BF%90%E7%AE%97%E6%A0%B8%E5%BF%83%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93"><span class="nav-number">2.6.</span> <span class="nav-text">位运算核心技巧总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%9F%BA%E6%9C%AC%E4%BD%8D%E6%93%8D%E4%BD%9C"><span class="nav-number">2.6.1.</span> <span class="nav-text">1. 基本位操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%AB%98%E7%BA%A7%E4%BD%8D%E6%8A%80%E5%B7%A7"><span class="nav-number">2.6.2.</span> <span class="nav-text">2. 高级位技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AF%B9%E8%A7%92%E7%BA%BF%E6%98%A0%E5%B0%84"><span class="nav-number">2.6.3.</span> <span class="nav-text">3. 对角线映射</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5%E6%80%BB%E7%BB%93"><span class="nav-number">2.7.</span> <span class="nav-text">优化策略总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E9%80%89%E6%8B%A9"><span class="nav-number">2.7.1.</span> <span class="nav-text">1. 数据结构选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%8A%B6%E6%80%81%E8%A1%A8%E7%A4%BA%E4%BC%98%E5%8C%96"><span class="nav-number">2.7.2.</span> <span class="nav-text">2. 状态表示优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%AE%97%E6%B3%95%E5%89%AA%E6%9E%9D"><span class="nav-number">2.7.3.</span> <span class="nav-text">3. 算法剪枝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%B8%B8%E6%95%B0%E4%BC%98%E5%8C%96"><span class="nav-number">2.7.4.</span> <span class="nav-text">4. 常数优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E8%A6%81%E7%82%B9"><span class="nav-number">2.8.</span> <span class="nav-text">学习要点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.8.1.</span> <span class="nav-text">1. 回溯算法模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BD%8D%E8%BF%90%E7%AE%97%E5%9C%A8%E7%AE%97%E6%B3%95%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">2.8.2.</span> <span class="nav-text">2. 位运算在算法中的应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%9D%E8%B7%AF"><span class="nav-number">2.8.3.</span> <span class="nav-text">3. 性能优化思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95"><span class="nav-number">2.8.4.</span> <span class="nav-text">4. 问题分析方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.9.</span> <span class="nav-text">实际应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%BA%A6%E6%9D%9F%E6%BB%A1%E8%B6%B3%E9%97%AE%E9%A2%98%EF%BC%88CSP%EF%BC%89"><span class="nav-number">2.9.1.</span> <span class="nav-text">1. 约束满足问题（CSP）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BD%8D%E8%BF%90%E7%AE%97%E4%BC%98%E5%8C%96%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.9.2.</span> <span class="nav-text">2. 位运算优化适用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.9.3.</span> <span class="nav-text">3. 工程实践建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.10.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

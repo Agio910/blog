@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series本笔记包括了基数排序的原理与实现，以及重要排序算法的性能总结与选择策略，包括了class028 -&gt; class029的内容 028【必备】基数排序基数排序概述基数排序是一种非基于比较的排序算法，它通过对数字的每一位进行排序来实现整体排序。与其他基于比">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（9）- 基数排序&amp;排序算法总结">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/08/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%889%EF%BC%89-%20%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F&%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series本笔记包括了基数排序的原理与实现，以及重要排序算法的性能总结与选择策略，包括了class028 -&gt; class029的内容 028【必备】基数排序基数排序概述基数排序是一种非基于比较的排序算法，它通过对数字的每一位进行排序来实现整体排序。与其他基于比">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(9)/class28-%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F/%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F%E4%BE%8B%E5%AD%90.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(9)/class28-%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F/%E6%A1%B6%E6%8E%92%E5%BA%8F%E4%BE%8B%E5%AD%90.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(9)/class28-%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F/%E8%BF%9B%E4%BD%8D%E5%BE%97%E5%88%B0%E6%95%B0%E5%AD%97.png">
+<meta property="article:published_time" content="2025-08-10T00:42:46.000Z">
+<meta property="article:modified_time" content="2025-08-16T09:19:16.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="排序算法">
+<meta property="article:tag" content="基数排序">
+<meta property="article:tag" content="计数排序">
+<meta property="article:tag" content="桶排序">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(9)/class28-%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F/%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F%E4%BE%8B%E5%AD%90.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/08/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%889%EF%BC%89-%20%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F&%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（9）- 基数排序&排序算法总结 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/08/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%889%EF%BC%89-%20%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F&%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（9）- 基数排序&排序算法总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-08-10 08:42:46" itemprop="dateCreated datePublished" datetime="2025-08-10T08:42:46+08:00">2025-08-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-08-16 17:19:16" itemprop="dateModified" datetime="2025-08-16T17:19:16+08:00">2025-08-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a><br>本笔记包括了基数排序的原理与实现，以及重要排序算法的性能总结与选择策略，包括了class028 -&gt; class029的内容</p>
+<h1 id="028【必备】基数排序"><a href="#028【必备】基数排序" class="headerlink" title="028【必备】基数排序"></a>028【必备】基数排序</h1><h2 id="基数排序概述"><a href="#基数排序概述" class="headerlink" title="基数排序概述"></a>基数排序概述</h2><p>基数排序是一种<strong>非基于比较</strong>的排序算法，它通过对数字的每一位进行排序来实现整体排序。与其他基于比较的排序算法不同，基数排序对数据类型有特定要求。</p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P1177">https://www.luogu.com.cn/problem/P1177</a></p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(9)/class28-%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F/%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F%E4%BE%8B%E5%AD%90.png" alt="基数排序例子"></p>
+<h3 id="基于比较-vs-非基于比较的排序"><a href="#基于比较-vs-非基于比较的排序" class="headerlink" title="基于比较 vs 非基于比较的排序"></a>基于比较 vs 非基于比较的排序</h3><p><strong>基于比较的排序</strong>：</p>
+<ul>
+<li>只需要定义好两个对象之间怎么比较即可</li>
+<li>对象的数据特征并不关心，很通用</li>
+<li>例如：快速排序、归并排序、堆排序等</li>
+</ul>
+<p><strong>非基于比较的排序</strong>：</p>
+<ul>
+<li>和比较无关的排序，对于对象的数据特征有要求</li>
+<li>并不通用，但在特定条件下效率极高</li>
+<li>例如：计数排序、桶排序、基数排序</li>
+</ul>
+<h2 id="从计数排序到基数排序"><a href="#从计数排序到基数排序" class="headerlink" title="从计数排序到基数排序"></a>从计数排序到基数排序</h2><h3 id="计数排序"><a href="#计数排序" class="headerlink" title="计数排序"></a>计数排序</h3><p>计数排序是最简单的非比较排序算法：</p>
+<ul>
+<li>用一个数组或哈希表来记录每个数字出现的次数</li>
+<li>遍历数组统计，然后按顺序输出</li>
+<li><strong>限制</strong>：数值范围比较大时就不实用了</li>
+</ul>
+<h3 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h3><p>桶排序是计数排序的升级版：</p>
+<ul>
+<li>将数据分到有限数量的桶里，然后对每个桶再分别排序，最后合并</li>
+<li>计数排序可以看成每个桶只存储相同元素</li>
+<li>桶排序每个桶存储一定范围的元素</li>
+<li>需要确定两个信息：桶的数量和每个桶的区间范围</li>
+</ul>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(9)/class28-%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F/%E6%A1%B6%E6%8E%92%E5%BA%8F%E4%BE%8B%E5%AD%90.png" alt="桶排序例子"></p>
+<h3 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h3><p>基数排序进一步优化了桶的使用：</p>
+<ul>
+<li>按位进行排序，比如先按个位数字放进桶里再倒出，再按十位数字放进桶里再倒出</li>
+<li>这样就得到一个有序的序列</li>
+</ul>
+<h2 id="基数排序的核心思想"><a href="#基数排序的核心思想" class="headerlink" title="基数排序的核心思想"></a>基数排序的核心思想</h2><p>基数排序采用**LSD（Least Significant Digit）**策略，从最低位开始排序：</p>
+<ol>
+<li><strong>从个位开始</strong>：按个位数字进行计数排序</li>
+<li><strong>依次向高位</strong>：按十位、百位、千位…依次排序</li>
+<li><strong>保持稳定性</strong>：每次排序都要保持之前排序的相对顺序</li>
+</ol>
+<p><strong>关键点</strong>：</p>
+<ul>
+<li>前缀数量分区的技巧</li>
+<li>数字提取某一位的技巧</li>
+<li>时间复杂度O(n)，额外空间复杂度O(m)</li>
+</ul>
+<h2 id="基数排序实现详解"><a href="#基数排序实现详解" class="headerlink" title="基数排序实现详解"></a>基数排序实现详解</h2><h3 id="核心代码结构"><a href="#核心代码结构" class="headerlink" title="核心代码结构"></a>核心代码结构</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以设置进制，不一定10进制</span></span><br><span class="line">BASE = <span class="number">10</span>  <span class="comment"># 基数，当前设置为10进制</span></span><br><span class="line"></span><br><span class="line">MAXN = <span class="number">100001</span>  <span class="comment"># 最大数据量</span></span><br><span class="line">arr = [<span class="number">0</span>] * MAXN      <span class="comment"># 存储待排序数组</span></span><br><span class="line">help_arr = [<span class="number">0</span>] * MAXN <span class="comment"># 辅助数组</span></span><br><span class="line">cnts = [<span class="number">0</span>] * BASE     <span class="comment"># 计数数组</span></span><br><span class="line">n = <span class="number">0</span>                 <span class="comment"># 元素数量</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="处理负数的技巧"><a href="#处理负数的技巧" class="headerlink" title="处理负数的技巧"></a>处理负数的技巧</h3><p>由于基数排序要求非负整数，需要特殊处理负数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">sort</span>():</span><br><span class="line">    <span class="comment"># 找到数组中的最小值</span></span><br><span class="line">    min_val = arr[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n):</span><br><span class="line">        min_val = <span class="built_in">min</span>(min_val, arr[i])</span><br><span class="line">    </span><br><span class="line">    max_val = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        arr[i] -= min_val  <span class="comment"># 全部减去最小值，转为非负数</span></span><br><span class="line">        max_val = <span class="built_in">max</span>(max_val, arr[i])</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 根据最大值在BASE进制下的位数，决定基数排序做多少轮</span></span><br><span class="line">    radixSort(bits(max_val))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 数组中所有数都减去了最小值，所以最后不要忘了还原</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        arr[i] += min_val</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(9)/class28-%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F/%E8%BF%9B%E4%BD%8D%E5%BE%97%E5%88%B0%E6%95%B0%E5%AD%97.png" alt="进位得到数字"></p>
+<h3 id="计算位数"><a href="#计算位数" class="headerlink" title="计算位数"></a>计算位数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">bits</span>(<span class="params">number</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;返回number在BASE进制下有几位&quot;&quot;&quot;</span></span><br><span class="line">    ans = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> number &gt; <span class="number">0</span>:</span><br><span class="line">        ans += <span class="number">1</span></span><br><span class="line">        number //= BASE</span><br><span class="line">    <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="基数排序核心算法"><a href="#基数排序核心算法" class="headerlink" title="基数排序核心算法"></a>基数排序核心算法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">radixSort</span>(<span class="params">bits_</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    基数排序核心代码</span></span><br><span class="line"><span class="string">    arr内要保证没有负数</span></span><br><span class="line"><span class="string">    bits_是arr中最大值在BASE进制下有几位</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    offset = <span class="number">1</span>  <span class="comment"># 当前位权重</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(bits_):</span><br><span class="line">        <span class="comment"># 每一轮针对某一位排序</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 1. 计数数组清零</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(BASE):</span><br><span class="line">            cnts[i] = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 2. 统计该位各数字出现次数</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            cnts[(arr[i] // offset) % BASE] += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 3. 转换为前缀和（确定位置）</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, BASE):</span><br><span class="line">            cnts[i] += cnts[i - <span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 4. 从后往前放入辅助数组（保证稳定性）</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">            idx = (arr[i] // offset) % BASE  <span class="comment"># 该位的值</span></span><br><span class="line">            cnts[idx] -= <span class="number">1</span></span><br><span class="line">            help_arr[cnts[idx]] = arr[i]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 5. 拷回原数组</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            arr[i] = help_arr[i]</span><br><span class="line">        </span><br><span class="line">        offset *= BASE  <span class="comment"># 下一位</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="算法详细步骤演示"><a href="#算法详细步骤演示" class="headerlink" title="算法详细步骤演示"></a>算法详细步骤演示</h2><p>以数组 <code>[170, 45, 75, 90, 2, 802, 24, 66]</code> 为例：</p>
+<p><strong>初始数组</strong>：<code>[170, 45, 75, 90, 2, 802, 24, 66]</code></p>
+<h3 id="第一轮（个位排序）"><a href="#第一轮（个位排序）" class="headerlink" title="第一轮（个位排序）"></a>第一轮（个位排序）</h3><p><strong>Step 1 - 统计个位数字</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">个位: [0, 5, 5, 0, 2, 2, 4, 6]</span><br><span class="line">cnts: [2, 0, 2, 0, 1, 2, 1, 0, 0, 0]</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 2 - 计算前缀和</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnts: [2, 2, 4, 4, 5, 7, 8, 8, 8, 8]</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 3 - 从后往前放置</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">结果: [170, 90, 2, 802, 24, 45, 75, 66]</span><br></pre></td></tr></table></figure>
+
+<h3 id="第二轮（十位排序）"><a href="#第二轮（十位排序）" class="headerlink" title="第二轮（十位排序）"></a>第二轮（十位排序）</h3><p><strong>Step 1 - 统计十位数字</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">十位: [7, 9, 0, 0, 2, 4, 7, 6]</span><br><span class="line">cnts: [2, 0, 1, 0, 1, 0, 1, 2, 0, 1]</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 2 - 计算前缀和并放置</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">结果: [2, 802, 24, 45, 66, 170, 75, 90]</span><br></pre></td></tr></table></figure>
+
+<h3 id="第三轮（百位排序）"><a href="#第三轮（百位排序）" class="headerlink" title="第三轮（百位排序）"></a>第三轮（百位排序）</h3><p>最终结果：<code>[2, 24, 45, 66, 75, 90, 170, 802]</code></p>
+<h2 id="稳定性保证"><a href="#稳定性保证" class="headerlink" title="稳定性保证"></a>稳定性保证</h2><p>基数排序的稳定性通过以下方式保证：</p>
+<ol>
+<li><strong>从后往前处理</strong>：在放入辅助数组时从后往前遍历原数组</li>
+<li><strong>前缀和技巧</strong>：使用前缀和确定每个元素在结果数组中的准确位置</li>
+<li><strong>逐位处理</strong>：每一位的排序都保持前一位排序的相对顺序</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关键：从后往前，确保稳定性</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">    idx = (arr[i] // offset) % BASE</span><br><span class="line">    cnts[idx] -= <span class="number">1</span></span><br><span class="line">    help_arr[cnts[idx]] = arr[i]</span><br></pre></td></tr></table></figure>
+
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><p><strong>时间复杂度：O(n)</strong></p>
+<ul>
+<li>设最大数有d位，需要进行d轮排序</li>
+<li>每轮排序需要O(n + k)时间，其中k是基数（通常k&#x3D;10）</li>
+<li>总时间复杂度：O(d × (n + k)) ≈ O(n)</li>
+</ul>
+<p><strong>空间复杂度：O(m)</strong></p>
+<ul>
+<li>m为基数大小，需要辅助空间做类似桶的作用</li>
+<li>包括辅助数组help_arr和计数数组cnts</li>
+</ul>
+<h2 id="应用限制"><a href="#应用限制" class="headerlink" title="应用限制"></a>应用限制</h2><p><strong>一般来讲，基数排序要求</strong>：</p>
+<ul>
+<li>样本是10进制的非负整数</li>
+<li>如果不是就需要转化（如代码中处理负数的方式）</li>
+<li>可以设置任何进制来进行排序</li>
+</ul>
+<p><strong>局限性</strong>：</p>
+<ul>
+<li>一旦比较的对象不再是常规数字，改写代价显著增加</li>
+<li>不基于比较的排序并不通用</li>
+</ul>
+<h1 id="029【必备】重要排序算法的总结"><a href="#029【必备】重要排序算法的总结" class="headerlink" title="029【必备】重要排序算法的总结"></a>029【必备】重要排序算法的总结</h1><h2 id="排序算法稳定性"><a href="#排序算法稳定性" class="headerlink" title="排序算法稳定性"></a>排序算法稳定性</h2><h3 id="稳定性定义"><a href="#稳定性定义" class="headerlink" title="稳定性定义"></a>稳定性定义</h3><p><strong>排序算法的稳定性</strong>是指：同样大小的样本在排序之后不会改变原始的相对次序。</p>
+<p><strong>重要性</strong>：</p>
+<ul>
+<li>稳定性对基础类型对象来说毫无意义</li>
+<li>稳定性对非基础类型对象有意义，可以保留之前的相对次序</li>
+</ul>
+<h2 id="主要排序算法性能总结"><a href="#主要排序算法性能总结" class="headerlink" title="主要排序算法性能总结"></a>主要排序算法性能总结</h2><table>
+<thead>
+<tr>
+<th>排序算法</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>稳定性</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SelectionSort</strong><br/>选择排序</td>
+<td>O(N²)</td>
+<td>O(1)</td>
+<td>❌</td>
+<td>因为是随机的交换</td>
+</tr>
+<tr>
+<td><strong>BubbleSort</strong><br/>冒泡排序</td>
+<td>O(N²)</td>
+<td>O(1)</td>
+<td>✅</td>
+<td>数学归纳法可以保证</td>
+</tr>
+<tr>
+<td><strong>InsertionSort</strong><br/>插入排序</td>
+<td>O(N²)</td>
+<td>O(1)</td>
+<td>✅</td>
+<td>相等会直接停，能够保证稳定性</td>
+</tr>
+<tr>
+<td><strong>MergeSort</strong><br/>归并排序</td>
+<td>O(N log N)</td>
+<td>O(N)</td>
+<td>✅</td>
+<td>左右两边的区域满足偏序性</td>
+</tr>
+<tr>
+<td><strong>QuickSort</strong><br/>快速排序</td>
+<td>O(N log N)</td>
+<td>O(log N)</td>
+<td>❌</td>
+<td>普通的是固定选择，随机的随机选择</td>
+</tr>
+<tr>
+<td><strong>HeapSort</strong><br/>堆排序</td>
+<td>O(N log N)</td>
+<td>O(1)</td>
+<td>❌</td>
+<td>建堆的过程根本不在乎稳不稳定</td>
+</tr>
+<tr>
+<td><strong>CountSort</strong><br/>计数排序</td>
+<td>O(N)</td>
+<td>O(M)</td>
+<td>✅</td>
+<td>入桶和出桶的过程是按次序的</td>
+</tr>
+<tr>
+<td><strong>RadixSort</strong><br/>基数排序</td>
+<td>O(N)</td>
+<td>O(M)</td>
+<td>✅</td>
+<td>同计数排序</td>
+</tr>
+</tbody></table>
+<h3 id="关键说明"><a href="#关键说明" class="headerlink" title="关键说明"></a>关键说明</h3><p><strong>随机快速排序的复杂度</strong>：</p>
+<ul>
+<li>一定要按照概率上的期望指标来估计</li>
+<li>用最差的复杂度估计无意义</li>
+<li>随机快排的详细说明在之前的视频中已有详细解释</li>
+</ul>
+<p><strong>重要结论</strong>：</p>
+<blockquote>
+<p>基于比较的排序，时间复杂度O(n log n)，空间复杂度低于O(n)，还具有稳定性的排序算法目前没有找到</p>
+</blockquote>
+<p><strong>TimSort说明</strong>：</p>
+<ul>
+<li>TimSort也不行，虽然在实际应用中通常不需要这么多的额外空间</li>
+<li>但空间复杂度指标就是O(n)</li>
+<li>在算法面试、笔试、比赛中都很少用到</li>
+</ul>
+<p><strong>希尔排序（ShellSort）</strong>：</p>
+<ul>
+<li>也不常用，就是加入步长调整的插入排序</li>
+<li>有兴趣的同学可以研究一下</li>
+</ul>
+<h2 id="排序算法选择策略"><a href="#排序算法选择策略" class="headerlink" title="排序算法选择策略"></a>排序算法选择策略</h2><p>排序算法的选择完全取决于你在排序过程中在乎什么：</p>
+<h3 id="1-数据量非常小的情况"><a href="#1-数据量非常小的情况" class="headerlink" title="1. 数据量非常小的情况"></a>1. 数据量非常小的情况</h3><p><strong>推荐：插入排序</strong></p>
+<ul>
+<li>可以做到非常迅速</li>
+<li>实现简单，常数项小</li>
+<li>很多高级排序算法在小数据量时会切换到插入排序</li>
+</ul>
+<h3 id="2-性能优异-实现简单-不在乎稳定性"><a href="#2-性能优异-实现简单-不在乎稳定性" class="headerlink" title="2. 性能优异 + 实现简单 + 不在乎稳定性"></a>2. 性能优异 + 实现简单 + 不在乎稳定性</h3><p><strong>推荐：随机快速排序</strong></p>
+<ul>
+<li>性能优异，期望时间复杂度O(n log n)</li>
+<li>实现简单且利于改进</li>
+<li>面对不同业务可以选择不同划分策略</li>
+<li>空间复杂度较小O(log n)</li>
+</ul>
+<h3 id="3-性能优异-需要稳定性-不在乎额外空间"><a href="#3-性能优异-需要稳定性-不在乎额外空间" class="headerlink" title="3. 性能优异 + 需要稳定性 + 不在乎额外空间"></a>3. 性能优异 + 需要稳定性 + 不在乎额外空间</h3><p><strong>推荐：归并排序</strong></p>
+<ul>
+<li>性能优异，稳定的O(n log n)时间复杂度</li>
+<li>具有稳定性</li>
+<li>适合外部排序（大数据量）</li>
+<li>空间复杂度O(n)</li>
+</ul>
+<h3 id="4-性能优异-额外空间要求O-1-不在乎稳定性"><a href="#4-性能优异-额外空间要求O-1-不在乎稳定性" class="headerlink" title="4. 性能优异 + 额外空间要求O(1) + 不在乎稳定性"></a>4. 性能优异 + 额外空间要求O(1) + 不在乎稳定性</h3><p><strong>推荐：堆排序</strong></p>
+<ul>
+<li>性能优异，稳定的O(n log n)时间复杂度</li>
+<li>额外空间占用O(1)</li>
+<li>最坏情况下性能依然稳定</li>
+<li>不具有稳定性</li>
+</ul>
+<h3 id="5-特定数据特征-追求极致性能"><a href="#5-特定数据特征-追求极致性能" class="headerlink" title="5. 特定数据特征 + 追求极致性能"></a>5. 特定数据特征 + 追求极致性能</h3><p><strong>推荐：基数排序&#x2F;计数排序</strong></p>
+<ul>
+<li>在特定条件下可以达到O(n)时间复杂度</li>
+<li>对数据类型有严格要求</li>
+<li>适用于整数排序且范围有限的场景</li>
+</ul>
+<h2 id="实际应用建议"><a href="#实际应用建议" class="headerlink" title="实际应用建议"></a>实际应用建议</h2><h3 id="编程竞赛-面试"><a href="#编程竞赛-面试" class="headerlink" title="编程竞赛&#x2F;面试"></a>编程竞赛&#x2F;面试</h3><ol>
+<li><strong>快速排序</strong>：最常考查，需要熟练掌握</li>
+<li><strong>归并排序</strong>：稳定性要求时的首选</li>
+<li><strong>堆排序</strong>：空间复杂度有严格限制时</li>
+</ol>
+<h3 id="工程实践"><a href="#工程实践" class="headerlink" title="工程实践"></a>工程实践</h3><ol>
+<li><strong>小数组</strong>：插入排序</li>
+<li><strong>大数组</strong>：快速排序（随机化）</li>
+<li><strong>需要稳定性</strong>：归并排序</li>
+<li><strong>内存敏感</strong>：堆排序</li>
+<li><strong>特殊数据</strong>：计数排序&#x2F;基数排序</li>
+</ol>
+<h3 id="语言内置排序"><a href="#语言内置排序" class="headerlink" title="语言内置排序"></a>语言内置排序</h3><p>大多数编程语言的内置排序算法都是混合算法：</p>
+<ul>
+<li><strong>Python</strong>：Timsort（归并+插入的混合）</li>
+<li><strong>Java</strong>：双轴快排（小数组时用插入排序）</li>
+<li><strong>C++</strong>：通常是内省排序（快排+堆排序+插入排序的混合）</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>理解各种排序算法的特点和适用场景比单纯记忆算法更重要。在实际应用中，需要根据具体需求（数据规模、稳定性要求、空间限制等）来选择合适的排序算法。基数排序作为非比较排序的代表，在特定场景下能够突破O(n log n)的理论下界，达到线性时间复杂度。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" rel="tag"># 排序算法</a>
+              <a href="/tags/%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F/" rel="tag"># 基数排序</a>
+              <a href="/tags/%E8%AE%A1%E6%95%B0%E6%8E%92%E5%BA%8F/" rel="tag"># 计数排序</a>
+              <a href="/tags/%E6%A1%B6%E6%8E%92%E5%BA%8F/" rel="tag"># 桶排序</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/08/09/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%888%EF%BC%89-%20%E5%A0%86%E7%BB%93%E6%9E%84&%E5%93%88%E5%B8%8C%E8%A1%A8&%E5%A0%86%E7%BB%93%E6%9E%84%E7%9B%B8%E5%85%B3%E4%B9%A0%E9%A2%98/" rel="prev" title="数据结构与算法自学笔记（8）- 堆结构&哈希表&堆结构相关习题">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（8）- 堆结构&哈希表&堆结构相关习题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/08/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8810%EF%BC%89-%20%E5%BC%82%E6%88%96%E8%BF%90%E7%AE%97%E5%92%8C%E4%BD%8D%E8%BF%90%E7%AE%97%E7%9A%84%E9%AA%9A%E6%93%8D%E4%BD%9C/" rel="next" title="数据结构与算法自学笔记（10）- 异或运算和位运算的骚操作">
+      数据结构与算法自学笔记（10）- 异或运算和位运算的骚操作 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#028%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">028【必备】基数排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">基数排序概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%AF%94%E8%BE%83-vs-%E9%9D%9E%E5%9F%BA%E4%BA%8E%E6%AF%94%E8%BE%83%E7%9A%84%E6%8E%92%E5%BA%8F"><span class="nav-number">1.1.1.</span> <span class="nav-text">基于比较 vs 非基于比较的排序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E8%AE%A1%E6%95%B0%E6%8E%92%E5%BA%8F%E5%88%B0%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F"><span class="nav-number">1.2.</span> <span class="nav-text">从计数排序到基数排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E6%95%B0%E6%8E%92%E5%BA%8F"><span class="nav-number">1.2.1.</span> <span class="nav-text">计数排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%B6%E6%8E%92%E5%BA%8F"><span class="nav-number">1.2.2.</span> <span class="nav-text">桶排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F"><span class="nav-number">1.2.3.</span> <span class="nav-text">基数排序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">1.3.</span> <span class="nav-text">基数排序的核心思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F%E5%AE%9E%E7%8E%B0%E8%AF%A6%E8%A7%A3"><span class="nav-number">1.4.</span> <span class="nav-text">基数排序实现详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84"><span class="nav-number">1.4.1.</span> <span class="nav-text">核心代码结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E8%B4%9F%E6%95%B0%E7%9A%84%E6%8A%80%E5%B7%A7"><span class="nav-number">1.4.2.</span> <span class="nav-text">处理负数的技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E4%BD%8D%E6%95%B0"><span class="nav-number">1.4.3.</span> <span class="nav-text">计算位数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F%E6%A0%B8%E5%BF%83%E7%AE%97%E6%B3%95"><span class="nav-number">1.4.4.</span> <span class="nav-text">基数排序核心算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4%E6%BC%94%E7%A4%BA"><span class="nav-number">1.5.</span> <span class="nav-text">算法详细步骤演示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E8%BD%AE%EF%BC%88%E4%B8%AA%E4%BD%8D%E6%8E%92%E5%BA%8F%EF%BC%89"><span class="nav-number">1.5.1.</span> <span class="nav-text">第一轮（个位排序）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E8%BD%AE%EF%BC%88%E5%8D%81%E4%BD%8D%E6%8E%92%E5%BA%8F%EF%BC%89"><span class="nav-number">1.5.2.</span> <span class="nav-text">第二轮（十位排序）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E8%BD%AE%EF%BC%88%E7%99%BE%E4%BD%8D%E6%8E%92%E5%BA%8F%EF%BC%89"><span class="nav-number">1.5.3.</span> <span class="nav-text">第三轮（百位排序）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%B3%E5%AE%9A%E6%80%A7%E4%BF%9D%E8%AF%81"><span class="nav-number">1.6.</span> <span class="nav-text">稳定性保证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">1.7.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E9%99%90%E5%88%B6"><span class="nav-number">1.8.</span> <span class="nav-text">应用限制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#029%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E9%87%8D%E8%A6%81%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E7%9A%84%E6%80%BB%E7%BB%93"><span class="nav-number">2.</span> <span class="nav-text">029【必备】重要排序算法的总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E7%A8%B3%E5%AE%9A%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">排序算法稳定性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%AE%9A%E4%B9%89"><span class="nav-number">2.1.1.</span> <span class="nav-text">稳定性定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%A7%E8%83%BD%E6%80%BB%E7%BB%93"><span class="nav-number">2.2.</span> <span class="nav-text">主要排序算法性能总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%AF%B4%E6%98%8E"><span class="nav-number">2.2.1.</span> <span class="nav-text">关键说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E9%80%89%E6%8B%A9%E7%AD%96%E7%95%A5"><span class="nav-number">2.3.</span> <span class="nav-text">排序算法选择策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%95%B0%E6%8D%AE%E9%87%8F%E9%9D%9E%E5%B8%B8%E5%B0%8F%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">2.3.1.</span> <span class="nav-text">1. 数据量非常小的情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%80%A7%E8%83%BD%E4%BC%98%E5%BC%82-%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95-%E4%B8%8D%E5%9C%A8%E4%B9%8E%E7%A8%B3%E5%AE%9A%E6%80%A7"><span class="nav-number">2.3.2.</span> <span class="nav-text">2. 性能优异 + 实现简单 + 不在乎稳定性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%80%A7%E8%83%BD%E4%BC%98%E5%BC%82-%E9%9C%80%E8%A6%81%E7%A8%B3%E5%AE%9A%E6%80%A7-%E4%B8%8D%E5%9C%A8%E4%B9%8E%E9%A2%9D%E5%A4%96%E7%A9%BA%E9%97%B4"><span class="nav-number">2.3.3.</span> <span class="nav-text">3. 性能优异 + 需要稳定性 + 不在乎额外空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%80%A7%E8%83%BD%E4%BC%98%E5%BC%82-%E9%A2%9D%E5%A4%96%E7%A9%BA%E9%97%B4%E8%A6%81%E6%B1%82O-1-%E4%B8%8D%E5%9C%A8%E4%B9%8E%E7%A8%B3%E5%AE%9A%E6%80%A7"><span class="nav-number">2.3.4.</span> <span class="nav-text">4. 性能优异 + 额外空间要求O(1) + 不在乎稳定性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%89%B9%E5%AE%9A%E6%95%B0%E6%8D%AE%E7%89%B9%E5%BE%81-%E8%BF%BD%E6%B1%82%E6%9E%81%E8%87%B4%E6%80%A7%E8%83%BD"><span class="nav-number">2.3.5.</span> <span class="nav-text">5. 特定数据特征 + 追求极致性能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.4.</span> <span class="nav-text">实际应用建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A8%8B%E7%AB%9E%E8%B5%9B-%E9%9D%A2%E8%AF%95"><span class="nav-number">2.4.1.</span> <span class="nav-text">编程竞赛&#x2F;面试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5"><span class="nav-number">2.4.2.</span> <span class="nav-text">工程实践</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E8%A8%80%E5%86%85%E7%BD%AE%E6%8E%92%E5%BA%8F"><span class="nav-number">2.4.3.</span> <span class="nav-text">语言内置排序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

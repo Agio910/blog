@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series本笔记包括了二叉树的基础概念、三种遍历方式的递归实现和非递归实现，涵盖了先序、中序、后序遍历的原理与代码实现，包括了class017 -&gt; class018的内容 017【入门】二叉树及其三种序的递归实现二叉树的基本概念二叉树是一种重要的树形数据结构，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（4）- 二叉树相关">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/08/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%884%EF%BC%89-%20%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9B%B8%E5%85%B3/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series本笔记包括了二叉树的基础概念、三种遍历方式的递归实现和非递归实现，涵盖了先序、中序、后序遍历的原理与代码实现，包括了class017 -&gt; class018的内容 017【入门】二叉树及其三种序的递归实现二叉树的基本概念二叉树是一种重要的树形数据结构，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class17%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%89%E7%A7%8D%E5%BA%8F/f%E5%87%BD%E6%95%B0.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class17%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%89%E7%A7%8D%E5%BA%8F/%E7%90%86%E8%A7%A3f%E5%87%BD%E6%95%B0%E4%BB%A5%E5%8F%8A%E9%80%92%E5%BD%92%E5%BA%8F.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class17%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%89%E7%A7%8D%E5%BA%8F/%E5%85%88%E5%BA%8F.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class17%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%89%E7%A7%8D%E5%BA%8F/%E4%B8%AD%E5%BA%8F.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class17%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%89%E7%A7%8D%E5%BA%8F/%E5%90%8E%E5%BA%8F.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class18%E4%BA%8C%E5%8F%89%E6%A0%91%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0/%E5%85%88%E5%BA%8F.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class18%E4%BA%8C%E5%8F%89%E6%A0%91%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0/%E4%B8%AD%E5%BA%8F.png">
+<meta property="article:published_time" content="2025-08-04T06:42:46.000Z">
+<meta property="article:modified_time" content="2025-08-05T08:01:36.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="二叉树">
+<meta property="article:tag" content="递归">
+<meta property="article:tag" content="节点遍历">
+<meta property="article:tag" content="迭代">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class17%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%89%E7%A7%8D%E5%BA%8F/f%E5%87%BD%E6%95%B0.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/08/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%884%EF%BC%89-%20%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9B%B8%E5%85%B3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（4）- 二叉树相关 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/08/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%884%EF%BC%89-%20%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9B%B8%E5%85%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（4）- 二叉树相关
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-08-04 14:42:46" itemprop="dateCreated datePublished" datetime="2025-08-04T14:42:46+08:00">2025-08-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-08-05 16:01:36" itemprop="dateModified" datetime="2025-08-05T16:01:36+08:00">2025-08-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a><br>本笔记包括了二叉树的基础概念、三种遍历方式的递归实现和非递归实现，涵盖了先序、中序、后序遍历的原理与代码实现，包括了class017 -&gt; class018的内容</p>
+<h1 id="017【入门】二叉树及其三种序的递归实现"><a href="#017【入门】二叉树及其三种序的递归实现" class="headerlink" title="017【入门】二叉树及其三种序的递归实现"></a>017【入门】二叉树及其三种序的递归实现</h1><h2 id="二叉树的基本概念"><a href="#二叉树的基本概念" class="headerlink" title="二叉树的基本概念"></a>二叉树的基本概念</h2><p>二叉树是一种重要的树形数据结构，每个节点最多有两个子节点，分别称为左子节点和右子节点。二叉树是许多高级数据结构和算法的基础。</p>
+<h3 id="二叉树节点定义"><a href="#二叉树节点定义" class="headerlink" title="二叉树节点定义"></a>二叉树节点定义</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TreeNode</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, v</span>):</span><br><span class="line">        <span class="variable language_">self</span>.val = v         <span class="comment"># 节点的值</span></span><br><span class="line">        <span class="variable language_">self</span>.left = <span class="literal">None</span>     <span class="comment"># 左子节点</span></span><br><span class="line">        <span class="variable language_">self</span>.right = <span class="literal">None</span>    <span class="comment"># 右子节点</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="递归序的概念"><a href="#递归序的概念" class="headerlink" title="递归序的概念"></a>递归序的概念</h3><p>递归序是理解二叉树遍历的关键概念。对于任意二叉树节点，递归过程会经过该节点三次：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>(<span class="params">head</span>):</span><br><span class="line">    <span class="keyword">if</span> head <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="comment"># 第1次到达该节点 - 刚进入该节点</span></span><br><span class="line">    f(head.left)   <span class="comment"># 递归处理左子树</span></span><br><span class="line">    <span class="comment"># 第2次到达该节点 - 左子树处理完毕</span></span><br><span class="line">    f(head.right)  <span class="comment"># 递归处理右子树</span></span><br><span class="line">    <span class="comment"># 第3次到达该节点 - 右子树处理完毕</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class17%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%89%E7%A7%8D%E5%BA%8F/f%E5%87%BD%E6%95%B0.png" alt="f函数"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class17%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%89%E7%A7%8D%E5%BA%8F/%E7%90%86%E8%A7%A3f%E5%87%BD%E6%95%B0%E4%BB%A5%E5%8F%8A%E9%80%92%E5%BD%92%E5%BA%8F.png" alt="理解f函数"></p>
+<p>根据在这三个时机中选择处理节点的时机不同，就形成了三种不同的遍历方式。</p>
+<h2 id="二叉树的三种递归遍历"><a href="#二叉树的三种递归遍历" class="headerlink" title="二叉树的三种递归遍历"></a>二叉树的三种递归遍历</h2><h3 id="先序遍历（Pre-order-Traversal）"><a href="#先序遍历（Pre-order-Traversal）" class="headerlink" title="先序遍历（Pre-order Traversal）"></a>先序遍历（Pre-order Traversal）</h3><p>先序遍历的顺序是：<strong>根节点 → 左子树 → 右子树</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">preOrder</span>(<span class="params">head</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    先序遍历：在第1次到达节点时处理</span></span><br><span class="line"><span class="string">    应用场景：复制二叉树、表达式树求值、目录树打印</span></span><br><span class="line"><span class="string">    测试链接LeetCode 144. 二叉树的前序遍历https://leetcode.cn/problems/binary-tree-preorder-traversal/</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> head <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="built_in">print</span>(head.val, end=<span class="string">&quot; &quot;</span>)  <span class="comment"># 先处理当前节点</span></span><br><span class="line">    BinaryTreeTraversalRecursion.preOrder(head.left)   <span class="comment"># 再遍历左子树</span></span><br><span class="line">    BinaryTreeTraversalRecursion.preOrder(head.right)  <span class="comment"># 最后遍历右子树</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class17%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%89%E7%A7%8D%E5%BA%8F/%E5%85%88%E5%BA%8F.png" alt="先序"></p>
+<h3 id="中序遍历（In-order-Traversal）"><a href="#中序遍历（In-order-Traversal）" class="headerlink" title="中序遍历（In-order Traversal）"></a>中序遍历（In-order Traversal）</h3><p>中序遍历的顺序是：<strong>左子树 → 根节点 → 右子树</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">inOrder</span>(<span class="params">head</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    中序遍历：在第2次到达节点时处理</span></span><br><span class="line"><span class="string">    应用场景：二叉搜索树排序（得到有序序列）、表达式树转中缀表达式</span></span><br><span class="line"><span class="string">    测试链接LeetCode 94. 二叉树的中序遍历：https://leetcode.cn/problems/binary-tree-inorder-traversal/</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> head <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    BinaryTreeTraversalRecursion.inOrder(head.left)   <span class="comment"># 先遍历左子树</span></span><br><span class="line">    <span class="built_in">print</span>(head.val, end=<span class="string">&quot; &quot;</span>)  <span class="comment"># 再处理当前节点</span></span><br><span class="line">    BinaryTreeTraversalRecursion.inOrder(head.right)  <span class="comment"># 最后遍历右子树</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class17%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%89%E7%A7%8D%E5%BA%8F/%E4%B8%AD%E5%BA%8F.png" alt="中序"></p>
+<h3 id="后序遍历（Post-order-Traversal）"><a href="#后序遍历（Post-order-Traversal）" class="headerlink" title="后序遍历（Post-order Traversal）"></a>后序遍历（Post-order Traversal）</h3><p>后序遍历的顺序是：<strong>左子树 → 右子树 → 根节点</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">posOrder</span>(<span class="params">head</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    后序遍历：在第3次到达节点时处理</span></span><br><span class="line"><span class="string">    应用场景：计算目录大小、删除二叉树、表达式树计算</span></span><br><span class="line"><span class="string">    测试链接LeetCode 145. 二叉树的后序遍历：https://leetcode.cn/problems/binary-tree-postorder-traversal/</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> head <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    BinaryTreeTraversalRecursion.posOrder(head.left)   <span class="comment"># 先遍历左子树</span></span><br><span class="line">    BinaryTreeTraversalRecursion.posOrder(head.right)  <span class="comment"># 再遍历右子树</span></span><br><span class="line">    <span class="built_in">print</span>(head.val, end=<span class="string">&quot; &quot;</span>)  <span class="comment"># 最后处理当前节点</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class17%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%89%E7%A7%8D%E5%BA%8F/%E5%90%8E%E5%BA%8F.png" alt="后序"></p>
+<h2 id="递归遍历的示例执行"><a href="#递归遍历的示例执行" class="headerlink" title="递归遍历的示例执行"></a>递归遍历的示例执行</h2><p>以下面的二叉树为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    1</span><br><span class="line">   / \</span><br><span class="line">  2   3</span><br><span class="line"> / \ / \</span><br><span class="line">4  5 6  7</span><br></pre></td></tr></table></figure>
+
+<h3 id="执行结果对比"><a href="#执行结果对比" class="headerlink" title="执行结果对比"></a>执行结果对比</h3><ul>
+<li><strong>先序遍历结果</strong>：1 2 4 5 3 6 7</li>
+<li><strong>中序遍历结果</strong>：4 2 5 1 6 3 7  </li>
+<li><strong>后序遍历结果</strong>：4 5 2 6 7 3 1</li>
+</ul>
+<h3 id="递归调用过程分析"><a href="#递归调用过程分析" class="headerlink" title="递归调用过程分析"></a>递归调用过程分析</h3><p>以先序遍历为例，递归调用的过程：</p>
+<ol>
+<li>访问节点1，打印1</li>
+<li>递归进入左子树（节点2）<ul>
+<li>访问节点2，打印2</li>
+<li>递归进入左子树（节点4）<ul>
+<li>访问节点4，打印4</li>
+<li>左右子树为空，返回</li>
+</ul>
+</li>
+<li>递归进入右子树（节点5）<ul>
+<li>访问节点5，打印5</li>
+<li>左右子树为空，返回</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>递归进入右子树（节点3）<ul>
+<li>类似过程…</li>
+</ul>
+</li>
+</ol>
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><h3 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h3><p>所有递归遍历算法的时间复杂度都是 <strong>O(n)</strong>，其中n是二叉树的节点数。每个节点都会被访问恰好一次。</p>
+<h3 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h3><p><strong>额外空间复杂度：O(h)</strong>，其中h是树的高度。</p>
+<ul>
+<li><strong>最好情况</strong>（完全平衡的二叉树）：h &#x3D; ⌊log₂n⌋，空间复杂度为O(log n)</li>
+<li><strong>最坏情况</strong>（完全不平衡的树，退化为链表）：h &#x3D; n，空间复杂度为O(n)</li>
+<li><strong>平均情况</strong>：对于随机二叉树，h &#x3D; O(log n)</li>
+</ul>
+<p>空间消耗主要来自递归调用栈，栈的最大深度等于树的高度。</p>
+<h2 id="三种遍历方式的应用场景"><a href="#三种遍历方式的应用场景" class="headerlink" title="三种遍历方式的应用场景"></a>三种遍历方式的应用场景</h2><h3 id="先序遍历的典型应用"><a href="#先序遍历的典型应用" class="headerlink" title="先序遍历的典型应用"></a>先序遍历的典型应用</h3><ol>
+<li><strong>复制二叉树</strong>：先创建根节点，再递归复制左右子树</li>
+<li><strong>表达式树求值</strong>：先处理操作符，再处理操作数</li>
+<li><strong>目录树打印</strong>：先打印目录名，再打印子目录内容</li>
+<li><strong>序列化二叉树</strong>：将树结构转换为字符串格式</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 复制二叉树示例</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">copyTree</span>(<span class="params">root</span>):</span><br><span class="line">    <span class="keyword">if</span> root <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    <span class="comment"># 先创建新节点（先序特点）</span></span><br><span class="line">    newNode = TreeNode(root.val)</span><br><span class="line">    newNode.left = copyTree(root.left)    <span class="comment"># 递归复制左子树</span></span><br><span class="line">    newNode.right = copyTree(root.right)  <span class="comment"># 递归复制右子树</span></span><br><span class="line">    <span class="keyword">return</span> newNode</span><br></pre></td></tr></table></figure>
+
+<h3 id="中序遍历的典型应用"><a href="#中序遍历的典型应用" class="headerlink" title="中序遍历的典型应用"></a>中序遍历的典型应用</h3><ol>
+<li><strong>二叉搜索树排序</strong>：中序遍历BST得到有序序列</li>
+<li><strong>表达式树转中缀表达式</strong>：按照运算符优先级添加括号</li>
+<li><strong>验证二叉搜索树</strong>：检查中序遍历结果是否为递增序列</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 验证二叉搜索树示例</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">isValidBST</span>(<span class="params">root</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inorder</span>(<span class="params">node, values</span>):</span><br><span class="line">        <span class="keyword">if</span> node <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        inorder(node.left, values)</span><br><span class="line">        values.append(node.val)  <span class="comment"># 中序收集值</span></span><br><span class="line">        inorder(node.right, values)</span><br><span class="line">    </span><br><span class="line">    values = []</span><br><span class="line">    inorder(root, values)</span><br><span class="line">    <span class="comment"># 检查是否严格递增</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">all</span>(values[i] &lt; values[i+<span class="number">1</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(values)-<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+<h3 id="后序遍历的典型应用"><a href="#后序遍历的典型应用" class="headerlink" title="后序遍历的典型应用"></a>后序遍历的典型应用</h3><ol>
+<li><strong>计算目录大小</strong>：先计算子目录大小，再计算当前目录</li>
+<li><strong>删除二叉树</strong>：先删除子节点，再删除父节点</li>
+<li><strong>表达式树计算</strong>：先计算子表达式，再计算根表达式</li>
+<li><strong>计算树的高度</strong>：先计算子树高度，再计算当前树高度</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 计算二叉树高度示例</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">maxDepth</span>(<span class="params">root</span>):</span><br><span class="line">    <span class="keyword">if</span> root <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="comment"># 先计算左右子树高度（后序特点）</span></span><br><span class="line">    leftHeight = maxDepth(root.left)</span><br><span class="line">    rightHeight = maxDepth(root.right)</span><br><span class="line">    <span class="comment"># 再计算当前树高度</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">max</span>(leftHeight, rightHeight) + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="遍历方式选择指南"><a href="#遍历方式选择指南" class="headerlink" title="遍历方式选择指南"></a>遍历方式选择指南</h2><table>
+<thead>
+<tr>
+<th>需求场景</th>
+<th>推荐遍历方式</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>复制&#x2F;构建树结构</td>
+<td>先序遍历</td>
+<td>需要先创建根节点</td>
+</tr>
+<tr>
+<td>获取有序数据</td>
+<td>中序遍历</td>
+<td>BST的中序遍历有序</td>
+</tr>
+<tr>
+<td>释放&#x2F;计算资源</td>
+<td>后序遍历</td>
+<td>需要先处理子节点</td>
+</tr>
+<tr>
+<td>树的序列化</td>
+<td>先序遍历</td>
+<td>便于重建树结构</td>
+</tr>
+<tr>
+<td>表达式求值</td>
+<td>后序遍历</td>
+<td>需要先计算子表达式</td>
+</tr>
+</tbody></table>
+<h2 id="递归实现的优缺点"><a href="#递归实现的优缺点" class="headerlink" title="递归实现的优缺点"></a>递归实现的优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ol>
+<li><strong>代码简洁</strong>：逻辑清晰，易于理解和实现</li>
+<li><strong>自然表达</strong>：完美匹配树的递归定义</li>
+<li><strong>易于扩展</strong>：容易添加额外的处理逻辑</li>
+</ol>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ol>
+<li><strong>栈溢出风险</strong>：深度递归可能导致栈溢出</li>
+<li><strong>性能开销</strong>：函数调用的开销相对较大</li>
+<li><strong>难以控制</strong>：无法方便地暂停或恢复遍历过程</li>
+</ol>
+<p>在实际应用中，对于一般规模的二叉树，递归实现是首选方案。当树的深度可能很大时，需要考虑使用非递归实现来避免栈溢出问题。</p>
+<hr>
+<h1 id="018【入门】二叉树遍历的非递归实现和复杂度分析"><a href="#018【入门】二叉树遍历的非递归实现和复杂度分析" class="headerlink" title="018【入门】二叉树遍历的非递归实现和复杂度分析"></a>018【入门】二叉树遍历的非递归实现和复杂度分析</h1><h2 id="非递归实现的必要性"><a href="#非递归实现的必要性" class="headerlink" title="非递归实现的必要性"></a>非递归实现的必要性</h2><p>递归实现虽然简洁易懂，但在处理大型树时可能导致栈溢出。非递归实现使用显式栈来模拟递归过程，提供了更好的控制性和避免栈溢出的优势。</p>
+<h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>用显式的栈数据结构来模拟系统递归调用栈的行为，手动管理遍历过程中的状态信息。</p>
+<h2 id="先序遍历的非递归实现"><a href="#先序遍历的非递归实现" class="headerlink" title="先序遍历的非递归实现"></a>先序遍历的非递归实现</h2><h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>先序遍历要求”根-左-右”的访问顺序。使用栈时，由于栈是LIFO（后进先出）结构，需要先压入右子节点，再压入左子节点，这样弹栈时就是先处理左子树。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">preOrder</span>(<span class="params">head</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    先序遍历非递归实现</span></span><br><span class="line"><span class="string">    核心思路：使用一个栈。每次先访问节点本身，再依次压入右、左子节点（注意顺序，先右后左），这样弹栈时总是优先处理左子树，实现“中-左-右”顺序</span></span><br><span class="line"><span class="string">    时间复杂度：O(n)，每个节点进栈出栈各一次</span></span><br><span class="line"><span class="string">    空间复杂度：O(h)，h为树的高度</span></span><br><span class="line"><span class="string">    测试链接LeetCode 144. 二叉树的前序遍历https://leetcode.cn/problems/binary-tree-preorder-traversal/</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> head <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        stack = []</span><br><span class="line">        stack.append(head)</span><br><span class="line">        <span class="keyword">while</span> stack:</span><br><span class="line">            head = stack.pop()        <span class="comment"># 弹出栈顶节点</span></span><br><span class="line">            <span class="built_in">print</span>(head.val, end=<span class="string">&quot; &quot;</span>)  <span class="comment"># 立即打印（先序特点）</span></span><br><span class="line">            <span class="comment"># 关键：先压右子节点，再压左子节点</span></span><br><span class="line">            <span class="comment"># 这样弹栈时就是先处理左子树，再处理右子树</span></span><br><span class="line">            <span class="keyword">if</span> head.right <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                stack.append(head.right)</span><br><span class="line">            <span class="keyword">if</span> head.left <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                stack.append(head.left)</span><br><span class="line">        <span class="built_in">print</span>()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class18%E4%BA%8C%E5%8F%89%E6%A0%91%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0/%E5%85%88%E5%BA%8F.png" alt="先序2"></p>
+<h3 id="执行过程示例"><a href="#执行过程示例" class="headerlink" title="执行过程示例"></a>执行过程示例</h3><p>以树 <code>1(2(4,5),3(6,7))</code> 为例：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>栈状态</th>
+<th>弹出节点</th>
+<th>打印</th>
+<th>压入节点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>初始</td>
+<td>[1]</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>1</td>
+<td>[3,2]</td>
+<td>1</td>
+<td>1</td>
+<td>3,2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>[3,5,4]</td>
+<td>2</td>
+<td>2</td>
+<td>5,4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>[3,5]</td>
+<td>4</td>
+<td>4</td>
+<td>-</td>
+</tr>
+<tr>
+<td>4</td>
+<td>[3]</td>
+<td>5</td>
+<td>5</td>
+<td>-</td>
+</tr>
+<tr>
+<td>5</td>
+<td>[7,6]</td>
+<td>3</td>
+<td>3</td>
+<td>7,6</td>
+</tr>
+<tr>
+<td>6</td>
+<td>[7]</td>
+<td>6</td>
+<td>6</td>
+<td>-</td>
+</tr>
+<tr>
+<td>7</td>
+<td>[]</td>
+<td>7</td>
+<td>7</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p><strong>输出结果</strong>：1 2 4 5 3 6 7</p>
+<h2 id="中序遍历的非递归实现"><a href="#中序遍历的非递归实现" class="headerlink" title="中序遍历的非递归实现"></a>中序遍历的非递归实现</h2><h3 id="实现原理-1"><a href="#实现原理-1" class="headerlink" title="实现原理"></a>实现原理</h3><p>中序遍历要求”左-根-右”的访问顺序。需要先沿着左子树走到底，将路径上的所有节点压栈，然后开始弹栈处理节点，并转向右子树。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">inOrder</span>(<span class="params">head</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    中序遍历非递归实现</span></span><br><span class="line"><span class="string">    核心思路：用一个栈模拟递归。每次不断沿左子树走到底，并将沿途所有节点入栈；遇到空节点就弹出栈顶节点，访问它，然后转向其右子树。如此反复，完整地实现“左-中-右”顺序。</span></span><br><span class="line"><span class="string">    测试链接LeetCode 94. 二叉树的中序遍历：https://leetcode.cn/problems/binary-tree-inorder-traversal/</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> head <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        stack = []</span><br><span class="line">        <span class="keyword">while</span> stack <span class="keyword">or</span> head <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">if</span> head <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                <span class="comment"># 当前节点不为空，压栈并继续向左</span></span><br><span class="line">                stack.append(head)</span><br><span class="line">                head = head.left</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 当前节点为空，说明左子树遍历完毕</span></span><br><span class="line">                head = stack.pop()        <span class="comment"># 弹出栈顶节点</span></span><br><span class="line">                <span class="built_in">print</span>(head.val, end=<span class="string">&quot; &quot;</span>)  <span class="comment"># 打印节点值（中序特点）</span></span><br><span class="line">                head = head.right         <span class="comment"># 转向右子树</span></span><br><span class="line">        <span class="built_in">print</span>()</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法状态分析"><a href="#算法状态分析" class="headerlink" title="算法状态分析"></a>算法状态分析</h3><p>中序遍历的非递归实现有两种状态：</p>
+<ol>
+<li><strong>下降状态</strong>：<code>head != None</code>，沿左子树向下走并压栈</li>
+<li><strong>上升状态</strong>：<code>head == None</code>，弹栈处理节点并转向右子树</li>
+</ol>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(4)/class18%E4%BA%8C%E5%8F%89%E6%A0%91%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0/%E4%B8%AD%E5%BA%8F.png" alt="中序2"></p>
+<h3 id="执行过程示例-1"><a href="#执行过程示例-1" class="headerlink" title="执行过程示例"></a>执行过程示例</h3><p>以树 <code>1(2(4,5),3(6,7))</code> 为例：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>head</th>
+<th>栈状态</th>
+<th>操作</th>
+<th>打印</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>初始</td>
+<td>1</td>
+<td>[]</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>[1]</td>
+<td>压栈1，左移</td>
+<td>-</td>
+</tr>
+<tr>
+<td>2</td>
+<td>4</td>
+<td>[1,2]</td>
+<td>压栈2，左移</td>
+<td>-</td>
+</tr>
+<tr>
+<td>3</td>
+<td>None</td>
+<td>[1,2,4]</td>
+<td>压栈4，左移</td>
+<td>-</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>[1,2]</td>
+<td>弹栈4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>None</td>
+<td>[1,2]</td>
+<td>4右移(None)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>6</td>
+<td>2</td>
+<td>[1]</td>
+<td>弹栈2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>7</td>
+<td>5</td>
+<td>[1]</td>
+<td>2右移到5</td>
+<td>-</td>
+</tr>
+<tr>
+<td>8</td>
+<td>None</td>
+<td>[1,5]</td>
+<td>压栈5，左移</td>
+<td>-</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody></table>
+<p><strong>输出结果</strong>：4 2 5 1 6 3 7</p>
+<h2 id="后序遍历的非递归实现"><a href="#后序遍历的非递归实现" class="headerlink" title="后序遍历的非递归实现"></a>后序遍历的非递归实现</h2><p>后序遍历是最复杂的，因为需要确保在访问根节点之前，左右子树都已经被完全访问。提供两种实现方法：</p>
+<h3 id="方法一：使用两个栈"><a href="#方法一：使用两个栈" class="headerlink" title="方法一：使用两个栈"></a>方法一：使用两个栈</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">posOrderTwoStacks</span>(<span class="params">head</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    后序遍历非递归实现 - 双栈法</span></span><br><span class="line"><span class="string">    核心思路：第一个栈实现&quot;中-右-左&quot;遍历，结果压入第二个栈</span></span><br><span class="line"><span class="string">    最后弹出第二个栈得到&quot;左-右-中&quot;的后序遍历结果</span></span><br><span class="line"><span class="string">    即：用一个栈模拟递归。每次不断沿左子树走到底，并将沿途所有节点入栈；遇到空节点就弹出栈顶节点，访问它，然后转向其右子树。如此反复，完整地实现“左-中-右”顺序。</span></span><br><span class="line"><span class="string">    测试链接LeetCode 145. 二叉树的后序遍历：https://leetcode.cn/problems/binary-tree-postorder-traversal/</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> head <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        stack = []      <span class="comment"># 主栈：用于遍历</span></span><br><span class="line">        collect = []    <span class="comment"># 收集栈：用于收集结果</span></span><br><span class="line">        stack.append(head)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> stack:</span><br><span class="line">            head = stack.pop()</span><br><span class="line">            collect.append(head)      <span class="comment"># 收集节点到第二个栈</span></span><br><span class="line">            <span class="comment"># 注意：这里先压左子节点，再压右子节点</span></span><br><span class="line">            <span class="comment"># 这样遍历顺序就是&quot;中-右-左&quot;</span></span><br><span class="line">            <span class="keyword">if</span> head.left <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                stack.append(head.left)</span><br><span class="line">            <span class="keyword">if</span> head.right <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                stack.append(head.right)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 反向弹出收集栈，得到&quot;左-右-中&quot;顺序</span></span><br><span class="line">        <span class="keyword">while</span> collect:</span><br><span class="line">            <span class="built_in">print</span>(collect.pop().val, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>()</span><br></pre></td></tr></table></figure>
+
+<h4 id="双栈法原理解析"><a href="#双栈法原理解析" class="headerlink" title="双栈法原理解析"></a>双栈法原理解析</h4><ol>
+<li><strong>第一阶段</strong>：用第一个栈实现”中-右-左”遍历，类似先序遍历但左右子节点入栈顺序相反</li>
+<li><strong>第二阶段</strong>：将第一阶段的结果压入第二个栈</li>
+<li><strong>第三阶段</strong>：弹出第二个栈，得到”左-右-中”的后序遍历结果</li>
+</ol>
+<p><strong>关键洞察</strong>：”中-右-左”的逆序正好是”左-右-中”</p>
+<h3 id="方法二：使用一个栈"><a href="#方法二：使用一个栈" class="headerlink" title="方法二：使用一个栈"></a>方法二：使用一个栈</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">posOrderOneStack</span>(<span class="params">h</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    后序遍历非递归实现 - 单栈法</span></span><br><span class="line"><span class="string">    核心思路：通过记录最近访问的节点，确保每个节点在其左右子树都被访问后才访问自己，从而严格实现“左-右-中”的后序遍历。</span></span><br><span class="line"><span class="string">    每个节点最多入栈两次，效率更高</span></span><br><span class="line"><span class="string">    测试链接LeetCode 145. 二叉树的后序遍历：https://leetcode.cn/problems/binary-tree-postorder-traversal/</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> h <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        stack = []</span><br><span class="line">        stack.append(h)</span><br><span class="line">        <span class="comment"># h的含义：最近一次处理（打印）的节点</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> stack:</span><br><span class="line">            cur = stack[-<span class="number">1</span>]  <span class="comment"># 查看栈顶元素但不弹出</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 情况1：有左子树且左子树未被处理过</span></span><br><span class="line">            <span class="keyword">if</span> cur.left <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> h != cur.left <span class="keyword">and</span> h != cur.right:</span><br><span class="line">                stack.append(cur.left)</span><br><span class="line">            <span class="comment"># 情况2：有右子树且右子树未被处理过</span></span><br><span class="line">            <span class="keyword">elif</span> cur.right <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> h != cur.right:</span><br><span class="line">                stack.append(cur.right)</span><br><span class="line">            <span class="comment"># 情况3：左右子树都没有或都已处理完毕</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="built_in">print</span>(cur.val, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">                h = stack.pop()  <span class="comment"># 更新h为刚刚处理的节点</span></span><br><span class="line">        <span class="built_in">print</span>()</span><br></pre></td></tr></table></figure>
+
+<h4 id="单栈法状态管理"><a href="#单栈法状态管理" class="headerlink" title="单栈法状态管理"></a>单栈法状态管理</h4><p><strong>核心变量h的含义变化</strong>：</p>
+<ul>
+<li><strong>初始时</strong>：h指向根节点（但实际表示”还没有处理过任何节点”）</li>
+<li><strong>处理过程中</strong>：h始终指向最近一次处理（打印）的节点</li>
+<li><strong>判断逻辑</strong>：通过比较当前节点的子节点与h的关系，判断子树是否已被处理</li>
+</ul>
+<p><strong>三种处理情况</strong>：</p>
+<ol>
+<li><strong>有左子树且未处理</strong>：<code>cur.left != None and h != cur.left and h != cur.right</code></li>
+<li><strong>有右子树且未处理</strong>：<code>cur.right != None and h != cur.right</code></li>
+<li><strong>可以处理当前节点</strong>：左右子树都不存在或都已处理完毕</li>
+</ol>
+<h2 id="复杂度分析对比"><a href="#复杂度分析对比" class="headerlink" title="复杂度分析对比"></a>复杂度分析对比</h2><h3 id="时间复杂度-1"><a href="#时间复杂度-1" class="headerlink" title="时间复杂度"></a>时间复杂度</h3><p>所有非递归遍历算法的时间复杂度都是 <strong>O(n)</strong>：</p>
+<ul>
+<li><strong>先序和中序</strong>：每个节点进栈出栈各一次</li>
+<li><strong>后序双栈法</strong>：每个节点进栈出栈总共两次（每个栈一次）</li>
+<li><strong>后序单栈法</strong>：每个节点最多进栈两次，出栈一次</li>
+</ul>
+<h3 id="空间复杂度-1"><a href="#空间复杂度-1" class="headerlink" title="空间复杂度"></a>空间复杂度</h3><p><strong>额外空间复杂度对比</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>实现方法</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>先序非递归</td>
+<td>O(h)</td>
+<td>一个栈，最大深度为树高</td>
+</tr>
+<tr>
+<td>中序非递归</td>
+<td>O(h)</td>
+<td>一个栈，最大深度为树高</td>
+</tr>
+<tr>
+<td>后序双栈法</td>
+<td>O(n)</td>
+<td>收集栈最坏情况存储所有节点</td>
+</tr>
+<tr>
+<td>后序单栈法</td>
+<td>O(h)</td>
+<td>一个栈，最大深度为树高</td>
+</tr>
+<tr>
+<td>递归实现</td>
+<td>O(h)</td>
+<td>系统调用栈，深度为树高</td>
+</tr>
+</tbody></table>
+<p>其中h为树的高度：</p>
+<ul>
+<li><strong>最好情况</strong>：h &#x3D; O(log n)（平衡树）</li>
+<li><strong>最坏情况</strong>：h &#x3D; O(n)（退化为链表）</li>
+</ul>
+<h2 id="实现方法选择建议"><a href="#实现方法选择建议" class="headerlink" title="实现方法选择建议"></a>实现方法选择建议</h2><h3 id="性能对比"><a href="#性能对比" class="headerlink" title="性能对比"></a>性能对比</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>实现难度</th>
+<th>推荐场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>先序非递归</td>
+<td>O(n)</td>
+<td>O(h)</td>
+<td>简单</td>
+<td>通用推荐</td>
+</tr>
+<tr>
+<td>中序非递归</td>
+<td>O(n)</td>
+<td>O(h)</td>
+<td>中等</td>
+<td>BST相关问题</td>
+</tr>
+<tr>
+<td>后序双栈法</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>简单</td>
+<td>理解后序遍历逻辑</td>
+</tr>
+<tr>
+<td>后序单栈法</td>
+<td>O(n)</td>
+<td>O(h)</td>
+<td>困难</td>
+<td>空间要求严格的场景</td>
+</tr>
+</tbody></table>
+<h3 id="选择建议"><a href="#选择建议" class="headerlink" title="选择建议"></a>选择建议</h3><ol>
+<li><strong>实际应用</strong>：根据具体需求选择，一般情况下递归实现更简洁</li>
+<li><strong>性能要求高</strong>：选择非递归实现，避免函数调用开销</li>
+<li><strong>内存受限</strong>：后序遍历优选单栈法，其他遍历方式空间复杂度相当</li>
+</ol>
+<h2 id="非递归实现的优势"><a href="#非递归实现的优势" class="headerlink" title="非递归实现的优势"></a>非递归实现的优势</h2><ol>
+<li><strong>避免栈溢出</strong>：可以处理任意深度的树</li>
+<li><strong>更好控制</strong>：可以方便地暂停、恢复遍历过程</li>
+<li><strong>性能优化</strong>：减少函数调用开销</li>
+<li><strong>状态保存</strong>：便于在遍历过程中保存额外信息</li>
+</ol>
+<p>非递归实现虽然代码复杂度较高，但在处理大规模数据或有特殊要求的场景中具有重要意义。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag"># 二叉树</a>
+              <a href="/tags/%E9%80%92%E5%BD%92/" rel="tag"># 递归</a>
+              <a href="/tags/%E8%8A%82%E7%82%B9%E9%81%8D%E5%8E%86/" rel="tag"># 节点遍历</a>
+              <a href="/tags/%E8%BF%AD%E4%BB%A3/" rel="tag"># 迭代</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/08/04/Academic%20Paper%20learning%20&%20Translation%20Records/" rel="prev" title="Academic Paper learning & Translation Records">
+      <i class="fa fa-chevron-left"></i> Academic Paper learning & Translation Records
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/08/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%885%EF%BC%89-%20%E7%AE%97%E6%B3%95%E7%AC%94%E8%AF%95%E4%B8%AD%E5%A4%84%E7%90%86%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA/" rel="next" title="数据结构与算法自学笔记（5）- 算法笔试中处理输入和输出">
+      数据结构与算法自学笔记（5）- 算法笔试中处理输入和输出 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#017%E3%80%90%E5%85%A5%E9%97%A8%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E5%85%B6%E4%B8%89%E7%A7%8D%E5%BA%8F%E7%9A%84%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.</span> <span class="nav-text">017【入门】二叉树及其三种序的递归实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">二叉树的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E8%8A%82%E7%82%B9%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">二叉树节点定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E5%BA%8F%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.2.</span> <span class="nav-text">递归序的概念</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%89%E7%A7%8D%E9%80%92%E5%BD%92%E9%81%8D%E5%8E%86"><span class="nav-number">1.2.</span> <span class="nav-text">二叉树的三种递归遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%88Pre-order-Traversal%EF%BC%89"><span class="nav-number">1.2.1.</span> <span class="nav-text">先序遍历（Pre-order Traversal）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%88In-order-Traversal%EF%BC%89"><span class="nav-number">1.2.2.</span> <span class="nav-text">中序遍历（In-order Traversal）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%88Post-order-Traversal%EF%BC%89"><span class="nav-number">1.2.3.</span> <span class="nav-text">后序遍历（Post-order Traversal）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E9%81%8D%E5%8E%86%E7%9A%84%E7%A4%BA%E4%BE%8B%E6%89%A7%E8%A1%8C"><span class="nav-number">1.3.</span> <span class="nav-text">递归遍历的示例执行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E7%BB%93%E6%9E%9C%E5%AF%B9%E6%AF%94"><span class="nav-number">1.3.1.</span> <span class="nav-text">执行结果对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E8%B0%83%E7%94%A8%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-number">1.3.2.</span> <span class="nav-text">递归调用过程分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">1.4.</span> <span class="nav-text">复杂度分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">1.4.1.</span> <span class="nav-text">时间复杂度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">1.4.2.</span> <span class="nav-text">空间复杂度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.5.</span> <span class="nav-text">三种遍历方式的应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E5%BA%8F%E9%81%8D%E5%8E%86%E7%9A%84%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8"><span class="nav-number">1.5.1.</span> <span class="nav-text">先序遍历的典型应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E7%9A%84%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8"><span class="nav-number">1.5.2.</span> <span class="nav-text">中序遍历的典型应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%E7%9A%84%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8"><span class="nav-number">1.5.3.</span> <span class="nav-text">后序遍历的典型应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F%E9%80%89%E6%8B%A9%E6%8C%87%E5%8D%97"><span class="nav-number">1.6.</span> <span class="nav-text">遍历方式选择指南</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">1.7.</span> <span class="nav-text">递归实现的优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-number">1.7.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-number">1.7.2.</span> <span class="nav-text">缺点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#018%E3%80%90%E5%85%A5%E9%97%A8%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86%E7%9A%84%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">018【入门】二叉树遍历的非递归实现和复杂度分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">非递归实现的必要性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">2.1.1.</span> <span class="nav-text">核心思想</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E5%BA%8F%E9%81%8D%E5%8E%86%E7%9A%84%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.2.</span> <span class="nav-text">先序遍历的非递归实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">2.2.1.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.2.2.</span> <span class="nav-text">执行过程示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E7%9A%84%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.3.</span> <span class="nav-text">中序遍历的非递归实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-1"><span class="nav-number">2.3.1.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E7%8A%B6%E6%80%81%E5%88%86%E6%9E%90"><span class="nav-number">2.3.2.</span> <span class="nav-text">算法状态分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B-1"><span class="nav-number">2.3.3.</span> <span class="nav-text">执行过程示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%E7%9A%84%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.4.</span> <span class="nav-text">后序遍历的非递归实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E4%BD%BF%E7%94%A8%E4%B8%A4%E4%B8%AA%E6%A0%88"><span class="nav-number">2.4.1.</span> <span class="nav-text">方法一：使用两个栈</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8C%E6%A0%88%E6%B3%95%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90"><span class="nav-number">2.4.1.1.</span> <span class="nav-text">双栈法原理解析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E4%BD%BF%E7%94%A8%E4%B8%80%E4%B8%AA%E6%A0%88"><span class="nav-number">2.4.2.</span> <span class="nav-text">方法二：使用一个栈</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E6%A0%88%E6%B3%95%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">单栈法状态管理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90%E5%AF%B9%E6%AF%94"><span class="nav-number">2.5.</span> <span class="nav-text">复杂度分析对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6-1"><span class="nav-number">2.5.1.</span> <span class="nav-text">时间复杂度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6-1"><span class="nav-number">2.5.2.</span> <span class="nav-text">空间复杂度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95%E9%80%89%E6%8B%A9%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.6.</span> <span class="nav-text">实现方法选择建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="nav-number">2.6.1.</span> <span class="nav-text">性能对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.6.2.</span> <span class="nav-text">选择建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">2.7.</span> <span class="nav-text">非递归实现的优势</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

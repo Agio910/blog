@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="模式识别笔记汇总本次笔记主要关于K-Means 及其变分问题、熵不等式、Softmax&#x2F;Softmin 函数、数值稳定化、以及泛函与方向导数等内容。  K-Means 基本原理与能量函数K-Means 能量函数的定义K-Means 算法的能量函数（目标函数）定义如下： $$E(\vec{U}, \vec{C})&#x3D; \sum_{x \in \Omega} \sum_{k&amp;#x3D">
+<meta property="og:type" content="article">
+<meta property="og:title" content="25 Spring - 模式识别笔记(2)">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/05/10/%E6%A8%A1%E5%BC%8F%E8%AF%86%E5%88%AB%E7%AC%94%E8%AE%B0%EF%BC%882%EF%BC%89/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="模式识别笔记汇总本次笔记主要关于K-Means 及其变分问题、熵不等式、Softmax&#x2F;Softmin 函数、数值稳定化、以及泛函与方向导数等内容。  K-Means 基本原理与能量函数K-Means 能量函数的定义K-Means 算法的能量函数（目标函数）定义如下： $$E(\vec{U}, \vec{C})&#x3D; \sum_{x \in \Omega} \sum_{k&amp;#x3D">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-05-10T10:42:46.000Z">
+<meta property="article:modified_time" content="2025-08-02T04:20:44.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="模式识别">
+<meta property="article:tag" content="K-Means聚类">
+<meta property="article:tag" content="变分法">
+<meta property="article:tag" content="熵不等式">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/05/10/%E6%A8%A1%E5%BC%8F%E8%AF%86%E5%88%AB%E7%AC%94%E8%AE%B0%EF%BC%882%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>25 Spring - 模式识别笔记(2) | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/05/10/%E6%A8%A1%E5%BC%8F%E8%AF%86%E5%88%AB%E7%AC%94%E8%AE%B0%EF%BC%882%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          25 Spring - 模式识别笔记(2)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-05-10 18:42:46" itemprop="dateCreated datePublished" datetime="2025-05-10T18:42:46+08:00">2025-05-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-08-02 12:20:44" itemprop="dateModified" datetime="2025-08-02T12:20:44+08:00">2025-08-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Course/" itemprop="url" rel="index"><span itemprop="name">Course</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="模式识别笔记汇总"><a href="#模式识别笔记汇总" class="headerlink" title="模式识别笔记汇总"></a>模式识别笔记汇总</h1><p>本次笔记主要关于K-Means 及其变分问题、熵不等式、Softmax&#x2F;Softmin 函数、数值稳定化、以及泛函与方向导数等内容。</p>
+<hr>
+<h2 id="K-Means-基本原理与能量函数"><a href="#K-Means-基本原理与能量函数" class="headerlink" title="K-Means 基本原理与能量函数"></a>K-Means 基本原理与能量函数</h2><h3 id="K-Means-能量函数的定义"><a href="#K-Means-能量函数的定义" class="headerlink" title="K-Means 能量函数的定义"></a>K-Means 能量函数的定义</h3><p>K-Means 算法的能量函数（目标函数）定义如下：</p>
+<p>$$<br>E(\vec{U}, \vec{C})<br>&#x3D; \sum_{x \in \Omega} \sum_{k&#x3D;1}^{K} \bigl(f(x) - C_k\bigr)^2  U_k(x)<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$ f(x) $ 表示数据点 $ x $ 的特征值；</li>
+<li>$ C_k $ 表示第 $ k $ 个聚类中心；</li>
+<li>$ U_k(x) $ 为归属矩阵的元素，表示数据点 $ x $ 是否属于第 $ k $ 个簇（在硬分类中，取值为 0 或 1）。</li>
+</ul>
+<p>然后定义</p>
+<p>$$<br>\langle \overrightarrow{O}, \overrightarrow{u} \rangle &#x3D; \sum_{x \in \Omega} \sum_{k&#x3D;1}^{K} O_k(x) \cdot u_k(x)<br>$$</p>
+<p>其中误差函数为：</p>
+<p>$$<br>O_k(x) &#x3D; \bigl(f(x) - C_k\bigr)^2<br>$$</p>
+<p>该能量函数也可用内积的形式表示：</p>
+<p>$$<br>E(\vec{U}, \vec{C}) &#x3D; \langle \vec{O}, \vec{U} \rangle<br>$$</p>
+<p>其中 $\vec{O}$ 为一个误差向量。</p>
+<hr>
+<h3 id="K-Means-算法的迭代更新规则"><a href="#K-Means-算法的迭代更新规则" class="headerlink" title="K-Means 算法的迭代更新规则"></a>K-Means 算法的迭代更新规则</h3><p>K-Means 算法通过两步交替迭代来最小化能量函数 $E(\vec{U}, \vec{C})$：</p>
+<ol>
+<li><p><strong>更新归属矩阵</strong> $\vec{U}^{t+1}$：</p>
+<p>$$<br>\vec{U}^{t+1} &#x3D; \arg \min_{\vec{U}}  E(\vec{U}, \vec{C}^t)<br>$$</p>
+<p>具体到每个样本点 $x$ 的更新规则为：</p>
+  
+   $$
+   U_k^{t+1}(x)= 
+   \begin{cases}
+   1, & \text{if} k = \arg \min_{k \in \{1, \dots, K\}} (f(x) - C_k^t)^2 \\
+   0, & \text{otherwise}
+   \end{cases}
+   $$
+     
+
+<p>即将每个数据点分配给距离其最近的簇中心。</p>
+</li>
+<li><p><strong>更新聚类中心</strong> $\vec{C}^{t+1}$：</p>
+<p>$$<br>\vec{C}^{t+1} &#x3D; \arg \min_{\vec{C}}  E\bigl(\vec{U}^{t+1}, \vec{C}\bigr)<br>$$</p>
+<p>即对每个簇的样本求均值，作为新的聚类中心。</p>
+</li>
+</ol>
+<hr>
+<h3 id="误差函数与误差向量"><a href="#误差函数与误差向量" class="headerlink" title="误差函数与误差向量"></a>误差函数与误差向量</h3><p>定义误差函数：</p>
+<p>$$<br>O_k(x) &#x3D; \bigl(f(x) - C_k\bigr)^2<br>$$</p>
+<p>令</p>
+<p>$$<br>\vec{O}(x) &#x3D; \bigl(O_1(x), O_2(x), \dots, O_K(x)\bigr)^\mathsf{T},<br>$$</p>
+<p>则 $\vec{O}$ 是一个向量值函数，映射</p>
+<p>$$<br>\vec{O}: \Omega \subseteq \mathbb{R}^2 \to \mathbb{R}^K.<br>$$</p>
+<hr>
+<h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><ul>
+<li>K-Means 采用<strong>硬聚类</strong>方式，每个数据点只能属于一个簇，$U_k(x) \in {0,1}$。</li>
+<li>优化目标：在每次迭代中，先更新 $\vec{U}$，再更新 $\vec{C}$，直至收敛。</li>
+<li>计算复杂度：主要与数据点数 $N$ 和簇数 $K$ 有关，通常为 $O(NKT)$（$T$ 为迭代次数）。</li>
+</ul>
+<hr>
+<h2 id="K-Means-的变分问题与熵的性质"><a href="#K-Means-的变分问题与熵的性质" class="headerlink" title="K-Means 的变分问题与熵的性质"></a>K-Means 的变分问题与熵的性质</h2><h3 id="K-Means-变分问题"><a href="#K-Means-变分问题" class="headerlink" title="K-Means 变分问题"></a>K-Means 变分问题</h3><p>我们希望最小化下述能量函数：</p>
+<p>$$<br>\min_{\vec{U}, \vec{C}} E(\vec{U}, \vec{C})<br>$$</p>
+<p>其中 $\vec{U}$ 为归属矩阵，$\vec{C}$ 为聚类中心。</p>
+<p>除硬划分之外，还可使用许多优化或正则化技巧，例如引入<strong>软分类</strong>思想（softmax &#x2F; softmin）的方法。</p>
+<hr>
+<h3 id="熵的性质"><a href="#熵的性质" class="headerlink" title="熵的性质"></a>熵的性质</h3><p>在分析 K-Means 变分问题时，引入熵的一条不等式，用于约束归属矩阵的对数项：</p>
+<p>$$<br>-\ln K<br>\le \langle \vec{U}, \ln \vec{U} \rangle<br>\le 0<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$U_k$ 表示数据点对第 $k$ 个簇的归属概率（软分类时可在 $[0,1]$ 之间）；</li>
+<li>$\langle \vec{U}, \ln \vec{U}\rangle &#x3D; \sum_{k&#x3D;1}^{K} U_k \ln U_k$ 是熵相关的项。</li>
+</ul>
+<p>该不等式可以用 Jensen 不等式等方法证明。等号成立的两种情况为：</p>
+<ul>
+<li>左边等号：所有 $U_k &#x3D; \frac{1}{K}$，即均匀分布；</li>
+<li>右边等号：某一个 $U_k&#x3D;1$，其它为 0，即完全硬分类。</li>
+</ul>
+<hr>
+<h3 id="变分方法的直观解释"><a href="#变分方法的直观解释" class="headerlink" title="变分方法的直观解释"></a>变分方法的直观解释</h3><ul>
+<li><strong>最优化角度</strong>：寻找最优的 $\vec{U}, \vec{C}$ 使得数据点与簇中心的总体误差最小；</li>
+<li><strong>信息论角度</strong>：考虑信息熵约束，避免过度偏向某一簇，从而获得更合理的簇划分。</li>
+</ul>
+<hr>
+<h3 id="备注-1"><a href="#备注-1" class="headerlink" title="备注"></a>备注</h3><ul>
+<li>熵的约束：对归属矩阵 $ \vec{U} $ 提供了额外的正则约束。</li>
+<li>与 EM（期望最大化）算法中的<strong>软聚类</strong>思想存在对应关系。</li>
+</ul>
+<hr>
+<h2 id="熵不等式的证明"><a href="#熵不等式的证明" class="headerlink" title="熵不等式的证明"></a>熵不等式的证明</h2><p>这里给出熵不等式：</p>
+<p>$$<br>-\ln K<br>\leq \langle \vec{U}, \ln \vec{U} \rangle<br>\leq 0<br>$$</p>
+<p>的推导思路详述如下：</p>
+<h3 id="证明-f-u-ln-u-是凸函数："><a href="#证明-f-u-ln-u-是凸函数：" class="headerlink" title="证明 $f(u)&#x3D;-\ln u$ 是凸函数："></a>证明 $f(u)&#x3D;-\ln u$ 是凸函数：</h3><p>函数 $f(u) &#x3D; -\ln u$ 的一阶导数和二阶导数分别为：</p>
+<p>$$<br>f’(u) &#x3D; -\frac{1}{u},<br>\quad<br>f’’(u) &#x3D; \frac{1}{u^2} &gt; 0 \quad (u&gt;0)<br>$$</p>
+<p>由于 $f’’(u) &gt; 0$，可知 $f(u)$ 是凸函数。</p>
+<h3 id="计算极限-lim-limits-u-to0-u-ln-u-："><a href="#计算极限-lim-limits-u-to0-u-ln-u-：" class="headerlink" title="计算极限 $\lim\limits_{u\to0^+} u \ln u$："></a>计算极限 $\lim\limits_{u\to0^+} u \ln u$：</h3><p>令 $g(u) &#x3D; -u \ln u$，求其极限：</p>
+<p>$$<br>\lim_{u\to0^+} u \ln u &#x3D; \lim_{u\to0^+} \frac{\ln u}{1&#x2F;u}<br>$$</p>
+<p>利用洛必达法则，分子求导得$1&#x2F;u$，分母求导得 $-1&#x2F;u^2$，因此：</p>
+<p>$$<br>\lim_{u\to0^+} \frac{\ln u}{1&#x2F;u} &#x3D; \lim_{u\to0^+} \frac{1&#x2F;u}{-1&#x2F;u^2} &#x3D; \lim_{u\to0^+} -u &#x3D; 0<br>$$</p>
+<p>所以：</p>
+<p>$$<br>\lim_{u\to0^+} u \ln u &#x3D; 0.<br>$$</p>
+<p>这表明当 $u \to 0$ 时，$u \ln u$ 趋于 0。</p>
+<h3 id="用-Jensen-不等式推导熵不等式："><a href="#用-Jensen-不等式推导熵不等式：" class="headerlink" title="用 Jensen 不等式推导熵不等式："></a>用 Jensen 不等式推导熵不等式：</h3><p>由于 $f(x)&#x3D;-\ln x$ 是凸函数，因此对于满足 $\sum_{k&#x3D;1}^{K} \alpha_k &#x3D; 1$ 且 $ 0 \leq \alpha_k \leq 1$ 的权重  $\alpha_{k} $ ，有：</p>
+<p>$$<br>\left( \sum_{k&#x3D;1}^{K} \alpha_k x_k \right) \leq \sum_{k&#x3D;1}^{K} \alpha_k f(x_k)<br>$$</p>
+<p>取 $\alpha_k &#x3D; U_k$，$x_k &#x3D; \frac{1}{U_k}$，则：</p>
+<p>$$<br>-ln \left( \sum_{k&#x3D;1}^{K} U_k \cdot \frac{1}{U_k} \right) \leq \sum_{k&#x3D;1}^{K} U_k (-\ln \frac{1}{U_k})<br>$$</p>
+<p>由于 $\sum_{k&#x3D;1}^{K} U_k &#x3D; 1$，所以：</p>
+<p>$$<br>-ln K \leq \sum_{k&#x3D;1}^{K} U_k \ln U_k \leq 0<br>$$</p>
+<p>即</p>
+<p>$$<br>ln K \geq -\langle \vec{U}, \ln \vec{U} \rangle<br>$$</p>
+<h3 id="等号成立的条件："><a href="#等号成立的条件：" class="headerlink" title="等号成立的条件："></a>等号成立的条件：</h3><ul>
+<li><strong>左边等号成立条件</strong>：当所有 $U_k$ 相等，即 $U_k &#x3D; 1&#x2F;K$ 时，左侧等号成立。</li>
+<li><strong>右边等号成立条件</strong>：当仅有一个 $U_k&#x3D;1$，其余 $U_k&#x3D;0$ 时，右侧等号成立。</li>
+</ul>
+<h3 id="熵不等式在-K-Means-变分问题中的作用："><a href="#熵不等式在-K-Means-变分问题中的作用：" class="headerlink" title="熵不等式在 K-Means 变分问题中的作用："></a>熵不等式在 K-Means 变分问题中的作用：</h3><p>该不等式用于限制聚类的过度集中，即防止所有数据点都归属于同一簇。同时，它也鼓励一定程度的分散度，使簇划分更加均匀，从而优化聚类效果。</p>
+<hr>
+<h2 id="K-Means-的变分问题扩展"><a href="#K-Means-的变分问题扩展" class="headerlink" title="K-Means 的变分问题扩展"></a>K-Means 的变分问题扩展</h2><p>在传统 K-Means 的能量函数 $E(\vec{U}, \vec{C})$ 基础上，引入一项基于熵的正则化：</p>
+<p>$$<br>\min_{\vec{u}\in U}<br>\Bigl[<br>E(\vec{u}, \vec{C})<br>+\varepsilon \langle \vec{u}, \ln \vec{u}\rangle<br>\Bigr]<br>$$</p>
+<p>其中 $\varepsilon &gt; 0$ 为权衡系数（正则化参数）。当 $\varepsilon \to 0$ 时，该模型接近传统 K-Means 硬分类；当 $\varepsilon$ 较大时，模型更倾向于<strong>软聚类</strong>。</p>
+<p>更新过程：</p>
+<ol>
+<li>$\vec{u}^{t+1} &#x3D; \arg \min_{\vec{u}} \bigl[E(\vec{u}, \vec{C}^t) - \varepsilon H(\vec{u})\bigr]$ (变成了严格凸)</li>
+<li>$\vec{C}^{t+1} &#x3D; \arg \min_{\vec{C}} \bigl[E(\vec{u}^{t+1}, \vec{C})\bigr]$  （与传统 K-Means 相同）</li>
+</ol>
+<p>这里的熵项</p>
+<p>$$<br>H(\vec{u})<br>&#x3D; - \sum_{k&#x3D;1}^{K} \sum_{x\in \Omega} u_k(x)\ln u_k(x)<br>$$</p>
+<p>作为“软化”或正则化手段，避免完全的 0-1 硬分类。</p>
+<h3 id="偏导数计算"><a href="#偏导数计算" class="headerlink" title="偏导数计算"></a>偏导数计算</h3><p>熵项 $H(\vec{u})$ 可重写为</p>
+<p>$$<br> -H(\vec{u}) &#x3D; \langle \vec{u}, \ln \vec{u} \rangle.<br>$$</p>
+<p>对于目标函数 $E(\vec{u}, \vec{C}) - \varepsilon H(\vec{u})$，计算其关于 $u_k$ 的偏导数：</p>
+<ol>
+<li><p>设 $E(\vec{u}, \vec{C})$ 关于 $u_k$ 的偏导数为：</p>
+<p>$$<br>\frac{\delta E}{\delta u_k} &#x3D; O_k<br>$$</p>
+</li>
+<li><p>对于熵项：</p>
+<p>$$<br>\frac{\delta (-H)}{\delta u_k} &#x3D; \ln u_k + 1<br>$$</p>
+</li>
+<li><p>结合上述结果，求解极值条件：</p>
+<p>$$<br>O_k - \varepsilon (\ln u_k + 1) &#x3D; 0<br>$$</p>
+</li>
+<li><p>化简得：</p>
+<p>$$<br>u_k &#x3D; \exp\left(-\frac{O_k}{\varepsilon} - 1\right)<br>$$</p>
+</li>
+</ol>
+<p>这表明更新 $u_k$ 时，其值受 $\varepsilon$ 控制，较大的 $\varepsilon$ 使得 $u_k$ 更加平滑，有助于软聚类。</p>
+<hr>
+<h2 id="拉格朗日函数与-Softmax-分析"><a href="#拉格朗日函数与-Softmax-分析" class="headerlink" title="拉格朗日函数与 Softmax 分析"></a>拉格朗日函数与 Softmax 分析</h2><h3 id="拉格朗日函数"><a href="#拉格朗日函数" class="headerlink" title="拉格朗日函数"></a>拉格朗日函数</h3><p>定义拉格朗日函数：</p>
+<p>$$<br>\mathcal{L}(\vec{u}, \lambda)<br>&#x3D; E(\vec{u}, \vec{c})<br>-\varepsilon H(\vec{u})+\sum_{x \in \Omega} \lambda(x)<br>\Bigl(<br>\sum_{k&#x3D;1}^{K} u_k(x)-1<br>\Bigr)<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$H(\vec{u})$ 是熵项；</li>
+<li>$\lambda(x)$ 为拉格朗日乘子，用于保证 $\sum_{k&#x3D;1}^{K} u_k(x)&#x3D;1$。</li>
+</ul>
+<h3 id="软分类-Softmin-Softmax-的推导"><a href="#软分类-Softmin-Softmax-的推导" class="headerlink" title="软分类 (Softmin &#x2F; Softmax) 的推导"></a>软分类 (Softmin &#x2F; Softmax) 的推导</h3><p>对 $\mathcal{L}(\vec{u}, \lambda)$ 关于 $u_k$ 取偏导为 0，可得到：</p>
+<p>$$<br>\ln u_k(x)&#x3D; -\frac{O_k(x) +\lambda(x)}{\varepsilon}<br>$$</p>
+<p>其中 $O_k$ 是某类损失（例如 $(f(x)-C_k)^2$ ）或能量。</p>
+<p>结合约束 $\sum_{k&#x3D;1}^K u_k(x)&#x3D;1$，可得<strong>Softmin</strong>形式：</p>
+<p>$$<br>u_k^{t+1}(x)&#x3D; \frac{\exp\Bigl(\dfrac{-O_k(x)}{\varepsilon}\Bigr)}{\sum_{j&#x3D;1}^{K} \exp\Bigl(\dfrac{-O_j(x)}{\varepsilon}\Bigr)}<br>$$</p>
+<p>也可写成<strong>softmax</strong>形式：</p>
+  
+$$
+\text{Softmax}_{\varepsilon}(-\vec{O}) =
+\left[\text{Softmin}_{\varepsilon}(\vec{O})\right]_k
+$$
+  
+
+<hr>
+<h2 id="极限问题与分母拆分"><a href="#极限问题与分母拆分" class="headerlink" title="极限问题与分母拆分"></a>极限问题与分母拆分</h2><h3 id="k-means-硬分类更新公式"><a href="#k-means-硬分类更新公式" class="headerlink" title="k-means 硬分类更新公式"></a>k-means 硬分类更新公式</h3><p>当不考虑熵正则化时，k-means 的硬分类可写为：</p>
+<p>$$<br>u_k^{t+1}(x) &#x3D;<br>\begin{cases}<br>    1, &amp; \text{if } k &#x3D; \arg \min_{k \in {1, \dots, K}} O_k, \<br>    0, &amp; \text{otherwise}.<br>\end{cases}<br>$$</p>
+<h3 id="Softmin-的极限"><a href="#Softmin-的极限" class="headerlink" title="Softmin 的极限"></a>Softmin 的极限</h3><p>考虑</p>
+
+$$
+\lim_{\varepsilon \to 0^+}
+\frac{\exp\bigl(-O_k(x)/\varepsilon\bigr)}{\sum_{j=1}^K \exp\bigl(-O_j(x)/\varepsilon\bigr)}
+=\lim_{\varepsilon \to 0^+}\frac{\exp\bigl(-O_k(x)+m(x)/\varepsilon\bigr)}{\sum_{j\in M} \exp\bigl(-O_j(x)+m(x)/\varepsilon\bigr)+\sum_{j\notin M} \exp\bigl(-O_j(x)+m(x)/\varepsilon\bigr)}
+$$
+
+
+<p>令 $m = \min \bigl\{ O_1(x), O_2(x), \dots, O_K(x) \bigr\}, \quad M = \arg\min_{k \in \bigl\{ 1, \dots, K \bigr\}} O_k(x)$。<br>当 $\varepsilon \to 0^+$，对于属于最优集 $M$ 的索引 $k$，$\exp(-O_k&#x2F;\varepsilon)$ 主导；而不是最优集的 $\exp(-O_k&#x2F;\varepsilon)$ 迅速衰减为 0。因此极限结果为：</p>
+
+$$
+\lim_{\varepsilon \to 0^+}
+\text{Softmin}_{\varepsilon}(\vec{O})
+=
+\begin{cases}
+1, & \text{if } k \in M \\
+0, & \text{if } k \notin M
+\end{cases}
+\quad \text{where } M = \left\{ k \mid O_k = \min_j O_j \right\}
+$$
+
+
+<h2 id="这与-k-means-硬分类（一次只属于距离最近的簇）相一致。称-为softmin-softmax的分类的变分优化问题"><a href="#这与-k-means-硬分类（一次只属于距离最近的簇）相一致。称-为softmin-softmax的分类的变分优化问题" class="headerlink" title="这与 k-means 硬分类（一次只属于距离最近的簇）相一致。称   为softmin&#x2F;softmax的分类的变分优化问题"></a>这与 k-means 硬分类（一次只属于距离最近的簇）相一致。<br>称   $\min_{\vec{u}\in U，\vec{C}}\Bigl[E(\vec{u}, \vec{C})-\varepsilon H(u)\Bigr]$   为softmin&#x2F;softmax的分类的变分优化问题</h2><h2 id="k-means-的光滑化与-Softmax-溢出问题"><a href="#k-means-的光滑化与-Softmax-溢出问题" class="headerlink" title="k-means 的光滑化与 Softmax 溢出问题"></a>k-means 的光滑化与 Softmax 溢出问题</h2><h3 id="k-means-的光滑化"><a href="#k-means-的光滑化" class="headerlink" title="k-means 的光滑化"></a>k-means 的光滑化</h3><p>通过在 k-means 能量函数中加入熵项并令 $\varepsilon&gt;0$，可以将硬分类变为软分类，使其输出变得连续可导。</p>
+<ul>
+<li>当 $\varepsilon \to 0$，Softmin 退化为 k-means 硬分类；</li>
+<li>当 $\varepsilon$ 较大时，软分类更加显著。</li>
+</ul>
+<h3 id="Softmax-的数值溢出问题"><a href="#Softmax-的数值溢出问题" class="headerlink" title="Softmax 的数值溢出问题"></a>Softmax 的数值溢出问题</h3><p><strong>Softmax 标准形式</strong>：</p>
+  
+$$
+\text{Softmax}\bigl(\vec{O}\bigr)_k
+=
+\frac{e^{O_k}}{\sum_{j=1}^K e^{O_j}}.
+$$
+  
+
+<p>若 $O_k$ 值过大，$e^{O_k}$ 可能数值溢出。</p>
+<p><strong>解决方案：数值稳定化</strong><br>取   $\displaystyle M = \max\{O_1, O_2, \dots, O_K\}$  ，将所有项减去 $M$：</p>
+  
+$$
+\text{Softmax}(\vec{O})_k
+=
+\frac{e^{O_k - M}}{\sum_{j=1}^K e^{O_j - M}}
+$$
+
+
+<p>这样可防止溢出，保持结果不变。</p>
+<hr>
+<h2 id="泛函分析与方向导数"><a href="#泛函分析与方向导数" class="headerlink" title="泛函分析与方向导数"></a>泛函分析与方向导数</h2><h3 id="泛函与方向导数基本概念"><a href="#泛函与方向导数基本概念" class="headerlink" title="泛函与方向导数基本概念"></a>泛函与方向导数基本概念</h3><p>在更高层次，令</p>
+  
+$$
+J: \mathcal{F} \to \mathbb{R}
+$$
+  
+
+<p>是作用于函数空间 $\mathcal{F}$ 的一个泛函（functional）。对于 $u(x)$ 的变化，可以定义方向导数：</p>
+  
+$$
+\lim_{h \to 0}
+\frac{J\bigl(x + hv\bigr) - J(x)}{h}
+=
+\left.
+\frac{d}{dh} 
+J\bigl(x + hv\bigr)
+\right|_{h=0}
+$$
+  
+
+<p>方向导数与梯度存在对应关系：若把 $\nabla J&#x3D;(\tfrac{\delta J}{\delta x_1}，\tfrac{\delta J}{\delta x_2} \cdot \cdot \cdot \tfrac{\delta J}{\delta x_n})$ 类比于有限维中的梯度，则方向导数可理解为梯度在 $v$ 方向的投影。</p>
+<hr>
+<h3 id="方向导数与梯度的关系"><a href="#方向导数与梯度的关系" class="headerlink" title="方向导数与梯度的关系"></a>方向导数与梯度的关系</h3><p>对 $J(U_k)$ 做微分：</p>
+  
+$$
+\langle \tfrac{\delta J}{\delta U_k},  V_k \rangle
+=
+\left.
+\tfrac{d}{dh}
+J\bigl(U_k + hV_k\bigr)
+\right|_{h=0}.
+$$
+  
+
+<p>例如，若</p>
+  
+$$
+J(U_k)
+=
+\sum_{x\in \Omega}
+O_k(x)\ln U_k(x),
+$$
+  
+
+<p>则</p>
+  
+$$
+J(U_k + hV_k)
+=
+\sum_{x\in \Omega}
+O_k(x)\ln\bigl(U_k(x) + hV_k(x)\bigr)
+$$
+  
+
+<p>对其在 $h&#x3D;0$ 处求导，可得到对应的偏导，从而确定梯度形式。</p>
+<hr>
+<h2 id="九、总结与要点"><a href="#九、总结与要点" class="headerlink" title="九、总结与要点"></a>九、总结与要点</h2><ol>
+<li><p><strong>K-Means 算法</strong></p>
+<ul>
+<li>能量函数：数据点到簇中心的平方误差和；</li>
+<li>经典迭代：硬分类与均值更新交替进行。</li>
+</ul>
+</li>
+<li><p><strong>K-Means 的变分扩展</strong></p>
+<ul>
+<li>通过引入熵（软分类），可得到 Softmin &#x2F; Softmax 形式；</li>
+<li>当正则系数 $\varepsilon \to 0$ 时，又可退化到原始硬划分结果。</li>
+</ul>
+</li>
+<li><p><strong>熵不等式与数值稳定</strong></p>
+<ul>
+<li>熵提供了在聚类中的分布约束；</li>
+<li>Softmax 需用数值移位避免溢出。</li>
+</ul>
+</li>
+<li><p><strong>泛函与方向导数</strong></p>
+<ul>
+<li>在更高阶场景中，可将 K-Means 问题放到泛函分析框架下；</li>
+<li>方向导数、梯度概念可帮助理解对函数空间的优化。</li>
+</ul>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%A8%A1%E5%BC%8F%E8%AF%86%E5%88%AB/" rel="tag"># 模式识别</a>
+              <a href="/tags/K-Means%E8%81%9A%E7%B1%BB/" rel="tag"># K-Means聚类</a>
+              <a href="/tags/%E5%8F%98%E5%88%86%E6%B3%95/" rel="tag"># 变分法</a>
+              <a href="/tags/%E7%86%B5%E4%B8%8D%E7%AD%89%E5%BC%8F/" rel="tag"># 熵不等式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/05/10/The%20Applications%20of%20Large%20Language%20Models%20in%20Mental%20Health%20Scoping%20Review/" rel="prev" title="The Applications of Large Language Models in Mental Health Scoping Review.">
+      <i class="fa fa-chevron-left"></i> The Applications of Large Language Models in Mental Health Scoping Review.
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/16/%E6%A8%A1%E5%BC%8F%E8%AF%86%E5%88%AB%E7%AC%94%E8%AE%B0%EF%BC%883%EF%BC%89/" rel="next" title="25 Spring - 模式识别笔记(3)">
+      25 Spring - 模式识别笔记(3) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E5%BC%8F%E8%AF%86%E5%88%AB%E7%AC%94%E8%AE%B0%E6%B1%87%E6%80%BB"><span class="nav-number">1.</span> <span class="nav-text">模式识别笔记汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#K-Means-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E4%B8%8E%E8%83%BD%E9%87%8F%E5%87%BD%E6%95%B0"><span class="nav-number">1.1.</span> <span class="nav-text">K-Means 基本原理与能量函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#K-Means-%E8%83%BD%E9%87%8F%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">K-Means 能量函数的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#K-Means-%E7%AE%97%E6%B3%95%E7%9A%84%E8%BF%AD%E4%BB%A3%E6%9B%B4%E6%96%B0%E8%A7%84%E5%88%99"><span class="nav-number">1.1.2.</span> <span class="nav-text">K-Means 算法的迭代更新规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AF%E5%B7%AE%E5%87%BD%E6%95%B0%E4%B8%8E%E8%AF%AF%E5%B7%AE%E5%90%91%E9%87%8F"><span class="nav-number">1.1.3.</span> <span class="nav-text">误差函数与误差向量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E6%B3%A8"><span class="nav-number">1.1.4.</span> <span class="nav-text">备注</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#K-Means-%E7%9A%84%E5%8F%98%E5%88%86%E9%97%AE%E9%A2%98%E4%B8%8E%E7%86%B5%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">1.2.</span> <span class="nav-text">K-Means 的变分问题与熵的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#K-Means-%E5%8F%98%E5%88%86%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.1.</span> <span class="nav-text">K-Means 变分问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%86%B5%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">熵的性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E5%88%86%E6%96%B9%E6%B3%95%E7%9A%84%E7%9B%B4%E8%A7%82%E8%A7%A3%E9%87%8A"><span class="nav-number">1.2.3.</span> <span class="nav-text">变分方法的直观解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E6%B3%A8-1"><span class="nav-number">1.2.4.</span> <span class="nav-text">备注</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%86%B5%E4%B8%8D%E7%AD%89%E5%BC%8F%E7%9A%84%E8%AF%81%E6%98%8E"><span class="nav-number">1.3.</span> <span class="nav-text">熵不等式的证明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%81%E6%98%8E-f-u-ln-u-%E6%98%AF%E5%87%B8%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="nav-number">1.3.1.</span> <span class="nav-text">证明 $f(u)&#x3D;-\ln u$ 是凸函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9E%81%E9%99%90-lim-limits-u-to0-u-ln-u-%EF%BC%9A"><span class="nav-number">1.3.2.</span> <span class="nav-text">计算极限 $\lim\limits_{u\to0^+} u \ln u$：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8-Jensen-%E4%B8%8D%E7%AD%89%E5%BC%8F%E6%8E%A8%E5%AF%BC%E7%86%B5%E4%B8%8D%E7%AD%89%E5%BC%8F%EF%BC%9A"><span class="nav-number">1.3.3.</span> <span class="nav-text">用 Jensen 不等式推导熵不等式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%89%E5%8F%B7%E6%88%90%E7%AB%8B%E7%9A%84%E6%9D%A1%E4%BB%B6%EF%BC%9A"><span class="nav-number">1.3.4.</span> <span class="nav-text">等号成立的条件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%86%B5%E4%B8%8D%E7%AD%89%E5%BC%8F%E5%9C%A8-K-Means-%E5%8F%98%E5%88%86%E9%97%AE%E9%A2%98%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9A"><span class="nav-number">1.3.5.</span> <span class="nav-text">熵不等式在 K-Means 变分问题中的作用：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#K-Means-%E7%9A%84%E5%8F%98%E5%88%86%E9%97%AE%E9%A2%98%E6%89%A9%E5%B1%95"><span class="nav-number">1.4.</span> <span class="nav-text">K-Means 的变分问题扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%8F%E5%AF%BC%E6%95%B0%E8%AE%A1%E7%AE%97"><span class="nav-number">1.4.1.</span> <span class="nav-text">偏导数计算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E5%87%BD%E6%95%B0%E4%B8%8E-Softmax-%E5%88%86%E6%9E%90"><span class="nav-number">1.5.</span> <span class="nav-text">拉格朗日函数与 Softmax 分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E5%87%BD%E6%95%B0"><span class="nav-number">1.5.1.</span> <span class="nav-text">拉格朗日函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E5%88%86%E7%B1%BB-Softmin-Softmax-%E7%9A%84%E6%8E%A8%E5%AF%BC"><span class="nav-number">1.5.2.</span> <span class="nav-text">软分类 (Softmin &#x2F; Softmax) 的推导</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%81%E9%99%90%E9%97%AE%E9%A2%98%E4%B8%8E%E5%88%86%E6%AF%8D%E6%8B%86%E5%88%86"><span class="nav-number">1.6.</span> <span class="nav-text">极限问题与分母拆分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#k-means-%E7%A1%AC%E5%88%86%E7%B1%BB%E6%9B%B4%E6%96%B0%E5%85%AC%E5%BC%8F"><span class="nav-number">1.6.1.</span> <span class="nav-text">k-means 硬分类更新公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Softmin-%E7%9A%84%E6%9E%81%E9%99%90"><span class="nav-number">1.6.2.</span> <span class="nav-text">Softmin 的极限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%99%E4%B8%8E-k-means-%E7%A1%AC%E5%88%86%E7%B1%BB%EF%BC%88%E4%B8%80%E6%AC%A1%E5%8F%AA%E5%B1%9E%E4%BA%8E%E8%B7%9D%E7%A6%BB%E6%9C%80%E8%BF%91%E7%9A%84%E7%B0%87%EF%BC%89%E7%9B%B8%E4%B8%80%E8%87%B4%E3%80%82%E7%A7%B0-%E4%B8%BAsoftmin-softmax%E7%9A%84%E5%88%86%E7%B1%BB%E7%9A%84%E5%8F%98%E5%88%86%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98"><span class="nav-number">1.7.</span> <span class="nav-text">这与 k-means 硬分类（一次只属于距离最近的簇）相一致。称   $\min_{\vec{u}\in U，\vec{C}}\Bigl[E(\vec{u}, \vec{C})-\varepsilon H(u)\Bigr]$   为softmin&#x2F;softmax的分类的变分优化问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k-means-%E7%9A%84%E5%85%89%E6%BB%91%E5%8C%96%E4%B8%8E-Softmax-%E6%BA%A2%E5%87%BA%E9%97%AE%E9%A2%98"><span class="nav-number">1.8.</span> <span class="nav-text">k-means 的光滑化与 Softmax 溢出问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#k-means-%E7%9A%84%E5%85%89%E6%BB%91%E5%8C%96"><span class="nav-number">1.8.1.</span> <span class="nav-text">k-means 的光滑化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Softmax-%E7%9A%84%E6%95%B0%E5%80%BC%E6%BA%A2%E5%87%BA%E9%97%AE%E9%A2%98"><span class="nav-number">1.8.2.</span> <span class="nav-text">Softmax 的数值溢出问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%9B%E5%87%BD%E5%88%86%E6%9E%90%E4%B8%8E%E6%96%B9%E5%90%91%E5%AF%BC%E6%95%B0"><span class="nav-number">1.9.</span> <span class="nav-text">泛函分析与方向导数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%9B%E5%87%BD%E4%B8%8E%E6%96%B9%E5%90%91%E5%AF%BC%E6%95%B0%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.9.1.</span> <span class="nav-text">泛函与方向导数基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%90%91%E5%AF%BC%E6%95%B0%E4%B8%8E%E6%A2%AF%E5%BA%A6%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.9.2.</span> <span class="nav-text">方向导数与梯度的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E6%80%BB%E7%BB%93%E4%B8%8E%E8%A6%81%E7%82%B9"><span class="nav-number">1.10.</span> <span class="nav-text">九、总结与要点</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

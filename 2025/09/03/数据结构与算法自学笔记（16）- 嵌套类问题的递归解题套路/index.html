@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是讲解039的内容，总结了嵌套类问题的递归解题套路。这类问题的共同特点是存在嵌套结构（如括号嵌套），需要用递归来处理。 前置知识在学习嵌套类问题之前，需要掌握以下基础知识：  讲解017、020、021、023、036、037、038 这些章节都">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（16）- 嵌套类问题的递归解题套路">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/09/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8816%EF%BC%89-%20%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记是讲解039的内容，总结了嵌套类问题的递归解题套路。这类问题的共同特点是存在嵌套结构（如括号嵌套），需要用递归来处理。 前置知识在学习嵌套类问题之前，需要掌握以下基础知识：  讲解017、020、021、023、036、037、038 这些章节都">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(16)/class39-%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/%E5%AE%9E%E7%8E%B0%E4%B8%89%E7%A7%8D%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(16)/class39-%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/where%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(16)/class39-%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/%E8%A7%A3%E7%A0%81%E5%B5%8C%E5%A5%97%E5%AD%97%E7%AC%A6%E4%B8%B2.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(16)/class39-%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/%E8%A7%A3%E8%AF%BB%E5%8E%9F%E5%AD%90%E4%B8%AA%E6%95%B0.png">
+<meta property="article:published_time" content="2025-09-03T02:30:00.000Z">
+<meta property="article:modified_time" content="2025-09-08T10:26:54.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="递归">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="嵌套结构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(16)/class39-%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/%E5%AE%9E%E7%8E%B0%E4%B8%89%E7%A7%8D%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/09/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8816%EF%BC%89-%20%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（16）- 嵌套类问题的递归解题套路 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/09/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8816%EF%BC%89-%20%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（16）- 嵌套类问题的递归解题套路
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-09-03 10:30:00" itemprop="dateCreated datePublished" datetime="2025-09-03T10:30:00+08:00">2025-09-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-09-08 18:26:54" itemprop="dateModified" datetime="2025-09-08T18:26:54+08:00">2025-09-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a></p>
+<p>本笔记是讲解039的内容，总结了嵌套类问题的递归解题套路。这类问题的共同特点是存在嵌套结构（如括号嵌套），需要用递归来处理。</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>在学习嵌套类问题之前，需要掌握以下基础知识：</p>
+<ul>
+<li>讲解017、020、021、023、036、037、038</li>
+<li>这些章节都分析过递归，尤其是讲解038，不熟悉的同学可以先熟悉一下</li>
+</ul>
+<hr>
+<h1 id="039【必备】嵌套类问题的递归解题套路"><a href="#039【必备】嵌套类问题的递归解题套路" class="headerlink" title="039【必备】嵌套类问题的递归解题套路"></a>039【必备】嵌套类问题的递归解题套路</h1><h2 id="核心解题思路"><a href="#核心解题思路" class="headerlink" title="核心解题思路"></a>核心解题思路</h2><h3 id="基本套路模板"><a href="#基本套路模板" class="headerlink" title="基本套路模板"></a>基本套路模板</h3><p>嵌套类问题的解题套路可以概括为：</p>
+<ol>
+<li><strong>定义全局变量</strong> <code>where</code>：记录当前解析到的位置</li>
+<li><strong>递归函数</strong> <code>f(i)</code>：从位置i开始解析，遇到字符串终止或嵌套条件终止就返回</li>
+<li><strong>返回值机制</strong>：<code>f(i)</code>负责这一段的结果，返回前更新全局变量<code>where</code></li>
+<li><strong>位置传递</strong>：让上级函数通过<code>where</code>知道解析到了什么位置，进而继续</li>
+</ol>
+<h3 id="执行细节"><a href="#执行细节" class="headerlink" title="执行细节"></a>执行细节</h3><ul>
+<li>如果<code>f(i)</code>遇到<strong>嵌套条件开始</strong>，就调用下级递归去处理嵌套</li>
+<li>下级会负责嵌套部分的计算结果</li>
+<li><code>f(i)</code>下级处理完成后，可以根据下级更新的全局变量<code>where</code>，知道该从什么位置继续解析</li>
+</ul>
+<hr>
+<h2 id="题目一：含有嵌套的表达式求值"><a href="#题目一：含有嵌套的表达式求值" class="headerlink" title="题目一：含有嵌套的表达式求值"></a>题目一：含有嵌套的表达式求值</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>请写一个整数计算器，支持加减乘三种运算和括号。</p>
+<ul>
+<li>数据范围：0 &lt; |s| &lt; 100，保证计算结果始终在整型范围内</li>
+<li>要求：空间复杂度 O(n)，时间复杂度 O(n)</li>
+</ul>
+<p><strong>测试链接</strong>：</p>
+<ul>
+<li>LeetCode：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/basic-calculator-iii/">https://leetcode.cn/problems/basic-calculator-iii/</a></li>
+<li>牛客网：<a target="_blank" rel="noopener" href="https://www.nowcoder.com/practice/c215ba61c8b1443b996351df929dc4d4">https://www.nowcoder.com/practice/c215ba61c8b1443b996351df929dc4d4</a></li>
+</ul>
+<h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>使用递归处理括号嵌套，同时用两个列表分别存储数字和操作符。通过<code>push</code>辅助函数处理运算优先级：</p>
+<ul>
+<li><strong>乘除法优先级高</strong>：遇到时立即计算，并更新数字列表的最后一个数</li>
+<li><strong>加减法优先级低</strong>：先将数字和操作符存入列表</li>
+<li><strong>遇到左括号<code>(</code></strong>：递归调用自身 <code>_f</code> 来计算括号内的值，把它当作一个整体的数字</li>
+<li><strong>遇到右括号 <code>)</code> 或字符串末尾</strong>：结束当前层级的计算,并对 <code>numbers</code> 和 <code>ops</code> 列表中的加减法进行最终求和</li>
+</ul>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(16)/class39-%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/%E5%AE%9E%E7%8E%B0%E4%B8%89%E7%A7%8D%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91.png" alt="实现三种运算符的底层逻辑"></p>
+<h3 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">calculate</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        主函数，初始化共享索引并启动递归</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.where = <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>._f(<span class="built_in">list</span>(s), <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># s[i....]开始计算，遇到字符串终止 或者 遇到)停止</span></span><br><span class="line">    <span class="comment"># 返回 : 自己负责的这一段，计算的结果</span></span><br><span class="line">    <span class="comment"># 返回之间，更新全局变量where，为了上游函数知道从哪继续！</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, s: <span class="type">List</span>[<span class="built_in">str</span>], i: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        递归函数，处理一个括号内的或整个表达式的求值</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        cur = <span class="number">0</span></span><br><span class="line">        numbers = []</span><br><span class="line">        ops = []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(s) <span class="keyword">and</span> s[i] != <span class="string">&#x27;)&#x27;</span>: <span class="comment"># 未终止且未遇到右括号</span></span><br><span class="line">            <span class="keyword">if</span> s[i].isdigit(): <span class="comment"># 是数字</span></span><br><span class="line">                cur = cur * <span class="number">10</span> + <span class="built_in">int</span>(s[i])</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> s[i] != <span class="string">&#x27;(&#x27;</span>: <span class="comment"># 不是左括号</span></span><br><span class="line">                <span class="comment"># 遇到了运算符 + - * /</span></span><br><span class="line">                <span class="variable language_">self</span>._push(numbers, ops, cur, s[i])</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">                cur = <span class="number">0</span></span><br><span class="line">            <span class="keyword">else</span>: <span class="comment"># 是左括号</span></span><br><span class="line">                <span class="comment"># i (.....)</span></span><br><span class="line">                <span class="comment"># 遇到了左括号！</span></span><br><span class="line">                <span class="comment"># 递归调用 f，计算括号内的结果</span></span><br><span class="line">                cur = <span class="variable language_">self</span>._f(s, i + <span class="number">1</span>)</span><br><span class="line">                <span class="comment"># 递归返回后，where 指向了 &#x27;)&#x27; 的位置，i 需要跳到 &#x27;)&#x27; 之后</span></span><br><span class="line">                i = <span class="variable language_">self</span>.where + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 如果碰到了右括号，将最后一个数字（或括号运算结果）加入列表，并更新全局索引</span></span><br><span class="line">        <span class="variable language_">self</span>._push(numbers, ops, cur, <span class="string">&#x27;+&#x27;</span>) <span class="comment"># 末尾添加一个 &#x27;+&#x27; 不影响最终计算</span></span><br><span class="line">        <span class="comment"># 更新全局索引，让上级函数知道从哪继续</span></span><br><span class="line">        <span class="variable language_">self</span>.where = i</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>._compute(numbers, ops)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_push</span>(<span class="params">self, numbers: <span class="type">List</span>[<span class="built_in">int</span>], ops: <span class="type">List</span>[<span class="built_in">str</span>], cur: <span class="built_in">int</span>, op: <span class="built_in">str</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;辅助函数，处理数字和操作符的入栈逻辑，并处理乘除法&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> numbers <span class="keyword">or</span> ops[-<span class="number">1</span>] == <span class="string">&#x27;+&#x27;</span> <span class="keyword">or</span> ops[-<span class="number">1</span>] == <span class="string">&#x27;-&#x27;</span>:</span><br><span class="line">            <span class="comment"># 如果是第一个数，或者前一个运算符是+或-，直接入栈</span></span><br><span class="line">            numbers.append(cur)</span><br><span class="line">            ops.append(op)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 如果前一个运算符是*或/，立即计算</span></span><br><span class="line">            top_number = numbers[-<span class="number">1</span>]</span><br><span class="line">            top_op = ops[-<span class="number">1</span>]</span><br><span class="line">            <span class="keyword">if</span> top_op == <span class="string">&#x27;*&#x27;</span>:</span><br><span class="line">                numbers[-<span class="number">1</span>] = top_number * cur</span><br><span class="line">            <span class="keyword">else</span>: <span class="comment"># top_op == &#x27;/&#x27;</span></span><br><span class="line">                <span class="comment"># Python 的 // 是向下取整，题目要求向零取整</span></span><br><span class="line">                numbers[-<span class="number">1</span>] = <span class="built_in">int</span>(top_number / cur)</span><br><span class="line">            ops[-<span class="number">1</span>] = op <span class="comment"># 更新操作符</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 具体例子   </span></span><br><span class="line">            <span class="comment"># 原始：3 * 4 + 5</span></span><br><span class="line">            <span class="comment">#     处理到 * 4 时：</span></span><br><span class="line">            <span class="comment">#     - numbers: [3, 4] → [12] (3*4=12)</span></span><br><span class="line">            <span class="comment">#     - ops: [&#x27;*&#x27;] → [&#x27;+&#x27;] (更新操作符)  </span></span><br><span class="line">            <span class="comment"># 这样下一个数字 5 就能正确地与 12 进行加法运算</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_compute</span>(<span class="params">self, numbers: <span class="type">List</span>[<span class="built_in">int</span>], ops: <span class="type">List</span>[<span class="built_in">str</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;辅助函数，计算只有加减法的最终结果&quot;&quot;&quot;</span></span><br><span class="line">        ans = numbers[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(numbers)):</span><br><span class="line">            ans += numbers[i] <span class="keyword">if</span> ops[i - <span class="number">1</span>] == <span class="string">&#x27;+&#x27;</span> <span class="keyword">else</span> -numbers[i]</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n)</li>
+<li><strong>空间复杂度</strong>：O(n)</li>
+<li><strong>核心技巧</strong>：递归处理嵌套 + 分离处理优先级</li>
+</ul>
+<hr>
+<h2 id="题目二：含有嵌套的字符串解码"><a href="#题目二：含有嵌套的字符串解码" class="headerlink" title="题目二：含有嵌套的字符串解码"></a>题目二：含有嵌套的字符串解码</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定一个经过编码的字符串，返回它解码后的字符串。<br>编码规则为：<code>k[encoded_string]</code>，表示其中方括号内部的 <code>encoded_string</code> 正好重复 k 次。</p>
+<p><strong>示例</strong>：输入：<code>s = &quot;3[a2[c]]&quot;</code>，输出：<code>&quot;accaccacc&quot;</code></p>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/decode-string/">https://leetcode.cn/problems/decode-string/</a></p>
+<h3 id="核心思想-1"><a href="#核心思想-1" class="headerlink" title="核心思想"></a>核心思想</h3><p>递归解码嵌套字符串。有嵌套就一定有数字：</p>
+<ul>
+<li><strong>遇到字母</strong>：直接拼接到当前层级的结果 <code>path</code> 中</li>
+<li><strong>遇到数字</strong>：累加成一个完整的数字 <code>cnt</code>，这代表后续 <code>[]</code> 内字符串的重复次数</li>
+<li><strong>遇到左括号<code>[</code></strong>：说明进入了一个新的嵌套层级。此时，递归调用 <code>_f</code> 来解码 <code>[]</code> 内的子问题。递归返回后，将得到的子字符串重复 <code>cnt</code> 次，拼接到 <code>path</code> 中。</li>
+<li><strong>遇到右括号 <code>]</code> 或字符串末尾</strong>：当前层级解码结束，返回 <code>path</code>。</li>
+</ul>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(16)/class39-%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/where%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.png" alt="where全局变量"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(16)/class39-%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/%E8%A7%A3%E7%A0%81%E5%B5%8C%E5%A5%97%E5%AD%97%E7%AC%A6%E4%B8%B2.png" alt="解码嵌套字符串"></p>
+<h3 id="算法实现-1"><a href="#算法实现-1" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decodeString</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        主函数，初始化共享索引并启动递归</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.where = <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>._f(<span class="built_in">list</span>(s), <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># s[i....]开始计算，遇到字符串终止 或者 遇到 ] 停止</span></span><br><span class="line">    <span class="comment"># 返回 : 自己负责的这一段字符串的结果</span></span><br><span class="line">    <span class="comment"># 返回之间，更新全局变量where，为了上游函数知道从哪继续！</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, s: <span class="built_in">list</span>, i: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        递归函数，解码一个层级的字符串</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        path = []</span><br><span class="line">        cnt = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(s) <span class="keyword">and</span> s[i] != <span class="string">&#x27;]&#x27;</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;a&#x27;</span> &lt;= s[i] &lt;= <span class="string">&#x27;z&#x27;</span> <span class="keyword">or</span> <span class="string">&#x27;A&#x27;</span> &lt;= s[i] &lt;= <span class="string">&#x27;Z&#x27;</span>:  <span class="comment"># 比较范围</span></span><br><span class="line">                path.append(s[i])</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> s[i].isdigit():</span><br><span class="line">                cnt = cnt * <span class="number">10</span> + <span class="built_in">int</span>(s[i])</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 遇到 [ </span></span><br><span class="line">                <span class="comment"># 递归调用 f 来解码括号内的内容</span></span><br><span class="line">                inner_str = <span class="variable language_">self</span>._f(s, i + <span class="number">1</span>)</span><br><span class="line">                <span class="comment"># 将解码后的子串重复 cnt 次</span></span><br><span class="line">                path.append(cnt * inner_str)</span><br><span class="line">                <span class="comment"># 更新 i 到 &#x27;]&#x27; 之后的位置</span></span><br><span class="line">                i = <span class="variable language_">self</span>.where + <span class="number">1</span></span><br><span class="line">                <span class="comment"># 重置 cnt</span></span><br><span class="line">                cnt = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 更新全局索引，以便上层函数知道从哪里继续</span></span><br><span class="line">        <span class="variable language_">self</span>.where = i</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>.join(path)</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-1"><a href="#算法分析-1" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n)</li>
+<li><strong>空间复杂度</strong>：O(n)</li>
+<li><strong>核心技巧</strong>：递归处理嵌套 + 字符串重复</li>
+</ul>
+<hr>
+<h2 id="题目三：含有嵌套的分子式求原子数量"><a href="#题目三：含有嵌套的分子式求原子数量" class="headerlink" title="题目三：含有嵌套的分子式求原子数量"></a>题目三：含有嵌套的分子式求原子数量</h2><h3 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个字符串化学式 <code>formula</code>，返回每种原子的数量。</p>
+<ul>
+<li>原子总是以一个大写字母开始，接着跟随0个或任意个小写字母</li>
+<li>如果数量大于1，原子后会跟着数字表示原子的数量</li>
+<li>如果数量等于1则不会跟数字</li>
+</ul>
+<p><strong>测试链接</strong>：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/number-of-atoms/">https://leetcode.cn/problems/number-of-atoms/</a></p>
+<h3 id="核心思想-2"><a href="#核心思想-2" class="headerlink" title="核心思想"></a>核心思想</h3><p>递归解析嵌套分子式，返回原子计数字典</p>
+<p>具体流程如下：</p>
+<ul>
+<li>循环解析当前层级，直到遇到 ‘)’ 或字符串末尾。</li>
+<li>解析过程中维护三个状态：<code>name</code> (当前原子名), <code>pre</code> (括号内解析结果的字典), <code>cnt</code> (倍数)。</li>
+<li>当遇到下一个大写字母或左括号 <code>(</code> 时，说明前一个“单元”（原子或括号）已经解析完毕，<br>  调用 <code>_fill</code> 函数将其信息合并到当前层级的总结果 <code>ans</code> 字典中。</li>
+<li>遇到 <code>(</code>，递归调用 <code>_f</code> 获取括号内的原子构成，存入 <code>pre</code> 字典。</li>
+<li>遇到大写字母，开始一个新的原子名 <code>name</code>。</li>
+<li>遇到小写字母，追加到 <code>name</code>。</li>
+<li>遇到数字，累加成倍数 <code>cnt</code>。</li>
+</ul>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(16)/class39-%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF/%E8%A7%A3%E8%AF%BB%E5%8E%9F%E5%AD%90%E4%B8%AA%E6%95%B0.png" alt="解读原子个数"></p>
+<h3 id="算法实现-2"><a href="#算法实现-2" class="headerlink" title="算法实现"></a>算法实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">countOfAtoms</span>(<span class="params">self, formula: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        主函数，初始化共享索引并启动递归，最后格式化输出</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.where = <span class="number">0</span></span><br><span class="line">        <span class="comment"># 调用递归函数获取原子计数的字典</span></span><br><span class="line">        atom_map = <span class="variable language_">self</span>._f(<span class="built_in">list</span>(formula), <span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 构建最终的输出字符串</span></span><br><span class="line">        ans = []</span><br><span class="line">        <span class="comment"># 按原子名称的字母顺序排序，返回有序表</span></span><br><span class="line">        <span class="keyword">for</span> key <span class="keyword">in</span> <span class="built_in">sorted</span>(atom_map.keys()):</span><br><span class="line">            ans.append(key) <span class="comment"># 先添加原子名称再添加数量</span></span><br><span class="line">            cnt = atom_map[key]</span><br><span class="line">            <span class="keyword">if</span> cnt &gt; <span class="number">1</span>:</span><br><span class="line">                ans.append(<span class="built_in">str</span>(cnt))</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>.join(ans)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, s: <span class="built_in">list</span>, i: <span class="built_in">int</span></span>) -&gt; <span class="built_in">dict</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        递归函数，解析一个层级的分子式，返回一个字典</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        ans = defaultdict(<span class="built_in">int</span>)  <span class="comment"># 创建默认字典</span></span><br><span class="line">        name = []  <span class="comment"># 存储当前原子名称</span></span><br><span class="line">        pre = <span class="literal">None</span>  <span class="comment"># 历史记录</span></span><br><span class="line">        cnt = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(s) <span class="keyword">and</span> s[i] != <span class="string">&#x27;)&#x27;</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;A&#x27;</span> &lt;= s[i] &lt;= <span class="string">&#x27;Z&#x27;</span> <span class="keyword">or</span> s[i] == <span class="string">&#x27;(&#x27;</span>:</span><br><span class="line">                <span class="comment"># 遇到新单元，先把之前收集的信息处理掉</span></span><br><span class="line">                <span class="variable language_">self</span>._fill(ans, name, pre, cnt)</span><br><span class="line">                <span class="comment"># 重置状态</span></span><br><span class="line">                name.clear()  <span class="comment"># 清空列表中的所有元素</span></span><br><span class="line">                pre = <span class="literal">None</span></span><br><span class="line">                cnt = <span class="number">0</span>  <span class="comment"># 重置倍数</span></span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span> <span class="string">&#x27;A&#x27;</span> &lt;= s[i] &lt;= <span class="string">&#x27;Z&#x27;</span>:</span><br><span class="line">                    name.append(s[i])</span><br><span class="line">                    i += <span class="number">1</span>  <span class="comment"># 移动到下一个字符</span></span><br><span class="line">                <span class="keyword">else</span>:  <span class="comment"># 遇到 (</span></span><br><span class="line">                    <span class="comment"># 递归处理括号内的表达式</span></span><br><span class="line">                    pre = <span class="variable language_">self</span>._f(s, i + <span class="number">1</span>)</span><br><span class="line">                    i = <span class="variable language_">self</span>.where + <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">&#x27;a&#x27;</span> &lt;= s[i] &lt;= <span class="string">&#x27;z&#x27;</span>:</span><br><span class="line">                name.append(s[i])</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:  <span class="comment"># 遇到数字</span></span><br><span class="line">                cnt = cnt * <span class="number">10</span> + <span class="built_in">int</span>(s[i])</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 循环结束，处理最后一个单元</span></span><br><span class="line">        <span class="variable language_">self</span>._fill(ans, name, pre, cnt)</span><br><span class="line">        <span class="comment"># 更新全局索引</span></span><br><span class="line">        <span class="variable language_">self</span>.where = i</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_fill</span>(<span class="params">self, ans: <span class="built_in">dict</span>, name: <span class="built_in">list</span>, pre: <span class="built_in">dict</span>, cnt: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;辅助函数，将一个解析完的单元（原子或括号）合并到总结果中&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> name <span class="keyword">or</span> pre:</span><br><span class="line">            <span class="comment"># 如果没有数字，倍数默认为1</span></span><br><span class="line">            cnt = <span class="number">1</span> <span class="keyword">if</span> cnt == <span class="number">0</span> <span class="keyword">else</span> cnt</span><br><span class="line">            <span class="keyword">if</span> name:</span><br><span class="line">                <span class="comment"># 如果是原子，直接累加数量</span></span><br><span class="line">                key = <span class="string">&quot;&quot;</span>.join(name)</span><br><span class="line">                ans[key] += cnt</span><br><span class="line">            <span class="keyword">else</span>:  <span class="comment"># 如果是括号内的字典 pre</span></span><br><span class="line">                <span class="comment"># 遍历字典，将其中每个原子的数量乘以倍数 cnt，再累加</span></span><br><span class="line">                <span class="keyword">for</span> key, val <span class="keyword">in</span> pre.items():</span><br><span class="line">                    ans[key] += val * cnt</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法分析-2"><a href="#算法分析-2" class="headerlink" title="算法分析"></a>算法分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(n)</li>
+<li><strong>空间复杂度</strong>：O(n)</li>
+<li><strong>核心技巧</strong>：递归处理嵌套 + 字典合并</li>
+</ul>
+<hr>
+<h2 id="核心套路总结"><a href="#核心套路总结" class="headerlink" title="核心套路总结"></a>核心套路总结</h2><h3 id="1-递归函数设计模板"><a href="#1-递归函数设计模板" class="headerlink" title="1. 递归函数设计模板"></a>1. 递归函数设计模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">solve</span>(<span class="params">self, s: <span class="built_in">str</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;主函数，初始化全局变量&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.where = <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>._f(<span class="built_in">list</span>(s), <span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, s: <span class="built_in">list</span>, i: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;递归函数核心模板&quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 初始化当前层级的状态变量</span></span><br><span class="line">        result = []  <span class="comment"># 或其他适当的数据结构</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(s) <span class="keyword">and</span> s[i] != 终止条件:</span><br><span class="line">            <span class="keyword">if</span> 普通字符处理:</span><br><span class="line">                <span class="comment"># 直接处理</span></span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> 嵌套开始标志:</span><br><span class="line">                <span class="comment"># 递归调用处理嵌套</span></span><br><span class="line">                nested_result = <span class="variable language_">self</span>._f(s, i + <span class="number">1</span>)</span><br><span class="line">                <span class="comment"># 处理递归结果</span></span><br><span class="line">                result.append(nested_result)</span><br><span class="line">                <span class="comment"># 更新位置</span></span><br><span class="line">                i = <span class="variable language_">self</span>.where + <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 其他情况处理</span></span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 更新全局位置</span></span><br><span class="line">        <span class="variable language_">self</span>.where = i</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-全局变量where的作用"><a href="#2-全局变量where的作用" class="headerlink" title="2. 全局变量where的作用"></a>2. 全局变量where的作用</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># where的三个关键作用：</span></span><br><span class="line"><span class="comment"># 1. 记录当前递归函数解析到的位置</span></span><br><span class="line"><span class="comment"># 2. 让上级函数知道下级函数处理到哪里了</span></span><br><span class="line"><span class="comment"># 3. 实现递归层级之间的位置传递</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-嵌套处理的通用策略"><a href="#3-嵌套处理的通用策略" class="headerlink" title="3. 嵌套处理的通用策略"></a>3. 嵌套处理的通用策略</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 遇到嵌套开始标志时：</span></span><br><span class="line"><span class="keyword">if</span> s[i] == <span class="string">&#x27;(&#x27;</span> <span class="keyword">or</span> s[i] == <span class="string">&#x27;[&#x27;</span>:  <span class="comment"># 根据具体问题调整</span></span><br><span class="line">    <span class="comment"># 1. 递归调用处理嵌套内容</span></span><br><span class="line">    nested_result = <span class="variable language_">self</span>._f(s, i + <span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 2. 处理递归返回的结果</span></span><br><span class="line">    process_nested_result(nested_result)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 3. 更新当前位置到嵌套结束后</span></span><br><span class="line">    i = <span class="variable language_">self</span>.where + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="复杂度分析总结"><a href="#复杂度分析总结" class="headerlink" title="复杂度分析总结"></a>复杂度分析总结</h2><table>
+<thead>
+<tr>
+<th>题目</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>核心数据结构</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>表达式求值</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>列表 + 递归栈</td>
+</tr>
+<tr>
+<td>字符串解码</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>字符串 + 递归栈</td>
+</tr>
+<tr>
+<td>分子式解析</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>字典 + 递归栈</td>
+</tr>
+</tbody></table>
+<h2 id="学习建议"><a href="#学习建议" class="headerlink" title="学习建议"></a>学习建议</h2><h3 id="1-理解递归本质"><a href="#1-理解递归本质" class="headerlink" title="1. 理解递归本质"></a>1. 理解递归本质</h3><ul>
+<li>递归是处理嵌套结构的自然选择</li>
+<li>每一层递归负责处理一个层级的内容</li>
+<li>通过全局变量实现层级间的信息传递</li>
+</ul>
+<h3 id="2-掌握状态管理"><a href="#2-掌握状态管理" class="headerlink" title="2. 掌握状态管理"></a>2. 掌握状态管理</h3><ul>
+<li>明确每层递归需要维护哪些状态</li>
+<li>合理设计辅助函数处理复杂逻辑</li>
+<li>注意状态的重置和更新时机</li>
+</ul>
+<h3 id="3-练习边界处理"><a href="#3-练习边界处理" class="headerlink" title="3. 练习边界处理"></a>3. 练习边界处理</h3><ul>
+<li>递归终止条件的设计</li>
+<li>嵌套边界的正确处理</li>
+<li>特殊情况的考虑（空字符串、单字符等）</li>
+</ul>
+<h3 id="4-优化技巧"><a href="#4-优化技巧" class="headerlink" title="4. 优化技巧"></a>4. 优化技巧</h3><ul>
+<li>使用合适的数据结构（列表、字典、栈等）</li>
+<li>避免重复计算和冗余操作</li>
+<li>考虑空间复杂度的优化</li>
+</ul>
+<h3 id="5-调试方法"><a href="#5-调试方法" class="headerlink" title="5. 调试方法"></a>5. 调试方法</h3><ul>
+<li>画出递归调用的层级关系图</li>
+<li>追踪全局变量where的变化</li>
+<li>验证每层递归的输入输出</li>
+</ul>
+<p>通过掌握这个通用的嵌套类问题解题套路，可以有效解决包含括号、方括号等嵌套结构的各类算法问题。关键在于理解递归的层级关系和全局变量的作用机制。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E9%80%92%E5%BD%92/" rel="tag"># 递归</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E5%B5%8C%E5%A5%97%E7%BB%93%E6%9E%84/" rel="tag"># 嵌套结构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/09/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8815%EF%BC%89-%20%E5%B8%B8%E8%A7%81%E7%BB%8F%E5%85%B8%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90/" rel="prev" title="数据结构与算法自学笔记（15）- 常见经典递归过程解析">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（15）- 常见经典递归过程解析
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/09/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8817%EF%BC%89-%20N%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98%E4%B8%8E%E4%BD%8D%E8%BF%90%E7%AE%97%E4%BC%98%E5%8C%96/" rel="next" title="数据结构与算法自学笔记（17）- N皇后问题与位运算优化版本">
+      数据结构与算法自学笔记（17）- N皇后问题与位运算优化版本 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">前置知识</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#039%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E5%B5%8C%E5%A5%97%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E9%80%92%E5%BD%92%E8%A7%A3%E9%A2%98%E5%A5%97%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">039【必备】嵌套类问题的递归解题套路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.1.</span> <span class="nav-text">核心解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%A5%97%E8%B7%AF%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.1.1.</span> <span class="nav-text">基本套路模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E7%BB%86%E8%8A%82"><span class="nav-number">2.1.2.</span> <span class="nav-text">执行细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%80%EF%BC%9A%E5%90%AB%E6%9C%89%E5%B5%8C%E5%A5%97%E7%9A%84%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B1%82%E5%80%BC"><span class="nav-number">2.2.</span> <span class="nav-text">题目一：含有嵌套的表达式求值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">2.2.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">2.2.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.2.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">2.2.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%8C%EF%BC%9A%E5%90%AB%E6%9C%89%E5%B5%8C%E5%A5%97%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81"><span class="nav-number">2.3.</span> <span class="nav-text">题目二：含有嵌套的字符串解码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">2.3.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-1"><span class="nav-number">2.3.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">2.3.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-1"><span class="nav-number">2.3.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%89%EF%BC%9A%E5%90%AB%E6%9C%89%E5%B5%8C%E5%A5%97%E7%9A%84%E5%88%86%E5%AD%90%E5%BC%8F%E6%B1%82%E5%8E%9F%E5%AD%90%E6%95%B0%E9%87%8F"><span class="nav-number">2.4.</span> <span class="nav-text">题目三：含有嵌套的分子式求原子数量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">2.4.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-2"><span class="nav-number">2.4.2.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">2.4.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-2"><span class="nav-number">2.4.4.</span> <span class="nav-text">算法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93"><span class="nav-number">2.5.</span> <span class="nav-text">核心套路总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0%E8%AE%BE%E8%AE%A1%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.5.1.</span> <span class="nav-text">1. 递归函数设计模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8Fwhere%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">2.5.2.</span> <span class="nav-text">2. 全局变量where的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%B5%8C%E5%A5%97%E5%A4%84%E7%90%86%E7%9A%84%E9%80%9A%E7%94%A8%E7%AD%96%E7%95%A5"><span class="nav-number">2.5.3.</span> <span class="nav-text">3. 嵌套处理的通用策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90%E6%80%BB%E7%BB%93"><span class="nav-number">2.6.</span> <span class="nav-text">复杂度分析总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.7.</span> <span class="nav-text">学习建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%90%86%E8%A7%A3%E9%80%92%E5%BD%92%E6%9C%AC%E8%B4%A8"><span class="nav-number">2.7.1.</span> <span class="nav-text">1. 理解递归本质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%8E%8C%E6%8F%A1%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86"><span class="nav-number">2.7.2.</span> <span class="nav-text">2. 掌握状态管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%BB%83%E4%B9%A0%E8%BE%B9%E7%95%8C%E5%A4%84%E7%90%86"><span class="nav-number">2.7.3.</span> <span class="nav-text">3. 练习边界处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%BC%98%E5%8C%96%E6%8A%80%E5%B7%A7"><span class="nav-number">2.7.4.</span> <span class="nav-text">4. 优化技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95"><span class="nav-number">2.7.5.</span> <span class="nav-text">5. 调试方法</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

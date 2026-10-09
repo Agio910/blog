@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记包括了位图数据结构的原理、实现和应用，以及如何用位运算实现加减乘除（完全不依赖任何算术运算符）。涵盖了class032 and class033的内容 032【必备】位图前置知识在学习位图之前，需要掌握以下基础知识：  二进制和位运算操作 对数器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（11）- 位图&amp;位运算实现加减乘除">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/08/16/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8811%EF%BC%89-%20%E4%BD%8D%E5%9B%BE&%E4%BD%8D%E8%BF%90%E7%AE%97%E5%AE%9E%E7%8E%B0%E5%8A%A0%E5%87%8F%E4%B9%98%E9%99%A4/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="引言参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series 本笔记包括了位图数据结构的原理、实现和应用，以及如何用位运算实现加减乘除（完全不依赖任何算术运算符）。涵盖了class032 and class033的内容 032【必备】位图前置知识在学习位图之前，需要掌握以下基础知识：  二进制和位运算操作 对数器">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(11)/class32-%E4%BD%8D%E5%9B%BE/%E4%BD%8D%E5%9B%BE%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86.png">
+<meta property="article:published_time" content="2025-08-16T00:42:46.000Z">
+<meta property="article:modified_time" content="2025-08-16T09:27:38.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="位运算">
+<meta property="article:tag" content="对数器">
+<meta property="article:tag" content="贪心算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(11)/class32-%E4%BD%8D%E5%9B%BE/%E4%BD%8D%E5%9B%BE%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/08/16/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8811%EF%BC%89-%20%E4%BD%8D%E5%9B%BE&%E4%BD%8D%E8%BF%90%E7%AE%97%E5%AE%9E%E7%8E%B0%E5%8A%A0%E5%87%8F%E4%B9%98%E9%99%A4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（11）- 位图&位运算实现加减乘除 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/08/16/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8811%EF%BC%89-%20%E4%BD%8D%E5%9B%BE&%E4%BD%8D%E8%BF%90%E7%AE%97%E5%AE%9E%E7%8E%B0%E5%8A%A0%E5%87%8F%E4%B9%98%E9%99%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（11）- 位图&位运算实现加减乘除
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-08-16 08:42:46 / Modified: 17:27:38" itemprop="dateCreated datePublished" datetime="2025-08-16T08:42:46+08:00">2025-08-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a></p>
+<p>本笔记包括了位图数据结构的原理、实现和应用，以及如何用位运算实现加减乘除（完全不依赖任何算术运算符）。涵盖了class032 and class033的内容</p>
+<h1 id="032【必备】位图"><a href="#032【必备】位图" class="headerlink" title="032【必备】位图"></a>032【必备】位图</h1><h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>在学习位图之前，需要掌握以下基础知识：</p>
+<ul>
+<li>二进制和位运算操作</li>
+<li>对数器的使用方法</li>
+</ul>
+<p><strong>Python特别提醒</strong>：在实现位运算题目时需要特别注意溢出和符号扩展问题，通常需要手动处理：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python中处理溢出的常见方法</span></span><br><span class="line">result = (n &lt;&lt; shift_amount) &amp; <span class="number">0xFFFFFFFF</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="位图的核心概念"><a href="#位图的核心概念" class="headerlink" title="位图的核心概念"></a>位图的核心概念</h2><h3 id="什么是位图"><a href="#什么是位图" class="headerlink" title="什么是位图"></a>什么是位图</h3><p>位图（Bitset）是一种极其节省空间的数据结构，用于存储大量布尔值。相比传统哈希表，位图具有显著的空间优势：</p>
+<ul>
+<li><strong>哈希表</strong>：每存储一个数字需要32个bit的空间</li>
+<li><strong>位图</strong>：每存储一个数字只需要1个bit的空间</li>
+</ul>
+<h3 id="位图的基本原理"><a href="#位图的基本原理" class="headerlink" title="位图的基本原理"></a>位图的基本原理</h3><p>位图本质上是用bit组成的数组来存放值，使用bit的状态（1和0）来表示元素的存在性：</p>
+<ul>
+<li><strong>bit位为1</strong>：表示该数字存在于集合中</li>
+<li><strong>bit位为0</strong>：表示该数字不存在于集合中</li>
+</ul>
+<p><strong>基本思想</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">用一个很长的二进制位数组，每一位（bit）对应一个整数的&quot;有无&quot;状态</span><br><span class="line">第0位代表数字0，第1位代表数字1，第2位代表数字2，依此类推</span><br></pre></td></tr></table></figure>
+
+<h3 id="位图的适用场景"><a href="#位图的适用场景" class="headerlink" title="位图的适用场景"></a>位图的适用场景</h3><p><strong>优势</strong>：</p>
+<ul>
+<li>极大节省空间（1个数字仅占1个bit）</li>
+<li>查询和修改操作都是O(1)时间复杂度</li>
+<li>支持高效的批量操作</li>
+</ul>
+<p><strong>限制</strong>：</p>
+<ul>
+<li>必须是连续范围的整数</li>
+<li>范围不能过大（适合0到几百万，不适合到几十亿）</li>
+<li>只能表示元素的存在性，不能存储额外信息</li>
+</ul>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>判断大量整数是否存在</li>
+<li>统计范围内数字的出现情况</li>
+<li>实现简单的集合操作</li>
+</ul>
+<h2 id="位图的实现"><a href="#位图的实现" class="headerlink" title="位图的实现"></a>位图的实现</h2><p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(11)/class32-%E4%BD%8D%E5%9B%BE/%E4%BD%8D%E5%9B%BE%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86.png" alt="位图实现原理"></p>
+<h3 id="类设计接口"><a href="#类设计接口" class="headerlink" title="类设计接口"></a>类设计接口</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Bitset</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n</span>):          <span class="comment"># 初始化位图，支持0~n-1所有数字</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">self, num</span>):             <span class="comment"># 把num加入到位图</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">remove</span>(<span class="params">self, num</span>):          <span class="comment"># 把num从位图中删除</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reverse</span>(<span class="params">self, num</span>):         <span class="comment"># 翻转num的状态（存在则删除，不存在则添加）</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">contains</span>(<span class="params">self, num</span>):        <span class="comment"># 查询num是否在位图中</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="完整实现代码"><a href="#完整实现代码" class="headerlink" title="完整实现代码"></a>完整实现代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Bitset</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        初始化位图，支持0~n-1范围内的数字</span></span><br><span class="line"><span class="string">        n个数字需要 (n + 31) // 32 个32位整数来存储</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 计算需要多少个32位整数</span></span><br><span class="line">        <span class="comment"># 使用 (n + 31) // 32 实现向上取整</span></span><br><span class="line">        <span class="comment"># 例如：32个数字需要1个整数，33个数字需要2个整数</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">set</span> = [<span class="number">0</span>] * ((n + <span class="number">31</span>) // <span class="number">32</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">self, num</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        将num添加到位图中（将对应位设置为1）</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># num // 32：确定数字在第几个32位整数中</span></span><br><span class="line">        <span class="comment"># num % 32：确定在该32位整数中的第几位</span></span><br><span class="line">        <span class="comment"># 1 &lt;&lt; (num % 32)：创建掩码，将1左移到对应位置</span></span><br><span class="line">        <span class="comment"># |=：按位或赋值，将对应位设置为1</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">set</span>[num // <span class="number">32</span>] |= <span class="number">1</span> &lt;&lt; (num % <span class="number">32</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">remove</span>(<span class="params">self, num</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        将num从位图中删除（将对应位设置为0）</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># ~(1 &lt;&lt; (num % 32))：创建掩码并取反，除了目标位其他位都是1</span></span><br><span class="line">        <span class="comment"># &amp;=：按位与赋值，将对应位清除为0</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">set</span>[num // <span class="number">32</span>] &amp;= ~(<span class="number">1</span> &lt;&lt; (num % <span class="number">32</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reverse</span>(<span class="params">self, num</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        翻转num在位图中的状态</span></span><br><span class="line"><span class="string">        如果存在则删除，如果不存在则添加</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># ^=：按位异或赋值</span></span><br><span class="line">        <span class="comment"># 如果位是0，异或1后变成1</span></span><br><span class="line">        <span class="comment"># 如果位是1，异或1后变成0</span></span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">set</span>[num // <span class="number">32</span>] ^= <span class="number">1</span> &lt;&lt; (num % <span class="number">32</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">contains</span>(<span class="params">self, num</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        判断num是否存在于位图中</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># &gt;&gt; (num % 32)：将目标位移动到最低位</span></span><br><span class="line">        <span class="comment"># &amp; 1：提取最低位的值</span></span><br><span class="line">        <span class="comment"># == 1：判断是否为1</span></span><br><span class="line">        <span class="keyword">return</span> ((<span class="variable language_">self</span>.<span class="built_in">set</span>[num // <span class="number">32</span>] &gt;&gt; (num % <span class="number">32</span>)) &amp; <span class="number">1</span>) == <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="关键实现细节"><a href="#关键实现细节" class="headerlink" title="关键实现细节"></a>关键实现细节</h3><h4 id="1-空间分配策略"><a href="#1-空间分配策略" class="headerlink" title="1. 空间分配策略"></a>1. 空间分配策略</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 向上取整的巧妙实现</span></span><br><span class="line"><span class="comment"># 对于n个数字，需要的32位整数个数</span></span><br><span class="line">array_size = (n + <span class="number">31</span>) // <span class="number">32</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 原理：</span></span><br><span class="line"><span class="comment"># - 如果n=32，则(32+31)//32 = 63//32 = 1（正好1个整数）</span></span><br><span class="line"><span class="comment"># - 如果n=33，则(33+31)//32 = 64//32 = 2（需要2个整数）</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-位置计算"><a href="#2-位置计算" class="headerlink" title="2. 位置计算"></a>2. 位置计算</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_position</span>(<span class="params">num</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算数字num在位图中的位置&quot;&quot;&quot;</span></span><br><span class="line">    array_index = num // <span class="number">32</span>    <span class="comment"># 在第几个32位整数中</span></span><br><span class="line">    bit_index = num % <span class="number">32</span>       <span class="comment"># 在该整数的第几位</span></span><br><span class="line">    <span class="keyword">return</span> array_index, bit_index</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-位运算技巧总结"><a href="#3-位运算技巧总结" class="headerlink" title="3. 位运算技巧总结"></a>3. 位运算技巧总结</h4><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>位运算实现</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>设置位为1</td>
+<td><code>x |= (1 &lt;&lt; i)</code></td>
+<td>按位或运算</td>
+</tr>
+<tr>
+<td>清除位为0</td>
+<td><code>x &amp;= ~(1 &lt;&lt; i)</code></td>
+<td>按位与运算（掩码取反）</td>
+</tr>
+<tr>
+<td>翻转位</td>
+<td><code>x ^= (1 &lt;&lt; i)</code></td>
+<td>按位异或运算</td>
+</tr>
+<tr>
+<td>检查位</td>
+<td><code>(x &gt;&gt; i) &amp; 1</code></td>
+<td>右移后提取最低位</td>
+</tr>
+</tbody></table>
+<h2 id="对数器测试"><a href="#对数器测试" class="headerlink" title="对数器测试"></a>对数器测试</h2><h3 id="测试设计思路"><a href="#测试设计思路" class="headerlink" title="测试设计思路"></a>测试设计思路</h3><p>使用Python内置的<code>set</code>作为参照标准，对位图的所有操作进行验证：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">test_bitset</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;使用对数器验证位图实现的正确性&quot;&quot;&quot;</span></span><br><span class="line">    n = <span class="number">1000</span>          <span class="comment"># 位图大小</span></span><br><span class="line">    testTimes = <span class="number">10000</span> <span class="comment"># 测试次数</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;测试开始&quot;</span>)</span><br><span class="line">    bitSet = Bitset(n)      <span class="comment"># 被测试的位图结构</span></span><br><span class="line">    hashSet = <span class="built_in">set</span>()         <span class="comment"># 参照标准（Python内置set）</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;调用阶段开始&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(testTimes):</span><br><span class="line">        decide = random.random()                    <span class="comment"># 随机决定操作类型</span></span><br><span class="line">        number = <span class="built_in">int</span>(random.random() * n)          <span class="comment"># 随机生成0~n-1的数字</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> decide &lt; <span class="number">0.333</span>:                         <span class="comment"># 33%概率执行add操作</span></span><br><span class="line">            bitSet.add(number)</span><br><span class="line">            hashSet.add(number)</span><br><span class="line">        <span class="keyword">elif</span> decide &lt; <span class="number">0.666</span>:                       <span class="comment"># 33%概率执行remove操作</span></span><br><span class="line">            bitSet.remove(number)</span><br><span class="line">            hashSet.discard(number)                <span class="comment"># 使用discard避免KeyError</span></span><br><span class="line">        <span class="keyword">else</span>:                                      <span class="comment"># 34%概率执行reverse操作</span></span><br><span class="line">            bitSet.reverse(number)</span><br><span class="line">            <span class="keyword">if</span> number <span class="keyword">in</span> hashSet:</span><br><span class="line">                hashSet.remove(number)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                hashSet.add(number)</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;调用阶段结束&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;验证阶段开始&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 验证所有数字的存在性是否一致</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        <span class="keyword">if</span> bitSet.contains(i) != (i <span class="keyword">in</span> hashSet):</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;出错了!&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;验证阶段结束&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;测试结束&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="测试覆盖的场景"><a href="#测试覆盖的场景" class="headerlink" title="测试覆盖的场景"></a>测试覆盖的场景</h3><ol>
+<li><strong>随机操作序列</strong>：大量随机的增删改查操作</li>
+<li><strong>边界条件</strong>：0和n-1等边界值</li>
+<li><strong>重复操作</strong>：对同一个数字的重复操作</li>
+<li><strong>状态一致性</strong>：每次操作后验证状态的一致性</li>
+</ol>
+<h2 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h2><h3 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h3><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>时间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>初始化</td>
+<td>O(n&#x2F;32)</td>
+<td>需要初始化数组</td>
+</tr>
+<tr>
+<td>add</td>
+<td>O(1)</td>
+<td>常数时间位运算</td>
+</tr>
+<tr>
+<td>remove</td>
+<td>O(1)</td>
+<td>常数时间位运算</td>
+</tr>
+<tr>
+<td>reverse</td>
+<td>O(1)</td>
+<td>常数时间位运算</td>
+</tr>
+<tr>
+<td>contains</td>
+<td>O(1)</td>
+<td>常数时间位运算</td>
+</tr>
+</tbody></table>
+<h3 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h3><ul>
+<li><strong>位图空间</strong>：O(n&#x2F;32) &#x3D; O(n)</li>
+<li><strong>相比哈希表</strong>：空间节省约32倍</li>
+</ul>
+<h3 id="实际空间对比"><a href="#实际空间对比" class="headerlink" title="实际空间对比"></a>实际空间对比</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 存储1000万个数字的空间对比</span></span><br><span class="line">numbers = <span class="number">10_000_000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 哈希表（假设每个数字32位）</span></span><br><span class="line">hash_space = numbers * <span class="number">32</span>  <span class="comment"># 320,000,000 bits</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 位图</span></span><br><span class="line">bitset_space = numbers * <span class="number">1</span>  <span class="comment"># 10,000,000 bits</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 空间节省比例</span></span><br><span class="line">space_saving = hash_space / bitset_space  <span class="comment"># 32倍</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="应用场景与扩展"><a href="#应用场景与扩展" class="headerlink" title="应用场景与扩展"></a>应用场景与扩展</h2><h3 id="典型应用场景"><a href="#典型应用场景" class="headerlink" title="典型应用场景"></a>典型应用场景</h3><ol>
+<li><strong>大数据去重</strong>：判断海量数据中的重复元素</li>
+<li><strong>布隆过滤器基础</strong>：位图是布隆过滤器的核心组件</li>
+<li><strong>状态压缩</strong>：在动态规划中压缩状态空间</li>
+<li><strong>集合运算</strong>：高效实现并集、交集、差集运算</li>
+</ol>
+<h3 id="位图的集合运算"><a href="#位图的集合运算" class="headerlink" title="位图的集合运算"></a>位图的集合运算</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">bitset_union</span>(<span class="params">bitset1, bitset2</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;位图并集运算&quot;&quot;&quot;</span></span><br><span class="line">    result = Bitset(<span class="built_in">max</span>(<span class="built_in">len</span>(bitset1.<span class="built_in">set</span>), <span class="built_in">len</span>(bitset2.<span class="built_in">set</span>)) * <span class="number">32</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">min</span>(<span class="built_in">len</span>(bitset1.<span class="built_in">set</span>), <span class="built_in">len</span>(bitset2.<span class="built_in">set</span>))):</span><br><span class="line">        result.<span class="built_in">set</span>[i] = bitset1.<span class="built_in">set</span>[i] | bitset2.<span class="built_in">set</span>[i]</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bitset_intersection</span>(<span class="params">bitset1, bitset2</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;位图交集运算&quot;&quot;&quot;</span></span><br><span class="line">    result = Bitset(<span class="built_in">max</span>(<span class="built_in">len</span>(bitset1.<span class="built_in">set</span>), <span class="built_in">len</span>(bitset2.<span class="built_in">set</span>)) * <span class="number">32</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">min</span>(<span class="built_in">len</span>(bitset1.<span class="built_in">set</span>), <span class="built_in">len</span>(bitset2.<span class="built_in">set</span>))):</span><br><span class="line">        result.<span class="built_in">set</span>[i] = bitset1.<span class="built_in">set</span>[i] &amp; bitset2.<span class="built_in">set</span>[i]</span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<h3 id="实际应用示例"><a href="#实际应用示例" class="headerlink" title="实际应用示例"></a>实际应用示例</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">find_missing_numbers</span>(<span class="params">arr, n</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;找出0到n-1范围内缺失的所有数字&quot;&quot;&quot;</span></span><br><span class="line">    bitset = Bitset(n)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 标记存在的数字</span></span><br><span class="line">    <span class="keyword">for</span> num <span class="keyword">in</span> arr:</span><br><span class="line">        <span class="keyword">if</span> <span class="number">0</span> &lt;= num &lt; n:</span><br><span class="line">            bitset.add(num)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 找出缺失的数字</span></span><br><span class="line">    missing = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> bitset.contains(i):</span><br><span class="line">            missing.append(i)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> missing</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例使用</span></span><br><span class="line">arr = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">9</span>]</span><br><span class="line">n = <span class="number">10</span></span><br><span class="line">missing = find_missing_numbers(arr, n)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;缺失的数字: <span class="subst">&#123;missing&#125;</span>&quot;</span>)  <span class="comment"># 输出: [2, 4, 5, 8]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>位图是一种非常实用的数据结构，特别适合处理大量整数的存在性判断问题。它的核心优势在于：</p>
+<ol>
+<li><strong>极致的空间效率</strong>：相比传统数据结构节省32倍空间</li>
+<li><strong>优秀的时间性能</strong>：所有基本操作都是O(1)时间复杂度</li>
+<li><strong>简单的实现逻辑</strong>：基于基础位运算，易于理解和实现</li>
+</ol>
+<p>在大数据处理、系统设计等场景中，位图都是一个非常有价值的工具。</p>
+<h1 id="033【必备】位运算实现加减乘除"><a href="#033【必备】位运算实现加减乘除" class="headerlink" title="033【必备】位运算实现加减乘除"></a>033【必备】位运算实现加减乘除</h1><h2 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h2><p>位运算实现四则运算的核心在于模拟计算机底层的运算逻辑：</p>
+<ul>
+<li><strong>加法</strong>：基于异或（无进位相加）和与运算（进位处理）</li>
+<li><strong>减法</strong>：通过加法和取反实现</li>
+<li><strong>乘法</strong>：基于移位和加法的重复运算</li>
+<li><strong>除法</strong>：基于减法和移位的优化算法</li>
+</ul>
+<h2 id="Python中的特殊处理"><a href="#Python中的特殊处理" class="headerlink" title="Python中的特殊处理"></a>Python中的特殊处理</h2><p>在实现过程中，需要特别注意Python与Java的差异：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Java中的整数范围限制</span></span><br><span class="line">MIN = -<span class="number">2</span>**<span class="number">31</span>      <span class="comment"># -2147483648</span></span><br><span class="line">MAX = <span class="number">2</span>**<span class="number">31</span> - <span class="number">1</span>   <span class="comment"># 2147483647</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Python中需要手动处理32位整数溢出</span></span><br><span class="line">result &amp;= <span class="number">0xFFFFFFFF</span>  <span class="comment"># 保持32位</span></span><br><span class="line"><span class="keyword">if</span> result &gt; <span class="number">0x7FFFFFFF</span>:</span><br><span class="line">    result = ~(result ^ <span class="number">0xFFFFFFFF</span>)  <span class="comment"># 转换为有符号整数</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="1-加法实现（核心基础）"><a href="#1-加法实现（核心基础）" class="headerlink" title="1. 加法实现（核心基础）"></a>1. 加法实现（核心基础）</h2><h3 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h3><p>加法的位运算实现基于两个关键概念：</p>
+<ol>
+<li><strong>无进位相加</strong>：使用异或运算（XOR）</li>
+<li><strong>进位信息</strong>：使用与运算（AND）后左移</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;位运算实现加法&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment">#单次相加的结果为：无进位相加的结果+进位信息</span></span><br><span class="line">    ans = a</span><br><span class="line">    <span class="keyword">while</span> b != <span class="number">0</span>: <span class="comment"># 当b为0时，说明没有进位了，加法结束</span></span><br><span class="line">        <span class="comment"># 单次进位只能把当前位的进位信息加到下一高位，但新一位的进位可能和更高位产生新的进位冲突，需要继续处理。</span></span><br><span class="line">        <span class="comment"># 只有所有进位都为0，结果才是完整无误的。</span></span><br><span class="line">        <span class="comment"># ans : a和b无进位相加的结果</span></span><br><span class="line">        ans = a ^ b</span><br><span class="line">        <span class="comment"># b : a和b相加时的进位信息</span></span><br><span class="line">        b = (a &amp; b) &lt;&lt; <span class="number">1</span></span><br><span class="line">        <span class="comment"># Python中int无限大，为了模拟int32，需要对超出部分进行处理</span></span><br><span class="line">        <span class="comment"># 下面两行确保ans和b都保持32位</span></span><br><span class="line">        ans &amp;= <span class="number">0xFFFFFFFF</span></span><br><span class="line">        b &amp;= <span class="number">0xFFFFFFFF</span></span><br><span class="line">        a = ans</span><br><span class="line">    <span class="comment"># 处理负数转为补码</span></span><br><span class="line">    <span class="keyword">return</span> ans <span class="keyword">if</span> ans &lt;= <span class="number">0x7FFFFFFF</span> <span class="keyword">else</span> ~(ans ^ <span class="number">0xFFFFFFFF</span>)  <span class="comment">#结果超过最大值时，需要将无符号32位结果转换为有符号，当加法结果超过0x7FFFFFFF时，实际上表示的是负数，需要转换为对应的有符号表示</span></span><br><span class="line">    <span class="comment">#将ans与全1进行异或，相当于按位取反，~(...)：再次取反，相当于恢复原值</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="执行过程示例"><a href="#执行过程示例" class="headerlink" title="执行过程示例"></a>执行过程示例</h3><p>以 <code>5 + 3</code> 为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">第1轮：a=5(101), b=3(011)</span><br><span class="line">  无进位：5^3 = 101^011 = 110 = 6</span><br><span class="line">  进位：(5&amp;3)&lt;&lt;1 = (001)&lt;&lt;1 = 010 = 2</span><br><span class="line">  </span><br><span class="line">第2轮：a=6(110), b=2(010)  </span><br><span class="line">  无进位：6^2 = 110^010 = 100 = 4</span><br><span class="line">  进位：(6&amp;2)&lt;&lt;1 = (010)&lt;&lt;1 = 100 = 4</span><br><span class="line">  </span><br><span class="line">第3轮：a=4(100), b=4(100)</span><br><span class="line">  无进位：4^4 = 100^100 = 000 = 0</span><br><span class="line">  进位：(4&amp;4)&lt;&lt;1 = (100)&lt;&lt;1 = 1000 = 8</span><br><span class="line">  </span><br><span class="line">第4轮：a=0(000), b=8(1000)</span><br><span class="line">  无进位：0^8 = 1000 = 8</span><br><span class="line">  进位：(0&amp;8)&lt;&lt;1 = 0</span><br><span class="line">  </span><br><span class="line">结果：8</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-取反运算"><a href="#2-取反运算" class="headerlink" title="2. 取反运算"></a>2. 取反运算</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">neg</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;取相反数：~n + 1&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> BitOperationAddMinusMultiplyDivide.add(~n, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="原理解释"><a href="#原理解释" class="headerlink" title="原理解释"></a>原理解释</h3><p>基于补码的性质：一个数的相反数等于该数按位取反后加1。</p>
+<ul>
+<li>正数：直接按位取反加1</li>
+<li>负数：同样规则，利用补码特性</li>
+</ul>
+<h2 id="3-减法实现"><a href="#3-减法实现" class="headerlink" title="3. 减法实现"></a>3. 减法实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">minus</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;减法就是加上-b&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> BitOperationAddMinusMultiplyDivide.add(a, BitOperationAddMinusMultiplyDivide.neg(b))</span><br></pre></td></tr></table></figure>
+
+<p>减法的实现非常简洁：<code>a - b = a + (-b)</code></p>
+<h2 id="4-乘法实现（龟速乘）"><a href="#4-乘法实现（龟速乘）" class="headerlink" title="4. 乘法实现（龟速乘）"></a>4. 乘法实现（龟速乘）</h2><h3 id="算法原理-1"><a href="#算法原理-1" class="headerlink" title="算法原理"></a>算法原理</h3><p>基于二进制乘法的原理，将乘法转换为多次加法和移位运算：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">multiply</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;位运算实现乘法&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 把乘法拆成若干次加法，用位运算（移位）和加法实现，不直接用乘号，适合大数和防溢出场合。</span></span><br><span class="line">    <span class="comment"># 二进制的乘法也是像十进制一样，从右到左，一位一位的乘，然后错位相加</span></span><br><span class="line">    ans = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 为了模拟int32，确保a, b, ans都在32位内</span></span><br><span class="line">    a &amp;= <span class="number">0xFFFFFFFF</span></span><br><span class="line">    b &amp;= <span class="number">0xFFFFFFFF</span></span><br><span class="line">    <span class="keyword">while</span> b != <span class="number">0</span>: <span class="comment">#说明乘数没有耗尽，继续乘</span></span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>) != <span class="number">0</span>: <span class="comment">#说明当前位是1，需要加到结果上</span></span><br><span class="line">            <span class="comment"># 考察b当前最右的状态！</span></span><br><span class="line">            ans = BitOperationAddMinusMultiplyDivide.add(ans, a)</span><br><span class="line">            ans &amp;= <span class="number">0xFFFFFFFF</span>  <span class="comment"># 保持32位</span></span><br><span class="line">        a = (a &lt;&lt; <span class="number">1</span>) &amp; <span class="number">0xFFFFFFFF</span>  <span class="comment"># 左移并保持32位</span></span><br><span class="line">        <span class="comment"># Java中的 &gt;&gt;&gt; 表示无符号右移，Python没有，需特殊处理</span></span><br><span class="line">        <span class="keyword">if</span> b &gt;= <span class="number">0</span>:</span><br><span class="line">            b &gt;&gt;= <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment">#在Java中，&gt;&gt;&gt; 是无符号右移操作，无论原数是正数还是负数，右移时都在高位补0。但在Python中，&gt;&gt; 是有符号右移，对于负数会补1</span></span><br><span class="line">            <span class="comment">#内存中：b + 0x100000000和b的位模式完全相同，这时候又该告诉python该改变语义理解了</span></span><br><span class="line">            b = (b + <span class="number">0x100000000</span>) &gt;&gt; <span class="number">1</span> <span class="comment">#0x100000000等于2^32</span></span><br><span class="line">        b &amp;= <span class="number">0xFFFFFFFF</span>  <span class="comment"># 保持32位</span></span><br><span class="line">    <span class="comment"># 处理负数转为补码</span></span><br><span class="line">    <span class="keyword">return</span> ans <span class="keyword">if</span> ans &lt;= <span class="number">0x7FFFFFFF</span> <span class="keyword">else</span> ~(ans ^ <span class="number">0xFFFFFFFF</span>) <span class="comment"># 0xFFFFFFFF是全1，保证结果是32位，</span></span><br><span class="line">    <span class="comment"># 如果结果超过0x7FFFFFFF，说明发生了溢出</span></span><br><span class="line">    <span class="comment"># 使用~(ans ^ 0xFFFFFFFF)将结果&quot;包装&quot;到32位范围内</span></span><br><span class="line">    <span class="comment"># 这样就能得到正确的有符号32位整数结果</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="执行过程示例-1"><a href="#执行过程示例-1" class="headerlink" title="执行过程示例"></a>执行过程示例</h3><p>以 <code>5 × 3</code> 为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3的二进制：011</span><br><span class="line">第1轮：b=011, b&amp;1=1, ans += 5×2^0 = 5</span><br><span class="line">第2轮：b=001, b&amp;1=1, ans += 5×2^1 = 5+10 = 15</span><br><span class="line">第3轮：b=000, 结束</span><br><span class="line">结果：15</span><br></pre></td></tr></table></figure>
+
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>这种”龟速乘”在以下场景特别有用：</p>
+<ul>
+<li>大数乘法防溢出</li>
+<li>模运算：<code>(a × b) % m</code></li>
+<li>快速幂运算的基础</li>
+</ul>
+<h2 id="5-除法实现（最复杂）"><a href="#5-除法实现（最复杂）" class="headerlink" title="5. 除法实现（最复杂）"></a>5. 除法实现（最复杂）</h2><h3 id="核心挑战"><a href="#核心挑战" class="headerlink" title="核心挑战"></a>核心挑战</h3><p>除法是四则运算中最复杂的，需要处理多种边界情况：</p>
+<ol>
+<li>除数为0的情况</li>
+<li>整数最小值的特殊处理</li>
+<li>溢出预防</li>
+<li>符号处理</li>
+</ol>
+<h3 id="主要函数结构"><a href="#主要函数结构" class="headerlink" title="主要函数结构"></a>主要函数结构</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">divide</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;主除法函数，处理各种边界情况&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 处理 a 和 b 都为最小值的情况</span></span><br><span class="line">    <span class="keyword">if</span> a == BitOperationAddMinusMultiplyDivide.MIN <span class="keyword">and</span> b == BitOperationAddMinusMultiplyDivide.MIN:</span><br><span class="line">        <span class="comment"># a和b都是整数最小</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="comment"># 处理 a 和 b 都不是最小值的情况</span></span><br><span class="line">    <span class="keyword">if</span> a != BitOperationAddMinusMultiplyDivide.MIN <span class="keyword">and</span> b != BitOperationAddMinusMultiplyDivide.MIN:</span><br><span class="line">        <span class="comment"># a和b都不是整数最小，那么正常去除</span></span><br><span class="line">        <span class="keyword">return</span> BitOperationAddMinusMultiplyDivide.div(a, b)</span><br><span class="line">    <span class="comment"># 处理 b 为最小值的情况</span></span><br><span class="line">    <span class="keyword">if</span> b == BitOperationAddMinusMultiplyDivide.MIN: </span><br><span class="line">        <span class="comment"># a不是整数最小，b是整数最小，整数最小值是负数，而且整数最小值无法转成相反数</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="comment"># 处理 a 为最小值，b 为 -1 的情况（防止溢出）</span></span><br><span class="line">    <span class="comment"># 第1个if不成立：a 和 b 不都是最小值；第2个if不成立：a 和 b 不都不是最小值；第3个if不成立：b 不是最小值，则排除完b，a就是最小值</span></span><br><span class="line">    <span class="keyword">if</span> b == BitOperationAddMinusMultiplyDivide.neg(<span class="number">1</span>):</span><br><span class="line">        <span class="comment"># a是整数最小，b是-1，返回整数最大，因为题目里明确这么说了</span></span><br><span class="line">        <span class="keyword">return</span> BitOperationAddMinusMultiplyDivide.MAX</span><br><span class="line">    <span class="comment"># a是整数最小，b不是整数最小，b也不是-1</span></span><br><span class="line">    a = BitOperationAddMinusMultiplyDivide.add(a, b <span class="keyword">if</span> b &gt; <span class="number">0</span> <span class="keyword">else</span> BitOperationAddMinusMultiplyDivide.neg(b)) <span class="comment">#让 a 不再是最小值，这样就可以安全地调用 div 函数了，如果 b &gt; 0：a = a + b；如果 b &lt; 0：a = a + (-b)</span></span><br><span class="line">    ans = BitOperationAddMinusMultiplyDivide.div(a, b) <span class="comment"># 现在 a 不再是最小值，可以安全地调用 div 函数</span></span><br><span class="line">    offset = BitOperationAddMinusMultiplyDivide.neg(<span class="number">1</span>) <span class="keyword">if</span> b &gt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">1</span> <span class="comment"># 如果 b &gt; 0，则 offset = -1；如果 b &lt; 0，则 offset = 1</span></span><br><span class="line">    <span class="keyword">return</span> BitOperationAddMinusMultiplyDivide.add(ans, offset) <span class="comment"># 最后把 offset 加回去</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="核心除法算法"><a href="#核心除法算法" class="headerlink" title="核心除法算法"></a>核心除法算法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">div</span>(<span class="params">a, b</span>): <span class="comment">#向下取整，但是不返回余数</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;核心除法实现，要求a和b都不是整数最小值&quot;&quot;&quot;</span></span><br><span class="line">    x = BitOperationAddMinusMultiplyDivide.neg(a) <span class="keyword">if</span> a &lt; <span class="number">0</span> <span class="keyword">else</span> a  <span class="comment"># 取绝对值</span></span><br><span class="line">    y = BitOperationAddMinusMultiplyDivide.neg(b) <span class="keyword">if</span> b &lt; <span class="number">0</span> <span class="keyword">else</span> b  <span class="comment"># 取绝对值</span></span><br><span class="line">    ans = <span class="number">0</span></span><br><span class="line">    i = <span class="number">30</span></span><br><span class="line">    <span class="keyword">while</span> i &gt;= <span class="number">0</span>:</span><br><span class="line">        <span class="comment"># (x &gt;&gt; i) &gt;= y 时，说明y &lt;&lt; i 还能减掉</span></span><br><span class="line">        <span class="keyword">if</span> (x &gt;&gt; i) &gt;= y: <span class="comment">#判断x右移i位后是否大于等于y，若大于则记录1</span></span><br><span class="line">            ans |= (<span class="number">1</span> &lt;&lt; i)  <span class="comment"># 记录这个位</span></span><br><span class="line">            x = BitOperationAddMinusMultiplyDivide.minus(x, y &lt;&lt; i)  <span class="comment"># x 减去 y &lt;&lt; i，即y*2^i</span></span><br><span class="line">        i = BitOperationAddMinusMultiplyDivide.minus(i, <span class="number">1</span>)  <span class="comment"># 相当于 i--</span></span><br><span class="line">    <span class="comment"># 最后根据正负判断符号</span></span><br><span class="line">    <span class="keyword">return</span> BitOperationAddMinusMultiplyDivide.neg(ans) <span class="keyword">if</span> (a &lt; <span class="number">0</span>) ^ (b &lt; <span class="number">0</span>) <span class="keyword">else</span> ans <span class="comment">#当两个数的符号不同时，结果取负；当符号相同时，结果保持正。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="算法原理解析"><a href="#算法原理解析" class="headerlink" title="算法原理解析"></a>算法原理解析</h3><p>除法算法本质上是<strong>二分查找的变种</strong>：</p>
+<ol>
+<li><strong>从高位到低位</strong>：尝试每一位是否能为1</li>
+<li><strong>位移优化</strong>：<code>y &lt;&lt; i</code> 相当于 <code>y × 2^i</code></li>
+<li><strong>贪心策略</strong>：能减就减，记录对应的位</li>
+</ol>
+<h3 id="执行过程示例-2"><a href="#执行过程示例-2" class="headerlink" title="执行过程示例"></a>执行过程示例</h3><p>以 <code>10 ÷ 3</code> 为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x=10, y=3</span><br><span class="line">i=30: (10&gt;&gt;30)=0 &lt; 3, 跳过</span><br><span class="line">...</span><br><span class="line">i=2: (10&gt;&gt;2)=2 &lt; 3, 跳过  </span><br><span class="line">i=1: (10&gt;&gt;1)=5 &gt;= 3, ans|=(1&lt;&lt;1), x=10-6=4</span><br><span class="line">i=0: (4&gt;&gt;0)=4 &gt;= 3, ans|=(1&lt;&lt;0), x=4-3=1</span><br><span class="line">结果：ans = 11(二进制) = 3(十进制)</span><br></pre></td></tr></table></figure>
+
+<h2 id="边界情况处理"><a href="#边界情况处理" class="headerlink" title="边界情况处理"></a>边界情况处理</h2><h3 id="整数最小值的特殊性"><a href="#整数最小值的特殊性" class="headerlink" title="整数最小值的特殊性"></a>整数最小值的特殊性</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MIN = -<span class="number">2</span>**<span class="number">31</span>  <span class="comment"># -2147483648</span></span><br><span class="line">MAX = <span class="number">2</span>**<span class="number">31</span> - <span class="number">1</span>  <span class="comment"># 2147483647</span></span><br></pre></td></tr></table></figure>
+
+<p>整数最小值的特殊性在于它<strong>没有对应的正数</strong>，因为：</p>
+<ul>
+<li>最小值的绝对值是 <code>2^31</code></li>
+<li>最大正整数只有 <code>2^31 - 1</code></li>
+</ul>
+<h3 id="处理策略"><a href="#处理策略" class="headerlink" title="处理策略"></a>处理策略</h3><ol>
+<li><strong>预处理</strong>：将最小值调整为非最小值</li>
+<li><strong>后处理</strong>：补偿调整造成的误差</li>
+<li><strong>特殊返回</strong>：<code>MIN ÷ (-1)</code> 返回 <code>MAX</code></li>
+</ol>
+<h2 id="完整实现的使用示例"><a href="#完整实现的使用示例" class="headerlink" title="完整实现的使用示例"></a>完整实现的使用示例</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建类实例</span></span><br><span class="line">calc = BitOperationAddMinusMultiplyDivide()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试各种运算</span></span><br><span class="line"><span class="built_in">print</span>(calc.add(<span class="number">15</span>, <span class="number">27</span>))        <span class="comment"># 42</span></span><br><span class="line"><span class="built_in">print</span>(calc.minus(<span class="number">50</span>, <span class="number">18</span>))      <span class="comment"># 32  </span></span><br><span class="line"><span class="built_in">print</span>(calc.multiply(<span class="number">6</span>, <span class="number">7</span>))     <span class="comment"># 42</span></span><br><span class="line"><span class="built_in">print</span>(calc.divide(<span class="number">84</span>, <span class="number">2</span>))      <span class="comment"># 42</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试边界情况</span></span><br><span class="line"><span class="built_in">print</span>(calc.divide(-<span class="number">2</span>**<span class="number">31</span>, -<span class="number">1</span>)) <span class="comment"># 2**31-1 (MAX)</span></span><br><span class="line"><span class="built_in">print</span>(calc.divide(<span class="number">10</span>, <span class="number">3</span>))      <span class="comment"># 3</span></span><br><span class="line"><span class="built_in">print</span>(calc.divide(-<span class="number">10</span>, <span class="number">3</span>))     <span class="comment"># -3</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="时间复杂度分析"><a href="#时间复杂度分析" class="headerlink" title="时间复杂度分析"></a>时间复杂度分析</h2><table>
+<thead>
+<tr>
+<th>运算</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>加法</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>最多32次循环</td>
+</tr>
+<tr>
+<td>减法</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>调用加法和取反</td>
+</tr>
+<tr>
+<td>乘法</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>最多32次循环</td>
+</tr>
+<tr>
+<td>除法</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>固定31次循环</td>
+</tr>
+</tbody></table>
+<p>虽然有循环，但循环次数是固定的（最多32次），所以时间复杂度为常数。</p>
+<h2 id="实际应用场景"><a href="#实际应用场景" class="headerlink" title="实际应用场景"></a>实际应用场景</h2><ul>
+<li><ol>
+<li>底层系统编程<br>在某些嵌入式系统或底层驱动中，可能需要在没有算术运算单元的情况下实现运算。</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>大数运算<br>在实现大整数库时，这些技巧是基础构建块。</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>密码学应用<br>在某些密码学算法中，需要避免使用标准库的运算函数。</li>
+</ol>
+</li>
+<li><ol start="4">
+<li>算法竞赛<br>某些特殊题目可能限制算术运算的使用。</li>
+</ol>
+</li>
+<li><ol start="5">
+<li>教学演示<br>帮助理解计算机底层运算原理。</li>
+</ol>
+</li>
+</ul>
+<h2 id="总结与思考"><a href="#总结与思考" class="headerlink" title="总结与思考"></a>总结与思考</h2><p>位运算实现四则运算展示了计算机底层运算的本质。虽然在实际开发中很少直接使用，但理解这些原理对于：</p>
+<ol>
+<li><strong>加深对计算机原理的理解</strong></li>
+<li><strong>提升位运算技巧</strong>  </li>
+<li><strong>应对特殊场景需求</strong></li>
+<li><strong>算法思维的训练</strong></li>
+</ol>
+<p>都具有重要意义。特别是除法的实现，体现了二分思想和贪心策略的完美结合，是位运算技巧的集大成者。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" rel="tag"># 位运算</a>
+              <a href="/tags/%E5%AF%B9%E6%95%B0%E5%99%A8/" rel="tag"># 对数器</a>
+              <a href="/tags/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" rel="tag"># 贪心算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/08/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8810%EF%BC%89-%20%E5%BC%82%E6%88%96%E8%BF%90%E7%AE%97%E5%92%8C%E4%BD%8D%E8%BF%90%E7%AE%97%E7%9A%84%E9%AA%9A%E6%93%8D%E4%BD%9C/" rel="prev" title="数据结构与算法自学笔记（10）- 异或运算和位运算的骚操作">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（10）- 异或运算和位运算的骚操作
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/08/17/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%8812%EF%BC%89-%20%E9%93%BE%E8%A1%A8%E9%AB%98%E9%A2%91%E9%A2%98%E7%9B%AE%E5%92%8C%E5%BF%85%E5%A4%87%E6%8A%80%E5%B7%A7/" rel="next" title="数据结构与算法自学笔记（12）- 链表高频题目和必备技巧">
+      数据结构与算法自学笔记（12）- 链表高频题目和必备技巧 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#032%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E4%BD%8D%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">032【必备】位图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">2.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E5%9B%BE%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">2.2.</span> <span class="nav-text">位图的核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BD%8D%E5%9B%BE"><span class="nav-number">2.2.1.</span> <span class="nav-text">什么是位图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E5%9B%BE%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">2.2.2.</span> <span class="nav-text">位图的基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E5%9B%BE%E7%9A%84%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.2.3.</span> <span class="nav-text">位图的适用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E5%9B%BE%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.3.</span> <span class="nav-text">位图的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E8%AE%BE%E8%AE%A1%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.3.1.</span> <span class="nav-text">类设计接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81"><span class="nav-number">2.3.2.</span> <span class="nav-text">完整实现代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.3.3.</span> <span class="nav-text">关键实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E7%A9%BA%E9%97%B4%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">1. 空间分配策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BD%8D%E7%BD%AE%E8%AE%A1%E7%AE%97"><span class="nav-number">2.3.3.2.</span> <span class="nav-text">2. 位置计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%BD%8D%E8%BF%90%E7%AE%97%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93"><span class="nav-number">2.3.3.3.</span> <span class="nav-text">3. 位运算技巧总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%95%B0%E5%99%A8%E6%B5%8B%E8%AF%95"><span class="nav-number">2.4.</span> <span class="nav-text">对数器测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF"><span class="nav-number">2.4.1.</span> <span class="nav-text">测试设计思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E8%A6%86%E7%9B%96%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">2.4.2.</span> <span class="nav-text">测试覆盖的场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90"><span class="nav-number">2.5.</span> <span class="nav-text">性能分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">2.5.1.</span> <span class="nav-text">时间复杂度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">2.5.2.</span> <span class="nav-text">空间复杂度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E7%A9%BA%E9%97%B4%E5%AF%B9%E6%AF%94"><span class="nav-number">2.5.3.</span> <span class="nav-text">实际空间对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E6%89%A9%E5%B1%95"><span class="nav-number">2.6.</span> <span class="nav-text">应用场景与扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.6.1.</span> <span class="nav-text">典型应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E5%9B%BE%E7%9A%84%E9%9B%86%E5%90%88%E8%BF%90%E7%AE%97"><span class="nav-number">2.6.2.</span> <span class="nav-text">位图的集合运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.6.3.</span> <span class="nav-text">实际应用示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.7.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#033%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E4%BD%8D%E8%BF%90%E7%AE%97%E5%AE%9E%E7%8E%B0%E5%8A%A0%E5%87%8F%E4%B9%98%E9%99%A4"><span class="nav-number">3.</span> <span class="nav-text">033【必备】位运算实现加减乘除</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">3.1.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python%E4%B8%AD%E7%9A%84%E7%89%B9%E6%AE%8A%E5%A4%84%E7%90%86"><span class="nav-number">3.2.</span> <span class="nav-text">Python中的特殊处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%8A%A0%E6%B3%95%E5%AE%9E%E7%8E%B0%EF%BC%88%E6%A0%B8%E5%BF%83%E5%9F%BA%E7%A1%80%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">1. 加法实现（核心基础）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86"><span class="nav-number">3.3.1.</span> <span class="nav-text">算法原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.3.2.</span> <span class="nav-text">执行过程示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%8F%96%E5%8F%8D%E8%BF%90%E7%AE%97"><span class="nav-number">3.4.</span> <span class="nav-text">2. 取反运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E8%A7%A3%E9%87%8A"><span class="nav-number">3.4.1.</span> <span class="nav-text">原理解释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%87%8F%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.5.</span> <span class="nav-text">3. 减法实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E4%B9%98%E6%B3%95%E5%AE%9E%E7%8E%B0%EF%BC%88%E9%BE%9F%E9%80%9F%E4%B9%98%EF%BC%89"><span class="nav-number">3.6.</span> <span class="nav-text">4. 乘法实现（龟速乘）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86-1"><span class="nav-number">3.6.1.</span> <span class="nav-text">算法原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B-1"><span class="nav-number">3.6.2.</span> <span class="nav-text">执行过程示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.6.3.</span> <span class="nav-text">应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E9%99%A4%E6%B3%95%E5%AE%9E%E7%8E%B0%EF%BC%88%E6%9C%80%E5%A4%8D%E6%9D%82%EF%BC%89"><span class="nav-number">3.7.</span> <span class="nav-text">5. 除法实现（最复杂）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8C%91%E6%88%98"><span class="nav-number">3.7.1.</span> <span class="nav-text">核心挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%87%BD%E6%95%B0%E7%BB%93%E6%9E%84"><span class="nav-number">3.7.2.</span> <span class="nav-text">主要函数结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E9%99%A4%E6%B3%95%E7%AE%97%E6%B3%95"><span class="nav-number">3.7.3.</span> <span class="nav-text">核心除法算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90"><span class="nav-number">3.7.4.</span> <span class="nav-text">算法原理解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B-2"><span class="nav-number">3.7.5.</span> <span class="nav-text">执行过程示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%B9%E7%95%8C%E6%83%85%E5%86%B5%E5%A4%84%E7%90%86"><span class="nav-number">3.8.</span> <span class="nav-text">边界情况处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E6%9C%80%E5%B0%8F%E5%80%BC%E7%9A%84%E7%89%B9%E6%AE%8A%E6%80%A7"><span class="nav-number">3.8.1.</span> <span class="nav-text">整数最小值的特殊性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E7%AD%96%E7%95%A5"><span class="nav-number">3.8.2.</span> <span class="nav-text">处理策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E5%AE%9E%E7%8E%B0%E7%9A%84%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.9.</span> <span class="nav-text">完整实现的使用示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">3.10.</span> <span class="nav-text">时间复杂度分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.11.</span> <span class="nav-text">实际应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E4%B8%8E%E6%80%9D%E8%80%83"><span class="nav-number">3.12.</span> <span class="nav-text">总结与思考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series   记录的是class020→class022，包括了递归的本质理解、Master公式的应用、归并排序的递归与非递归实现，以及归并分治思想在解决小和问题和翻转对问题中的应用。 020【必备】递归和Master公式递归的本质理解思想层面的递归递归不是玄学，它">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法自学笔记（6）- 递归、归并排序与归并分治">
+<meta property="og:url" content="https://blog.agiopan.cn/2025/08/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%886%EF%BC%89-%20%E9%80%92%E5%BD%92%E4%B8%8Emaster%E5%85%AC%E5%BC%8F%E7%9B%B8%E5%85%B3/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="参照的是左程云的课程：https:&#x2F;&#x2F;space.bilibili.com&#x2F;8888480&#x2F;lists&#x2F;3509640?type&#x3D;series   记录的是class020→class022，包括了递归的本质理解、Master公式的应用、归并排序的递归与非递归实现，以及归并分治思想在解决小和问题和翻转对问题中的应用。 020【必备】递归和Master公式递归的本质理解思想层面的递归递归不是玄学，它">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class20-%E9%80%92%E5%BD%92%E5%92%8Cmaster%E5%85%AC%E5%BC%8F/%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E5%88%86%E6%AD%A5.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class20-%E9%80%92%E5%BD%92%E5%92%8Cmaster%E5%85%AC%E5%BC%8F/%E9%80%92%E5%BD%92%E6%97%B6%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class20-%E9%80%92%E5%BD%92%E5%92%8Cmaster%E5%85%AC%E5%BC%8F/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%9A%84%E6%A0%88%E4%B8%8D%E4%BC%9A%E6%B7%B1.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class20-%E9%80%92%E5%BD%92%E5%92%8Cmaster%E5%85%AC%E5%BC%8F/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%9A%84%E6%A0%88%E4%B8%8D%E4%BC%9A%E6%B7%B12.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class22-%E5%BD%92%E5%B9%B6%E5%88%86%E6%B2%BB/%E5%88%86%E6%B2%BB%E6%8C%87%E9%92%88%E6%BB%91%E5%8A%A8.png">
+<meta property="og:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class22-%E5%BD%92%E5%B9%B6%E5%88%86%E6%B2%BB/%E5%B0%8F%E5%92%8C%E9%97%AE%E9%A2%98%E6%8B%86%E5%88%86%E6%88%90%E5%AD%90%E9%97%AE%E9%A2%98.png">
+<meta property="article:published_time" content="2025-08-06T00:42:46.000Z">
+<meta property="article:modified_time" content="2025-08-07T06:18:06.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="递归">
+<meta property="article:tag" content="归并排序">
+<meta property="article:tag" content="分治算法">
+<meta property="article:tag" content="Master公式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class20-%E9%80%92%E5%BD%92%E5%92%8Cmaster%E5%85%AC%E5%BC%8F/%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E5%88%86%E6%AD%A5.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/2025/08/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%886%EF%BC%89-%20%E9%80%92%E5%BD%92%E4%B8%8Emaster%E5%85%AC%E5%BC%8F%E7%9B%B8%E5%85%B3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>数据结构与算法自学笔记（6）- 递归、归并排序与归并分治 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/2025/08/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%886%EF%BC%89-%20%E9%80%92%E5%BD%92%E4%B8%8Emaster%E5%85%AC%E5%BC%8F%E7%9B%B8%E5%85%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法自学笔记（6）- 递归、归并排序与归并分治
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-08-06 08:42:46" itemprop="dateCreated datePublished" datetime="2025-08-06T08:42:46+08:00">2025-08-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-08-07 14:18:06" itemprop="dateModified" datetime="2025-08-07T14:18:06+08:00">2025-08-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参照的是左程云的课程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/8888480/lists/3509640?type=series">https://space.bilibili.com/8888480/lists/3509640?type=series</a>  </p>
+<p>记录的是class020→class022，包括了递归的本质理解、Master公式的应用、归并排序的递归与非递归实现，以及归并分治思想在解决小和问题和翻转对问题中的应用。</p>
+<h1 id="020【必备】递归和Master公式"><a href="#020【必备】递归和Master公式" class="headerlink" title="020【必备】递归和Master公式"></a>020【必备】递归和Master公式</h1><h2 id="递归的本质理解"><a href="#递归的本质理解" class="headerlink" title="递归的本质理解"></a>递归的本质理解</h2><h3 id="思想层面的递归"><a href="#思想层面的递归" class="headerlink" title="思想层面的递归"></a>思想层面的递归</h3><p>递归不是玄学，它是一种**”大事化小”**的思维方式。对于新手来说，<strong>画调用图</strong>是理解递归的关键。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">max_value</span>(<span class="params">arr</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;给定一个数组，在arr[l...r]范围上，返回最大值&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> f(arr, <span class="number">0</span>, <span class="built_in">len</span>(arr) - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>(<span class="params">arr, l, r</span>):</span><br><span class="line">    <span class="comment"># arr[l...r] 范围上的最大值</span></span><br><span class="line">    <span class="keyword">if</span> l == r:</span><br><span class="line">        <span class="comment"># 递归基：当左右下标相等时，区间只有一个数，直接返回</span></span><br><span class="line">        <span class="keyword">return</span> arr[l]</span><br><span class="line">    m = (l + r) // <span class="number">2</span>  <span class="comment"># 找到中点</span></span><br><span class="line">    lmax = f(arr, l, m)        <span class="comment"># 递归求左半部分最大值</span></span><br><span class="line">    rmax = f(arr, m + <span class="number">1</span>, r)    <span class="comment"># 递归求右半部分最大值</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">max</span>(lmax, rmax)     <span class="comment"># 返回左右部分的最大值</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>递归的三个关键点</strong>：</p>
+<ol>
+<li><strong>明确递归要干什么</strong>：这里是”返回 arr[l…r] 的最大值”</li>
+<li><strong>找递归的终止条件</strong>：这里是”l &#x3D;&#x3D; r”，即区间只有一个数  </li>
+<li><strong>思考如何缩小规模</strong>：这里是分别递归处理左区间和右区间</li>
+</ol>
+<h3 id="实际层面的递归"><a href="#实际层面的递归" class="headerlink" title="实际层面的递归"></a>实际层面的递归</h3><p>递归底层利用<strong>系统栈</strong>来实现：</p>
+<ul>
+<li>当函数调用发生时，系统会将函数的状态（参数、局部变量、返回地址）压入栈中</li>
+<li>当函数返回时，系统从栈中弹出状态，恢复到调用点继续执行</li>
+<li>这个过程是<strong>可视化的</strong>，所以所有递归函数都可以改成非递归</li>
+</ul>
+<p><strong>递归改非递归的必要性</strong>：</p>
+<ul>
+<li><strong>工程实践</strong>：几乎一定要改，除非确定递归深度不会太大</li>
+<li><strong>算法竞赛</strong>：能通过就不改，时间紧迫时优先保证正确性</li>
+</ul>
+<p><strong>形象比喻</strong>：</p>
+<ul>
+<li><strong>迭代</strong>像是擂台赛：一个个来，逐步解决</li>
+<li><strong>递归</strong>像是季后赛：分组对战，逐层淘汰<br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class20-%E9%80%92%E5%BD%92%E5%92%8Cmaster%E5%85%AC%E5%BC%8F/%E9%80%92%E5%BD%92%E8%BF%87%E7%A8%8B%E5%88%86%E6%AD%A5.png" alt="递归过程分步"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class20-%E9%80%92%E5%BD%92%E5%92%8Cmaster%E5%85%AC%E5%BC%8F/%E9%80%92%E5%BD%92%E6%97%B6%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" alt="递归时的数据结构"></li>
+</ul>
+<h2 id="Master公式详解"><a href="#Master公式详解" class="headerlink" title="Master公式详解"></a>Master公式详解</h2><p>Master公式用于分析<strong>分治算法</strong>的时间复杂度，适用于所有子问题规模相同的递归。</p>
+<h3 id="公式形式"><a href="#公式形式" class="headerlink" title="公式形式"></a>公式形式</h3><p>$$T(n) &#x3D; a \times T(\frac{n}{b}) + O(n^c)$$</p>
+<p>其中：</p>
+<ul>
+<li><strong>a</strong>：子问题被调用的次数</li>
+<li><strong>b</strong>：子问题规模（数据量变为原来的1&#x2F;b）  </li>
+<li><strong>c</strong>：除去子问题之外的时间复杂度指数</li>
+</ul>
+<h3 id="判断标准"><a href="#判断标准" class="headerlink" title="判断标准"></a>判断标准</h3><p>设 $\log_b(a) &#x3D; d$，则：</p>
+<table>
+<thead>
+<tr>
+<th>条件</th>
+<th>时间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$d &lt; c$</td>
+<td>$O(n^c)$</td>
+<td>合并工作量占主导</td>
+</tr>
+<tr>
+<td>$d &gt; c$</td>
+<td>$O(n^d)$</td>
+<td>递归调用占主导</td>
+</tr>
+<tr>
+<td>$d &#x3D; c$</td>
+<td>$O(n^c \log n)$</td>
+<td>两者平衡</td>
+</tr>
+</tbody></table>
+<h3 id="经典例子分析"><a href="#经典例子分析" class="headerlink" title="经典例子分析"></a>经典例子分析</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 归并排序：T(n) = 2*T(n/2) + O(n)</span></span><br><span class="line"><span class="comment"># a=2, b=2, c=1</span></span><br><span class="line"><span class="comment"># log₂(2) = 1 = c，所以复杂度为 O(n*logn)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 二分查找：T(n) = 1*T(n/2) + O(1)  </span></span><br><span class="line"><span class="comment"># a=1, b=2, c=0</span></span><br><span class="line"><span class="comment"># log₂(1) = 0 = c，所以复杂度为 O(logn)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 快速排序最好情况：T(n) = 2*T(n/2) + O(n)</span></span><br><span class="line"><span class="comment"># 结果同归并排序：O(n*logn)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="特殊情况"><a href="#特殊情况" class="headerlink" title="特殊情况"></a>特殊情况</h3><p>对于 $T(n) &#x3D; 2 \times T(\frac{n}{2}) + O(n \log n)$：</p>
+<ul>
+<li>这不符合标准Master公式形式，结果是 $O(n \times (\log n)^2)$，需要特殊记忆，证明过程较复杂，这种递归式常见于“分治 + 合并时需要二分&#x2F;复杂统计”的问题，比如“翻转对”、“区间对统计”，主定理告知其复杂度为 $O(n \log^2 n)$</li>
+</ul>
+<h1 id="021【必备】归并排序"><a href="#021【必备】归并排序" class="headerlink" title="021【必备】归并排序"></a>021【必备】归并排序</h1><h2 id="归并排序原理"><a href="#归并排序原理" class="headerlink" title="归并排序原理"></a>归并排序原理</h2><h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><ol>
+<li><strong>左部分排好序、右部分排好序</strong></li>
+<li><strong>利用merge过程让左右整体有序</strong></li>
+<li><strong>merge过程</strong>：谁小拷贝谁，直到左右两部分数字耗尽，拷贝回原数组</li>
+</ol>
+<h3 id="为什么归并排序比O-n²-排序快？"><a href="#为什么归并排序比O-n²-排序快？" class="headerlink" title="为什么归并排序比O(n²)排序快？"></a>为什么归并排序比O(n²)排序快？</h3><p><strong>比较行为没有浪费！</strong></p>
+<p>对比三种原始排序（选择、冒泡、插入）：</p>
+<ul>
+<li>每次1到N-1次比较只能确定一个位置</li>
+<li>大量比较工作被浪费，效率低下</li>
+</ul>
+<p>归并排序中：</p>
+<ul>
+<li>每次比较都有意义，用于合并两个有序序列</li>
+<li>比较结果被充分利用，没有浪费</li>
+<li>系统栈不会太深</li>
+</ul>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class20-%E9%80%92%E5%BD%92%E5%92%8Cmaster%E5%85%AC%E5%BC%8F/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%9A%84%E6%A0%88%E4%B8%8D%E4%BC%9A%E6%B7%B1.png" alt="归并排序的栈不会深"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class20-%E9%80%92%E5%BD%92%E5%92%8Cmaster%E5%85%AC%E5%BC%8F/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%9A%84%E6%A0%88%E4%B8%8D%E4%BC%9A%E6%B7%B12.png" alt="归并排序的栈不会深2"></p>
+<p> <strong>测试链接</strong> ：<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P1177">https://www.luogu.com.cn/problem/P1177</a></p>
+<h2 id="递归实现"><a href="#递归实现" class="headerlink" title="递归实现"></a>递归实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">MAXN = <span class="number">100001</span></span><br><span class="line">arr = [<span class="number">0</span>] * MAXN      <span class="comment"># 原数组</span></span><br><span class="line">help_arr = [<span class="number">0</span>] * MAXN <span class="comment"># 辅助数组</span></span><br><span class="line">n = <span class="number">0</span>                 <span class="comment"># 数组长度</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">mergeSort1</span>(<span class="params">l, r</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    归并排序递归版</span></span><br><span class="line"><span class="string">    T(n) = 2 * T(n/2) + O(n)</span></span><br><span class="line"><span class="string">    根据master公式，时间复杂度O(n * logn)</span></span><br><span class="line"><span class="string">    空间复杂度O(n)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> l == r:  <span class="comment"># 递归终止条件：只剩一个元素</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    m = (l + r) // <span class="number">2</span>  <span class="comment"># 计算中点</span></span><br><span class="line">    mergeSort1(l, m)      <span class="comment"># 递归排序左半部分</span></span><br><span class="line">    mergeSort1(m + <span class="number">1</span>, r)  <span class="comment"># 递归排序右半部分</span></span><br><span class="line">    merge(l, m, r)        <span class="comment"># 合并</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">merge</span>(<span class="params">l, m, r</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    合并两个有序区间 arr[l...m] 和 arr[m+1...r]</span></span><br><span class="line"><span class="string">    时间复杂度O(n)，其中n = r - l + 1</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    i = l      <span class="comment"># help数组写指针</span></span><br><span class="line">    a = l      <span class="comment"># 左侧起始指针</span></span><br><span class="line">    b = m + <span class="number">1</span>  <span class="comment"># 右侧起始指针</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 双指针合并过程</span></span><br><span class="line">    <span class="keyword">while</span> a &lt;= m <span class="keyword">and</span> b &lt;= r:</span><br><span class="line">        <span class="keyword">if</span> arr[a] &lt;= arr[b]:</span><br><span class="line">            help_arr[i] = arr[a]</span><br><span class="line">            a += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            help_arr[i] = arr[b] </span><br><span class="line">            b += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 处理剩余元素</span></span><br><span class="line">    <span class="keyword">while</span> a &lt;= m:</span><br><span class="line">        help_arr[i] = arr[a]</span><br><span class="line">        a += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> b &lt;= r:</span><br><span class="line">        help_arr[i] = arr[b]</span><br><span class="line">        b += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">    <span class="comment"># 写回原数组</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(l, r + <span class="number">1</span>):</span><br><span class="line">        arr[i] = help_arr[i]</span><br></pre></td></tr></table></figure>
+
+<h2 id="非递归实现"><a href="#非递归实现" class="headerlink" title="非递归实现"></a>非递归实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">mergeSort2</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    归并排序非递归版</span></span><br><span class="line"><span class="string">    时间复杂度O(n * logn)：外层循环O(logn)，内层归并O(n)</span></span><br><span class="line"><span class="string">    空间复杂度O(n)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">global</span> n</span><br><span class="line">    step = <span class="number">1</span>  <span class="comment"># 步长初始化为1</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> step &lt; n:  <span class="comment"># 外层控制步长，共O(logn)次</span></span><br><span class="line">        l = <span class="number">0</span>  <span class="comment"># 每轮从左端开始</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> l &lt; n:  <span class="comment"># 内层处理每一组</span></span><br><span class="line">            m = l + step - <span class="number">1</span>      <span class="comment"># 计算中点</span></span><br><span class="line">            <span class="keyword">if</span> m + <span class="number">1</span> &gt;= n:        <span class="comment"># 右半部分越界，跳出</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            r = <span class="built_in">min</span>(l + (step &lt;&lt; <span class="number">1</span>) - <span class="number">1</span>, n - <span class="number">1</span>)  <span class="comment"># 计算右边界</span></span><br><span class="line">            merge(l, m, r)        <span class="comment"># 合并</span></span><br><span class="line">            l = r + <span class="number">1</span>             <span class="comment"># 移动到下一组</span></span><br><span class="line">            </span><br><span class="line">        step &lt;&lt;= <span class="number">1</span>  <span class="comment"># 步长翻倍</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="非递归实现的核心思路"><a href="#非递归实现的核心思路" class="headerlink" title="非递归实现的核心思路"></a>非递归实现的核心思路</h3><ol>
+<li><strong>step表示每次要合并的有序段长度</strong>，初始为1（每个元素自己是有序段）</li>
+<li><strong>每一轮成对合并</strong>长度为step的有序段，合并成长度为2*step的有序段</li>
+<li><strong>下一轮step翻倍</strong>，继续两两合并</li>
+<li><strong>重复直到step &gt;&#x3D; n</strong>，整个数组有序</li>
+</ol>
+<p><strong>过程示例</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">原数组: [3, 8, 7, 6, 4, 5, 1, 2]</span><br><span class="line"></span><br><span class="line">step=1: [3,8] [6,7] [4,5] [1,2] → [3,8,6,7,4,5,1,2]</span><br><span class="line">step=2: [3,6,7,8] [1,2,4,5] → [3,6,7,8,1,2,4,5] </span><br><span class="line">step=4: [1,2,3,4,5,6,7,8] → [1,2,3,4,5,6,7,8]</span><br></pre></td></tr></table></figure>
+
+<h2 id="merge过程详解"><a href="#merge过程详解" class="headerlink" title="merge过程详解"></a>merge过程详解</h2><h3 id="双指针合并策略"><a href="#双指针合并策略" class="headerlink" title="双指针合并策略"></a>双指针合并策略</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">merge</span>(<span class="params">l, m, r</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    合并过程详解：</span></span><br><span class="line"><span class="string">    1. 双指针扫描：a指向左部分，b指向右部分</span></span><br><span class="line"><span class="string">    2. 比较合并：较小值写入help_arr，对应指针右移</span></span><br><span class="line"><span class="string">    3. 剩余处理：一边扫完后，另一边直接复制</span></span><br><span class="line"><span class="string">    4. 写回原数组：完成排序合并</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    i = l      <span class="comment"># help_arr写入位置</span></span><br><span class="line">    a = l      <span class="comment"># 左部分起点</span></span><br><span class="line">    b = m + <span class="number">1</span>  <span class="comment"># 右部分起点</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 两两比较，选择较小值</span></span><br><span class="line">    <span class="keyword">while</span> a &lt;= m <span class="keyword">and</span> b &lt;= r:</span><br><span class="line">        <span class="keyword">if</span> arr[a] &lt;= arr[b]:</span><br><span class="line">            help_arr[i] = arr[a]</span><br><span class="line">            a += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            help_arr[i] = arr[b]</span><br><span class="line">            b += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 处理剩余元素（必有一边先结束）</span></span><br><span class="line">    <span class="keyword">while</span> a &lt;= m:</span><br><span class="line">        help_arr[i] = arr[a]</span><br><span class="line">        a += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> b &lt;= r:</span><br><span class="line">        help_arr[i] = arr[b]</span><br><span class="line">        b += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 拷贝回原数组</span></span><br><span class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> <span class="built_in">range</span>(l, r + <span class="number">1</span>):</span><br><span class="line">        arr[idx] = help_arr[idx]</span><br></pre></td></tr></table></figure>
+
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><h3 id="时间复杂度：O-n-log-n"><a href="#时间复杂度：O-n-log-n" class="headerlink" title="时间复杂度：O(n log n)"></a>时间复杂度：O(n log n)</h3><ul>
+<li><strong>递归层数</strong>：log₂(n)层，每次将问题规模减半</li>
+<li><strong>每层工作量</strong>：O(n)，所有元素都要参与一次合并</li>
+<li><strong>总复杂度</strong>：O(n) × O(log n) &#x3D; O(n log n)</li>
+</ul>
+<h3 id="空间复杂度：O-n"><a href="#空间复杂度：O-n" class="headerlink" title="空间复杂度：O(n)"></a>空间复杂度：O(n)</h3><ul>
+<li><strong>辅助数组</strong>：需要与原数组等长的help_arr</li>
+<li><strong>递归栈</strong>：最大深度O(log n)，但主要空间开销是辅助数组</li>
+<li><strong>原地归并</strong>：理论上可以做到O(1)空间，但时间复杂度会退化到O(n²)</li>
+</ul>
+<h1 id="022【必备】归并分治"><a href="#022【必备】归并分治" class="headerlink" title="022【必备】归并分治"></a>022【必备】归并分治</h1><h2 id="归并分治的核心思想"><a href="#归并分治的核心思想" class="headerlink" title="归并分治的核心思想"></a>归并分治的核心思想</h2><p>归并分治是在归并排序基础上的拓展，用来解决更复杂的问题。</p>
+<h3 id="应用条件判断"><a href="#应用条件判断" class="headerlink" title="应用条件判断"></a>应用条件判断</h3><p>一个问题能用归并分治解决，需要满足：</p>
+<ol>
+<li><strong>大范围答案 &#x3D; 左部分答案 + 右部分答案 + 跨越左右产生的答案</strong></li>
+<li><strong>计算”跨越左右产生的答案”时，左右各自有序能带来计算便利性</strong></li>
+<li><strong>如果以上两点成立，该问题很可能被归并分治解决</strong></li>
+</ol>
+<p><strong>求解过程</strong>：在归并排序过程中加入统计逻辑，利用左右有序的特性获得计算便利性。</p>
+<h2 id="小和问题"><a href="#小和问题" class="headerlink" title="小和问题"></a>小和问题</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定数组arr，对于每个位置i，求出其左边所有小于等于arr[i]的数的累加和，所有位置的累加和即为数组的”小和”。</p>
+<p><strong>例子</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">数组: [1, 3, 5, 2, 4, 6]</span><br><span class="line"></span><br><span class="line">位置0(1): 左边小于等于1的数 → 0</span><br><span class="line">位置1(3): 左边小于等于3的数 → 1  </span><br><span class="line">位置2(5): 左边小于等于5的数 → 1+3 = 4</span><br><span class="line">位置3(2): 左边小于等于2的数 → 1</span><br><span class="line">位置4(4): 左边小于等于4的数 → 1+3+2 = 6</span><br><span class="line">位置5(6): 左边小于等于6的数 → 1+3+5+2+4 = 15</span><br><span class="line"></span><br><span class="line">小和 = 0+1+4+1+6+15 = 27</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class22-%E5%BD%92%E5%B9%B6%E5%88%86%E6%B2%BB/%E5%88%86%E6%B2%BB%E6%8C%87%E9%92%88%E6%BB%91%E5%8A%A8.png" alt="分治指针滑动"><br><img src="/images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0(6)/class22-%E5%BD%92%E5%B9%B6%E5%88%86%E6%B2%BB/%E5%B0%8F%E5%92%8C%E9%97%AE%E9%A2%98%E6%8B%86%E5%88%86%E6%88%90%E5%AD%90%E9%97%AE%E9%A2%98.png" alt="小和问题拆分成子问题"></p>
+<p> <strong>测试链接</strong> ：<a target="_blank" rel="noopener" href="https://www.nowcoder.com/practice/edfe05a1d45c4ea89101d936cac32469">https://www.nowcoder.com/practice/edfe05a1d45c4ea89101d936cac32469</a></p>
+<h3 id="归并分治解法"><a href="#归并分治解法" class="headerlink" title="归并分治解法"></a>归并分治解法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">smallSum</span>(<span class="params">l, r</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    返回arr[l...r]范围上小和的累加和，同时让arr[l..r]变有序</span></span><br><span class="line"><span class="string">    时间复杂度O(n * logn)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> l == r:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    m = (l + r) // <span class="number">2</span></span><br><span class="line">    <span class="comment"># 递归统计左右部分和跨区部分的小和</span></span><br><span class="line">    <span class="keyword">return</span> smallSum(l, m) + smallSum(m + <span class="number">1</span>, r) + merge(l, m, r)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">merge</span>(<span class="params">l, m, r</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    统计跨左右产生的小和，同时完成合并</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    ans = <span class="number">0</span>        <span class="comment"># 累计小和</span></span><br><span class="line">    i = l          <span class="comment"># 左侧指针</span></span><br><span class="line">    sum_left = <span class="number">0</span>   <span class="comment"># 累计左侧小于等于当前右侧元素的和</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 统计跨区贡献：对每个右侧元素，统计左侧贡献</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(m + <span class="number">1</span>, r + <span class="number">1</span>):</span><br><span class="line">        <span class="comment"># 左侧所有 &lt;= arr[j] 的元素都对arr[j]有贡献</span></span><br><span class="line">        <span class="keyword">while</span> i &lt;= m <span class="keyword">and</span> arr[i] &lt;= arr[j]:</span><br><span class="line">            sum_left += arr[i]  <span class="comment"># 累加左侧贡献</span></span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">        ans += sum_left  <span class="comment"># arr[j]的左侧贡献总和</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 正常归并过程</span></span><br><span class="line">    i = l</span><br><span class="line">    a = l</span><br><span class="line">    b = m + <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> a &lt;= m <span class="keyword">and</span> b &lt;= r:</span><br><span class="line">        <span class="keyword">if</span> arr[a] &lt;= arr[b]:</span><br><span class="line">            help_arr[i] = arr[a]</span><br><span class="line">            a += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            help_arr[i] = arr[b]</span><br><span class="line">            b += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> a &lt;= m:</span><br><span class="line">        help_arr[i] = arr[a]</span><br><span class="line">        a += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> b &lt;= r:</span><br><span class="line">        help_arr[i] = arr[b]</span><br><span class="line">        b += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> <span class="built_in">range</span>(l, r + <span class="number">1</span>):</span><br><span class="line">        arr[idx] = help_arr[idx]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法关键思路"><a href="#算法关键思路" class="headerlink" title="算法关键思路"></a>算法关键思路</h3><p><strong>为什么要在merge过程中统计？</strong></p>
+<ol>
+<li><strong>左右有序的便利性</strong>：因为左右都有序，可以用双指针线性扫描</li>
+<li><strong>避免重复计算</strong>：每个跨区的小和贡献只需要计算一次</li>
+<li><strong>时间复杂度优势</strong>：总体保持O(n log n)，而暴力解法是O(n²)</li>
+</ol>
+<p><strong>核心技巧</strong>：</p>
+<ul>
+<li>对于右半部分的每个元素arr[j]，左半部分所有 ≤ arr[j] 的元素都会对小和产生贡献</li>
+<li>由于左半部分有序，可以用指针i从左向右扫描，累加贡献值</li>
+<li>指针i只会前进不会后退，总的扫描时间为O(n)</li>
+</ul>
+<h2 id="翻转对问题"><a href="#翻转对问题" class="headerlink" title="翻转对问题"></a>翻转对问题</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定数组nums，如果i&lt;j且nums[i]&gt;2*nums[j]，我们就将(i,j)称作一个重要翻转对。求数组中翻转对的总数量。</p>
+<p><strong>例子</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">数组: [1,3,2,3,1]</span><br><span class="line">翻转对: (1,4)→3&gt;2*1, (3,4)→3&gt;2*1</span><br><span class="line">答案: 2</span><br></pre></td></tr></table></figure>
+<p> <strong>测试链接</strong> ：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/reverse-pairs/">https://leetcode.cn/problems/reverse-pairs/</a></p>
+<h3 id="归并分治解法-1"><a href="#归并分治解法-1" class="headerlink" title="归并分治解法"></a>归并分治解法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">reversePairs</span>(<span class="params">arr</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;统计翻转对的主函数&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> counts(arr, <span class="number">0</span>, <span class="built_in">len</span>(arr) - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">counts</span>(<span class="params">arr, l, r</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    统计l...r范围上翻转对的数量，同时让l...r范围变有序</span></span><br><span class="line"><span class="string">    时间复杂度O(n * logn)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> l == r:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    m = (l + r) // <span class="number">2</span></span><br><span class="line">    <span class="comment"># 递归统计左右两边和跨区部分的翻转对数量</span></span><br><span class="line">    <span class="keyword">return</span> counts(arr, l, m) + counts(arr, m + <span class="number">1</span>, r) + merge(arr, l, m, r)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">merge</span>(<span class="params">arr, l, m, r</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;统计跨区翻转对并完成合并&quot;&quot;&quot;</span></span><br><span class="line">    ans = <span class="number">0</span>  <span class="comment"># 翻转对计数</span></span><br><span class="line">    j = m + <span class="number">1</span>  <span class="comment"># 右边数组起点</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 统计跨区翻转对</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(l, m + <span class="number">1</span>):</span><br><span class="line">        <span class="comment"># 找到右侧第一个不满足 arr[i] &gt; 2*arr[j] 的位置</span></span><br><span class="line">        <span class="keyword">while</span> j &lt;= r <span class="keyword">and</span> arr[i] &gt; <span class="number">2</span> * arr[j]:</span><br><span class="line">            j += <span class="number">1</span></span><br><span class="line">        <span class="comment"># 当前i能形成的翻转对数量 = j - (m+1)</span></span><br><span class="line">        ans += j - m - <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 正常merge过程（与归并排序相同）</span></span><br><span class="line">    i = l</span><br><span class="line">    a = l</span><br><span class="line">    b = m + <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> a &lt;= m <span class="keyword">and</span> b &lt;= r:</span><br><span class="line">        <span class="keyword">if</span> arr[a] &lt;= arr[b]:</span><br><span class="line">            help_arr[i] = arr[a]</span><br><span class="line">            a += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            help_arr[i] = arr[b]</span><br><span class="line">            b += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> a &lt;= m:</span><br><span class="line">        help_arr[i] = arr[a]</span><br><span class="line">        a += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> b &lt;= r:</span><br><span class="line">        help_arr[i] = arr[b]</span><br><span class="line">        b += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> <span class="built_in">range</span>(l, r + <span class="number">1</span>):</span><br><span class="line">        arr[idx] = help_arr[idx]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法关键思路-1"><a href="#算法关键思路-1" class="headerlink" title="算法关键思路"></a>算法关键思路</h3><p><strong>统计策略</strong>：</p>
+<ol>
+<li><strong>利用左右部分独立有序</strong>：对于左半部分的每个元素arr[i]，在右半部分找到满足arr[i] &gt; 2*arr[j]的所有j</li>
+<li><strong>指针单向移动</strong>：左右部分都是有序的，指针j只需要前进，不需要回退  </li>
+<li><strong>计数技巧</strong>：当找到第一个不满足条件的j时，说明j前面的所有元素都满足条件</li>
+</ol>
+<p><strong>时间复杂度分析</strong>：</p>
+<ul>
+<li>每个元素只会被访问一次，总的统计时间：O(n)，符合归并分治的要求</li>
+</ul>
+<h2 id="归并分治总结"><a href="#归并分治总结" class="headerlink" title="归并分治总结"></a>归并分治总结</h2><h3 id="适用问题特征"><a href="#适用问题特征" class="headerlink" title="适用问题特征"></a>适用问题特征</h3><ol>
+<li><strong>可分解性</strong>：问题可以分解为左部分 + 右部分 + 跨区部分</li>
+<li><strong>有序性便利</strong>：跨区部分的计算在左右有序时能够优化</li>
+<li><strong>线性合并</strong>：跨区计算的时间复杂度为O(n)</li>
+</ol>
+<h3 id="解题模板"><a href="#解题模板" class="headerlink" title="解题模板"></a>解题模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">divide_conquer</span>(<span class="params">l, r</span>):</span><br><span class="line">    <span class="keyword">if</span> l == r:</span><br><span class="line">        <span class="keyword">return</span> base_case</span><br><span class="line">    </span><br><span class="line">    m = (l + r) // <span class="number">2</span></span><br><span class="line">    left_ans = divide_conquer(l, m)</span><br><span class="line">    right_ans = divide_conquer(m + <span class="number">1</span>, r)</span><br><span class="line">    cross_ans = merge_and_count(l, m, r)  <span class="comment"># 关键：统计跨区答案</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> left_ans + right_ans + cross_ans</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">merge_and_count</span>(<span class="params">l, m, r</span>):</span><br><span class="line">    <span class="comment"># 1. 利用左右有序性，统计跨区答案</span></span><br><span class="line">    cross_count = <span class="number">0</span></span><br><span class="line">    <span class="comment"># ... 统计逻辑</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 2. 正常的归并排序merge过程</span></span><br><span class="line">    <span class="comment"># ... 合并逻辑</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> cross_count</span><br></pre></td></tr></table></figure>
+
+<h3 id="常见应用"><a href="#常见应用" class="headerlink" title="常见应用"></a>常见应用</h3><ol>
+<li><strong>小和问题</strong>：统计左侧小于等于当前元素的累加和</li>
+<li><strong>翻转对问题</strong>：统计满足特定大小关系的数对</li>
+<li><strong>最近点对问题</strong>：二维空间中最近两点距离（高难度）</li>
+<li><strong>逆序对问题</strong>：统计数组中的逆序对数量</li>
+</ol>
+<h3 id="与其他算法的关系"><a href="#与其他算法的关系" class="headerlink" title="与其他算法的关系"></a>与其他算法的关系</h3><ul>
+<li><strong>线段树</strong>：也可以解决类似问题，但常数因子可能更大</li>
+<li><strong>树状数组</strong>：适合在线查询修改，离线场景下归并分治更简洁</li>
+<li><strong>分块算法</strong>：另一种分治思想，将在后续课程中介绍</li>
+</ul>
+<p>归并分治是一种优雅而强大的算法思想，它将复杂问题通过分治和有序性的结合，优雅地降低了时间复杂度。掌握这种思想对于解决许多看似困难的问题都有很大帮助。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E9%80%92%E5%BD%92/" rel="tag"># 递归</a>
+              <a href="/tags/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/" rel="tag"># 归并排序</a>
+              <a href="/tags/%E5%88%86%E6%B2%BB%E7%AE%97%E6%B3%95/" rel="tag"># 分治算法</a>
+              <a href="/tags/Master%E5%85%AC%E5%BC%8F/" rel="tag"># Master公式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/08/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%885%EF%BC%89-%20%E7%AE%97%E6%B3%95%E7%AC%94%E8%AF%95%E4%B8%AD%E5%A4%84%E7%90%86%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA/" rel="prev" title="数据结构与算法自学笔记（5）- 算法笔试中处理输入和输出">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法自学笔记（5）- 算法笔试中处理输入和输出
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/08/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%887%EF%BC%89-%20%E9%9A%8F%E6%9C%BA%E6%8E%92%E5%BA%8F&%E9%9A%8F%E6%9C%BA%E9%80%89%E6%8B%A9%E7%AE%97%E6%B3%95/" rel="next" title="数据结构与算法自学笔记（7）- 随机排序&随机选择算法">
+      数据结构与算法自学笔记（7）- 随机排序&随机选择算法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#020%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E9%80%92%E5%BD%92%E5%92%8CMaster%E5%85%AC%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">020【必备】递归和Master公式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E7%9A%84%E6%9C%AC%E8%B4%A8%E7%90%86%E8%A7%A3"><span class="nav-number">1.1.</span> <span class="nav-text">递归的本质理解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E6%83%B3%E5%B1%82%E9%9D%A2%E7%9A%84%E9%80%92%E5%BD%92"><span class="nav-number">1.1.1.</span> <span class="nav-text">思想层面的递归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E5%B1%82%E9%9D%A2%E7%9A%84%E9%80%92%E5%BD%92"><span class="nav-number">1.1.2.</span> <span class="nav-text">实际层面的递归</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Master%E5%85%AC%E5%BC%8F%E8%AF%A6%E8%A7%A3"><span class="nav-number">1.2.</span> <span class="nav-text">Master公式详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.2.1.</span> <span class="nav-text">公式形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E6%A0%87%E5%87%86"><span class="nav-number">1.2.2.</span> <span class="nav-text">判断标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E4%BE%8B%E5%AD%90%E5%88%86%E6%9E%90"><span class="nav-number">1.2.3.</span> <span class="nav-text">经典例子分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5"><span class="nav-number">1.2.4.</span> <span class="nav-text">特殊情况</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#021%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F"><span class="nav-number">2.</span> <span class="nav-text">021【必备】归并排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">归并排序原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">2.1.1.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E6%AF%94O-n%C2%B2-%E6%8E%92%E5%BA%8F%E5%BF%AB%EF%BC%9F"><span class="nav-number">2.1.2.</span> <span class="nav-text">为什么归并排序比O(n²)排序快？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.2.</span> <span class="nav-text">递归实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.3.</span> <span class="nav-text">非递归实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF"><span class="nav-number">2.3.1.</span> <span class="nav-text">非递归实现的核心思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#merge%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.4.</span> <span class="nav-text">merge过程详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E6%8C%87%E9%92%88%E5%90%88%E5%B9%B6%E7%AD%96%E7%95%A5"><span class="nav-number">2.4.1.</span> <span class="nav-text">双指针合并策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">2.5.</span> <span class="nav-text">复杂度分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%EF%BC%9AO-n-log-n"><span class="nav-number">2.5.1.</span> <span class="nav-text">时间复杂度：O(n log n)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%EF%BC%9AO-n"><span class="nav-number">2.5.2.</span> <span class="nav-text">空间复杂度：O(n)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#022%E3%80%90%E5%BF%85%E5%A4%87%E3%80%91%E5%BD%92%E5%B9%B6%E5%88%86%E6%B2%BB"><span class="nav-number">3.</span> <span class="nav-text">022【必备】归并分治</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E5%88%86%E6%B2%BB%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">3.1.</span> <span class="nav-text">归并分治的核心思想</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD"><span class="nav-number">3.1.1.</span> <span class="nav-text">应用条件判断</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E5%92%8C%E9%97%AE%E9%A2%98"><span class="nav-number">3.2.</span> <span class="nav-text">小和问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">3.2.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E5%88%86%E6%B2%BB%E8%A7%A3%E6%B3%95"><span class="nav-number">3.2.2.</span> <span class="nav-text">归并分治解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%85%B3%E9%94%AE%E6%80%9D%E8%B7%AF"><span class="nav-number">3.2.3.</span> <span class="nav-text">算法关键思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BF%BB%E8%BD%AC%E5%AF%B9%E9%97%AE%E9%A2%98"><span class="nav-number">3.3.</span> <span class="nav-text">翻转对问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">3.3.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E5%88%86%E6%B2%BB%E8%A7%A3%E6%B3%95-1"><span class="nav-number">3.3.2.</span> <span class="nav-text">归并分治解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%85%B3%E9%94%AE%E6%80%9D%E8%B7%AF-1"><span class="nav-number">3.3.3.</span> <span class="nav-text">算法关键思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E5%88%86%E6%B2%BB%E6%80%BB%E7%BB%93"><span class="nav-number">3.4.</span> <span class="nav-text">归并分治总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E9%97%AE%E9%A2%98%E7%89%B9%E5%BE%81"><span class="nav-number">3.4.1.</span> <span class="nav-text">适用问题特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%A8%A1%E6%9D%BF"><span class="nav-number">3.4.2.</span> <span class="nav-text">解题模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8"><span class="nav-number">3.4.3.</span> <span class="nav-text">常见应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E5%85%B6%E4%BB%96%E7%AE%97%E6%B3%95%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">3.4.4.</span> <span class="nav-text">与其他算法的关系</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
