@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="樊龙江《生物信息学》（第二版）学习笔记 · 第 8 章。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第 8 章 基因预测及其功能和结构注释：学习笔记">
+<meta property="og:url" content="https://blog.agiopan.cn/bioinformatics/chapter-08/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="樊龙江《生物信息学》（第二版）学习笔记 · 第 8 章。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch08/fig08-00.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch08/fig08-02.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch08/fig08-03.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch08/fig08-04.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch08/fig08-05.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch08/fig08-06.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch08/fig08-10.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch08/fig08-11.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch08/fig08-13.png">
+<meta property="article:published_time" content="2026-10-27T04:08:00.000Z">
+<meta property="article:modified_time" content="2026-10-27T04:08:00.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="生物信息">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch08/fig08-00.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/bioinformatics/chapter-08/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>第 8 章 基因预测及其功能和结构注释：学习笔记 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/bioinformatics/chapter-08/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第 8 章 基因预测及其功能和结构注释：学习笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-10-27 12:08:00" itemprop="dateCreated datePublished" datetime="2026-10-27T12:08:00+08:00">2026-10-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Bioinfomatics/" itemprop="url" rel="index"><span itemprop="name">Bioinfomatics</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>樊龙江《生物信息学》（第二版）学习笔记 · 第 8 章。</p>
+<span id="more"></span>
+
+<p><a href="/bioinformatics/chapter-02/">第 2 章</a> · <a href="/bioinformatics/chapter-03/">第 3 章</a> · <a href="/bioinformatics/chapter-04/">第 4 章</a> · <a href="/bioinformatics/chapter-05/">第 5 章</a> · <a href="/bioinformatics/chapter-06/">第 6 章</a> · <a href="/bioinformatics/chapter-07/">第 7 章</a> · <a href="/bioinformatics/chapter-08/">第 8 章</a> · <a href="/bioinformatics/chapter-09/">第 9 章</a> · <a href="/bioinformatics/chapter-10/">第 10 章</a> · <a href="/bioinformatics/chapter-11/">第 11 章</a> · <a href="/bioinformatics/chapter-12/">第 12 章</a> · <a href="/bioinformatics/chapter-13/">第 13 章</a> · <a href="/bioinformatics/chapter-14/">第 14 章</a></p>
+<hr>
+<blockquote>
+<p>教材：樊龙江主编《生物信息学》（第二版），科学出版社，2021 年 5 月，第 8 章”基因预测及其功能和结构注释”，印刷页 p.190–213。<br>标签：【重点】需要掌握的结论或方法；【易错】常见误解或教材表述问题；【现代实践】教材出版后的工具与做法；【AI4S】机器学习视角的扩展；【已核实】2026-10 查过原始文献、数据库或官方页面；【需查证】暂未核实。<br>2026-10-23 审校。</p>
+</blockquote>
+<h2 id="0-教材范围与勘误"><a href="#0-教材范围与勘误" class="headerlink" title="0. 教材范围与勘误"></a>0. 教材范围与勘误</h2><h3 id="0-1-本章结构"><a href="#0-1-本章结构" class="headerlink" title="0.1 本章结构"></a>0.1 本章结构</h3><table>
+<thead>
+<tr>
+<th>节</th>
+<th>小节</th>
+<th>主要内容</th>
+<th>页码</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>章首</td>
+<td>导语、思维导图</td>
+<td>基因组序列、蛋白质序列、功能预测与结构预测的关系</td>
+<td>p.190</td>
+</tr>
+<tr>
+<td>第一节 蛋白质编码基因预测</td>
+<td>一、基因预测方法及其流程</td>
+<td>基因组构成（图 8.1）；蛋白编码基因结构（图 8.2）；预测难点；从头预测、同源比对、转录本三类方法（图 8.3、8.4）；灵敏度与特异性（表 8.1）；全基因组预测流程</td>
+<td>p.190–196</td>
+</tr>
+<tr>
+<td></td>
+<td>二、隐马尔可夫模型预测方法</td>
+<td>4 状态模型（图 8.5）；GENSCAN 模型（图 8.6）；Glimmer、BGF；FGENESH、AUGUSTUS、GeneMark；番茄 BAC 实例（图 8.7）</td>
+<td>p.196–198</td>
+</tr>
+<tr>
+<td>第二节 基因功能注释</td>
+<td>一、基于已知基因和功能域数据</td>
+<td>NR、Swiss-Prot 的 BLAST 注释（图 8.8）；InterPro 与 InterProScan</td>
+<td>p.199–200</td>
+</tr>
+<tr>
+<td></td>
+<td>二、基于功能分类和代谢途径</td>
+<td>GO；KEGG 与 KAAS（图 8.9）；Blast2GO；功能注释的局限</td>
+<td>p.200–201</td>
+</tr>
+<tr>
+<td>第三节 蛋白质结构预测</td>
+<td>一、蛋白质结构概述</td>
+<td>四个结构层次（图 8.10）；预测的基本假设；预测的意义；CASP</td>
+<td>p.202–204</td>
+</tr>
+<tr>
+<td></td>
+<td>二、蛋白质二级和三级结构预测</td>
+<td>Chou-Fasman、Lim、神经网络；同源建模（图 8.11、8.12）、折叠识别、从头预测、AlphaFold；工具（表 8.2）</td>
+<td>p.204–209</td>
+</tr>
+<tr>
+<td></td>
+<td>三、基因突变与蛋白质三维结构功能分析</td>
+<td>分析步骤与 5 条经验规则；FOXL2 R103C 实例（图 8.13）</td>
+<td>p.209–211</td>
+</tr>
+<tr>
+<td>章末</td>
+<td>习题（6 题）、历史与人物</td>
+<td>Markov、Baum、Haussler、Eddy、Baldi</td>
+<td>p.212–213</td>
+</tr>
+</tbody></table>
+<h3 id="0-2-勘误"><a href="#0-2-勘误" class="headerlink" title="0.2 勘误"></a>0.2 勘误</h3><p>下表区分印刷错误、历史数据和需要限定的表述。已确认的印刷字形沿用前序局部裁图核查；涉及历史方法的限制不一概判作原书当时的错误。教材以外的具体结论以原始来源为依据。</p>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>原书</th>
+<th>应为</th>
+<th>依据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>p.190</td>
+<td>“染色体中心粒附近重复序列多”</td>
+<td>着丝粒（centromere）附近。中心粒（centriole）是中心体中的细胞器，与染色体无关</td>
+<td>术语</td>
+</tr>
+<tr>
+<td>p.191</td>
+<td>人类核基因组”累计长度 3.6Gb”，”2.5 万个蛋白质编码基因”</td>
+<td>单倍体约 3.1 Gb（T2T-CHM13 不含 Y 染色体为 3.055 Gb）；GENCODE 第 50 版统计蛋白编码基因 19 442 个。2.5 万是 2000 年代初的估计</td>
+<td>Nurk et al., 2022；GENCODE 统计页【已核实】</td>
+</tr>
+<tr>
+<td>p.192 图 8.2 及图注</td>
+<td>起始密码子写作”TAG”</td>
+<td>ATG。TAG 是三个终止密码子之一；图 8.5 写的 ATG 是对的</td>
+<td>遗传密码</td>
+</tr>
+<tr>
+<td>p.192 图 8.2</td>
+<td>“5′URT””3′URT”</td>
+<td>5′UTR、3′UTR（untranslated region）</td>
+<td>术语</td>
+</tr>
+<tr>
+<td>p.193</td>
+<td>“约 40% 的组织特异性基因的 5′ 端含有 CpG 岛”</td>
+<td>原始研究的结论是：管家基因和广泛表达基因的转录起点都覆盖 CpG 岛；组织特异基因中约 40% 与 CpG 岛相关，但岛的位置并不偏向 5′ 端</td>
+<td>Larsen et al., 1992【已核实】</td>
+</tr>
+<tr>
+<td>p.193</td>
+<td>具有 CpG 岛特点的序列”仅占基因组 DNA 总量的 10% 左右”</td>
+<td>人类约 0.7%：UCSC hg38 的 cpgIslandExt 轨道在主染色体上有 27 949 个岛，合计 21.8 Mb，平均 780 bp</td>
+<td>UCSC Genome Browser API【已核实】</td>
+</tr>
+<tr>
+<td>p.194</td>
+<td>“specifity”</td>
+<td>specificity</td>
+<td>拼写</td>
+</tr>
+<tr>
+<td>p.194</td>
+<td>“近 20 年几乎没有出现新的基因注释方法”</td>
+<td>出版时已不成立：BRAKER1（Hoff et al., 2016）把 RNA-Seq 证据与 GeneMark、AUGUSTUS 的自训练结合起来，此后又有 BRAKER2、BRAKER3 和深度学习方法</td>
+<td>§2.6、§8.1</td>
+</tr>
+<tr>
+<td>p.194 表 8.1</td>
+<td>“Synder et al., 1995”</td>
+<td>Snyder &amp; Stormo（1995）</td>
+<td>Europe PMC【已核实】</td>
+</tr>
+<tr>
+<td>p.195</td>
+<td>“组蛋白、维管蛋白”</td>
+<td>微管蛋白（tubulin）</td>
+<td>术语</td>
+</tr>
+<tr>
+<td>p.196</td>
+<td>“xGBDvm”</td>
+<td>xGDBvm</td>
+<td>Duvick et al., 2016【已核实】</td>
+</tr>
+<tr>
+<td>p.196</td>
+<td>“ploy A”</td>
+<td>poly A</td>
+<td>拼写</td>
+</tr>
+<tr>
+<td>p.197 图 8.6 图注</td>
+<td>“F 和 T 分别表示 5′ 和 3′ 非转录区域（UTR）”</td>
+<td>非翻译区。UTR 会被转录进 mRNA，只是不翻译</td>
+<td>术语</td>
+</tr>
+<tr>
+<td>p.197</td>
+<td>FGENESH 由”Asaf 和 Victor”开发</td>
+<td>这是两位作者的名。文献通常写作 Salamov &amp; Solovyev（2000）</td>
+<td>【已核实】</td>
+</tr>
+<tr>
+<td>p.197</td>
+<td>GeneMark”于 1998 年开发”</td>
+<td>GeneMark 最早发表于 1993 年（Borodovsky &amp; McIninch）；1998 年发表的是 GeneMark.hmm（Lukashin &amp; Borodovsky）</td>
+<td>Crossref、Europe PMC【已核实】</td>
+</tr>
+<tr>
+<td>p.200</td>
+<td>“CATH-Genes3D”</td>
+<td>CATH-Gene3D</td>
+<td>InterPro 成员库名称【已核实】</td>
+</tr>
+<tr>
+<td>p.202</td>
+<td>一级结构包括”跨膜结构、抗原等”</td>
+<td>一级结构只是氨基酸残基的排列顺序。跨膜区、抗原表位、功能域是从序列预测出的特征，同页括注称之为”一级结构预测”，这个叫法可以保留，但不要与一级结构本身混淆</td>
+<td>定义（同页第（1）小节）</td>
+</tr>
+<tr>
+<td>p.204</td>
+<td>Chou-Fasman 的 Pt 是”形成卷曲结构的倾向性因子”</td>
+<td>Pt 是 β 转角（turn）的倾向性因子</td>
+<td>Chou &amp; Fasman, 1978</td>
+</tr>
+<tr>
+<td>p.205</td>
+<td>“二级结构预方法”</td>
+<td>二级结构预测方法（漏字）</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p.205</td>
+<td>BP 网络”即反馈式神经网络算法””使用反馈式学习规则”</td>
+<td>BP 网络是前馈网络（同段也说”信号在相邻各层间逐层传递”），训练时误差沿网络反向传播。说成”反馈式”容易与带环路的循环网络混淆</td>
+<td>定义</td>
+</tr>
+<tr>
+<td>p.205</td>
+<td>序列相似性超过 30%”就可以保证它们具有相似的三维结构”</td>
+<td>应说序列一致性（identity），而且阈值依赖比对长度；一致性 20%–35% 属于暗区，”保证”一词过强</td>
+<td>Rost, 1999【已核实】</td>
+</tr>
+<tr>
+<td>p.206 图 8.11 图注</td>
+<td>“三级结果预测”</td>
+<td>三级结构预测</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p.206、p.208、p.204</td>
+<td>折叠识别”发展最快也是最有前途”；从头预测”还不能作为一种常用的……方法”；”较大尺寸蛋白质（＞150 残基）的从头预测仍具挑战性”</td>
+<td>这些描述的是 2020 年以前的情况。AlphaFold2 在 CASP14（2020）中对多数目标达到可与实验结构相比的精度，见 §4.7</td>
+<td>Jumper et al., 2021【已核实】</td>
+</tr>
+<tr>
+<td>p.209</td>
+<td>“哥伦比亚大学的 David Shaw……开发的 Anton 芯片”</td>
+<td>Anton 由 Shaw 创立的私人研究机构 D. E. Shaw Research 开发；Shaw 早年任哥伦比亚大学计算机系助理教授，2001 年起转向蛋白分子动力学研究</td>
+<td>Wikipedia【已核实】</td>
+</tr>
+<tr>
+<td>p.209 表 8.2</td>
+<td>AlphaFold 网址指向 deepmind-research 仓库的 alphafold_casp13</td>
+<td>那是 AlphaFold1（CASP13）的代码；AlphaFold 3 的代码在 github.com&#x2F;google-deepmind&#x2F;alphafold3。其他历史网址的现行可用性未逐一核对</td>
+<td>AlphaFold 3 README【已核实】</td>
+</tr>
+<tr>
+<td>p.209 表 8.2 注</td>
+<td>“Swiss PDF Viewer”</td>
+<td>Swiss-PdbViewer（又名 DeepView）</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p.210</td>
+<td>下载”结构文件（.pdb 文件）”</td>
+<td>PDBx&#x2F;mmCIF 是 PDB 的标准存档格式；原子数或链数超出旧 PDB 格式定宽字段的大型结构只有 mmCIF 文件</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p.210–211</td>
+<td>“记录显示 FOXL2 并没有三维结构数据”</td>
+<td>出版时成立。2022 年起 PDB 已有 FOXL2 叉头结构域与 DNA 的复合物晶体结构 7VOU、7VOV（3.1 Å、3.15 Å）</td>
+<td>UniProt P58012、RCSB【已核实】</td>
+</tr>
+<tr>
+<td>p.212</td>
+<td>Baum”利用 Baum-Welch 算法，该公司连续 27 年在对冲基金回报率方面打败巴菲特”</td>
+<td>把一家公司的投资业绩归因于一个算法，没有可核实的依据，只能当轶事看</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p.213</td>
+<td>Haussler”曾任美国加州大学校长”</td>
+<td>无此经历。Haussler 是加州大学圣克鲁兹分校（UCSC）的教授，领导了人类基因组首个公共组装的团队</td>
+<td>Wikipedia【已核实】</td>
+</tr>
+<tr>
+<td>p.213</td>
+<td>“Probabilitic Models”</td>
+<td>Probabilistic Models（Durbin, Eddy, Krogh &amp; Mitchison, 1998）</td>
+<td>书名</td>
+</tr>
+</tbody></table>
+<p>另有一处教材没有写错、但最容易读错的定义：p.194 把 <span class="math">\(N_1/N\)</span> 称为”特异性”。它在机器学习里叫精确率（precision）。基因预测文献沿用 Burset &amp; Guigó（1996）的叫法，把它记作 Sp，与分类问题里的特异度 <span class="math">\(TN/(TN+FP)\)</span> 不是同一个量，见 §2.5 和 §6.5【易错】。</p>
+<h2 id="1-本章定位与知识地图"><a href="#1-本章定位与知识地图" class="headerlink" title="1. 本章定位与知识地图"></a>1. 本章定位与知识地图</h2><p><img src="/bioinformatics-notes/images/ch08/fig08-00.png" alt="图 8.0 本章思维导图"><br><em>图 8.0 本章思维导图（教材 p.190）</em></p>
+<p>第 7 章得到的是组装好的基因组序列。本章回答其后的几个问题：基因在哪里，每个基因编码什么蛋白，这个蛋白可能有什么功能、折叠成什么形状，以及某个突变会不会破坏它。教材按这条线分三节：第一节从基因组序列预测蛋白编码基因的结构（结构注释）；第二节用序列相似性给预测出的蛋白加功能标签（功能注释）；第三节从蛋白序列预测二级、三级结构，并用三维结构解释突变。非编码 RNA 基因的注释放在第 9 章。</p>
+<p>整条流程和每一步产生的数据如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">组装基因组 FASTA（10^6–10^10 bp）</span><br><span class="line">  │ 重复序列鉴定与屏蔽（soft mask：小写；hard mask：N）</span><br><span class="line">  ▼</span><br><span class="line">结构注释（第一节）</span><br><span class="line">  从头预测（HMM/GHMM） ┐</span><br><span class="line">  近缘物种蛋白比对     ├─ 整合（EVM、GLEAN、MAKER2） ─ 过滤 ─ GFF3 + 蛋白 FASTA</span><br><span class="line">  RNA-Seq 转录本证据   ┘</span><br><span class="line">  ▼</span><br><span class="line">功能注释（第二节）</span><br><span class="line">  BLASTP/DIAMOND → Swiss-Prot、NR 的最佳匹配；InterProScan → 结构域、GO；KAAS → KO、KEGG 通路</span><br><span class="line">  ▼</span><br><span class="line">结构注释（第三节）</span><br><span class="line">  二级结构（三态 H/E/C）；三级结构：同源建模 / 折叠识别 / 从头预测，现在多先查 AlphaFold DB</span><br><span class="line">  ▼</span><br><span class="line">应用：突变位点 → 三维位置与相互作用 → 功能影响的假说 → 实验验证</span><br></pre></td></tr></table></figure>
+
+<p>从计算的角度看，三节各对应一类熟悉的问题。</p>
+<p>基因预测是序列分段标注（segmentation）问题。输入是长达 <span class="math">\(10^8\)</span> 的四字母序列，输出是每个碱基的标签（基因间区、外显子、内含子……），而且标签序列必须满足语法：外显子拼起来要保持读码框，内含子两端要有剪接信号，完整 CDS 以相应起始和终止信号界定。编码区的统计信号很弱，最短的外显子只有几个碱基。隐马尔可夫模型（HMM）及其推广（广义 HMM）能把这些语法约束写进状态转移，把统计特征写进发射概率，再用动态规划求全局最优的标注，所以成了这一领域的主流方法。</p>
+<p>功能注释本质上是基于相似度的标签传递，相当于在序列空间里做最近邻分类。它的问题也和最近邻一致：标签（数据库已有注释）本身有错，而且错误会随注释传递扩散；相似不等于同功能，旁系同源基因常常功能分化。</p>
+<p>结构预测是在指定条件与建模假设下估计蛋白质的空间组织。2020 年以前，方法按”有没有可用模板”分为同源建模、折叠识别和从头预测三类；AlphaFold2 把问题改写为以多序列比对为输入、以实验结构为监督信号的端到端学习，三分法的界限随之模糊。</p>
+<p>与其他章的关系：第 4 章的 BLAST 和 E 值、第 5 章的多序列联配与 profile HMM 是功能注释的基础；第 7 章的组装质量、重复序列和 BUSCO 直接决定注释质量；第 9 章补上 tRNA、rRNA 等非编码基因；第 10 章的转录组数据是基因结构的主要证据；第 14 章给出 HMM 和神经网络的数学推导，教材 p.193、p.205、p.212 都指向那里。</p>
+<p>需要的前置知识：中心法则、遗传密码（起始密码子 ATG，终止密码子 TAA、TAG、TGA）、DNA 双链与反向互补；条件概率、马尔可夫链、极大似然、超几何分布与多重检验；动态规划（Viterbi 与 Smith-Waterman 属于同一类递推）。</p>
+<h2 id="2-第一节-蛋白质编码基因预测"><a href="#2-第一节-蛋白质编码基因预测" class="headerlink" title="2. 第一节 蛋白质编码基因预测"></a>2. 第一节 蛋白质编码基因预测</h2><h3 id="2-1-基因组组成与预测目标【必须掌握】"><a href="#2-1-基因组组成与预测目标【必须掌握】" class="headerlink" title="2.1 基因组组成与预测目标【必须掌握】"></a>2.1 基因组组成与预测目标【必须掌握】</h3><p>基因预测（gene finding）首先是结构注释：在给定基因组上确定基因的位置、方向、外显子及编码区边界，并组织成转录本。功能注释随后解释这些产物可能做什么。它与第三节的“蛋白质三维结构预测”不是同一个任务，虽然中文都包含“结构”。</p>
+<p>教材图 8.1 用两个 50 kb 区域比较水稻和人类的基因密度。一个区域含几个基因只描述选中的局部，不能直接推算整个物种的平均密度。人类基因组的蛋白编码部分较少，长内含子、基因间区和重复序列会增加寻找边界的困难；植物间的重复比例也相差很大。教材“一般 35%–80%”与玉米、小麦超过 85% 的例子并不逻辑矛盾，后者可以是一般范围之外的特例。</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>教材用于说明的特征</th>
+<th>阅读时的限定</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>人类核基因组</td>
+<td>编码区约占 1.5%，重复多，部分基因间距大</td>
+<td>组成比例、基因数和总长度均受参考版本与注释口径影响</td>
+</tr>
+<tr>
+<td>水稻核基因组</td>
+<td>约 400 Mb；教材列约 3.9 万蛋白编码基因及 TE 相关模型</td>
+<td>是否把转座子相关模型计入“基因”会影响总数</td>
+</tr>
+<tr>
+<td>玉米、小麦</td>
+<td>转座子扩增导致大量重复</td>
+<td>较大的基因组不意味着同等比例增加蛋白编码基因</td>
+</tr>
+<tr>
+<td>叶绿体基因组</td>
+<td>编码密集，有反向重复与部分含内含子的基因</td>
+<td>不能直接套用真核核基因的训练参数</td>
+</tr>
+</tbody></table>
+<p>GENCODE v50 的 19 442 是该版人类蛋白编码基因数，不是永久固定的物种常数。T2T-CHM13 的 3.055 Gb 不含 Y 染色体，也不能与“22 条常染色体加 X、Y 的参考序列集合”不加区分地比较。进行分析时应记录组装号和注释版，而不是从教材概数倒推结果是否正确。</p>
+<h3 id="2-2-外显子、CDS、ORF-与剪接"><a href="#2-2-外显子、CDS、ORF-与剪接" class="headerlink" title="2.2 外显子、CDS、ORF 与剪接"></a>2.2 外显子、CDS、ORF 与剪接</h3><p><img src="/bioinformatics-notes/images/ch08/fig08-02.png" alt="图 8.2 蛋白编码基因的典型结构"></p>
+<p><em>图 8.2 基因、前体转录本、成熟 mRNA 与编码区之间的关系（教材 p.192）。图中 TAG 起始密码子及 URT 拼写应按 §0 更正。</em></p>
+<p>外显子（exon）是剪接后保留在转录本中的片段，编码序列（coding sequence，CDS）是其中参与编码的部分。首尾外显子常含非翻译区（UTR），也可能有完全位于 UTR 的外显子。因此“预测全部外显子”和“预测全部 CDS”有不同分母。UTR 会被转录，不能称为非转录区。</p>
+<p>开放阅读框（open reading frame，ORF）描述一个读码相位内未被终止密码子打断的序列范围。不同软件有的采用起始到终止定义，有的先寻找终止到终止的开放区间；比较结果前需要声明采用哪一种。实际翻译起始点还需要起始信号和其他证据，最长候选 ORF 不必是真实蛋白。</p>
+<p>典型真核核基因的 CDS 被内含子分隔，拼接成熟转录本后才能连续翻译；但并非所有真核基因都有内含子，也不能说“只有原核 DNA 才能直接找 ORF”。无内含子真核基因、细胞器及病毒序列也可以直接扫描。反过来，“原核没有内含子”只能描述常见蛋白编码基因的简化情况，不应作为全称命题。</p>
+<p>双链 DNA 有六个候选读框：正链三个，反向互补链三个。负链基因仍按转录方向读取，报告位置时通常使用参考正链坐标。标准遗传密码中 ATG 是常见起始密码子，TAA、TAG、TGA 是终止密码子；实际生物和细胞器可能使用不同起始方式或翻译表。预测前确认遗传密码，尤其不能对病毒或细胞器无条件使用同一个表。</p>
+<p>多数真核核基因内含子使用 GT–AG 边界，但还存在 GC–AG、AT–AC 等类型。Burset et al., 2000 对其研究数据估计，校正测序错误后 GT–AG、GC–AG、AT–AC 分别约为 99.24%、0.69%、0.05%。这些是该研究的统计结果，不能作为每个物种的固定比例，也不宜把所有非 GT–AG 候选直接删除。</p>
+<p>教材列出的困难包括四字母背景中信号弱、极短外显子、首尾外显子的边界信号不完整、可变剪接以及序列错误。它们分别影响分类、边界、转录本组合和读码框。一个只有单碱基错误的组装也可能打断很长的 CDS，所以结构注释不能脱离第七章的组装质量评估。</p>
+<h3 id="2-3-三类证据与从头预测"><a href="#2-3-三类证据与从头预测" class="headerlink" title="2.3 三类证据与从头预测"></a>2.3 三类证据与从头预测</h3><p><img src="/bioinformatics-notes/images/ch08/fig08-03.png" alt="图 8.3 从头预测的信号与内容特征"></p>
+<p><em>图 8.3 基因预测同时使用局部信号和编码内容的统计特征（教材 p.193）。</em></p>
+<p>从头预测（ab initio prediction）从基因组本身的信号和统计特征估计基因结构。局部信号包括起始与终止密码子、剪接供体和受体、启动子及转录终止相关信号；内容特征包括密码子偏好、碱基组成和三周期性。单个信号常在背景中偶然出现，必须由模型把它们组合成完整结构。</p>
+<p><img src="/bioinformatics-notes/images/ch08/fig08-04.png" alt="图 8.4 同源序列和转录本证据辅助预测"></p>
+<p><em>图 8.4 已知序列与目标基因组联配，为基因位置和剪接提供证据（教材 p.194）。</em></p>
+<table>
+<thead>
+<tr>
+<th>证据</th>
+<th>主要信息</th>
+<th>不能据此保证的事情</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基因组从头模型</td>
+<td>编码倾向、信号和结构语法</td>
+<td>未见过的物种结构仍能准确识别</td>
+</tr>
+<tr>
+<td>同源蛋白或已知基因</td>
+<td>保守编码片段及可能的外显子位置</td>
+<td>同源一定同功能，模板一定无错</td>
+</tr>
+<tr>
+<td>同种 RNA&#x2F;转录本</td>
+<td>已表达转录本、剪接及部分 UTR</td>
+<td>未观察到就没有基因；每条组装转录本都完整无误</td>
+</tr>
+</tbody></table>
+<p>同源证据要区分序列类型。蛋白到基因组的联配需要处理遗传密码及内含子；cDNA 到基因组的联配直接比较核酸，处理剪接空位。Spidey、Sim4 属于转录本&#x2F;cDNA 联配方向，不能与蛋白联配器混写成同一种输入接口。miniprot 是蛋白到基因组联配的现代实例，其结果仍需结合目标物种与质量检查。</p>
+<p>转录本证据受到组织、时期、处理和表达量影响。没有覆盖的区域可能没有表达，也可能采样不足；转录证据也可能包含嵌合、错误剪接或非编码转录本。长读长能够直接观察更长的转录结构，但不会自动解决低表达缺失、截断和错误问题。“有转录”与“编码蛋白”仍需分别判断。</p>
+<p>原稿把早期研究中的 60%–70% 写成普遍“剪接位点准确率”。Burset and Guigó, 1996 实际报告的是多数程序核苷酸相关系数约 0.60–0.70，以及完全正确外显子不足一半。相关系数、边界正确率和逐位点准确率不是可互换的指标，也不能用历史数据给当前方法设定性能上限。</p>
+<h3 id="2-4-CpG-岛与候选基因的统计线索"><a href="#2-4-CpG-岛与候选基因的统计线索" class="headerlink" title="2.4 CpG 岛与候选基因的统计线索"></a>2.4 CpG 岛与候选基因的统计线索</h3><p>在长度 <span class="math">\(L\)</span> 的片段中，记 C、G 和相邻 CG 的次数分别为 <span class="math">\(n_C,n_G,n_{CG}\)</span>。常用的 CpG 观测&#x2F;期望比为</p>
+<div class="math">\[
+R_{CG}=\frac{n_{CG}L}{n_Cn_G},
+\qquad f_{GC}=\frac{n_C+n_G}{L}.
+\]</div>
+
+<p>这里使用常见的 <span class="math">\(L\)</span> 近似约定；若严格从 <span class="math">\(L-1\)</span> 个相邻位置构造独立背景，期望中会有端点修正。比较软件时应先检查其定义。只有在 C、G 都存在时这个比值才有定义；分母为零的窗口不能当作强烈缺失的可靠统计证据。</p>
+<p>Gardiner-Garden and Frommer, 1987 的常见判据以约 200 bp 以上、GC 大于 50%、观测&#x2F;期望比大于 0.6 识别候选区域。Takai and Jones, 2002 使用更严格的长度大于 500 bp、GC 至少 55%、观测&#x2F;期望比至少 0.65，以减少 Alu 等序列的影响。阈值是操作定义，选择不同定义会改变岛数和覆盖比例。</p>
+<p>教材把组织特异基因中的约 40% 说成“5′ 端有岛”，位置限定不符合 Larsen et al., 1992 的结果。该研究中组织特异基因关联岛的位置并不偏向 5′ 端。CpG 岛可提供候选调控区域的线索，但不能直接作为全部基因的起点标签，更不能推广为所有物种通用启动子标记。</p>
+<p>本轮依据 UCSC hg38 <code>cpgIslandExt</code> 轨道，主染色体上的岛合计约 21.79 Mb，约为基因组的 0.70%。这只对应指定轨道和染色体集合；教材的 10% 及原稿无出处的 1%–2% 都不能直接保留。§7.1 的代码仅模拟局部 CG 缺乏背景和富集区域，展示窗口估计会使边界外扩，不是在复现 UCSC 的完整建库算法。</p>
+<h3 id="2-5-评价指标与教材表-8-1【必须掌握】"><a href="#2-5-评价指标与教材表-8-1【必须掌握】" class="headerlink" title="2.5 评价指标与教材表 8.1【必须掌握】"></a>2.5 评价指标与教材表 8.1【必须掌握】</h3><p>设真实对象数为 <span class="math">\(M\)</span>，预测数为 <span class="math">\(N\)</span>，其中完全正确的预测数为 <span class="math">\(N_1\)</span>。教材的灵敏度与“特异性”为</p>
+<div class="math">\[
+\mathrm{Sn}=\frac{N_1}{M}=\frac{TP}{TP+FN},
+\qquad
+\mathrm{Sp}=\frac{N_1}{N}=\frac{TP}{TP+FP}.
+\]</div>
+
+<p>这里的 Sp 是精确率，不是分类中的经典特异度 <span class="math">\(TN/(TN+FP)\)</span>。基因水平的真阴性数本来就不容易自然定义；即使按碱基定义，大量非编码背景也会把经典特异度推近 1。指标名必须与公式一同记录。</p>
+<p>核苷酸水平的相关系数通常用 Matthews 相关系数：</p>
+<div class="math">\[
+\mathrm{CC}=\frac{TP\,TN-FP\,FN}
+{\sqrt{(TP+FP)(TP+FN)(TN+FP)(TN+FN)}}.
+\]</div>
+
+<p>某一因子为零时该式未定义，不能为了得到漂亮的平均值直接填 1。历史研究还使用近似相关系数 AC，§6 给出其定义。表中的 CC 不能未经原始方法说明就随意换成 AC。</p>
+<p>外显子水平要求两端边界都对，才算一个正确外显子。真实外显子完全没有与预测重叠的比例为 ME；预测外显子完全没有与真实对象重叠的比例为 WE。二者与 Sn、Sp 不互为补数，因为还存在部分重叠但边界错误的对象。多转录本、同坐标不同链或同一外显子在多个转录本中复用时，还必须规定计数单位。</p>
+<table>
+<thead>
+<tr>
+<th>程序</th>
+<th>算法标签</th>
+<th>nt Sn</th>
+<th>nt Sp</th>
+<th>CC</th>
+<th>exon Sn</th>
+<th>exon Sp</th>
+<th>ME</th>
+<th>WE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FGENESH</td>
+<td>HMM</td>
+<td>0.93</td>
+<td>0.93</td>
+<td>0.92</td>
+<td>0.81</td>
+<td>0.80</td>
+<td>0.09</td>
+<td>0.11</td>
+</tr>
+<tr>
+<td>AUGUSTUS</td>
+<td>HMM</td>
+<td>0.88</td>
+<td>0.93</td>
+<td>0.89</td>
+<td>0.72</td>
+<td>0.84</td>
+<td>0.20</td>
+<td>0.08</td>
+</tr>
+<tr>
+<td>GENSCAN</td>
+<td>HMM</td>
+<td>0.94</td>
+<td>0.89</td>
+<td>0.90</td>
+<td>0.78</td>
+<td>0.74</td>
+<td>0.08</td>
+<td>0.14</td>
+</tr>
+<tr>
+<td>GeneParser</td>
+<td>DP</td>
+<td>0.71</td>
+<td>0.72</td>
+<td>0.68</td>
+<td>0.69</td>
+<td>0.63</td>
+<td>0.31</td>
+<td>0.37</td>
+</tr>
+<tr>
+<td>Grail-I</td>
+<td>NN</td>
+<td>0.56</td>
+<td>0.85</td>
+<td>0.65</td>
+<td>0.59</td>
+<td>0.91</td>
+<td>0.40</td>
+<td>0.09</td>
+</tr>
+</tbody></table>
+<p><em>表 8.1 教材 p.194 所列历史结果，数值按原表保留；不能当作同一现代基准上的模型排名。</em></p>
+<p>FGENESH 的真实外显子中，完全正确比例 0.81、完全漏掉比例 0.09，余下约 0.10 是有重叠而边界不完全正确。GeneParser 行两种余量均为零，Grail-I 也几乎如此；这需要回查各行的原始评测定义，不能据此认定所有模型都在同一数据集、同一口径下比较。</p>
+<p>Goel et al., 2013 是综述，本轮未取得足以确认全表统一测试集和各项原始计算口径的证据【需查证】。因此只能用该表练习指标关系，不据此宣称 HMM 普遍胜过 DP 或神经网络。DP 是优化求解方式，HMM 是概率模型，神经网络是参数化模型；三类标签本身也不是互斥的算法范式。</p>
+<h3 id="2-6-全基因组注释流程"><a href="#2-6-全基因组注释流程" class="headerlink" title="2.6 全基因组注释流程"></a>2.6 全基因组注释流程</h3><p>重复库构建和屏蔽用于减少转座子相关序列对基因模型的干扰。物种特异重复库中若混入组蛋白、微管蛋白等真实多拷贝基因，过度屏蔽就会漏掉正常基因家族。因此应检查重复库与已知蛋白的关系，不能只以屏蔽比例越高越好。</p>
+<p>soft mask 用小写保留序列，hard mask 通常以 N 替换被屏蔽位置。后者使该输出文件中原始碱基不可见，但并非“信息永久丢失”，只要保留原始基因组和屏蔽坐标便可追溯。哪种屏蔽适合后续分析取决于工具是否识别大小写及其处理规则，没有无条件的优劣关系。</p>
+<p>随后组织从头预测、同源蛋白和转录本三路证据，利用 EVM、GLEAN 等整合，或由 MAKER2 一类流程组织各步骤。整合并不意味着简单多数投票：多个预测器可能共享训练数据与同一偏差，RNA 证据也可能只支持一个局部剪接。应保存证据来源和支持强度，以便回查有争议的模型。</p>
+<p>过滤规则必须与生物学目标相符。统一删除短于 50 aa 的蛋白会丢失真实短蛋白；删除所有缺少完整起止的模型会排除 contig 边缘的真实基因；含 N 的区域可能是组装缺口而非基因不存在。更合适的处理是标注短、截断、缺口或低支持等类别，并针对研究目的决定保留范围。</p>
+<p>输出至少包括基因组、GFF3、转录本&#x2F;CDS&#x2F;蛋白 FASTA 和证据表，检查坐标、链方向、翻译表及内部终止。BUSCO 可以检查保守基因空间，OMArk 可从蛋白家族及分类一致性等角度补充评估，但这些统计都不能代替对具体模型的结构检查。组装缺失和注释漏检也要分开，因为前者无法仅靠换一个注释器修复。</p>
+<p>【现代实践】BRAKER3 结合 GeneMark-ETP 与 AUGUSTUS，整合 RNA 和蛋白证据。Helixer、Tiberius 代表利用深度模型进行基因预测的方向；miniprot 与 Liftoff 分别提供蛋白定位及已有注释迁移方面的能力。方法选择应依据可用证据、物种距离和训练条件，而不是把新工具名等同于更可靠的输出。</p>
+<p>原核与宏基因组还需区分完整基因组和短片段模式。Prodigal 的单基因组训练与 meta 模式采用不同策略；本轮核对的源码中，单基因组模式最低长度限制为 20 000 bp，而 meta 模式使用预训练模型。因此短到 1 kb 的病毒片段不能当作一个适合重新学习全部参数的完整基因组。病毒遗传密码及特殊基因结构又可能需要专门处理，不能认为选了 meta 就已解决全部问题。</p>
+<h3 id="2-7-HMM-如何表示基因结构"><a href="#2-7-HMM-如何表示基因结构" class="headerlink" title="2.7 HMM 如何表示基因结构"></a>2.7 HMM 如何表示基因结构</h3><p><img src="/bioinformatics-notes/images/ch08/fig08-05.png" alt="图 8.5 简化的基因 HMM"></p>
+<p><em>图 8.5 基因间区、起始、编码与终止组成的简化状态图（教材 p.196）。状态可能对应一个信号或片段，不必都发射一个碱基。</em></p>
+<p>HMM 的隐状态表示当前位置或片段的生物学身份，观测是序列。转移规定哪些结构能够相接，发射模型评价对应序列是否像该类结构。区分这两部分很重要：局部序列很像剪接位点，不代表全局模型一定会采用它；它可能导致读码框不连续或不合理的短外显子。</p>
+<p><img src="/bioinformatics-notes/images/ch08/fig08-06.png" alt="图 8.6 GENSCAN 的状态模型"></p>
+<p><em>图 8.6 正负两条链的基因结构状态及共享的基因间区（教材 p.197）。F、T 是非翻译区。</em></p>
+<p>按教材图的表示，每条链包含三个内部外显子相位状态、三个内含子相位状态、首外显子、末外显子、单外显子基因，以及 5′UTR、3′UTR、启动子和 poly(A) 信号，合计 13 类；两条链再加共享基因间区，得到 <span class="math">\(2\times13+1=27\)</span> 个状态。这个数对应图中的模型，不是所有基因 HMM 必须使用的状态数。</p>
+<p>内含子相位记录它插在密码子的哪个位置：相位 0 在两个密码子之间，1 或 2 表示前一个外显子已经提供跨界密码子的一个或两个碱基。下一段外显子的开头需要补全该密码子。相位状态把跨越内含子的依赖留在有限状态中，避免把任意两个局部高分外显子拼成移码的 CDS。</p>
+<p>GFF3 的 phase 表示从当前 CDS 片段的转录方向开头走过多少碱基才能到下一个完整密码子的起点。它并非同一个相位编号，也不是把每段开头这些碱基从最终 CDS 删除。中间片段的开头常属于跨内含子的密码子，拼接完整 CDS 时应保留。§5 与 §6 给出坐标及换算。</p>
+<p>普通 HMM 的自转移使状态停留长度呈几何分布，而真实外显子和内含子有不同的长度规律。广义 HMM（GHMM，也称隐半马尔可夫模型的一类形式）显式评价片段长度和内容，适合把整个外显子作为一个段处理。其代价取决于允许的前驱和段长范围，不能仅把普通逐碱基 Viterbi 的复杂度原样套用。</p>
+<p>编码内容还可使用三周期高阶马尔可夫模型：同一个上下文后，下一个碱基的概率取决于当前密码子位置。高阶模型参数多，数据不足时容易过拟合；插值马尔可夫模型（IMM）用不同上下文长度的信息平衡可靠性。Glimmer 是这种思路的原核基因预测实例，不应简单理解成所有高阶计数都等权相加。</p>
+<h3 id="2-8-代表方法与教材实例"><a href="#2-8-代表方法与教材实例" class="headerlink" title="2.8 代表方法与教材实例"></a>2.8 代表方法与教材实例</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>经核对的来源与特点</th>
+<th>使用时关注的条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GENSCAN</td>
+<td>Burge and Karlin, 1997；广义概率模型、GC 相关参数与剪接信号</td>
+<td>原训练分布与目标是否相符</td>
+</tr>
+<tr>
+<td>FGENESH</td>
+<td>Salamov and Solovyev, 2000；真核基因预测</td>
+<td>物种参数及所使用的具体工具变体</td>
+</tr>
+<tr>
+<td>AUGUSTUS</td>
+<td>Stanke and Waack, 2003；后续工作加入更多应用与证据支持</td>
+<td>不把教材“75 个物种”当作当前固定列表</td>
+</tr>
+<tr>
+<td>GeneMark</td>
+<td>Borodovsky and McIninch, 1993；GeneMark.hmm 是 1998 年工作</td>
+<td>GeneMark、ES、S、ETP 等名称对应不同模型和证据</td>
+</tr>
+<tr>
+<td>GeneMark-ES</td>
+<td>Lomsadze et al., 2005；目标序列上的自训练</td>
+<td>无外部标签不等于没有先验或适用范围限制</td>
+</tr>
+<tr>
+<td>Glimmer</td>
+<td>Salzberg et al., 1998；Delcher et al., 2007</td>
+<td>常规原核与短的混合来源序列是不同场景</td>
+</tr>
+</tbody></table>
+<p>教材还介绍 BGF，作为较早基因预测研究的例子保留；本轮没有把它的历史性能转成现行推荐。FGENESH 的不同变体可引入蛋白证据、可变剪接或非经典剪接信号，选用时需看对应文档，不能根据相似名称推断全部接口相同。</p>
+<p>图 8.7 的番茄 BAC 为 EU124734.1，长度 126 477 bp。本轮已核对该记录身份；教材展示的是一次历史预测，报告 15 个基因、143 个外显子。它们不能标成今天重新提交后的实测输出。阅读结果时，TSS、首&#x2F;中间&#x2F;末&#x2F;单 CDS 及 PolA 等标签要与目标坐标对应，再检查转录本和蛋白翻译是否一致。</p>
+<p>训练参数不只是一个物种名字，而是内含子长度、组成、信号和编码内容的统计估计。近缘物种参数通常比完全不相关的参数更有依据，但仍可能错过快速变化的基因结构、非典型 GC 区域和短基因。最终应使用独立证据与分层指标验证，而不是仅凭参数名合理就接受全部预测。</p>
+<h2 id="3-第二节-基因功能注释"><a href="#3-第二节-基因功能注释" class="headerlink" title="3. 第二节 基因功能注释"></a>3. 第二节 基因功能注释</h2><h3 id="3-1-相似性搜索提供怎样的证据【必须掌握】"><a href="#3-1-相似性搜索提供怎样的证据【必须掌握】" class="headerlink" title="3.1 相似性搜索提供怎样的证据【必须掌握】"></a>3.1 相似性搜索提供怎样的证据【必须掌握】</h3><p>功能注释将预测蛋白与已知序列、家族、结构域和功能分类关联起来。教材图 8.8 展示通过 BLAST 结果阅读蛋白名称与数据库链接；网页会更新，真正需要保留的是命中区段、统计显著性、覆盖范围和注释来源。一个结果名不是完整的推理过程。</p>
+<p>NR 提供广泛的序列覆盖，但其中有自动预测及未知功能条目；Swiss-Prot 的人工审阅提高了注释可追溯性，也不意味着所有标签都有直接实验支持。应同时记录序列匹配与功能证据：命中一个可靠的家族不一定足以命名具体底物，命中 hypothetical protein 更不能凭空获得已知功能。</p>
+<p>第 4 章的 <span class="math">\(E=Kmn e^{-\lambda S}\)</span> 提醒我们 E 值依赖搜索空间。数据库变大时，相同联配分数对应的 E 值会变化；E 值描述随机背景下出现此类高分联配的期望次数，不是“功能注释错误的概率”。原稿说同一阈值在两个库上含义不同，应具体理解为搜索规模、组成和条目内容不同，不能把 E 值阈值当作跨库同一功能可靠度。</p>
+<p>只取最高 bitscore 的 best hit 会遇到多结构域、旁系同源、短保守片段和错误标签传播。查询与目标的覆盖度都要看，但覆盖阈值还取决于任务。为识别全长同源而设双向 50% 覆盖，可以过滤仅有一个结构域相似的长蛋白；若目标正是识别该结构域，同一过滤却会删除有意义证据。因此要区分全蛋白标签和局部结构域标签。</p>
+<p>多个局部联配片段的覆盖度应按坐标并集计算，不能直接把重叠片段长度相加。负链核酸联配还需统一起止方向。§7.4 的代码为蛋白单片段表格示例，不能无修改地处理任意 BLAST 输出。</p>
+<p>直系同源推断通常比任意相似性更有利于转移功能，但基因复制、丢失和功能分化会使简单双向最佳匹配失效。完整功能应结合结构域组合、关键位点、家族演化和实验上下文。DIAMOND、eggNOG-mapper 等可服务于大规模搜索或功能转移，但工具不同不消除证据层级问题。</p>
+<h3 id="3-2-InterPro-与结构域证据"><a href="#3-2-InterPro-与结构域证据" class="headerlink" title="3.2 InterPro 与结构域证据"></a>3.2 InterPro 与结构域证据</h3><p>InterPro 整合成员库中的蛋白签名，将相关签名组织成统一条目。Pfam 的 profile HMM、PROSITE 的模式与 profile、PRINTS 的指纹等方法有不同检测方式；相同蛋白命中多个来源，并不等于得到几份独立实验验证。条目可以描述 family、domain、repeat 或 site，而非全部都是“功能域”。</p>
+<p>InterProScan 是对输入序列运行相应分析的工具。解释结果时保留蛋白编号、长度、成员库及签名、匹配坐标、分值或 E 值、整合的 IPR 及功能映射。不同分析的分值不一定可比，没有统一的“所有签名 E 值阈值”。一些有效成员签名也可能尚未整合到 IPR，不能据此自动认定无效。</p>
+<p>前序核查的 InterPro 成员信息包含 Pfam、CATH-Gene3D、SUPERFAMILY、PANTHER、CDD、PROSITE、SMART、NCBIfam、PRINTS、HAMAP、PIRSF、SFLD、AntiFam。成员和条目数量持续变化，本笔记不把一次 API 返回的数目当永久配置；实际分析应保存所运行的 InterProScan 及成员数据库版本。</p>
+<p>结构域通常比全长命中更适合描述多结构域蛋白和远缘模块，但不能笼统说它总是“更稳健”。一个常见折叠可能支持很宽的家族归属，却不足以确定酶的底物；一个短 site 也需要正确上下文。整合结论应写成证据支持的最具体层级，保留尚不能细分的未知项。</p>
+<h3 id="3-3-GO-的关系与证据码"><a href="#3-3-GO-的关系与证据码" class="headerlink" title="3.3 GO 的关系与证据码"></a>3.3 GO 的关系与证据码</h3><p>Gene Ontology（GO）组织分子功能 MF、生物学过程 BP 和细胞组分 CC。术语可有多个上位关系，所以不能把它当作单棵分类树。注释除了“蛋白与术语”配对，还应包含来源、证据码、限定信息及日期；否则无法区分实验观察、人工审阅的计算分析与自动映射。</p>
+<p>沿关系向上传播需要知道关系类型。<code>is_a</code> 支持从具体类型推到较一般类型；适当的 <code>part_of</code> 也支持相应的上位结论。但“调控某过程”不等于“执行该过程”，不能沿 <code>regulates</code> 把蛋白直接注释成被调控过程的成员；<code>has_part</code> 等也不能不分方向照搬。GO 官方关系文档明确区分这些推理，原稿“所有祖先”一词应加上允许传播的关系规则。</p>
+<p>IEA 表示未经人工逐条审阅的电子注释。计算分析经过审阅后，还可能使用 ISS 等计算证据码；因此“计算预测一律 IEA”不成立。自动 InterPro2GO 映射通常属于电子注释路线，但应读取实际结果和提供方说明，而不是根据自己用了计算机就重写证据码。</p>
+<p>没有 GO 注释也不等于蛋白没有功能。它可能研究不足、未整合、未检出远缘关系或只支持无法映射到 GO 的描述。数据库缺失是观测与知识的不完整，不能在监督学习中毫无条件地当作可靠负标签。</p>
+<h3 id="3-4-富集分析的统计对象"><a href="#3-4-富集分析的统计对象" class="headerlink" title="3.4 富集分析的统计对象"></a>3.4 富集分析的统计对象</h3><p>设研究可抽样的背景集合含 <span class="math">\(N\)</span> 个基因，其中 <span class="math">\(M\)</span> 个关联术语 <span class="math">\(t\)</span>；目标集合有 <span class="math">\(n\)</span> 个，其中 <span class="math">\(k\)</span> 个关联该术语。超几何右尾为</p>
+<div class="math">\[
+p_t=P(X\ge k)=\sum_{i=k}^{\min(n,M)}
+\frac{\binom{M}{i}\binom{N-M}{n-i}}{\binom{N}{n}}.
+\]</div>
+
+<p>这个模型假定目标在背景中的选择与术语无关时可以视为无放回抽样。RNA 测序中基因长度、表达量和检出概率会影响进入目标集合的机会，简单背景未必满足该假设。至少应让背景来自实验实际有机会被选中的基因，并确保目标集合是其子集。</p>
+<p>背景不应无条件限定为“所有有注释的基因”，也不能直接使用全 GO 库。究竟排除未注释基因，取决于目标问题与检出机制；任何排除都应在选目标之前确定并保持两边一致。基因 ID、同工型去重和注释版本也会改变分母。</p>
+<p>多重检验集合需要预先定义，例如背景中具有一定基因数的全部可用术语。旧代码只保留目标中 <span class="math">\(k&gt;0\)</span> 的术语，再运行 BH，检验总数因此依赖观察结果，可能使校正偏乐观。保留 <span class="math">\(k=0\)</span> 的术语时其右尾为 1；可按预先声明、与目标富集无关的背景大小规则过滤，但不能悄悄按显著倾向筛选。</p>
+<p>GO 术语存在依赖，父子项可能重复表达同一信号。BH 的排序计算本身容易实现，其 FDR 保证仍有独立性或相应正相关等条件。结果应同时报告集合大小、命中数、富集倍数、原始与校正值及相关术语关系，不能把一串显著词当成相互独立的生物学机制。</p>
+<h3 id="3-5-KEGG、KAAS-与注释整合"><a href="#3-5-KEGG、KAAS-与注释整合" class="headerlink" title="3.5 KEGG、KAAS 与注释整合"></a>3.5 KEGG、KAAS 与注释整合</h3><p>KEGG Orthology（KO）把基因产物与功能同源组关联，再投影到通路或模块。KO 号与基因、通路不是一一对应，一条通路中出现几个命中也不能证明整条通路在该条件下活跃。需要区分潜在编码能力、表达证据与实际代谢活动。</p>
+<p>教材图 8.9 展示 KAAS 的提交界面。KAAS 根据相似性及相应启发式规则分配 KO，提供 BBH 和 SBH 路线；完整基因集较适合双向比较，不完整集合可以考虑单向方法。BBH 不是已知进化树，也不保证所有复杂基因家族中都识别出真正直系同源。</p>
+<p>KofamKOALA 使用 KO 相关 profile HMM 及相应评分规则，作为另一种已核实的注释方法理解即可。Blast2GO 把搜索、GO 映射与注释组织到一个流程中；工具整合不改变相似性转移的限制。没有实际运行这些服务时，不能把界面演示和文献报告写成本次实测输出。</p>
+<p>整合表可以为每个基因保存：预测结构置信类别、序列匹配、结构域、GO&#x2F;KO、证据来源与冲突。若 BLAST 名称与结构域不一致，应检查覆盖、融合&#x2F;拆分和来源质量，不能固定规定哪一种证据永远优先。保留较宽的家族描述通常比强行给出过细功能更可复查。</p>
+<h2 id="4-第三节-蛋白质结构预测"><a href="#4-第三节-蛋白质结构预测" class="headerlink" title="4. 第三节 蛋白质结构预测"></a>4. 第三节 蛋白质结构预测</h2><h3 id="4-1-结构层级与基本假设【应该理解】"><a href="#4-1-结构层级与基本假设【应该理解】" class="headerlink" title="4.1 结构层级与基本假设【应该理解】"></a>4.1 结构层级与基本假设【应该理解】</h3><table>
+<thead>
+<tr>
+<th>层级</th>
+<th>描述</th>
+<th>与预测任务的关系</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一级</td>
+<td>氨基酸残基的排列顺序</td>
+<td>常作为输入，跨膜区或抗原表位属于序列特征推断</td>
+</tr>
+<tr>
+<td>二级</td>
+<td>主链局部构象及其氢键模式</td>
+<td>可转为逐残基状态标注</td>
+</tr>
+<tr>
+<td>三级</td>
+<td>单条多肽链的整体空间组织</td>
+<td>需要处理长程关系和结构域相对位置</td>
+</tr>
+<tr>
+<td>四级</td>
+<td>多条链组成复合物的方式</td>
+<td>需要链组成、界面和装配状态信息</td>
+</tr>
+</tbody></table>
+<p><img src="/bioinformatics-notes/images/ch08/fig08-10.png" alt="图 8.10 螺旋与折叠的主链几何"></p>
+<p><em>图 8.10 α 螺旋与平行、反平行 β 折叠的几何和氢键示意（教材 p.203）。</em></p>
+<p>典型右手 α 螺旋约每圈 3.6 个残基，螺距约 0.54 nm，主链第 <span class="math">\(i\)</span> 个残基的羰基氧与第 <span class="math">\(i+4\)</span> 个残基的酰胺形成氢键。β 链通过链间氢键组织成平行或反平行折叠，序列上相距很远的片段也可以成为相邻链。四残基 β 转角常以首尾附近氢键稳定，但具体类型和几何可以不同，不能把每种转角都简化成完全相同的 180° 回折。</p>
+<p>Anfinsen 的研究支持在合适环境下序列包含恢复天然折叠所需的信息。它不意味着孤立序列在所有环境中只有一个静态结构，也不意味着细胞中的折叠与相互作用伙伴无关。无序、构象变化、膜环境和复合物装配都要求说明所预测的状态。</p>
+<p>结构预测为理解功能、设计实验和筛选候选机制提供证据。实验结构的条件和分辨率也有限，不能把每个原子位置当作绝对真值。预测与实验比较时应确认覆盖区域、链组成、配体、构象及编号，并区分结构域内正确与结构域相对位置正确。</p>
+<p>CASP 通过在实验结构公开前收集预测进行盲评，减少直接读取答案的机会。不同届、不同目标和不同指标不能简单横比。第 8 章教材描述的 CASP13 与 AlphaFold1 是一个特定阶段，后续方法应按原始论文与评价条件解释。</p>
+<h3 id="4-2-二级结构预测"><a href="#4-2-二级结构预测" class="headerlink" title="4.2 二级结构预测"></a>4.2 二级结构预测</h3><p>常用三态标签为 H（螺旋）、E（延伸链）和 C（其他状态）；Q3 是逐残基分类准确率。实验结构可经 DSSP 等规则标注，再将细状态合并。不同合并规则、缺失残基和数据划分都会改变结果，不能只比较一个没有定义的百分数。</p>
+<p>Chou–Fasman 用氨基酸在特定结构中的富集程度构造倾向因子。例如</p>
+<div class="math">\[
+P_\alpha(a)=\frac{f_\alpha(a)}{f(a)}.
+\]</div>
+
+<p>大于 1 表示该氨基酸在螺旋中相对富集，再结合成核、延伸等规则提出预测。<span class="math">\(P_t\)</span> 对应转角倾向，不能与所有非螺旋&#x2F;非折叠状态合称“卷曲”而忽略具体定义。GOR 利用窗口中邻居的信息，Lim 方法强调立体化学与亲疏水分布，是不同形式的局部约束。</p>
+<p>神经网络可从窗口序列或进化 profile 学习分类。BP 描述反向传播训练，前馈网络在推理时不因此产生反馈环。原稿把早期单序列方法约 60% 解释为因为“单序列没有空间信息”，因果说得过强：结构信息可以隐含在序列中，问题在于模型、数据与可提取信号的能力。</p>
+<p>PHD 和 PSIPRED 展示了利用多序列信息的收益。PHD 原论文三态准确率约 70.8%，多序列信息带来 6–8 个百分点；PSIPRED 在其折叠划分交叉验证中报告约 76.5%–78.3%。这些是已核对的历史实验，不能写成所有现代单序列方法的上限或一条通用增益定律。</p>
+<h3 id="4-3-同源建模与质量评估"><a href="#4-3-同源建模与质量评估" class="headerlink" title="4.3 同源建模与质量评估"></a>4.3 同源建模与质量评估</h3><p><img src="/bioinformatics-notes/images/ch08/fig08-11.png" alt="图 8.11 教材的三级结构方法选择"></p>
+<p><em>图 8.11 按模板关系组织同源建模、折叠识别与从头预测（教材 p.206）。该分类便于理解历史方法，但现代模型往往结合多类信息。</em></p>
+<p>同源建模利用目标与已知结构之间的同源关系。结构通常比序列更保守，但一致性阈值依赖联配长度、覆盖和组成。一个短基序超过 30% 一致性不能“保证”全长共享结构；低一致性也不等于排除同源。Rost, 1999 对暗区的分析说明应同时看长度与一致性，而不是把 30% 当作硬边界。</p>
+<p>典型过程包括搜索模板、目标与模板联配、复制保守主链、处理插入缺失和环区、构建侧链以及优化。联配错位会直接映射到错误三维位置，目标中模板没有覆盖的区域也不能凭空获得同样可靠的模型。多结构域蛋白还需检查各结构域相对方向。</p>
+<p>结构质量分为几何合理性和与真实构象的一致性。键长、键角、碰撞和 Ramachandran 分布可检验立体化学，但一个几何合理的错误折叠仍然可能通过。GMQE、QMEANDisCo 等是模型质量估计，不是实测 RMSD，也不是某个突变致病的概率。</p>
+<p>教材图 8.12 以 NP_000268 为例，该记录是人苯丙氨酸羟化酶，452 aa；历史页面展示三个模型，Model 01 的 GMQE 为 0.95。这个数不能标成现在重新运行得到的结果。SWISS-MODEL 官方帮助说明 GMQE 与 QMEANDisCo global 都在 0–1，通常越高越好；旧 QMEAN Z 分数规则已被标为弃用，不能当作当前唯一判断依据。</p>
+<h3 id="4-4-折叠识别与串线"><a href="#4-4-折叠识别与串线" class="headerlink" title="4.4 折叠识别与串线"></a>4.4 折叠识别与串线</h3><p>折叠识别尝试寻找序列相似性很弱但可能共享骨架的模板。序列可与结构环境、二级结构、暴露程度及残基相互作用相匹配。Bowie 等的 3D profile 与 Jones et al., 1992 的方法是教材主线中的历史实例；profile–profile 比较则利用家族层面的进化信号。</p>
+<p>若只把长度 100 的序列无空位地滑过长度 200 的骨架，起点有 <span class="math">\(200-100+1=101\)</span> 个。但允许复杂空位、非局部残基对作用之后，问题不再是这个简单扫描。Lathrop, 1994 对特定的相互作用串线模型证明了 NP 完全性；不能由此推出任意简化串线打分都 NP 难，也不能因某个实现用了动态规划就声称已经精确解决一般模型。</p>
+<p>当模板折叠正确而联配错误时，预测仍会在关键位置偏移。远缘结构相似也未必支持完全相同的功能。折叠识别给出的是结构解释的候选，应继续检查覆盖、置信和功能位点。</p>
+<h3 id="4-5-物理与统计势驱动的从头预测"><a href="#4-5-物理与统计势驱动的从头预测" class="headerlink" title="4.5 物理与统计势驱动的从头预测"></a>4.5 物理与统计势驱动的从头预测</h3><p>从头预测的传统形式包括选择构象表示、定义能量或打分、搜索构象及精化。简化模型减少自由度；基于物理的力场与来自已知结构的统计势提供不同近似。经典分子动力学、蒙特卡罗与模拟退火用于搜索，均受到采样和打分误差限制，不能一概描述为直接用量子化学求完整蛋白结构。</p>
+<p>HP 格点模型把残基简化为疏水与极性两类，用非相邻 H–H 接触等定义目标。Berger and Leighton, 1998 针对其模型证明困难性，说明即使粗化的构象优化也有复杂的组合结构。它是研究计算复杂性的模型，并不是现实蛋白的精确物理定律。</p>
+<p>教材提到 Rosetta、QUARK、SCRATCH 等不同预测路线及 Anton 专用硬件。Anton 来自 D. E. Shaw Research，不能因 Shaw 曾在哥伦比亚大学任教就把硬件归为该大学的开发结果。对某些体系实现长时间尺度模拟也不等于任意蛋白都能在可接受预算内完成无偏折叠。</p>
+<h3 id="4-6-结构比较指标与置信度"><a href="#4-6-结构比较指标与置信度" class="headerlink" title="4.6 结构比较指标与置信度"></a>4.6 结构比较指标与置信度</h3><p>RMSD 在指定原子对应关系及最优刚体叠合后计算：</p>
+<div class="math">\[
+\mathrm{RMSD}=\sqrt{\frac1N\sum_{i=1}^N
+\|R\mathbf x_i+\mathbf t-\mathbf y_i\|^2}.
+\]</div>
+
+<p>它对离群点、未联配区和蛋白长度敏感。仅在局部重叠区域报告很低 RMSD，不能表明全长模型正确。TM-score 和 GDT 等以其他方式概括整体结构差异；lDDT 从局部距离保持程度评价而不要求全局叠合。需要根据研究问题选择指标和覆盖范围。</p>
+<p>pLDDT 是模型对局部准确度的预测，PAE 描述对齐到某位置或区域时另一部分相对位置的不确定性。二者不是同一个置信度。一个蛋白各结构域内部 pLDDT 很高、跨结构域 PAE 很高时，仍不能可靠解释结构域之间的相互作用。</p>
+<p>低置信区域可能无序、缺少上下文或预测困难；不能直接等同于“已经证明无序”。高置信也不保证预测了正确配体结合态、寡聚状态或突变效应。把置信度用于下游分析，应先定义可用区域并说明模型覆盖。</p>
+<h3 id="4-7-AlphaFold-各代与现代结构预测"><a href="#4-7-AlphaFold-各代与现代结构预测" class="headerlink" title="4.7 AlphaFold 各代与现代结构预测"></a>4.7 AlphaFold 各代与现代结构预测</h3><table>
+<thead>
+<tr>
+<th>工作</th>
+<th>主要思想</th>
+<th>本章应保留的区分</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AlphaFold1（Senior et al., 2020）</td>
+<td>学习残基间距离分布等约束，再优化结构</td>
+<td>教材 p.209 主要描述这一代；不等于 AF2</td>
+</tr>
+<tr>
+<td>AlphaFold2（Jumper et al., 2021）</td>
+<td>结合 MSA、模板及几何模块的端到端预测</td>
+<td>大幅提高许多目标的精度，仍需看对象与置信度</td>
+</tr>
+<tr>
+<td>RoseTTAFold（Baek et al., 2021）</td>
+<td>联合序列、残基对与坐标信息</td>
+<td>与 AF2 同期的重要路线，不能由名称推断任意任务表现</td>
+</tr>
+<tr>
+<td>ESMFold（Lin et al., 2023）</td>
+<td>利用蛋白语言模型，从单序列进行结构预测</td>
+<td>不要求为每个目标搜索 MSA；不意味着所有稀有蛋白都正确</td>
+</tr>
+<tr>
+<td>AlphaFold3（Abramson et al., 2024）</td>
+<td>扩散架构，预测多种生物分子相互作用结构</td>
+<td>涉及蛋白、核酸、小分子、离子及修饰残基的组合</td>
+</tr>
+</tbody></table>
+<p>这些工作模糊了传统“有模板&#x2F;无模板”的分类，但模型依然从已知结构与序列数据学习，不能把无显式模板输入写成没有任何结构先验。AlphaFold DB 2024 论文报告超过 2.14 亿个预测结构；它是该论文时间点的数据库规模，而非每次使用时的实时数量。</p>
+<p>现代模型可生成研究所需的候选结构，却不直接给出折叠动力学、自由能景观或所有构象。比较野生型与突变型模型是否“看起来一样”，也不足以证明突变无影响。突变可能改变稳定性、结合、表达和动力学，而静态主链仍保持相近。</p>
+<p>【现代实践】ColabFold 主要改善运行与检索的可用性，并不使所有输入适合相同默认设置。AF3 的源代码与模型参数有不同许可和获取条件，前序已核对其官方 README；本文不将某次条款抄成永久保证，也不替读者承诺可以任意商用。运行时保存工具、模型与数据库来源，才便于解释结果。</p>
+<h3 id="4-8-教材表-8-2-的工具类别"><a href="#4-8-教材表-8-2-的工具类别" class="headerlink" title="4.8 教材表 8.2 的工具类别"></a>4.8 教材表 8.2 的工具类别</h3><table>
+<thead>
+<tr>
+<th>教材类别</th>
+<th>原表工具举例</th>
+<th>阅读方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>同源建模</td>
+<td>SWISS-MODEL、CPHmodels、ESyPred3D、Geno3d</td>
+<td>保留原理，不把历史网址当作已检查的现行服务</td>
+</tr>
+<tr>
+<td>折叠识别</td>
+<td>HHpred、Phyre、LOOPP、SAM-T02、Threader</td>
+<td>区分 profile 搜索与结构环境打分</td>
+</tr>
+<tr>
+<td>从头预测</td>
+<td>Rosetta、QUARK、SCRATCH、AlphaFold</td>
+<td>AlphaFold 名称需区分代际，工具可结合多种策略</td>
+</tr>
+<tr>
+<td>可视化</td>
+<td>RasMol、PyMOL、VMD、Chimera、Jmol、Cn3D、Swiss-PdbViewer 等</td>
+<td>可视化不等于结构预测或实验验证</td>
+</tr>
+</tbody></table>
+<p>工具能打开一个结构文件，只证明其解析了文件，不证明生物学装配、残基对应及缺失区处理正确。教材的 Chime 等历史工具可作为背景认识，不要求逐一安装。实际选择时，应以能否保留链、配体、编号及来源等信息为依据。</p>
+<h3 id="4-9-突变分析与-FOXL2-实例"><a href="#4-9-突变分析与-FOXL2-实例" class="headerlink" title="4.9 突变分析与 FOXL2 实例"></a>4.9 突变分析与 FOXL2 实例</h3><p><img src="/bioinformatics-notes/images/ch08/fig08-13.png" alt="图 8.13 FOXL2 R103C 的结构分析"></p>
+<p><em>图 8.13 教材用 FOXC2 同源复合物分析 FOXL2 R103 对应残基与 DNA 的接触（教材 p.211）。当前也可利用 FOXL2 自身的实验复合物。</em></p>
+<p>先在 UniProt 核对目标蛋白、同工型、突变编号和实验结构覆盖，再决定是否需要同源模板。直接搜到相似名字不能证明是目标分子；实验结构也可能只覆盖一个结构域。使用同源蛋白时，残基对应来自联配，不能把相同数字的位置直接等同。</p>
+<p>FOXL2 的 UniProt 记录为 P58012，376 aa，叉头 DNA 结合区域为 54–148。教材的出版时实例借用 FOXC2 的 6O3T A 链，其中 FOXL2 R103 对应 FOXC2 R121，附近保守序列包含 WQNSIRHN。本轮用下载的结构实际计算，R121 侧链与 DNA 鸟嘌呤 N7&#x2F;O6 的 N&#x2F;O 距离为 3.00–3.39 Å，符合该处极性接触的解释。</p>
+<p>2022 年起，7VOU、7VOV 已提供 FOXL2 叉头结构域与 DNA 的晶体结构，因此“FOXL2 没有实验结构”不能继续作为现状。在 7VOU 中，所用链的作者编号与 UniProt 不同，C230 对应 R103；计算得到它与 A 链 DG5 N7 的距离为 3.36 Å。§7.5 保留代码和两份实际输出。</p>
+<p>短 N&#x2F;O 距离只是筛选氢键候选的一部分，还需要考虑供受体、角度、质子化及实验精度。代码没有显式氢原子和角度，不能声称已自动识别全部氢键。距离支持野生型精氨酸与 DNA 接触的结构假说，也不单独量化 R103C 的结合变化或临床致病概率。</p>
+<p>UniProt 已列 R103C 与 BPES 的关联及聚集等观察，但其中也有正常转录激活活性的注释。因此把机制断言为“必然完全失去 DNA 结合”过强。合理的结论是该位点具备值得实验检验的结合与稳定性机制，具体效应需要对应体系中的结合、定位、表达及转录调控实验。</p>
+<table>
+<thead>
+<tr>
+<th>教材经验规则</th>
+<th>可作为假说的物理理由</th>
+<th>不能省略的条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>疏水内核引入电荷</td>
+<td>可能破坏埋藏环境与局部稳定</td>
+<td>取决于埋藏程度和补偿相互作用</td>
+</tr>
+<tr>
+<td>内核芳香残基被替换</td>
+<td>可能形成空腔或改变堆积</td>
+<td>不是所有 Trp 替换都产生同样后果</td>
+</tr>
+<tr>
+<td>表面电荷改为疏水残基</td>
+<td>可能改变溶解性和聚集界面</td>
+<td>需要具体表面与浓度条件</td>
+</tr>
+<tr>
+<td>螺旋内部换为 Pro&#x2F;Gly</td>
+<td>可能改变局部主链构象</td>
+<td>实际位置及功能性弯折很重要</td>
+</tr>
+<tr>
+<td>膜螺旋 Pro 被替换</td>
+<td>可能改变必要的弯折和构象转换</td>
+<td>不能推广为所有膜螺旋 Pro 都不可替换</td>
+</tr>
+</tbody></table>
+<p>这些是解释机制的线索，不能用来替代致病性判定。单链预测缺少 DNA 或其他伙伴时，会漏掉界面证据；同样，同源复合物也必须核对伙伴和识别序列是否适合当前问题。结构、保守性和实验数据相互补充，不能仅凭一张漂亮结构图下结论。</p>
+<h2 id="5-关键数据对象与坐标"><a href="#5-关键数据对象与坐标" class="headerlink" title="5. 关键数据对象与坐标"></a>5. 关键数据对象与坐标</h2><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>主要内容</th>
+<th>需要保持一致的信息</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基因组 FASTA</td>
+<td>参考序列及可选小写屏蔽</td>
+<td>组装号、序列名、大小写处理和长度</td>
+</tr>
+<tr>
+<td>GFF3</td>
+<td>九列特征及 ID&#x2F;Parent 层级</td>
+<td>同一组装、1-based 闭区间、链、CDS phase</td>
+</tr>
+<tr>
+<td>转录本&#x2F;CDS&#x2F;蛋白 FASTA</td>
+<td>从模型导出的产物</td>
+<td>相同转录本 ID、拼接顺序、翻译表、终止处理</td>
+</tr>
+<tr>
+<td>搜索结果</td>
+<td>查询&#x2F;目标、分值、坐标、覆盖</td>
+<td>数据库版本、单片段还是片段合并、过滤规则</td>
+</tr>
+<tr>
+<td>InterProScan 表</td>
+<td>成员签名、位置、IPR 及映射</td>
+<td>程序与成员库版本，空值和未整合签名的含义</td>
+</tr>
+<tr>
+<td>GO&#x2F;KO 映射</td>
+<td>产物与术语的多对多关系</td>
+<td>证据、来源、日期、限定信息及传播规则</td>
+</tr>
+<tr>
+<td>PDBx&#x2F;mmCIF</td>
+<td>原子、链、残基编号、坐标及元数据</td>
+<td>作者与标准编号、模型、占有率、替代构象、伙伴</td>
+</tr>
+<tr>
+<td>结构预测结果</td>
+<td>坐标、局部及相对位置置信</td>
+<td>模型来源、覆盖区域、链组成及置信字段定义</td>
+</tr>
+</tbody></table>
+<p>GFF3 的区间 <span class="math">\([s,e]\)</span> 对应 Python 切片 <code>seq[s-1:e]</code>，长度为 <span class="math">\(e-s+1\)</span>；BED 通常使用零起点半开区间 <span class="math">\([s-1,e)\)</span>。负链仍以较小基因组坐标写 start、较大坐标写 end，不能因为负链就把两列倒写。提取后按转录方向组织并取反向互补。</p>
+<p>一个 gene 可对应多个转录本，每个转录本再对应 exon&#x2F;CDS 等特征。外显子可以被多个转录本共享；ID、Parent 和特征类型比行号更可靠。按全文件坐标排序后直接拼接所有 CDS，会把不同转录本或不同链混到一起。模型评估也要声明按基因、转录本、唯一外显子还是 CDS 段计数。</p>
+<p>完整正链转录本的 CDS 段按位置递增处理，负链按递减处理。假设首段从完整密码子的第一位开始，前面已累计编码 <span class="math">\(c_j\)</span> 个碱基，则当前段的 GFF3 phase 为</p>
+<div class="math">\[
+\phi_j=(-c_j)\bmod3.
+\]</div>
+
+<p>这是定位下一完整密码子起点所需的前移数。它不授权删除跨段密码子的组成碱基。首端不完整、翻译例外及特殊注释还需依实际记录处理，不能用这个完整模型公式覆盖所有记录。</p>
+<p>结构文件同时可能有 <code>label_seq_id</code>、<code>auth_seq_id</code> 与 UniProt 编号，三者不能互换。缺失残基、标签序列与实验可见残基也不同。FOXL2 R103 对应 7VOU 中 C230 的例子说明，即使残基名正确，也需要联配及编号映射确认其身份。</p>
+<p>实验结构的 B 因子描述原子位移等相关信息；AlphaFold 分发文件可能借用该字段保存 pLDDT。字段的位置相同不意味着物理含义相同。解析时应依文件来源和元数据决定如何解释，不能对所有 PDB 文件都写“B 因子就是置信度”。</p>
+<h2 id="6-统计模型与算法推导"><a href="#6-统计模型与算法推导" class="headerlink" title="6. 统计模型与算法推导"></a>6. 统计模型与算法推导</h2><h3 id="6-1-HMM-的联合概率与边界条件"><a href="#6-1-HMM-的联合概率与边界条件" class="headerlink" title="6.1 HMM 的联合概率与边界条件"></a>6.1 HMM 的联合概率与边界条件</h3><p>设观测序列为 <span class="math">\(x_{1:L}\)</span>，隐状态为 <span class="math">\(z_{1:L}\)</span>，初始分布为 <span class="math">\(\pi\)</span>，转移矩阵为 <span class="math">\(A\)</span>，状态发射概率为 <span class="math">\(e_j\)</span>。对固定长度、没有另设终止状态的模型，</p>
+<div class="math">\[
+P(x,z)=\pi_{z_1}e_{z_1}(x_1)
+\prod_{t=2}^L A_{z_{t-1},z_t}e_{z_t}(x_t).
+\]</div>
+
+<p>若模型设有终止状态，还要乘 <span class="math">\(A_{z_L,\mathrm{end}}\)</span>，并在求和或求最大时一致处理。原稿的乘积一直使用 <span class="math">\(z_{L+1}\)</span> 却没有定义其终止含义，容易在实现时多乘一次转移。固定长度模型和显式终止模型都可以自洽，但不能混用边界。</p>
+<p>每行转移和为 1，发射分布也要归一；不允许的转移概率为零，在对数域中写成负无穷。用一个很小的正数替代零，会改变生物学语法约束；它不只是数值技巧。短序列上可以枚举路径验证递推，真实染色体则依赖动态规划。</p>
+<h3 id="6-2-Viterbi-与前向–后向"><a href="#6-2-Viterbi-与前向–后向" class="headerlink" title="6.2 Viterbi 与前向–后向"></a>6.2 Viterbi 与前向–后向</h3><p>令 <span class="math">\(V_t(j)\)</span> 为前 <span class="math">\(t\)</span> 个观测、以状态 <span class="math">\(j\)</span> 结束的最佳路径联合概率的对数。初始化和递推为</p>
+<div class="math">\[
+V_1(j)=\log\pi_j+\log e_j(x_1),
+\]</div>
+
+<div class="math">\[
+V_t(j)=\log e_j(x_t)+
+\max_i\{V_{t-1}(i)+\log A_{ij}\}.
+\]</div>
+
+<p>为每个状态保存达到最大值的前驱，再从最后一层最佳状态回溯得到合法最优路径。对 <span class="math">\(S\)</span> 个状态和全连接转移，时间为 <span class="math">\(O(LS^2)\)</span>，保留完整回溯表的空间为 <span class="math">\(O(LS)\)</span>；仅求分数时可用 <span class="math">\(O(S)\)</span> 滚动数组。若允许转移只有 <span class="math">\(|E|\)</span> 条，转移计算可以按稀疏边组织。</p>
+<p>前向算法把“最大”换成“求和”，对数域使用 log-sum-exp。令 <span class="math">\(\alpha_t(j)=P(x_{1:t},z_t=j)\)</span>、<span class="math">\(\beta_t(j)=P(x_{t+1:L}\mid z_t=j)\)</span>，则</p>
+<div class="math">\[
+\alpha_t(j)=e_j(x_t)\sum_i\alpha_{t-1}(i)A_{ij},
+\qquad P(x)=\sum_j\alpha_L(j),
+\]</div>
+
+<div class="math">\[
+\beta_t(i)=\sum_j A_{ij}e_j(x_{t+1})\beta_{t+1}(j),
+\qquad\beta_L(i)=1.
+\]</div>
+
+<p>后验为</p>
+<div class="math">\[
+P(z_t=j\mid x)=\frac{\alpha_t(j)\beta_t(j)}{P(x)}.
+\]</div>
+
+<p>逐位选后验最高的状态，不保证整条状态序列满足合法转移；Viterbi 则优化完整路径。因此“逐碱基准确率更高”与“可作为合法基因模型直接输出”不同。还可以把若干编码状态的后验加起来估计编码概率，但这并不给出完整外显子或转录本的联合置信度。</p>
+<p>§7.2 的固定模型中，最优路径只占总观测概率的约 <span class="math">\(4.43\times10^{-26}\)</span>。这不矛盾：有指数多条路径分担概率，最佳单条路径仍可能有较好分类表现。也不能把这个联合路径后验直接解释为每个外显子的可信程度。</p>
+<h3 id="6-3-自训练与广义-HMM"><a href="#6-3-自训练与广义-HMM" class="headerlink" title="6.3 自训练与广义 HMM"></a>6.3 自训练与广义 HMM</h3><p>有完整标注时，转移和发射可以由计数估计，加平滑处理稀少事件。缺少标注时，Baum–Welch 通过前向–后向得到状态和转移的期望计数，再更新参数，是 EM 的具体形式。它优化所声明模型的似然，不保证唯一全局最优，也不保证隐状态自动对应想要的生物学类别。</p>
+<p>GeneMark-ES 等“自训练”还包含具体生物学结构、初始化及迭代策略，不能简单等同于任意 HMM 上无约束地跑 EM。把所有高 GC 区学成编码区，可能获得模型上的解释，却不一定正确找出基因。训练与测试要使用独立区域和外部证据检验。</p>
+<p>普通 HMM 在状态 <span class="math">\(j\)</span> 的自转移概率为 <span class="math">\(p_j\)</span> 时，停留长度满足</p>
+<div class="math">\[
+P(D=d)=p_j^{d-1}(1-p_j),\qquad d\ge1.
+\]</div>
+
+<p>GHMM 则显式指定长度分布 <span class="math">\(f_j(d)\)</span> 和片段发射 <span class="math">\(g_j(x_{t-d+1:t})\)</span>，典型递推可写成</p>
+<div class="math">\[
+V_t(j)=\max_{i,d}\left\{
+V_{t-d}(i)+\log A_{ij}+\log f_j(d)
++\log g_j(x_{t-d+1:t})\right\}.
+\]</div>
+
+<p>在最长段长 <span class="math">\(D\)</span>、全连接前驱及片段分数已能有效取得的朴素实现中，复杂度可达 <span class="math">\(O(LS^2D)\)</span>。若每次还重新扫描整段计算发射，代价会更高；真实程序常用累积统计、稀疏转移和专门剪枝。复杂度应与具体递推、缓存和候选段定义一起给出。</p>
+<h3 id="6-4-内含子相位与三周期内容"><a href="#6-4-内含子相位与三周期内容" class="headerlink" title="6.4 内含子相位与三周期内容"></a>6.4 内含子相位与三周期内容</h3><p>设完整 CDS 分成长度为 <span class="math">\(100,152,88,62\)</span> 的四段，累计长度依次为 <span class="math">\(100,252,340,402\)</span>。前三个内含子相位为这些累计长度模 3，得到 <span class="math">\(1,0,1\)</span>；四段起点对应 GFF3 phase 为 <span class="math">\(0,2,0,2\)</span>。§7.1 复算这组值。</p>
+<p>对高阶编码模型，可以写</p>
+<div class="math">\[
+P(x_t\mid x_{t-r:t-1},q_t),\qquad q_t\in\{0,1,2\},
+\]</div>
+
+<p>其中 <span class="math">\(q_t\)</span> 是编码序列内的密码子位置，跨内含子后仍需延续原先读码相位。并非直接用基因组绝对坐标模 3，因为内含子长度可能不是 3 的倍数。负链的相位也要按转录方向计算。</p>
+<p>阶数越高，上下文类别约按 <span class="math">\(4^r\)</span> 增长，训练数据不足时大量计数为零。IMM 根据上下文可靠性组合高低阶估计，帮助处理这个偏差–方差折中。高阶不自动优于低阶，尤其是短病毒片段不能提供足够多的独立统计。</p>
+<h3 id="6-5-AC、类别不平衡与对象层级"><a href="#6-5-AC、类别不平衡与对象层级" class="headerlink" title="6.5 AC、类别不平衡与对象层级"></a>6.5 AC、类别不平衡与对象层级</h3><p>Burset and Guigó 使用的近似相关形式可以写为</p>
+<div class="math">\[
+\mathrm{ACP}=\frac14\left[
+\frac{TP}{TP+FN}+\frac{TP}{TP+FP}
++\frac{TN}{TN+FP}+\frac{TN}{TN+FN}\right],
+\qquad\mathrm{AC}=2(\mathrm{ACP}-0.5).
+\]</div>
+
+<p>它与 MCC 不是完全相同的量，且分母为零仍需预先规定处理。§7.3 用同一组预测增加远处非编码背景，经典特异度由约 0.988 接近 1，而 Sn、Sp 保持不变；CC、AC 也随背景构成有所变化。因此评测区域的选择本身会影响分数。</p>
+<p>碱基正确率高不保证边界、转录本或基因完全正确。一个模型只多预测 10 bp，核苷酸误差很小，却会使整个外显子的严格匹配失败。相反，完全落在背景中的假外显子会影响 WE。评价时要同时报告多个层级，不要把“外显子指标总低于碱基指标”当作数学定理，它取决于对象及错误分布。</p>
+<h3 id="6-6-富集与-BH-校正的计算"><a href="#6-6-富集与-BH-校正的计算" class="headerlink" title="6.6 富集与 BH 校正的计算"></a>6.6 富集与 BH 校正的计算</h3><p>对排序后的 <span class="math">\(m\)</span> 个原始值 <span class="math">\(p_{(1)}\le\cdots\le p_{(m)}\)</span>，BH 调整值为</p>
+<div class="math">\[
+q_{(i)}=\min\left(1,\min_{j\ge i}\frac{m}{j}p_{(j)}\right).
+\]</div>
+
+<p>必须从后向前取累积最小值，以保持调整值单调；简单逐项乘 <span class="math">\(m/i\)</span> 不是完整算法。排序再映射回原 ID，避免把术语与调整值错配。§7.4 的例子固定全部五个演示术语，再同时打印原始值和调整值。</p>
+<p>富集倍数可写为 <span class="math">\((k/n)/(M/N)\)</span>，它表示观察比例相对背景比例的变化，与显著性不同。大样本中的小变化可能显著，小集合的大倍数也可能不稳定。解释时应一起看实际基因列表，防止重复 ID 或一组共享注释的基因制造表面上的大量独立发现。</p>
+<h2 id="7-可运行代码与本机实际输出"><a href="#7-可运行代码与本机实际输出" class="headerlink" title="7. 可运行代码与本机实际输出"></a>7. 可运行代码与本机实际输出</h2><p>五个脚本只使用标准库、NumPy 和 SciPy，均已用指定解释器运行。含模拟的示例固定随机种子，统计指标只用于解释对应模型。结构脚本读取实际下载的 mmCIF；其解析器针对本例文件，不是通用 CIF 语法实现。</p>
+<h3 id="7-1-六框-ORF、CpG-窗口与相位"><a href="#7-1-六框-ORF、CpG-窗口与相位" class="headerlink" title="7.1 六框 ORF、CpG 窗口与相位"></a>7.1 六框 ORF、CpG 窗口与相位</h3><p>ORF 示例使用标准翻译表，只认 ATG 起点并标记序列边缘可能的截断；它没有核糖体结合位点、替代起始或真实基因打分。随机序列也有长 ORF，说明“检测到开放区间”并不能直接断定存在蛋白编码基因。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;第 8 章 §7.1：六框 ORF（含边缘截断）、CpG 岛窗口扫描、内含子相位与 GFF3 phase 的换算。&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">STOP = &#123;<span class="string">&quot;TAA&quot;</span>, <span class="string">&quot;TAG&quot;</span>, <span class="string">&quot;TGA&quot;</span>&#125;</span><br><span class="line">COMP = <span class="built_in">str</span>.maketrans(<span class="string">&quot;ACGTN&quot;</span>, <span class="string">&quot;TGCAN&quot;</span>)</span><br><span class="line">rng = np.random.default_rng(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">revcomp</span>(<span class="params">s</span>):</span><br><span class="line">    <span class="keyword">return</span> s.translate(COMP)[::-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">find_orfs</span>(<span class="params">seq, min_aa=<span class="number">80</span>, partial=<span class="literal">True</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;按“终止到终止”的片段扫描六个读框。返回 (链, 起, 止, 氨基酸数, 类型)，</span></span><br><span class="line"><span class="string">    坐标为正链 0-based 半开区间。片段碰到序列边缘且 partial=True 时，</span></span><br><span class="line"><span class="string">    认为基因可能延伸到序列之外（5&#x27; 端缺起始或 3&#x27; 端缺终止），这里只标记边缘截断可能性，不复现 Prodigal 的判定算法。&quot;&quot;&quot;</span></span><br><span class="line">    L, out = <span class="built_in">len</span>(seq), []</span><br><span class="line">    <span class="keyword">for</span> strand, s <span class="keyword">in</span> ((<span class="string">&quot;+&quot;</span>, seq), (<span class="string">&quot;-&quot;</span>, revcomp(seq))):</span><br><span class="line">        <span class="keyword">for</span> f <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">            cod = [s[i:i + <span class="number">3</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(f, <span class="built_in">len</span>(s) - <span class="number">2</span>, <span class="number">3</span>)]</span><br><span class="line">            stops = [k <span class="keyword">for</span> k, c <span class="keyword">in</span> <span class="built_in">enumerate</span>(cod) <span class="keyword">if</span> c <span class="keyword">in</span> STOP]</span><br><span class="line">            bounds = [-<span class="number">1</span>] + stops + [<span class="built_in">len</span>(cod)]</span><br><span class="line">            <span class="keyword">for</span> left, right <span class="keyword">in</span> <span class="built_in">zip</span>(bounds[:-<span class="number">1</span>], bounds[<span class="number">1</span>:]):</span><br><span class="line">                l_edge, r_edge = left == -<span class="number">1</span>, right == <span class="built_in">len</span>(cod)</span><br><span class="line">                <span class="keyword">if</span> l_edge <span class="keyword">and</span> partial:</span><br><span class="line">                    k0 = <span class="number">0</span>                       <span class="comment"># 5&#x27; 端可能在序列之外</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    atg = [k <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(left + <span class="number">1</span>, right) <span class="keyword">if</span> cod[k] == <span class="string">&quot;ATG&quot;</span>]</span><br><span class="line">                    <span class="keyword">if</span> <span class="keyword">not</span> atg:</span><br><span class="line">                        <span class="keyword">continue</span></span><br><span class="line">                    k0 = atg[<span class="number">0</span>]                  <span class="comment"># 取最上游的 ATG，即最长 ORF</span></span><br><span class="line">                <span class="keyword">if</span> r_edge <span class="keyword">and</span> <span class="keyword">not</span> partial:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                aa = right - k0</span><br><span class="line">                <span class="keyword">if</span> aa &lt; min_aa:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                a = f + <span class="number">3</span> * k0</span><br><span class="line">                b = f + <span class="number">3</span> * right + (<span class="number">0</span> <span class="keyword">if</span> r_edge <span class="keyword">else</span> <span class="number">3</span>)   <span class="comment"># 完整 ORF 含终止密码子</span></span><br><span class="line">                kind = &#123;(<span class="literal">False</span>, <span class="literal">False</span>): <span class="string">&quot;complete&quot;</span>, (<span class="literal">True</span>, <span class="literal">False</span>): <span class="string">&quot;5&#x27;partial&quot;</span>,</span><br><span class="line">                        (<span class="literal">False</span>, <span class="literal">True</span>): <span class="string">&quot;3&#x27;partial&quot;</span>, (<span class="literal">True</span>, <span class="literal">True</span>): <span class="string">&quot;both&quot;</span>&#125;[(l_edge <span class="keyword">and</span> partial, r_edge)]</span><br><span class="line">                a, b = (a, b) <span class="keyword">if</span> strand == <span class="string">&quot;+&quot;</span> <span class="keyword">else</span> (L - b, L - a)</span><br><span class="line">                out.append((strand, a, b, aa, kind))</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sorted</span>(out, key=<span class="keyword">lambda</span> o: o[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">random_seq</span>(<span class="params">n, p=(<span class="params"><span class="number">0.25</span>, <span class="number">0.25</span>, <span class="number">0.25</span>, <span class="number">0.25</span></span>)</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;&quot;</span>.join(rng.choice(<span class="built_in">list</span>(<span class="string">&quot;ACGT&quot;</span>), size=n, p=p))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">planted_gene</span>(<span class="params">n_codons</span>):</span><br><span class="line">    sense = [a + b + c <span class="keyword">for</span> a <span class="keyword">in</span> <span class="string">&quot;ACGT&quot;</span> <span class="keyword">for</span> b <span class="keyword">in</span> <span class="string">&quot;ACGT&quot;</span> <span class="keyword">for</span> c <span class="keyword">in</span> <span class="string">&quot;ACGT&quot;</span> <span class="keyword">if</span> a + b + c <span class="keyword">not</span> <span class="keyword">in</span> STOP]</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;ATG&quot;</span> + <span class="string">&quot;&quot;</span>.join(rng.choice(sense, size=n_codons)) + <span class="string">&quot;TAA&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------- 1. ORF：两个完整基因（正、负链各一）+ 一个被序列右端截断的基因 ----------</span></span><br><span class="line">g1, g2, g3 = planted_gene(<span class="number">150</span>), planted_gene(<span class="number">120</span>), planted_gene(<span class="number">200</span>)</span><br><span class="line">parts = [random_seq(<span class="number">300</span>), g1, random_seq(<span class="number">400</span>), revcomp(g2), random_seq(<span class="number">300</span>), g3[:<span class="number">330</span>]]</span><br><span class="line">seq = <span class="string">&quot;&quot;</span>.join(parts)</span><br><span class="line">pos = np.cumsum([<span class="number">0</span>] + [<span class="built_in">len</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> parts])</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;序列长度 %d；植入: + 链 [%d,%d)，- 链 [%d,%d)，+ 链 [%d,%d) 右端截断&quot;</span></span><br><span class="line">      % (<span class="built_in">len</span>(seq), pos[<span class="number">1</span>], pos[<span class="number">2</span>], pos[<span class="number">3</span>], pos[<span class="number">4</span>], pos[<span class="number">5</span>], pos[<span class="number">6</span>]))</span><br><span class="line"><span class="keyword">for</span> o <span class="keyword">in</span> find_orfs(seq):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;  %s %5d %5d %4d aa  %s&quot;</span> % o)</span><br><span class="line">n_rand = <span class="built_in">len</span>(find_orfs(random_seq(<span class="number">100000</span>), partial=<span class="literal">False</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;10 万 bp 随机序列中 &gt;=80 aa 的完整 ORF:&quot;</span>, n_rand)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------- 2. CpG 岛：甲基化导致的 CpG 缺乏背景 + 一段 600 bp 的 GC 富集区 ----------</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">deplete_cpg</span>(<span class="params">s, keep=<span class="number">0.25</span></span>):</span><br><span class="line">    s = <span class="built_in">list</span>(s)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(s) - <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">if</span> s[i] == <span class="string">&quot;C&quot;</span> <span class="keyword">and</span> s[i + <span class="number">1</span>] == <span class="string">&quot;G&quot;</span> <span class="keyword">and</span> rng.random() &gt; keep:</span><br><span class="line">            s[i] = <span class="string">&quot;T&quot;</span>                          <span class="comment"># 甲基化 C 脱氨成 T，CpG 逐渐流失</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;&quot;</span>.join(s)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cpg_islands</span>(<span class="params">seq, w=<span class="number">200</span>, step=<span class="number">20</span>, gc_min=<span class="number">0.5</span>, oe_min=<span class="number">0.6</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Gardiner-Garden &amp; Frommer (1987) 的窗口判据，合并相邻达标窗口。&quot;&quot;&quot;</span></span><br><span class="line">    hits = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(seq) - w + <span class="number">1</span>, step):</span><br><span class="line">        s = seq[i:i + w]</span><br><span class="line">        c, g, cg = s.count(<span class="string">&quot;C&quot;</span>), s.count(<span class="string">&quot;G&quot;</span>), s.count(<span class="string">&quot;CG&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> (c + g) / w &gt; gc_min <span class="keyword">and</span> c * g <span class="keyword">and</span> cg * w / (c * g) &gt; oe_min:</span><br><span class="line">            <span class="keyword">if</span> hits <span class="keyword">and</span> i &lt;= hits[-<span class="number">1</span>][<span class="number">1</span>]:</span><br><span class="line">                hits[-<span class="number">1</span>][<span class="number">1</span>] = i + w</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                hits.append([i, i + w])</span><br><span class="line">    <span class="keyword">return</span> hits</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">obs_exp</span>(<span class="params">s</span>):</span><br><span class="line">    <span class="keyword">return</span> s.count(<span class="string">&quot;CG&quot;</span>) * <span class="built_in">len</span>(s) / (s.count(<span class="string">&quot;C&quot;</span>) * s.count(<span class="string">&quot;G&quot;</span>))</span><br><span class="line"></span><br><span class="line">bg = deplete_cpg(random_seq(<span class="number">6000</span>, (<span class="number">0.29</span>, <span class="number">0.21</span>, <span class="number">0.21</span>, <span class="number">0.29</span>)))</span><br><span class="line">island = random_seq(<span class="number">600</span>, (<span class="number">0.17</span>, <span class="number">0.33</span>, <span class="number">0.33</span>, <span class="number">0.17</span>))</span><br><span class="line">genome = bg[:<span class="number">3000</span>] + island + bg[<span class="number">3000</span>:]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;背景 CpG 观测/期望 = %.2f；岛内 = %.2f&quot;</span> % (obs_exp(bg), obs_exp(island)))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;检出的 CpG 岛（植入区间 [3000,3600)）:&quot;</span>, cpg_islands(genome))</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------- 3. 内含子相位（GENSCAN 的下标）与 GFF3 第 8 列 phase ----------</span></span><br><span class="line">cds_len = [<span class="number">100</span>, <span class="number">152</span>, <span class="number">88</span>, <span class="number">62</span>]                    <span class="comment"># 一个基因四段 CDS 的长度，总长 402 = 134 个密码子</span></span><br><span class="line">cum = np.cumsum([<span class="number">0</span>] + cds_len)</span><br><span class="line">intron_phase = [<span class="built_in">int</span>(c % <span class="number">3</span>) <span class="keyword">for</span> c <span class="keyword">in</span> cum[<span class="number">1</span>:-<span class="number">1</span>]]  <span class="comment"># 内含子插在密码子第几个碱基之后</span></span><br><span class="line">gff3_phase = [<span class="built_in">int</span>((<span class="number">3</span> - c % <span class="number">3</span>) % <span class="number">3</span>) <span class="keyword">for</span> c <span class="keyword">in</span> cum[:-<span class="number">1</span>]]   <span class="comment"># 每段 CDS 开头要跳过几个碱基</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;内含子相位:&quot;</span>, intron_phase, <span class="string">&quot; 各段 CDS 的 GFF3 phase:&quot;</span>, gff3_phase)</span><br></pre></td></tr></table></figure>
+
+<p>本机实际输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">序列长度 2152；植入: + 链 [300,756)，- 链 [1156,1522)，+ 链 [1822,2152) 右端截断</span><br><span class="line">  +   300   756  151 aa  complete</span><br><span class="line">  -   841  1093   83 aa  complete</span><br><span class="line">  +  1141  1447  101 aa  complete</span><br><span class="line">  -  1156  1618  153 aa  complete</span><br><span class="line">  +  1822  2152  110 aa  3&#x27;partial</span><br><span class="line">10 万 bp 随机序列中 &gt;=80 aa 的完整 ORF: 56</span><br><span class="line">背景 CpG 观测/期望 = 0.31；岛内 = 0.99</span><br><span class="line">检出的 CpG 岛（植入区间 [3000,3600)）: [[2920, 3700]]</span><br><span class="line">内含子相位: [1, 0, 1]  各段 CDS 的 GFF3 phase: [0, 2, 0, 2]</span><br></pre></td></tr></table></figure>
+
+<p>负链植入基因的预测终点比真值延伸到更上游的 ATG，另有随机 ORF 被报告，均由这个简化规则产生。CpG 检出区间也外扩至植入区域以外，反映滑动窗口与合并策略对边界的影响。真实分析不能拿这两个简化输出直接当成已验证的基因与岛注释。</p>
+<h3 id="7-2-玩具-HMM：最优路径与边缘后验"><a href="#7-2-玩具-HMM：最优路径与边缘后验" class="headerlink" title="7.2 玩具 HMM：最优路径与边缘后验"></a>7.2 玩具 HMM：最优路径与边缘后验</h3><p>四个状态只有基因间区与三个密码子位置，尚未包含起始&#x2F;终止、内含子、正负链竞争及替代剪接。它适合核对递推和后验归一化，不代表完整 GENSCAN 实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;第 8 章 §7.2：4 状态玩具基因 HMM（对应图 8.5 的思路）：模拟、Viterbi、前向-后向。&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> scipy.special <span class="keyword">import</span> logsumexp</span><br><span class="line"></span><br><span class="line">rng = np.random.default_rng(<span class="number">0</span>)</span><br><span class="line">S = [<span class="string">&quot;N&quot;</span>, <span class="string">&quot;C1&quot;</span>, <span class="string">&quot;C2&quot;</span>, <span class="string">&quot;C3&quot;</span>]                      <span class="comment"># 基因间区 + 密码子三个位置（3 周期）</span></span><br><span class="line">A = np.array([[<span class="number">.995</span>, <span class="number">.005</span>, <span class="number">0</span>, <span class="number">0</span>],                <span class="comment"># N  -&gt; N / C1</span></span><br><span class="line">              [<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>],                      <span class="comment"># C1 -&gt; C2</span></span><br><span class="line">              [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>],                      <span class="comment"># C2 -&gt; C3</span></span><br><span class="line">              [<span class="number">.003</span>, <span class="number">.997</span>, <span class="number">0</span>, <span class="number">0</span>]])               <span class="comment"># C3 -&gt; N / C1：每个密码子后以 0.003 的概率结束</span></span><br><span class="line">E = np.array([[<span class="number">.30</span>, <span class="number">.20</span>, <span class="number">.20</span>, <span class="number">.30</span>],              <span class="comment"># 发射概率，列为 A C G T；基因间区偏 AT</span></span><br><span class="line">              [<span class="number">.25</span>, <span class="number">.20</span>, <span class="number">.35</span>, <span class="number">.20</span>],              <span class="comment"># 密码子第 1 位偏 G</span></span><br><span class="line">              [<span class="number">.30</span>, <span class="number">.25</span>, <span class="number">.15</span>, <span class="number">.30</span>],</span><br><span class="line">              [<span class="number">.15</span>, <span class="number">.35</span>, <span class="number">.35</span>, <span class="number">.15</span>]])             <span class="comment"># 第 3 位偏 G/C</span></span><br><span class="line">pi = np.array([<span class="number">1.</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>])</span><br><span class="line"><span class="keyword">with</span> np.errstate(divide=<span class="string">&quot;ignore&quot;</span>):</span><br><span class="line">    lpi, lA, lE = np.log(pi), np.log(A), np.log(E)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">simulate</span>(<span class="params">L</span>):</span><br><span class="line">    z = [<span class="number">0</span>]</span><br><span class="line">    x = [rng.choice(<span class="number">4</span>, p=E[<span class="number">0</span>])]</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(L - <span class="number">1</span>):</span><br><span class="line">        z.append(rng.choice(<span class="number">4</span>, p=A[z[-<span class="number">1</span>]]))</span><br><span class="line">        x.append(rng.choice(<span class="number">4</span>, p=E[z[-<span class="number">1</span>]]))</span><br><span class="line">    <span class="keyword">return</span> np.array(x), np.array(z)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">viterbi</span>(<span class="params">x</span>):</span><br><span class="line">    L, K = <span class="built_in">len</span>(x), <span class="built_in">len</span>(lpi)</span><br><span class="line">    V = np.empty((L, K)); B = np.zeros((L, K), <span class="built_in">int</span>)</span><br><span class="line">    V[<span class="number">0</span>] = lpi + lE[:, x[<span class="number">0</span>]]</span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, L):</span><br><span class="line">        sc = V[t - <span class="number">1</span>][:, <span class="literal">None</span>] + lA               <span class="comment"># sc[j, k]: 由 j 转到 k</span></span><br><span class="line">        B[t] = sc.argmax(<span class="number">0</span>)</span><br><span class="line">        V[t] = sc.<span class="built_in">max</span>(<span class="number">0</span>) + lE[:, x[t]]</span><br><span class="line">    path = [<span class="built_in">int</span>(V[-<span class="number">1</span>].argmax())]</span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(L - <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>):</span><br><span class="line">        path.append(B[t, path[-<span class="number">1</span>]])</span><br><span class="line">    <span class="keyword">return</span> np.array(path[::-<span class="number">1</span>]), V[-<span class="number">1</span>].<span class="built_in">max</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">forward_backward</span>(<span class="params">x</span>):</span><br><span class="line">    L, K = <span class="built_in">len</span>(x), <span class="built_in">len</span>(lpi)</span><br><span class="line">    F = np.empty((L, K)); Bk = np.zeros((L, K))</span><br><span class="line">    F[<span class="number">0</span>] = lpi + lE[:, x[<span class="number">0</span>]]</span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, L):</span><br><span class="line">        F[t] = logsumexp(F[t - <span class="number">1</span>][:, <span class="literal">None</span>] + lA, axis=<span class="number">0</span>) + lE[:, x[t]]</span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(L - <span class="number">2</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">        Bk[t] = logsumexp(lA + (lE[:, x[t + <span class="number">1</span>]] + Bk[t + <span class="number">1</span>])[<span class="literal">None</span>, :], axis=<span class="number">1</span>)</span><br><span class="line">    logP = logsumexp(F[-<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> np.exp(F + Bk - logP), logP           <span class="comment"># 每个位置各状态的后验概率</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sn_sp</span>(<span class="params">truth, pred</span>):</span><br><span class="line">    tp = (truth &amp; pred).<span class="built_in">sum</span>()</span><br><span class="line">    <span class="keyword">return</span> tp / truth.<span class="built_in">sum</span>(), tp / pred.<span class="built_in">sum</span>()</span><br><span class="line"></span><br><span class="line">x, z = simulate(<span class="number">20000</span>)</span><br><span class="line">zv, best = viterbi(x)</span><br><span class="line">post, logP = forward_backward(x)</span><br><span class="line">coding = z &gt; <span class="number">0</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;编码碱基占比 %.3f&quot;</span> % coding.mean())</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;log P(x) = %.1f，最优路径 log P(x, pi*) = %.1f，最优路径占全部概率的 %.2e&quot;</span></span><br><span class="line">      % (logP, best, np.exp(best - logP)))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Viterbi     nt Sn = %.3f  Sp(precision) = %.3f&quot;</span> % sn_sp(coding, zv &gt; <span class="number">0</span>))</span><br><span class="line">pc = post[:, <span class="number">1</span>:].<span class="built_in">sum</span>(<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;后验 &gt; 0.5  nt Sn = %.3f  Sp(precision) = %.3f&quot;</span> % sn_sp(coding, pc &gt; <span class="number">0.5</span>))</span><br><span class="line">both = coding &amp; (zv &gt; <span class="number">0</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;两者都判为编码的位置中，密码子位置（读码框）也一致的比例 %.3f&quot;</span> % (zv[both] == z[both]).mean())</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;后验概率列之和为 1:&quot;</span>, np.allclose(post.<span class="built_in">sum</span>(<span class="number">1</span>), <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+<p>本机实际输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">编码碱基占比 0.780</span><br><span class="line">log P(x) = -26982.3，最优路径 log P(x, pi*) = -27040.7，最优路径占全部概率的 4.43e-26</span><br><span class="line">Viterbi     nt Sn = 0.986  Sp(precision) = 0.969</span><br><span class="line">后验 &gt; 0.5  nt Sn = 0.991  Sp(precision) = 0.983</span><br><span class="line">两者都判为编码的位置中，密码子位置（读码框）也一致的比例 0.999</span><br><span class="line">后验概率列之和为 1: True</span><br></pre></td></tr></table></figure>
+
+<p>这里数据正是由同一模型生成，属于模型条件满足的检验。真实物种分布偏移、非典型基因及错误组装会降低表现；不能把模拟 Sn、Sp 写成真实注释的预期精度。阈值化编码后验没有输出合法完整转录本，只用于比较逐碱基决策。</p>
+<h3 id="7-3-核苷酸与外显子指标"><a href="#7-3-核苷酸与外显子指标" class="headerlink" title="7.3 核苷酸与外显子指标"></a>7.3 核苷酸与外显子指标</h3><p>示例区间均为同一条链上无重复的零起点半开区间，且分母非零。多转录本、重叠基因、不同链及空集合需另行规定，不能不加说明地直接用集合去重代表所有评测。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;第 8 章 §7.3：Burset &amp; Guigó (1996) 的核苷酸水平与外显子水平评价指标，并检查表 8.1。&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">nt_metrics</span>(<span class="params">true_iv, pred_iv, L</span>):</span><br><span class="line">    t = np.zeros(L, <span class="built_in">bool</span>); p = np.zeros(L, <span class="built_in">bool</span>)</span><br><span class="line">    <span class="keyword">for</span> a, b <span class="keyword">in</span> true_iv: t[a:b] = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">for</span> a, b <span class="keyword">in</span> pred_iv: p[a:b] = <span class="literal">True</span></span><br><span class="line">    TP, FP = <span class="built_in">int</span>((t &amp; p).<span class="built_in">sum</span>()), <span class="built_in">int</span>((~t &amp; p).<span class="built_in">sum</span>())</span><br><span class="line">    FN, TN = <span class="built_in">int</span>((t &amp; ~p).<span class="built_in">sum</span>()), <span class="built_in">int</span>((~t &amp; ~p).<span class="built_in">sum</span>())</span><br><span class="line">    cc = (TP * TN - FP * FN) / np.sqrt(<span class="built_in">float</span>(TP + FP) * (TP + FN) * (TN + FP) * (TN + FN))</span><br><span class="line">    acp = (TP / (TP + FN) + TP / (TP + FP) + TN / (TN + FP) + TN / (TN + FN)) / <span class="number">4</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">dict</span>(TP=TP, FP=FP, FN=FN, TN=TN, Sn=TP / (TP + FN), Sp=TP / (TP + FP),</span><br><span class="line">                Sp_classic=TN / (TN + FP), CC=cc, AC=<span class="number">2</span> * (acp - <span class="number">0.5</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">exon_metrics</span>(<span class="params">true_ex, pred_ex</span>):</span><br><span class="line">    ov = <span class="keyword">lambda</span> e, S: <span class="built_in">any</span>(a &lt; e[<span class="number">1</span>] <span class="keyword">and</span> e[<span class="number">0</span>] &lt; b <span class="keyword">for</span> a, b <span class="keyword">in</span> S)</span><br><span class="line">    T, P = <span class="built_in">set</span>(true_ex), <span class="built_in">set</span>(pred_ex)</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">dict</span>(Sn=<span class="built_in">len</span>(T &amp; P) / <span class="built_in">len</span>(T), Sp=<span class="built_in">len</span>(T &amp; P) / <span class="built_in">len</span>(P),       <span class="comment"># 两端边界都对才算对</span></span><br><span class="line">                ME=<span class="built_in">sum</span>(<span class="keyword">not</span> ov(e, P) <span class="keyword">for</span> e <span class="keyword">in</span> T) / <span class="built_in">len</span>(T),               <span class="comment"># 与任何预测都不重叠的真实外显子</span></span><br><span class="line">                WE=<span class="built_in">sum</span>(<span class="keyword">not</span> ov(e, T) <span class="keyword">for</span> e <span class="keyword">in</span> P) / <span class="built_in">len</span>(P))               <span class="comment"># 与任何真实外显子都不重叠的预测外显子</span></span><br><span class="line"></span><br><span class="line">true_ex = [(<span class="number">1000</span>, <span class="number">1200</span>), (<span class="number">1500</span>, <span class="number">1650</span>), (<span class="number">2000</span>, <span class="number">2300</span>)]</span><br><span class="line">pred_ex = [(<span class="number">1000</span>, <span class="number">1200</span>), (<span class="number">1490</span>, <span class="number">1650</span>), (<span class="number">2600</span>, <span class="number">2700</span>)]</span><br><span class="line"><span class="keyword">for</span> L <span class="keyword">in</span> (<span class="number">10_000</span>, <span class="number">1_000_000</span>):</span><br><span class="line">    m = nt_metrics(true_ex, pred_ex, L)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;L=%-9d&quot;</span> % L, <span class="string">&quot; &quot;</span>.join(<span class="string">&quot;%s=%s&quot;</span> % (k, (<span class="string">&quot;%.3f&quot;</span> % v) <span class="keyword">if</span> <span class="built_in">isinstance</span>(v, <span class="built_in">float</span>) <span class="keyword">else</span> v) <span class="keyword">for</span> k, v <span class="keyword">in</span> m.items()))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;外显子水平:&quot;</span>, &#123;k: <span class="built_in">round</span>(v, <span class="number">3</span>) <span class="keyword">for</span> k, v <span class="keyword">in</span> exon_metrics(true_ex, pred_ex).items()&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 表 8.1（教材 p.194）外显子水平：1-Sn-ME = 真实外显子中“部分重叠但边界不对”的比例</span></span><br><span class="line">tab = &#123;<span class="string">&quot;FGENESH&quot;</span>: (<span class="number">.81</span>, <span class="number">.80</span>, <span class="number">.09</span>, <span class="number">.11</span>), <span class="string">&quot;AUGUSTUS&quot;</span>: (<span class="number">.72</span>, <span class="number">.84</span>, <span class="number">.20</span>, <span class="number">.08</span>), <span class="string">&quot;GENSCAN&quot;</span>: (<span class="number">.78</span>, <span class="number">.74</span>, <span class="number">.08</span>, <span class="number">.14</span>),</span><br><span class="line">       <span class="string">&quot;GeneParser&quot;</span>: (<span class="number">.69</span>, <span class="number">.63</span>, <span class="number">.31</span>, <span class="number">.37</span>), <span class="string">&quot;Grail-I&quot;</span>: (<span class="number">.59</span>, <span class="number">.91</span>, <span class="number">.40</span>, <span class="number">.09</span>)&#125;</span><br><span class="line"><span class="keyword">for</span> k, (sn, sp, me, we) <span class="keyword">in</span> tab.items():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;%-10s 1-Sn-ME = %.2f   1-Sp-WE = %.2f&quot;</span> % (k, <span class="built_in">round</span>(<span class="number">1</span> - sn - me, <span class="number">2</span>) + <span class="number">0.0</span>, <span class="built_in">round</span>(<span class="number">1</span> - sp - we, <span class="number">2</span>) + <span class="number">0.0</span>))</span><br></pre></td></tr></table></figure>
+
+<p>本机实际输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">L=10000     TP=350 FP=110 FN=300 TN=9240 Sn=0.538 Sp=0.761 Sp_classic=0.988 CC=0.620 AC=0.628</span><br><span class="line">L=1000000   TP=350 FP=110 FN=300 TN=999240 Sn=0.538 Sp=0.761 Sp_classic=1.000 CC=0.640 AC=0.649</span><br><span class="line">外显子水平: &#123;&#x27;Sn&#x27;: 0.333, &#x27;Sp&#x27;: 0.333, &#x27;ME&#x27;: 0.333, &#x27;WE&#x27;: 0.333&#125;</span><br><span class="line">FGENESH    1-Sn-ME = 0.10   1-Sp-WE = 0.09</span><br><span class="line">AUGUSTUS   1-Sn-ME = 0.08   1-Sp-WE = 0.08</span><br><span class="line">GENSCAN    1-Sn-ME = 0.14   1-Sp-WE = 0.12</span><br><span class="line">GeneParser 1-Sn-ME = 0.00   1-Sp-WE = 0.00</span><br><span class="line">Grail-I    1-Sn-ME = 0.01   1-Sp-WE = 0.00</span><br></pre></td></tr></table></figure>
+
+<p>GeneParser 与 Grail-I 的历史表格余量提示定义或来源需要回查，而不是代码已经证明教材数值有错。对尚未确认的原始测试口径，本章保留【需查证】，不替原始研究补造解释。</p>
+<h3 id="7-4-best-hit、超几何与-BH"><a href="#7-4-best-hit、超几何与-BH" class="headerlink" title="7.4 best hit、超几何与 BH"></a>7.4 best hit、超几何与 BH</h3><p>输入为人工构造的 TSV 行，用于演示分值排序与双向覆盖过滤，不是实际 BLAST 运行结果；<code>GO:A</code> 等也是演示标签，不是有效 GO 编号。实际项目应替换为真实数据库与结果文件。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;第 8 章 §7.4：BLAST 表格（outfmt 6 + qlen slen）取带覆盖度过滤的 best hit；GO 超几何富集 + BH 校正。</span></span><br><span class="line"><span class="string">数据是手写的玩具例子，只用来演示计算。&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">import</span> csv, io</span><br><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> comb</span><br><span class="line"><span class="keyword">from</span> scipy.stats <span class="keyword">import</span> hypergeom</span><br><span class="line"></span><br><span class="line">hits_tsv = <span class="string">&quot;&quot;&quot;\</span></span><br><span class="line"><span class="string">g1\tsp|P1|KINASE\t45.0\t310\t0\t0\t20\t330\t5\t315\t1e-60\t250\t800\t320</span></span><br><span class="line"><span class="string">g1\tsp|P2|ADAPTER\t62.0\t240\t0\t0\t400\t640\t1\t240\t1e-70\t300\t800\t900</span></span><br><span class="line"><span class="string">g2\tsp|P3|TRANSPORTER\t38.0\t420\t0\t0\t3\t420\t10\t430\t1e-40\t180\t430\t450</span></span><br><span class="line"><span class="string">g3\tsp|P4|HYPOTHETICAL\t28.0\t60\t0\t0\t1\t60\t1\t60\t1e-3\t35\t200\t210</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">cols = <span class="string">&quot;qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen&quot;</span>.split()</span><br><span class="line">best = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> r <span class="keyword">in</span> csv.DictReader(io.StringIO(hits_tsv), fieldnames=cols, delimiter=<span class="string">&quot;\t&quot;</span>):</span><br><span class="line">    qcov = (<span class="built_in">int</span>(r[<span class="string">&quot;qend&quot;</span>]) - <span class="built_in">int</span>(r[<span class="string">&quot;qstart&quot;</span>]) + <span class="number">1</span>) / <span class="built_in">int</span>(r[<span class="string">&quot;qlen&quot;</span>])</span><br><span class="line">    scov = (<span class="built_in">int</span>(r[<span class="string">&quot;send&quot;</span>]) - <span class="built_in">int</span>(r[<span class="string">&quot;sstart&quot;</span>]) + <span class="number">1</span>) / <span class="built_in">int</span>(r[<span class="string">&quot;slen&quot;</span>])</span><br><span class="line">    ok = <span class="built_in">float</span>(r[<span class="string">&quot;evalue&quot;</span>]) &lt;= <span class="number">1e-5</span> <span class="keyword">and</span> qcov &gt;= <span class="number">0.5</span> <span class="keyword">and</span> scov &gt;= <span class="number">0.5</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;%s %-18s bits=%-5s qcov=%.2f scov=%.2f %s&quot;</span> % (r[<span class="string">&quot;qseqid&quot;</span>], r[<span class="string">&quot;sseqid&quot;</span>], r[<span class="string">&quot;bitscore&quot;</span>], qcov, scov, <span class="string">&quot;保留&quot;</span> <span class="keyword">if</span> ok <span class="keyword">else</span> <span class="string">&quot;过滤&quot;</span>))</span><br><span class="line">    <span class="keyword">if</span> ok <span class="keyword">and</span> <span class="built_in">float</span>(r[<span class="string">&quot;bitscore&quot;</span>]) &gt; best.get(r[<span class="string">&quot;qseqid&quot;</span>], (<span class="literal">None</span>, -<span class="number">1</span>))[<span class="number">1</span>]:</span><br><span class="line">        best[r[<span class="string">&quot;qseqid&quot;</span>]] = (r[<span class="string">&quot;sseqid&quot;</span>], <span class="built_in">float</span>(r[<span class="string">&quot;bitscore&quot;</span>]))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;best hit:&quot;</span>, best)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bh</span>(<span class="params">pvals</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Benjamini-Hochberg：q_(i) = min_&#123;j&gt;=i&#125; p_(j) m / j&quot;&quot;&quot;</span></span><br><span class="line">    m = <span class="built_in">len</span>(pvals); order = <span class="built_in">sorted</span>(<span class="built_in">range</span>(m), key=<span class="keyword">lambda</span> i: pvals[i])</span><br><span class="line">    q = [<span class="number">0.0</span>] * m; run = <span class="number">1.0</span></span><br><span class="line">    <span class="keyword">for</span> rank <span class="keyword">in</span> <span class="built_in">range</span>(m, <span class="number">0</span>, -<span class="number">1</span>):</span><br><span class="line">        i = order[rank - <span class="number">1</span>]</span><br><span class="line">        run = <span class="built_in">min</span>(run, pvals[i] * m / rank); q[i] = run</span><br><span class="line">    <span class="keyword">return</span> q</span><br><span class="line"></span><br><span class="line"><span class="comment"># 背景 N=10000 个有 GO 注释的基因，目标基因 n=200；每个术语给出 (M=背景中注释到该术语的基因数, k=目标中注释到的)</span></span><br><span class="line">N, n = <span class="number">10000</span>, <span class="number">200</span></span><br><span class="line">terms = &#123;<span class="string">&quot;GO:A&quot;</span>: (<span class="number">150</span>, <span class="number">12</span>), <span class="string">&quot;GO:B&quot;</span>: (<span class="number">400</span>, <span class="number">15</span>), <span class="string">&quot;GO:C&quot;</span>: (<span class="number">60</span>, <span class="number">1</span>), <span class="string">&quot;GO:D&quot;</span>: (<span class="number">1000</span>, <span class="number">25</span>), <span class="string">&quot;GO:E&quot;</span>: (<span class="number">30</span>, <span class="number">5</span>)&#125;</span><br><span class="line">p = &#123;t: hypergeom.sf(k - <span class="number">1</span>, N, M, n) <span class="keyword">for</span> t, (M, k) <span class="keyword">in</span> terms.items()&#125;      <span class="comment"># P(X &gt;= k)</span></span><br><span class="line">q = <span class="built_in">dict</span>(<span class="built_in">zip</span>(p, bh(<span class="built_in">list</span>(p.values()))))</span><br><span class="line"><span class="keyword">for</span> t, (M, k) <span class="keyword">in</span> terms.items():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;%s M=%4d k=%2d 期望=%.1f  p=%.2e  BH q=%.2e&quot;</span> % (t, M, k, n * M / N, p[t], q[t]))</span><br><span class="line">M, k = terms[<span class="string">&quot;GO:A&quot;</span>]</span><br><span class="line">direct = <span class="built_in">sum</span>(comb(M, i) * comb(N - M, n - i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(k, <span class="built_in">min</span>(n, M) + <span class="number">1</span>)) / comb(N, n)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;GO:A 按式子直接求和: %.6e，scipy: %.6e&quot;</span> % (direct, p[<span class="string">&quot;GO:A&quot;</span>]))</span><br></pre></td></tr></table></figure>
+
+<p>本机实际输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">g1 sp|P1|KINASE       bits=250   qcov=0.39 scov=0.97 过滤</span><br><span class="line">g1 sp|P2|ADAPTER      bits=300   qcov=0.30 scov=0.27 过滤</span><br><span class="line">g2 sp|P3|TRANSPORTER  bits=180   qcov=0.97 scov=0.94 保留</span><br><span class="line">g3 sp|P4|HYPOTHETICAL bits=35    qcov=0.30 scov=0.29 过滤</span><br><span class="line">best hit: &#123;&#x27;g2&#x27;: (&#x27;sp|P3|TRANSPORTER&#x27;, 180.0)&#125;</span><br><span class="line">GO:A M= 150 k=12 期望=3.0  p=4.54e-05  BH q=2.27e-04</span><br><span class="line">GO:B M= 400 k=15 期望=8.0  p=1.43e-02  BH q=2.39e-02</span><br><span class="line">GO:C M=  60 k= 1 期望=1.2  p=7.04e-01  BH q=7.04e-01</span><br><span class="line">GO:D M=1000 k=25 期望=20.0  p=1.43e-01  BH q=1.78e-01</span><br><span class="line">GO:E M=  30 k= 5 期望=0.6  p=2.89e-04  BH q=7.22e-04</span><br><span class="line">GO:A 按式子直接求和: 4.540307e-05，scipy: 4.540307e-05</span><br></pre></td></tr></table></figure>
+
+<p>在这个过滤规则下，g1 的两个候选都不能作为全长命中保留，但它们的局部结构域证据仍可能有用。超几何直接求和与 SciPy 一致，是算式实现的交叉核对；这并不证明真实实验满足无偏抽样假设。</p>
+<h3 id="7-5-复现-DNA-接触距离"><a href="#7-5-复现-DNA-接触距离" class="headerlink" title="7.5 复现 DNA 接触距离"></a>7.5 复现 DNA 接触距离</h3><p>从 RCSB 下载 <code>6O3T.cif</code> 后，运行脚本并传入文件路径、作者链 A、作者残基号 121。也可用本章已下载的临时文件复现。距离使用 Å；截断 3.5 Å 是本例的候选接触筛选，不是严格氢键判定。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp; <span class="string">&#x27;C:\ark-ai\ComfyUI_windows_portable\python_embeded\python.exe&#x27;</span> <span class="literal">-I</span> <span class="literal">-X</span> utf8 <span class="string">&#x27;code\ch08\ch08_foxc2_r121_contacts.py&#x27;</span> <span class="string">&#x27;..\tmp\审校工具\work\ch08\dl\6o3t.cif&#x27;</span> A <span class="number">121</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;第 8 章 §7.5：复现图 8.13B 的“polar contacts”——FOXC2 R121（对应 FOXL2 R103）与 DNA 的极性接触。</span></span><br><span class="line"><span class="string">结构文件从 RCSB 下载 PDBx/mmCIF，例如 https://files.rcsb.org/download/6O3T.cif。</span></span><br><span class="line"><span class="string">用法：python ch08_foxc2_r121_contacts.py 6o3t.cif A 121   </span></span><br><span class="line"><span class="string">      FOXL2 自身的结构：python ch08_foxc2_r121_contacts.py 7vou.cif C 230（7VOU 作者编号 = UniProt 编号 + 127）&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_atoms</span>(<span class="params">path</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;只解析 _atom_site 循环；返回每个原子的 (链, 残基号, 残基名, 原子名, 元素, xyz)。&quot;&quot;&quot;</span></span><br><span class="line">    cols, atoms = [], []</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">open</span>(path, encoding=<span class="string">&quot;utf-8&quot;</span>):</span><br><span class="line">        <span class="keyword">if</span> line.startswith(<span class="string">&quot;_atom_site.&quot;</span>):</span><br><span class="line">            cols.append(line.split(<span class="string">&quot;.&quot;</span>, <span class="number">1</span>)[<span class="number">1</span>].strip())</span><br><span class="line">        <span class="keyword">elif</span> cols <span class="keyword">and</span> line.startswith((<span class="string">&quot;ATOM&quot;</span>, <span class="string">&quot;HETATM&quot;</span>)):</span><br><span class="line">            f = <span class="built_in">dict</span>(<span class="built_in">zip</span>(cols, line.split()))</span><br><span class="line">            atoms.append((f[<span class="string">&quot;auth_asym_id&quot;</span>], <span class="built_in">int</span>(f[<span class="string">&quot;auth_seq_id&quot;</span>]), f[<span class="string">&quot;label_comp_id&quot;</span>], f[<span class="string">&quot;label_atom_id&quot;</span>].strip(<span class="string">&#x27;&quot;&#x27;</span>),</span><br><span class="line">                          f[<span class="string">&quot;type_symbol&quot;</span>], np.array([<span class="built_in">float</span>(f[<span class="string">&quot;Cartn_x&quot;</span>]), <span class="built_in">float</span>(f[<span class="string">&quot;Cartn_y&quot;</span>]), <span class="built_in">float</span>(f[<span class="string">&quot;Cartn_z&quot;</span>])])))</span><br><span class="line">        <span class="keyword">elif</span> cols <span class="keyword">and</span> atoms <span class="keyword">and</span> line.startswith(<span class="string">&quot;#&quot;</span>):</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> atoms</span><br><span class="line"></span><br><span class="line">path, chain, res = (sys.argv[<span class="number">1</span>:<span class="number">4</span>] + [<span class="string">&quot;6o3t.cif&quot;</span>, <span class="string">&quot;A&quot;</span>, <span class="string">&quot;121&quot;</span>][<span class="built_in">len</span>(sys.argv) - <span class="number">1</span>:])[:<span class="number">3</span>]</span><br><span class="line">res = <span class="built_in">int</span>(res)</span><br><span class="line">atoms = read_atoms(path)</span><br><span class="line">seq = &#123;r: n <span class="keyword">for</span> c, r, n, *_ <span class="keyword">in</span> atoms <span class="keyword">if</span> c == chain&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;%s 链残基 %d–%d；%d 号 = %s；%d–%d = %s&quot;</span> % (chain, <span class="built_in">min</span>(seq), <span class="built_in">max</span>(seq), res, seq[res], res - <span class="number">5</span>, res + <span class="number">2</span>,</span><br><span class="line">      <span class="string">&quot; &quot;</span>.join(seq.get(i, <span class="string">&quot;-&quot;</span>) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(res - <span class="number">5</span>, res + <span class="number">3</span>))))</span><br><span class="line">dna = [a <span class="keyword">for</span> a <span class="keyword">in</span> atoms <span class="keyword">if</span> a[<span class="number">2</span>] <span class="keyword">in</span> (<span class="string">&quot;DA&quot;</span>, <span class="string">&quot;DC&quot;</span>, <span class="string">&quot;DG&quot;</span>, <span class="string">&quot;DT&quot;</span>) <span class="keyword">and</span> a[<span class="number">4</span>] <span class="keyword">in</span> (<span class="string">&quot;N&quot;</span>, <span class="string">&quot;O&quot;</span>)]</span><br><span class="line">xyz = np.array([a[<span class="number">5</span>] <span class="keyword">for</span> a <span class="keyword">in</span> dna])</span><br><span class="line"><span class="keyword">for</span> c, r, n, atom, el, x <span class="keyword">in</span> atoms:</span><br><span class="line">    <span class="keyword">if</span> c == chain <span class="keyword">and</span> r == res <span class="keyword">and</span> el <span class="keyword">in</span> (<span class="string">&quot;N&quot;</span>, <span class="string">&quot;O&quot;</span>) <span class="keyword">and</span> atom <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&quot;N&quot;</span>, <span class="string">&quot;O&quot;</span>):  <span class="comment"># 只看侧链 N/O</span></span><br><span class="line">        d = np.linalg.norm(xyz - x, axis=<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> np.where(d &lt;= <span class="number">3.5</span>)[<span class="number">0</span>]:</span><br><span class="line">            b = dna[j]</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;  %s%d %-3s -&gt; 链 %s %s%-3d %-4s %.2f Å&quot;</span> % (n, r, atom, b[<span class="number">0</span>], b[<span class="number">2</span>], b[<span class="number">1</span>], b[<span class="number">3</span>], d[j]))</span><br></pre></td></tr></table></figure>
+
+<p>本机实际输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">A 链残基 70–164；121 号 = ARG；116–123 = TRP GLN ASN SER ILE ARG HIS ASN</span><br><span class="line">  ARG121 NE  -&gt; 链 C DG6   N7   3.33 Å</span><br><span class="line">  ARG121 NH2 -&gt; 链 C DG6   N7   3.39 Å</span><br><span class="line">  ARG121 NH2 -&gt; 链 C DG6   O6   3.00 Å</span><br></pre></td></tr></table></figure>
+
+<p>换用 <code>7vou.cif C 230</code> 后，本机实际输出为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C 链残基 181–266；230 号 = ARG；225–232 = TRP GLN ASN SER ILE ARG HIS ASN</span><br><span class="line">  ARG230 NE  -&gt; 链 A DG5   N7   3.36 Å</span><br></pre></td></tr></table></figure>
+
+<p>这同时核对了作者编号、残基身份、保守片段和复合物伙伴。若只看单链结构，就会漏掉 DNA 这部分观测；若只按“103”查结构坐标，又可能定位到完全不同的残基。</p>
+<h2 id="8-AI-for-Science-扩展【AI4S】"><a href="#8-AI-for-Science-扩展【AI4S】" class="headerlink" title="8. AI for Science 扩展【AI4S】"></a>8. AI for Science 扩展【AI4S】</h2><h3 id="8-1-基因预测是带生物约束的结构化预测"><a href="#8-1-基因预测是带生物约束的结构化预测" class="headerlink" title="8.1 基因预测是带生物约束的结构化预测"></a>8.1 基因预测是带生物约束的结构化预测</h3><p>一个逐碱基神经网络可以输出编码概率，却不自动得到有合法起止、剪接和读码框的基因模型。训练目标需要明确是碱基、边界、完整转录本还是基因集合。若损失只优化多数背景碱基的正确率，模型可能忽略短外显子；若只优化编码区重叠，也可能容许许多错误边界。</p>
+<p>HMM&#x2F;GHMM 的价值之一是显式表达约束。深度模型可以学习发射分数，再结合有限状态或其他结构化解码；也可以在网络内部学习长程关系。二者是否有效，需要在同一输入证据和测试划分上比较，不能把“使用神经网络”视为已解决标签语法。</p>
+<p>Helixer 与 Tiberius 是前序文献核查过的代表工作，适合对照传统 GHMM 理解特征学习与结构约束如何结合。研究时应分析输入片段长度、跨片段边界处理、正负链、转录本表达证据和训练物种分布。随机切窗训练后相邻窗口分到测试集，可能造成高度重叠的序列泄漏。</p>
+<p>基因注释标签也不是无噪声真值。不同版本可能改变边界、合并&#x2F;拆分基因或增删转录本；实验转录支持缺失不能证明模型错。训练集应保留证据层级，对高支持、低支持及冲突区域分别评价。一个模型与旧注释不一致时，需要外部证据判断，不能只以旧注释作为唯一裁判。</p>
+<h3 id="8-2-功能预测的标签不完整与粒度"><a href="#8-2-功能预测的标签不完整与粒度" class="headerlink" title="8.2 功能预测的标签不完整与粒度"></a>8.2 功能预测的标签不完整与粒度</h3><p>同一个蛋白可有多个功能标签，且标签具有上位关系。一个模型预测较宽的家族可能正确，却没有区分具体底物；另一个模型给出更细的术语，可能获得更多信息，也承担更大错误风险。因此应报告标签粒度、覆盖和精确率，而不是把所有术语都当作相互独立的平坦类别。</p>
+<p>数据库中未注释的蛋白是未标注数据，不能一律做负样本。频繁研究的家族、物种和疾病相关蛋白更容易拥有丰富注释，模型会受到知识采样偏倚影响。按时间切分可以检验新知识预测，但还需防止未来版本、近乎相同序列和衍生数据库间的泄漏。</p>
+<p>结构预测或 Foldseek 搜索可以为远缘关系提供补充，却仍不能直接把共享折叠解释成相同功能。较可靠的研究设计应比较：仅序列、仅结构、二者结合以及加入实验上下文后的差异，并分别检查家族归属、具体功能和关键位点。没有实验依据的未知蛋白，应允许模型拒绝过细标签。</p>
+<h3 id="8-3-结构与变异模型的评测"><a href="#8-3-结构与变异模型的评测" class="headerlink" title="8.3 结构与变异模型的评测"></a>8.3 结构与变异模型的评测</h3><p>结构模型的训练数据可能包含与测试目标同源的链。按序列完全去重只排除了最直接的重复，近缘、同折叠、同复合物伙伴和相同实验构象仍会影响结果。应明确需要的是同家族泛化、新家族泛化还是新的分子相互作用，并据此划分和报告。</p>
+<p>预测坐标的精度与科学用途也不同。一个足以识别整体折叠的模型，未必足以解释一个侧链接触；单链模型正确，未必说明界面正确。变异预测还要区分稳定性、结合、酶活、表达、细胞表型和临床分类，避免把其中一个代理标签当成全部功能影响。</p>
+<p>AlphaMissense（Cheng et al., 2023）、PolyPhen-2 和 PROVEAN 是不同证据与模型路线的实例。模型分值可以用于排序和提出假说，不能在缺少独立证据时替代具体变异的功能或临床判断。本章的 FOXL2 例子正适合练习把“野生型结构接触”“变异关联”和“机制实验”分层。</p>
+<h3 id="8-4-一个可复查的实验表"><a href="#8-4-一个可复查的实验表" class="headerlink" title="8.4 一个可复查的实验表"></a>8.4 一个可复查的实验表</h3><table>
+<thead>
+<tr>
+<th>环节</th>
+<th>至少保存什么</th>
+<th>对应风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标签构建</td>
+<td>组装与注释版本、来源、支持等级</td>
+<td>旧模型或自动推断被当作直接真值</td>
+</tr>
+<tr>
+<td>数据划分</td>
+<td>物种&#x2F;家族&#x2F;序列相似性与时间规则</td>
+<td>近缘泄漏、数据库版本泄漏</td>
+</tr>
+<tr>
+<td>输入证据</td>
+<td>DNA、RNA、同源蛋白、MSA、模板的可用范围</td>
+<td>一个方法使用额外信息而未披露</td>
+</tr>
+<tr>
+<td>训练与选择</td>
+<td>参数选择集、预算、阈值冻结方式</td>
+<td>在测试集反复调参</td>
+</tr>
+<tr>
+<td>指标</td>
+<td>层级、分母、缺失&#x2F;不确定对象处理</td>
+<td>高总体分数掩盖短基因与边界错误</td>
+</tr>
+<tr>
+<td>误差分析</td>
+<td>长度、GC、重复、家族距离、覆盖及置信分层</td>
+<td>只在容易对象上有效却被解释为普遍规律</td>
+</tr>
+</tbody></table>
+<h2 id="9-与-VirusBin-的联系"><a href="#9-与-VirusBin-的联系" class="headerlink" title="9. 与 VirusBin 的联系"></a>9. 与 VirusBin 的联系</h2><h3 id="9-1-基因调用是下游证据的前提"><a href="#9-1-基因调用是下游证据的前提" class="headerlink" title="9.1 基因调用是下游证据的前提"></a>9.1 基因调用是下游证据的前提</h3><p>短病毒 contig 的编码区可能被边缘截断，基因也可能重叠或使用特殊遗传密码。只保留有标准 ATG 和终止密码子的完整 ORF，会系统性丢失短片段上的真实基因。只按短蛋白阈值过滤，又可能改变某类病毒的可见基因组成。因此注释结果应保留 partial、链、读框和翻译表信息。</p>
+<p>如果分箱器或后处理使用蛋白冗余、标记基因和共享家族，这些统计都依赖基因调用和功能库覆盖。两个片段未共享注释，不一定来自不同病毒；它们可能没有检出足够完整蛋白。对 1 kb 片段，这种缺失尤其常见，不能把空注释向量当成强阴性证据。</p>
+<p>Pharokka 和 PHROG 等已核实工作提供病毒蛋白注释相关的路线；geNomad 提供移动遗传元件识别的模型与标记证据。它们的输出可服务于候选筛选和解释，但不能未经评测就成为所有病毒的完整真值。应检查实际场景与论文训练、评测对象的差异。</p>
+<h3 id="9-2-冗余基因与错误合并"><a href="#9-2-冗余基因与错误合并" class="headerlink" title="9.2 冗余基因与错误合并"></a>9.2 冗余基因与错误合并</h3><p>vRhyme 利用病毒较少编码冗余蛋白这一倾向进行 bin 精修。它提供的是有用的统计证据，不是“同一病毒绝无重复基因”的定律。真实复制、近缘共享家族、分裂基因、调用错误或两个不同蛋白误归同一家族，都可能影响冗余分数。</p>
+<p>在 VirusBin 中，可以检验蛋白冗余是否随独立真值定义的错误合并增加，而不直接把“冗余高”定义成错误合并。否则评价标签与待验证特征来自同一规则，会出现循环验证。应同时观察冗余低但真实混合的 bin，以及冗余高但仍来自同一实体的 bin。</p>
+<p>CheckV 可帮助识别宿主侧翼及评估病毒序列质量；PHAMB 的工作展示从 bulk metagenome 分箱病毒实体的另一种设置。它们回答的问题与“这些短片段是否属于同一病毒基因组”有交集，但没有任何一个输出可以无条件代替配对长读长组装与独立联配支持。</p>
+<h3 id="9-3-可以直接加入实验的分析"><a href="#9-3-可以直接加入实验的分析" class="headerlink" title="9.3 可以直接加入实验的分析"></a>9.3 可以直接加入实验的分析</h3><p>保持训练标签与评价标签独立：对比学习若使用注释家族构造正样本，最后的同基因组判断就应使用独立长读长真值。测试时按真值基因组或更高关系划分，并检查蛋白家族或近乎相同片段是否跨集合重复。</p>
+<p>把“没有可调用基因”“只有 partial 基因”“有完整但未知功能蛋白”“有已知家族”分开统计，可以判断模型是否只在注释充分的长片段上有效。序列与覆盖模型若在无注释短片段上仍保持良好 FMR 和召回，更能说明其适用性。</p>
+<p>结构预测适合挑少量代表蛋白解释家族或机制；对全部短 contig 强行预测结构可能成本高且覆盖有限。是否值得加入，应以消融实验和目标任务收益决定，不应因能够生成三维坐标就默认有助于分箱。</p>
+<h2 id="10-教材习题解答"><a href="#10-教材习题解答" class="headerlink" title="10. 教材习题解答"></a>10. 教材习题解答</h2><h3 id="10-1-简述基因注释流程"><a href="#10-1-简述基因注释流程" class="headerlink" title="10.1 简述基因注释流程"></a>10.1 简述基因注释流程</h3><p>先确认组装质量、污染、单倍型冗余和坐标版本，构建或选择重复库并检查误屏蔽。根据物种与证据选择从头模型、同源蛋白定位和转录本联配，整合成转录本及 CDS 结构，再检查翻译、边界与证据支持。保留短、截断和低支持类别，不把长度阈值当作普遍生物定律。</p>
+<p>导出相互一致的 GFF3、CDS、转录本和蛋白 FASTA，评估完整性及结构正确性。功能注释同时组织全长搜索、结构域、家族和 GO&#x2F;KO 等映射，保留证据来源、覆盖与冲突。必要时补结构预测及突变分析，但它们不是每个基因都必须完成的步骤。</p>
+<p>可复查的结果还应包含组装和数据库版本、训练参数、输入证据、过滤规则及评价分母。只给最终蛋白名称表，无法判断错误来自组装、结构调用还是功能转移。</p>
+<h3 id="10-2-用-FGENESH-注释-KJ000047-1"><a href="#10-2-用-FGENESH-注释-KJ000047-1" class="headerlink" title="10.2 用 FGENESH 注释 KJ000047.1"></a>10.2 用 FGENESH 注释 KJ000047.1</h3><p>KJ000047.1 是稗草叶绿体基因组，长度 139 800 bp。前序已下载其特征表，统计为 129 个 gene 特征、87 个 CDS、42 个 tRNA 和 8 个 rRNA；这些类别不是互斥计数，不能直接相加当作独立基因总数。反向重复区中的对应基因按位置计了两个拷贝。</p>
+<p>叶绿体多数编码区较紧凑，但本记录中有 9 个 CDS 由两至三段组成，7 个 tRNA 含内含子；rps12 的转录结构还涉及特殊剪接。因此“原核起源，所以全部无内含子”不成立，也不能机械换成一个不支持此类结构的普通细菌模型就宣布解决。</p>
+<p>按题目进行在线实验时，应提交该确切版本的 FASTA，记录所选参数、日期、结果文件及坐标。普通植物核基因参数与叶绿体的信号及内含子机制并不匹配。FGENESH 的输出首先作为待评价的蛋白编码预测，再与 GenBank CDS 在方向、边界及翻译层面比较；tRNA&#x2F;rRNA 属于第九章的独立注释任务。</p>
+<p>本轮没有向 FGENESH 在线服务提交并获得新的结果，因此不编造“预测了多少个基因”的输出【需查证：在线预测结果】。已核对的原始特征表给出了可用参照；使用参照时也应称为已有注释，不把它等同于没有任何误差的实验真值。评价应区分反向重复拷贝、跨段基因和边缘问题，不能只比较总数。</p>
+<h3 id="10-3-用-InterProScan-注释-ALP29445-1"><a href="#10-3-用-InterProScan-注释-ALP29445-1" class="headerlink" title="10.3 用 InterProScan 注释 ALP29445.1"></a>10.3 用 InterProScan 注释 ALP29445.1</h3><p>NCBI 核对结果为叶绿体核糖体蛋白 S7，156 aa。应先保存对应 FASTA，再运行序列签名分析，记录签名位置、成员库分值、整合条目与 GO 映射。前序核查确认，Pfam 的 PF00177 为 Ribosomal_S7，整合到 IPR023798；PROSITE 的 PS00052 为相关保守位点，整合到 IPR020606。这些是可用于解读输出的已知条目关系。</p>
+<p>IPR023798 当前核对的名称为 Small ribosomal subunit protein uS7 domain，条目类型为 domain。该次条目 API 元数据没有列 GO，不能为了完成答案随意补一个 GO 号。保守位点与结构域的匹配尺度不同，二者同时出现也不意味着两个独立功能域。</p>
+<p>这些条目元数据并非本轮对 ALP29445.1 重新运行 InterProScan 的实测命中，具体命中位置、评分和完整输出仍应标【需查证：序列扫描结果】。已有 NCBI 身份和成员库整合关系足以说明正确的阅读方法，但不能替代尚未执行的在线扫描。</p>
+<h3 id="10-4-主要蛋白质三级结构数据库"><a href="#10-4-主要蛋白质三级结构数据库" class="headerlink" title="10.4 主要蛋白质三级结构数据库"></a>10.4 主要蛋白质三级结构数据库</h3><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>例子</th>
+<th>使用时检查</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>实验结构存档</td>
+<td>PDB，由 wwPDB 合作维护；RCSB、PDBe、PDBj 等提供访问</td>
+<td>实验方法、分辨率或相应质量、覆盖、装配与配体</td>
+</tr>
+<tr>
+<td>结构分类</td>
+<td>SCOP&#x2F;SCOPe、CATH</td>
+<td>分类版本、域边界和层级；分类不直接等于功能</td>
+</tr>
+<tr>
+<td>预测模型</td>
+<td>AlphaFold DB、SWISS-MODEL Repository、ModelArchive、ESM Atlas</td>
+<td>模型来源、置信与覆盖，不能标为实验测定</td>
+</tr>
+<tr>
+<td>相关实验数据</td>
+<td>EMDB 等</td>
+<td>密度图与原子模型是不同数据对象</td>
+</tr>
+</tbody></table>
+<p>教材所列历史库和网址应放在相应时代背景中理解。下载时优先保存 PDBx&#x2F;mmCIF 及元数据，不能只根据 <code>.pdb</code> 文件是否存在判断是否有结构。</p>
+<h3 id="10-5-主要三级结构预测方法"><a href="#10-5-主要三级结构预测方法" class="headerlink" title="10.5 主要三级结构预测方法"></a>10.5 主要三级结构预测方法</h3><p>传统三类是同源建模、折叠识别和从头预测。同源建模依赖可用同源模板，主要困难在目标–模板联配、可变环区和未覆盖部分；折叠识别寻找远缘共享骨架，受环境打分与联配误差限制；从头预测需要构象表示、打分和搜索，受采样与势函数限制。</p>
+<p>现代深度模型把序列、进化与结构信息联合学习，传统边界不再严格。选择时先确定目标是单链、复合物、某个配体态还是变异机制，再检查输入和方法支持的范围。输出坐标后仍需看置信度和独立验证，不能把所有成功生成文件的预测都称为高质量结构。</p>
+<h3 id="10-6-SWISS-MODEL-原理、过程及结果"><a href="#10-6-SWISS-MODEL-原理、过程及结果" class="headerlink" title="10.6 SWISS-MODEL 原理、过程及结果"></a>10.6 SWISS-MODEL 原理、过程及结果</h3><p>SWISS-MODEL 的基础是比较建模：搜索模板，建立联配，选择覆盖与质量合适的模板，构建保守主链和变动区域，再评价结果。应保留目标、模板、联配及模型，检查寡聚状态与伙伴是否对应研究问题。</p>
+<p>教材 NP_000268 实例中的三个模型和 GMQE 0.95 属于历史页面。GMQE 与 QMEANDisCo global 的 0–1 分数用于估计质量，值越高通常越可信；还应检查逐残基图，不能把一个总体高分推广到所有环区或末端。QMEAN 旧 Z 分数的阈值作为历史背景理解，当前帮助页已将该分析标为弃用。</p>
+<p>结果说明至少包含模板身份、实验质量、目标覆盖、序列一致性、局部低置信区和所保留的装配&#x2F;配体。比较建模并非原则上不能表达复合物，具体工具和模板可能支持装配；教材 FOXL2 实例强调的是单链结果漏掉 DNA，不能据此写成 SWISS-MODEL 永远不考虑任何伙伴。</p>
+<h2 id="11-自测题"><a href="#11-自测题" class="headerlink" title="11. 自测题"></a>11. 自测题</h2><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>答案要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一个外显子是否全部编码？</td>
+<td>可能包含或全部属于 UTR，exon 与 CDS 不能互换</td>
+</tr>
+<tr>
+<td>UTR 是否被转录？</td>
+<td>是，非翻译不等于非转录</td>
+</tr>
+<tr>
+<td>最长 ORF 是否一定是真基因？</td>
+<td>不是，随机序列、错误起点及翻译表都会影响</td>
+</tr>
+<tr>
+<td>从头模型是否完全不需要训练？</td>
+<td>不需要外部同源证据不等于不需要参数或先验</td>
+</tr>
+<tr>
+<td>RNA 未覆盖是否说明无基因？</td>
+<td>不能，取决于表达、采样和技术条件</td>
+</tr>
+<tr>
+<td>基因预测中的 Sp 是什么？</td>
+<td>通常为精确率，需看定义；不同于经典特异度</td>
+</tr>
+<tr>
+<td>外显子 Sn 加 ME 是否为 1？</td>
+<td>还存在部分重叠但边界不对的对象</td>
+</tr>
+<tr>
+<td>Viterbi 与后验解码是否同一目标？</td>
+<td>前者优化合法完整路径，后者可逐位优化但可能不合法</td>
+</tr>
+<tr>
+<td>phase 是否意味着删除每段 CDS 开头？</td>
+<td>不意味着删除跨段密码子的组成碱基</td>
+</tr>
+<tr>
+<td>计算所得 GO 是否全为 IEA？</td>
+<td>不是，人工审阅的计算证据还可使用 ISS 等</td>
+</tr>
+<tr>
+<td>GO 是否可沿全部关系无条件传播？</td>
+<td>不可，必须依关系和方向的推理规则</td>
+</tr>
+<tr>
+<td>未注释蛋白是否为功能负样本？</td>
+<td>通常只能称未标注，不能直接视为可靠负例</td>
+</tr>
+<tr>
+<td>结构域相同是否一定底物相同？</td>
+<td>不保证，功能粒度和关键位点仍需证据</td>
+</tr>
+<tr>
+<td>低 pLDDT 是否证明无序？</td>
+<td>不证明，也可能反映其他预测不确定性</td>
+</tr>
+<tr>
+<td>N&#x2F;O 距离小于 3.5 Å 是否证明氢键？</td>
+<td>只筛候选，还需几何、化学与实验质量信息</td>
+</tr>
+<tr>
+<td>结构域内高置信能否证明域间方向正确？</td>
+<td>不能，应检查相对位置不确定性</td>
+</tr>
+</tbody></table>
+<h2 id="12-历史与人物"><a href="#12-历史与人物" class="headerlink" title="12. 历史与人物"></a>12. 历史与人物</h2><p>教材从 Markov 的链式随机过程谈到 Baum–Welch，再介绍 Haussler、Eddy、Baldi 等人在概率建模与序列分析中的贡献。需要掌握的是建模对象的变化：从可观测状态的转移，到含隐状态的序列模型，再到基因结构和蛋白家族的概率表示。</p>
+<p>1994 年相关 HMM 研究形成两条重要应用：基因预测和蛋白家族建模。前者利用隐状态解释基因结构，后者用 profile 表示家族中位置相关的替换与插入缺失；它们共享概率与动态规划思想，输入输出和状态语义却不同。GENSCAN 进一步把复杂基因结构组织到广义模型中。</p>
+<p>Haussler 参与并领导过人类基因组公共组装相关团队，教材称其“曾任美国加州大学校长”没有依据。Baum 参与金融机构的经历也不能证明投资业绩由 Baum–Welch 单独造成；不将这类轶事当作算法性能证据。</p>
+<p>Eddy 与 HMMER、Pfam 的关系，以及 Durbin、Eddy、Krogh、Mitchison 的《Biological Sequence Analysis》，适合与第五章和第十四章对读。Baldi 与 Brunak 的《Bioinformatics: The Machine Learning Approach》提供另一条机器学习教材线索。书籍用于补方法背景，不以人物声望代替结论核查。</p>
+<h2 id="13-全章速记"><a href="#13-全章速记" class="headerlink" title="13. 全章速记"></a>13. 全章速记</h2><table>
+<thead>
+<tr>
+<th>主题</th>
+<th>可带走的结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>注释层级</td>
+<td>结构注释、功能注释和三维结构预测是不同任务</td>
+</tr>
+<tr>
+<td>基因结构</td>
+<td>外显子不等于 CDS，UTR 被转录但不翻译</td>
+</tr>
+<tr>
+<td>ORF</td>
+<td>开放读框提供候选，真实起点与编码性还需证据</td>
+</tr>
+<tr>
+<td>三路证据</td>
+<td>从头、同源与转录本互补，各有缺失和偏差</td>
+</tr>
+<tr>
+<td>屏蔽</td>
+<td>小写保留碱基，N 在输出中遮住碱基；适用性由工具决定</td>
+</tr>
+<tr>
+<td>模型语法</td>
+<td>转移约束结构，发射评价内容，长度模型处理段尺度</td>
+</tr>
+<tr>
+<td>解码</td>
+<td>最优路径与边缘后验回答不同问题</td>
+</tr>
+<tr>
+<td>指标</td>
+<td>同时报告碱基、边界和完整模型，明确 Sp 的定义</td>
+</tr>
+<tr>
+<td>功能转移</td>
+<td>统计相似不是功能相同，标签要有粒度与证据</td>
+</tr>
+<tr>
+<td>GO</td>
+<td>关系推理与证据码不能省略，富集要声明背景与检验集合</td>
+</tr>
+<tr>
+<td>结构预测</td>
+<td>模板、MSA、序列模型和几何先验可共同使用</td>
+</tr>
+<tr>
+<td>置信度</td>
+<td>局部、域间和界面置信不同，不等于功能结论</td>
+</tr>
+<tr>
+<td>变异解释</td>
+<td>保守性、结构与实验支持机制假说，不能凭静态图定效应</td>
+</tr>
+<tr>
+<td>病毒短片段</td>
+<td>边缘截断、遗传密码与未知功能导致非随机缺失</td>
+</tr>
+</tbody></table>
+<h2 id="14-下一步学习建议"><a href="#14-下一步学习建议" class="headerlink" title="14. 下一步学习建议"></a>14. 下一步学习建议</h2><p>方法上先用 §7.2 对照 §6 复核 Viterbi 与前向–后向，确认初始、终止和归一化；再把逐碱基预测与完整基因评价分开。第十四章补充概率模型与训练，第九章继续处理本章没有覆盖的非编码基因。</p>
+<p>数据上选一个真实 GFF3，按转录本检查负链拼接、CDS phase 和翻译产物。不要先跑大量预测软件再追查坐标含义。对一个明确版本的基因集保存搜索、结构域和 GO&#x2F;KO 原始证据，比较宽家族和细功能标签各自能支持到哪里。</p>
+<p>对 VirusBin，优先检验基因调用带来的缺失模式：按长度、完整&#x2F;partial、翻译表和注释丰富程度分层，看错误合并与召回是否变化。FOXL2 结构例子适合练习编号和伙伴核查，但无需把人类变异分析强行迁移到病毒分箱。</p>
+<h2 id="15-参考文献与原始来源"><a href="#15-参考文献与原始来源" class="headerlink" title="15. 参考文献与原始来源"></a>15. 参考文献与原始来源</h2><p>文献 metadata 沿用前序实际查询结果；下列条目只保留本章直接使用的方法与证据。数据库与网页状态对应本轮核查时间，实际运行仍需保存版本。</p>
+<ul>
+<li><p>Burge C, Karlin S, 1997. Prediction of complete gene structures in human genomic DNA. J Mol Biol 268(1):78-94. <a target="_blank" rel="noopener" href="https://doi.org/10.1006/jmbi.1997.0951">DOI: 10.1006&#x2F;jmbi.1997.0951</a>。</p>
+</li>
+<li><p>Salamov AA, Solovyev VV, 2000. Ab initio gene finding in Drosophila genomic DNA. Genome Res 10(4):516-522. <a target="_blank" rel="noopener" href="https://doi.org/10.1101/gr.10.4.516">DOI: 10.1101&#x2F;gr.10.4.516</a>。</p>
+</li>
+<li><p>Stanke M, Waack S, 2003. Gene prediction with a hidden Markov model and a new intron submodel. Bioinformatics 19 Suppl 2:ii215-25. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btg1080">DOI: 10.1093&#x2F;bioinformatics&#x2F;btg1080</a>。</p>
+</li>
+<li><p>Stanke M et al., 2006. Gene prediction in eukaryotes with a generalized hidden Markov model that uses hints from external sources. BMC Bioinformatics 7:62. <a target="_blank" rel="noopener" href="https://doi.org/10.1186/1471-2105-7-62">DOI: 10.1186&#x2F;1471-2105-7-62</a>。</p>
+</li>
+<li><p>Lukashin AV, Borodovsky M, 1998. GeneMark.hmm: new solutions for gene finding. Nucleic Acids Res 26(4):1107-1115. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/26.4.1107">DOI: 10.1093&#x2F;nar&#x2F;26.4.1107</a>。</p>
+</li>
+<li><p>Lomsadze A et al., 2005. Gene identification in novel eukaryotic genomes by self-training algorithm. Nucleic Acids Res 33(20):6494-6506. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/gki937">DOI: 10.1093&#x2F;nar&#x2F;gki937</a>。</p>
+</li>
+<li><p>Besemer J et al., 2001. GeneMarkS: a self-training method for prediction of gene starts in microbial genomes. Implications for finding sequence motifs in regulatory regions. Nucleic Acids Res 29(12):2607-2618. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/29.12.2607">DOI: 10.1093&#x2F;nar&#x2F;29.12.2607</a>。</p>
+</li>
+<li><p>Zhu W et al., 2010. Ab initio gene identification in metagenomic sequences. Nucleic Acids Res 38(12):e132. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/gkq275">DOI: 10.1093&#x2F;nar&#x2F;gkq275</a>。</p>
+</li>
+<li><p>Salzberg SL et al., 1998. Microbial gene identification using interpolated Markov models. Nucleic Acids Res 26(2):544-548. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/26.2.544">DOI: 10.1093&#x2F;nar&#x2F;26.2.544</a>。</p>
+</li>
+<li><p>Delcher AL et al., 2007. Identifying bacterial genes and endosymbiont DNA with Glimmer. Bioinformatics 23(6):673-679. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btm009">DOI: 10.1093&#x2F;bioinformatics&#x2F;btm009</a>。</p>
+</li>
+<li><p>Snyder EE, Stormo GD, 1995. Identification of protein coding regions in genomic DNA. J Mol Biol 248(1):1-18. <a target="_blank" rel="noopener" href="https://doi.org/10.1006/jmbi.1995.0198">DOI: 10.1006&#x2F;jmbi.1995.0198</a>。</p>
+</li>
+<li><p>Uberbacher EC, Mural RJ, 1991. Locating protein-coding regions in human DNA sequences by a multiple sensor-neural network approach. Proc Natl Acad Sci U S A 88(24):11261-11265. <a target="_blank" rel="noopener" href="https://doi.org/10.1073/pnas.88.24.11261">DOI: 10.1073&#x2F;pnas.88.24.11261</a>。</p>
+</li>
+<li><p>Goel N et al., 2013. A comparative analysis of soft computing techniques for gene prediction. Anal Biochem 438(1):14-21. <a target="_blank" rel="noopener" href="https://doi.org/10.1016/j.ab.2013.03.015">DOI: 10.1016&#x2F;j.ab.2013.03.015</a>。</p>
+</li>
+<li><p>Burset M, Guigó R, 1996. Evaluation of gene structure prediction programs. Genomics 34(3):353-367. <a target="_blank" rel="noopener" href="https://doi.org/10.1006/geno.1996.0298">DOI: 10.1006&#x2F;geno.1996.0298</a>。</p>
+</li>
+<li><p>Krogh A et al., 1994. A hidden Markov model that finds genes in E. coli DNA. Nucleic Acids Res 22(22):4768-4778. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/22.22.4768">DOI: 10.1093&#x2F;nar&#x2F;22.22.4768</a>。</p>
+</li>
+<li><p>Krogh A et al., 1994. Hidden Markov models in computational biology. Applications to protein modeling. J Mol Biol 235(5):1501-1531. <a target="_blank" rel="noopener" href="https://doi.org/10.1006/jmbi.1994.1104">DOI: 10.1006&#x2F;jmbi.1994.1104</a>。</p>
+</li>
+<li><p>Haas BJ et al., 2008. Automated eukaryotic gene structure annotation using EVidenceModeler and the Program to Assemble Spliced Alignments. Genome Biol 9(1):R7. <a target="_blank" rel="noopener" href="https://doi.org/10.1186/gb-2008-9-1-r7">DOI: 10.1186&#x2F;gb-2008-9-1-r7</a>。</p>
+</li>
+<li><p>Elsik CG et al., 2007. Creating a honey bee consensus gene set. Genome Biol 8(1):R13. <a target="_blank" rel="noopener" href="https://doi.org/10.1186/gb-2007-8-1-r13">DOI: 10.1186&#x2F;gb-2007-8-1-r13</a>。</p>
+</li>
+<li><p>Holt C, Yandell M, 2011. MAKER2: an annotation pipeline and genome-database management tool for second-generation genome projects. BMC Bioinformatics 12:491. <a target="_blank" rel="noopener" href="https://doi.org/10.1186/1471-2105-12-491">DOI: 10.1186&#x2F;1471-2105-12-491</a>。</p>
+</li>
+<li><p>Duvick J et al., 2016. xGDBvm: A Web GUI-Driven Workflow for Annotating Eukaryotic Genomes in the Cloud. Plant Cell 28(4):840-854. <a target="_blank" rel="noopener" href="https://doi.org/10.1105/tpc.15.00933">DOI: 10.1105&#x2F;tpc.15.00933</a>。</p>
+</li>
+<li><p>Wheelan SJ et al., 2001. Spidey: a tool for mRNA-to-genomic alignments. Genome Res 11(11):1952-1957. <a target="_blank" rel="noopener" href="https://doi.org/10.1101/gr.195301">DOI: 10.1101&#x2F;gr.195301</a>。</p>
+</li>
+<li><p>Florea L et al., 1998. A computer program for aligning a cDNA sequence with a genomic DNA sequence. Genome Res 8(9):967-974. <a target="_blank" rel="noopener" href="https://doi.org/10.1101/gr.8.9.967">DOI: 10.1101&#x2F;gr.8.9.967</a>。</p>
+</li>
+<li><p>Hoff KJ et al., 2016. BRAKER1: Unsupervised RNA-Seq-Based Genome Annotation with GeneMark-ET and AUGUSTUS. Bioinformatics 32(5):767-769. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btv661">DOI: 10.1093&#x2F;bioinformatics&#x2F;btv661</a>。</p>
+</li>
+<li><p>Brůna T et al., 2021. BRAKER2: automatic eukaryotic genome annotation with GeneMark-EP+ and AUGUSTUS supported by a protein database. NAR Genom Bioinform 3(1):lqaa108. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nargab/lqaa108">DOI: 10.1093&#x2F;nargab&#x2F;lqaa108</a>。</p>
+</li>
+<li><p>Gabriel L et al., 2024. BRAKER3: Fully automated genome annotation using RNA-seq and protein evidence with GeneMark-ETP, AUGUSTUS, and TSEBRA. Genome Res 34(5):769-777. <a target="_blank" rel="noopener" href="https://doi.org/10.1101/gr.278090.123">DOI: 10.1101&#x2F;gr.278090.123</a>。</p>
+</li>
+<li><p>Brůna T et al., 2024. GeneMark-ETP significantly improves the accuracy of automatic annotation of large eukaryotic genomes. Genome Res 34(5):757-768. <a target="_blank" rel="noopener" href="https://doi.org/10.1101/gr.278373.123">DOI: 10.1101&#x2F;gr.278373.123</a>。</p>
+</li>
+<li><p>Stiehler F et al., 2021. Helixer: cross-species gene annotation of large eukaryotic genomes using deep learning. Bioinformatics 36(22-23):5291-5298. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btaa1044">DOI: 10.1093&#x2F;bioinformatics&#x2F;btaa1044</a>。</p>
+</li>
+<li><p>Gabriel L et al., 2024. Tiberius: end-to-end deep learning with an HMM for gene prediction. Bioinformatics 40(12):btae685. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btae685">DOI: 10.1093&#x2F;bioinformatics&#x2F;btae685</a>。</p>
+</li>
+<li><p>Li H, 2023. Protein-to-genome alignment with miniprot. Bioinformatics 39(1):btad014. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btad014">DOI: 10.1093&#x2F;bioinformatics&#x2F;btad014</a>。</p>
+</li>
+<li><p>Shumate A, Salzberg SL, 2021. Liftoff: accurate mapping of gene annotations. Bioinformatics 37(12):1639-1643. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btaa1016">DOI: 10.1093&#x2F;bioinformatics&#x2F;btaa1016</a>。</p>
+</li>
+<li><p>Simão FA et al., 2015. BUSCO: assessing genome assembly and annotation completeness with single-copy orthologs. Bioinformatics 31(19):3210-3212. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btv351">DOI: 10.1093&#x2F;bioinformatics&#x2F;btv351</a>。</p>
+</li>
+<li><p>Nevers Y et al., 2025. Quality assessment of gene repertoire annotations with OMArk. Nat Biotechnol 43(1):124-133. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/s41587-024-02147-w">DOI: 10.1038&#x2F;s41587-024-02147-w</a>。</p>
+</li>
+<li><p>Hyatt D et al., 2010. Prodigal: prokaryotic gene recognition and translation initiation site identification. BMC Bioinformatics 11:119. <a target="_blank" rel="noopener" href="https://doi.org/10.1186/1471-2105-11-119">DOI: 10.1186&#x2F;1471-2105-11-119</a>。</p>
+</li>
+<li><p>Hyatt D et al., 2012. Gene and translation initiation site prediction in metagenomic sequences. Bioinformatics 28(17):2223-2230. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/bts429">DOI: 10.1093&#x2F;bioinformatics&#x2F;bts429</a>。</p>
+</li>
+<li><p>Nurk S et al., 2022. The complete sequence of a human genome. Science 376(6588):44-53. <a target="_blank" rel="noopener" href="https://doi.org/10.1126/science.abj6987">DOI: 10.1126&#x2F;science.abj6987</a>。</p>
+</li>
+<li><p>Gardiner-Garden M, Frommer M, 1987. CpG islands in vertebrate genomes. J Mol Biol 196(2):261-282. <a target="_blank" rel="noopener" href="https://doi.org/10.1016/0022-2836(87)90689-9">DOI: 10.1016&#x2F;0022-2836(87)90689-9</a>。</p>
+</li>
+<li><p>Takai D, Jones PA, 2002. Comprehensive analysis of CpG islands in human chromosomes 21 and 22. Proc Natl Acad Sci U S A 99(6):3740-3745. <a target="_blank" rel="noopener" href="https://doi.org/10.1073/pnas.052410099">DOI: 10.1073&#x2F;pnas.052410099</a>。</p>
+</li>
+<li><p>Larsen F et al., 1992. CpG islands as gene markers in the human genome. Genomics 13(4):1095-1107. <a target="_blank" rel="noopener" href="https://doi.org/10.1016/0888-7543(92)90024-m">DOI: 10.1016&#x2F;0888-7543(92)90024-m</a>。</p>
+</li>
+<li><p>Senior AW et al., 2020. Improved protein structure prediction using potentials from deep learning. Nature 577(7792):706-710. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/s41586-019-1923-7">DOI: 10.1038&#x2F;s41586-019-1923-7</a>。</p>
+</li>
+<li><p>Lin Z et al., 2023. Evolutionary-scale prediction of atomic-level protein structure with a language model. Science 379(6637):1123-1130. <a target="_blank" rel="noopener" href="https://doi.org/10.1126/science.ade2574">DOI: 10.1126&#x2F;science.ade2574</a>。</p>
+</li>
+<li><p>Baek M et al., 2021. Accurate prediction of protein structures and interactions using a three-track neural network. Science 373(6557):871-876. <a target="_blank" rel="noopener" href="https://doi.org/10.1126/science.abj8754">DOI: 10.1126&#x2F;science.abj8754</a>。</p>
+</li>
+<li><p>Mirdita M et al., 2022. ColabFold: making protein folding accessible to all. Nat Methods 19(6):679-682. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/s41592-022-01488-1">DOI: 10.1038&#x2F;s41592-022-01488-1</a>。</p>
+</li>
+<li><p>Varadi M et al., 2024. AlphaFold Protein Structure Database in 2024: providing structure coverage for over 214 million protein sequences. Nucleic Acids Res 52(D1):D368-D375. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/gkad1011">DOI: 10.1093&#x2F;nar&#x2F;gkad1011</a>。</p>
+</li>
+<li><p>Jones DT, 1999. Protein secondary structure prediction based on position-specific scoring matrices. J Mol Biol 292(2):195-202. <a target="_blank" rel="noopener" href="https://doi.org/10.1006/jmbi.1999.3091">DOI: 10.1006&#x2F;jmbi.1999.3091</a>。</p>
+</li>
+<li><p>Rost B, Sander C, 1993. Prediction of protein secondary structure at better than 70% accuracy. J Mol Biol 232(2):584-599. <a target="_blank" rel="noopener" href="https://doi.org/10.1006/jmbi.1993.1413">DOI: 10.1006&#x2F;jmbi.1993.1413</a>。</p>
+</li>
+<li><p>Kabsch W, Sander C, 1983. Dictionary of protein secondary structure: pattern recognition of hydrogen-bonded and geometrical features. Biopolymers 22(12):2577-2637. <a target="_blank" rel="noopener" href="https://doi.org/10.1002/bip.360221211">DOI: 10.1002&#x2F;bip.360221211</a>。</p>
+</li>
+<li><p>Garnier J et al., 1978. Analysis of the accuracy and implications of simple methods for predicting the secondary structure of globular proteins. J Mol Biol 120(1):97-120. <a target="_blank" rel="noopener" href="https://doi.org/10.1016/0022-2836(78)90297-8">DOI: 10.1016&#x2F;0022-2836(78)90297-8</a>。</p>
+</li>
+<li><p>Lim VI, 1974. Algorithms for prediction of alpha-helical and beta-structural regions in globular proteins. J Mol Biol 88(4):873-894. <a target="_blank" rel="noopener" href="https://doi.org/10.1016/0022-2836(74)90405-7">DOI: 10.1016&#x2F;0022-2836(74)90405-7</a>。</p>
+</li>
+<li><p>Jones DT et al., 1992. A new approach to protein fold recognition. Nature 358(6381):86-89. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/358086a0">DOI: 10.1038&#x2F;358086a0</a>。</p>
+</li>
+<li><p>Lathrop RH, 1994. The protein threading problem with sequence amino acid interaction preferences is NP-complete. Protein Eng 7(9):1059-1068. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/protein/7.9.1059">DOI: 10.1093&#x2F;protein&#x2F;7.9.1059</a>。</p>
+</li>
+<li><p>Berger B, Leighton T, 1998. Protein folding in the hydrophobic-hydrophilic (HP) model is NP-complete. J Comput Biol 5(1):27-40. <a target="_blank" rel="noopener" href="https://doi.org/10.1089/cmb.1998.5.27">DOI: 10.1089&#x2F;cmb.1998.5.27</a>。</p>
+</li>
+<li><p>Anfinsen CB, 1973. Principles that govern the folding of protein chains. Science 181(4096):223-230. <a target="_blank" rel="noopener" href="https://doi.org/10.1126/science.181.4096.223">DOI: 10.1126&#x2F;science.181.4096.223</a>。</p>
+</li>
+<li><p>Zhang Y, Skolnick J, 2004. Scoring function for automated assessment of protein structure template quality. Proteins 57(4):702-710. <a target="_blank" rel="noopener" href="https://doi.org/10.1002/prot.20264">DOI: 10.1002&#x2F;prot.20264</a>。</p>
+</li>
+<li><p>Mariani V et al., 2013. lDDT: a local superposition-free score for comparing protein structures and models using distance difference tests. Bioinformatics 29(21):2722-2728. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btt473">DOI: 10.1093&#x2F;bioinformatics&#x2F;btt473</a>。</p>
+</li>
+<li><p>Waterhouse A et al., 2018. SWISS-MODEL: homology modelling of protein structures and complexes. Nucleic Acids Res 46(W1):W296-W303. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/gky427">DOI: 10.1093&#x2F;nar&#x2F;gky427</a>。</p>
+</li>
+<li><p>Blum M et al., 2025. InterPro: the protein sequence classification resource in 2025. Nucleic Acids Res 53(D1):D444-D456. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/gkae1082">DOI: 10.1093&#x2F;nar&#x2F;gkae1082</a>。</p>
+</li>
+<li><p>Moriya Y et al., 2007. KAAS: an automatic genome annotation and pathway reconstruction server. Nucleic Acids Res 35(Web Server issue):W182-5. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/gkm321">DOI: 10.1093&#x2F;nar&#x2F;gkm321</a>。</p>
+</li>
+<li><p>Cantalapiedra CP et al., 2021. eggNOG-mapper v2: Functional Annotation, Orthology Assignments, and Domain Prediction at the Metagenomic Scale. Mol Biol Evol 38(12):5825-5829. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/molbev/msab293">DOI: 10.1093&#x2F;molbev&#x2F;msab293</a>。</p>
+</li>
+<li><p>Buchfink B et al., 2021. Sensitive protein alignments at tree-of-life scale using DIAMOND. Nat Methods 18(4):366-368. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/s41592-021-01101-x">DOI: 10.1038&#x2F;s41592-021-01101-x</a>。</p>
+</li>
+<li><p>Conesa A et al., 2005. Blast2GO: a universal tool for annotation, visualization and analysis in functional genomics research. Bioinformatics 21(18):3674-3676. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/bti610">DOI: 10.1093&#x2F;bioinformatics&#x2F;bti610</a>。</p>
+</li>
+<li><p>van Kempen M et al., 2024. Fast and accurate protein structure search with Foldseek. Nat Biotechnol 42(2):243-246. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/s41587-023-01773-0">DOI: 10.1038&#x2F;s41587-023-01773-0</a>。</p>
+</li>
+<li><p>Cheng J et al., 2023. Accurate proteome-wide missense variant effect prediction with AlphaMissense. Science 381(6664):eadg7492. <a target="_blank" rel="noopener" href="https://doi.org/10.1126/science.adg7492">DOI: 10.1126&#x2F;science.adg7492</a>。</p>
+</li>
+<li><p>Adzhubei IA et al., 2010. A method and server for predicting damaging missense mutations. Nat Methods 7(4):248-249. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/nmeth0410-248">DOI: 10.1038&#x2F;nmeth0410-248</a>。</p>
+</li>
+<li><p>Choi Y et al., 2012. Predicting the functional effect of amino acid substitutions and indels. PLoS One 7(10):e46688. <a target="_blank" rel="noopener" href="https://doi.org/10.1371/journal.pone.0046688">DOI: 10.1371&#x2F;journal.pone.0046688</a>。</p>
+</li>
+<li><p>Burset M et al., 2000. Analysis of canonical and non-canonical splice sites in mammalian genomes. Nucleic Acids Res 28(21):4364-4375. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/28.21.4364">DOI: 10.1093&#x2F;nar&#x2F;28.21.4364</a>。</p>
+</li>
+<li><p>Nayfach S et al., 2021. CheckV assesses the quality and completeness of metagenome-assembled viral genomes. Nat Biotechnol 39(5):578-585. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/s41587-020-00774-7">DOI: 10.1038&#x2F;s41587-020-00774-7</a>。</p>
+</li>
+<li><p>Camargo AP et al., 2024. Identification of mobile genetic elements with geNomad. Nat Biotechnol 42(8):1303-1312. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/s41587-023-01953-y">DOI: 10.1038&#x2F;s41587-023-01953-y</a>。</p>
+</li>
+<li><p>Kieft K et al., 2022. vRhyme enables binning of viral genomes from metagenomes. Nucleic Acids Res 50(14):e83. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/gkac341">DOI: 10.1093&#x2F;nar&#x2F;gkac341</a>。</p>
+</li>
+<li><p>Johansen J et al., 2022. Genome binning of viral entities from bulk metagenomics data. Nat Commun 13(1):965. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/s41467-022-28581-5">DOI: 10.1038&#x2F;s41467-022-28581-5</a>。</p>
+</li>
+<li><p>Bouras G et al., 2023. Pharokka: a fast scalable bacteriophage annotation tool. Bioinformatics 39(1):btac776. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btac776">DOI: 10.1093&#x2F;bioinformatics&#x2F;btac776</a>。</p>
+</li>
+<li><p>Terzian P et al., 2021. PHROG: families of prokaryotic virus proteins clustered using remote homology. NAR Genom Bioinform 3(3):lqab067. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nargab/lqab067">DOI: 10.1093&#x2F;nargab&#x2F;lqab067</a>。</p>
+</li>
+<li><p>Rost B, 1999. Twilight zone of protein sequence alignments. Protein Eng 12(2):85-94. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/protein/12.2.85">DOI: 10.1093&#x2F;protein&#x2F;12.2.85</a>。</p>
+</li>
+<li><p>Jones P et al., 2014. InterProScan 5: genome-scale protein function classification. Bioinformatics 30(9):1236-1240. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btu031">DOI: 10.1093&#x2F;bioinformatics&#x2F;btu031</a>。</p>
+</li>
+<li><p>Kanehisa M, Goto S, 2000. KEGG: kyoto encyclopedia of genes and genomes. Nucleic Acids Res 28(1):27-30. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/28.1.27">DOI: 10.1093&#x2F;nar&#x2F;28.1.27</a>。</p>
+</li>
+<li><p>Aramaki T et al., 2020. KofamKOALA: KEGG Ortholog assignment based on profile HMM and adaptive score threshold. Bioinformatics 36(7):2251-2252. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btz859">DOI: 10.1093&#x2F;bioinformatics&#x2F;btz859</a>。</p>
+</li>
+<li><p>Jumper et al., 2021. Highly accurate protein structure prediction with AlphaFold. Nature. <a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/34265844/">原文记录</a>。</p>
+</li>
+<li><p>Abramson et al., 2024. Accurate structure prediction of biomolecular interactions with AlphaFold 3. Nature 630:493–500. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/s41586-024-07487-w">DOI: 10.1038&#x2F;s41586-024-07487-w</a>。</p>
+</li>
+<li><p>Chou and Fasman, 1978. Empirical Predictions of Protein Conformation. Annual Review of Biochemistry 47:251–276. <a target="_blank" rel="noopener" href="https://doi.org/10.1146/annurev.bi.47.070178.001343">DOI: 10.1146&#x2F;annurev.bi.47.070178.001343</a>。</p>
+</li>
+<li><p>Borodovsky and McIninch, 1993. GENMARK: Parallel gene recognition for both DNA strands. Computers &amp; Chemistry. <a target="_blank" rel="noopener" href="https://doi.org/10.1016/0097-8485(93)85004-v">DOI: 10.1016&#x2F;0097-8485(93)85004-v</a>。</p>
+</li>
+<li><p>FOXL2–DNA 实验结构对应论文，2022. Nucleic Acids Research. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/gkac673">DOI: 10.1093&#x2F;nar&#x2F;gkac673</a>。</p>
+</li>
+<li><p>数据记录：<a target="_blank" rel="noopener" href="https://www.ncbi.nlm.nih.gov/nuccore/KJ000047.1">KJ000047.1</a>、<a target="_blank" rel="noopener" href="https://www.ncbi.nlm.nih.gov/protein/ALP29445.1">ALP29445.1</a>、<a target="_blank" rel="noopener" href="https://www.uniprot.org/uniprotkb/P58012/entry">FOXL2 P58012</a>、<a target="_blank" rel="noopener" href="https://www.rcsb.org/structure/6O3T">6O3T</a>、<a target="_blank" rel="noopener" href="https://www.rcsb.org/structure/7VOU">7VOU</a>、<a target="_blank" rel="noopener" href="https://www.rcsb.org/structure/7VOV">7VOV</a>。</p>
+</li>
+<li><p>官方说明：<a target="_blank" rel="noopener" href="https://geneontology.org/docs/ontology-relations/">GO 关系</a>、<a target="_blank" rel="noopener" href="https://geneontology.org/docs/guide-go-evidence-codes/">GO 证据码</a>、<a target="_blank" rel="noopener" href="https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md">GFF3 规范</a>、<a target="_blank" rel="noopener" href="https://swissmodel.expasy.org/docs/help">SWISS-MODEL 帮助</a>、<a target="_blank" rel="noopener" href="https://www.gencodegenes.org/human/stats.html">GENCODE 统计</a>、<a target="_blank" rel="noopener" href="https://github.com/google-deepmind/alphafold3">AlphaFold3 仓库</a>。</p>
+</li>
+</ul>
+<hr>
+<p><a href="/bioinformatics/chapter-07/">上一章</a> · <a href="/bioinformatics/chapter-09/">下一章</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF/" rel="tag"># 生物信息</a>
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/bioinformatics/chapter-07/" rel="prev" title="第 7 章 基因组调查、拼装与分析：学习笔记">
+      <i class="fa fa-chevron-left"></i> 第 7 章 基因组调查、拼装与分析：学习笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/bioinformatics/chapter-09/" rel="next" title="第 9 章 非编码 RNA 鉴定与功能预测：学习笔记">
+      第 9 章 非编码 RNA 鉴定与功能预测：学习笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E6%95%99%E6%9D%90%E8%8C%83%E5%9B%B4%E4%B8%8E%E5%8B%98%E8%AF%AF"><span class="nav-number">1.</span> <span class="nav-text">0. 教材范围与勘误</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-1-%E6%9C%AC%E7%AB%A0%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">0.1 本章结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-2-%E5%8B%98%E8%AF%AF"><span class="nav-number">1.2.</span> <span class="nav-text">0.2 勘误</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%9C%AC%E7%AB%A0%E5%AE%9A%E4%BD%8D%E4%B8%8E%E7%9F%A5%E8%AF%86%E5%9C%B0%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">1. 本章定位与知识地图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%AC%AC%E4%B8%80%E8%8A%82-%E8%9B%8B%E7%99%BD%E8%B4%A8%E7%BC%96%E7%A0%81%E5%9F%BA%E5%9B%A0%E9%A2%84%E6%B5%8B"><span class="nav-number">3.</span> <span class="nav-text">2. 第一节 蛋白质编码基因预测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BB%84%E6%88%90%E4%B8%8E%E9%A2%84%E6%B5%8B%E7%9B%AE%E6%A0%87%E3%80%90%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E3%80%91"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 基因组组成与预测目标【必须掌握】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%A4%96%E6%98%BE%E5%AD%90%E3%80%81CDS%E3%80%81ORF-%E4%B8%8E%E5%89%AA%E6%8E%A5"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 外显子、CDS、ORF 与剪接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E4%B8%89%E7%B1%BB%E8%AF%81%E6%8D%AE%E4%B8%8E%E4%BB%8E%E5%A4%B4%E9%A2%84%E6%B5%8B"><span class="nav-number">3.3.</span> <span class="nav-text">2.3 三类证据与从头预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-CpG-%E5%B2%9B%E4%B8%8E%E5%80%99%E9%80%89%E5%9F%BA%E5%9B%A0%E7%9A%84%E7%BB%9F%E8%AE%A1%E7%BA%BF%E7%B4%A2"><span class="nav-number">3.4.</span> <span class="nav-text">2.4 CpG 岛与候选基因的统计线索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87%E4%B8%8E%E6%95%99%E6%9D%90%E8%A1%A8-8-1%E3%80%90%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E3%80%91"><span class="nav-number">3.5.</span> <span class="nav-text">2.5 评价指标与教材表 8.1【必须掌握】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E5%85%A8%E5%9F%BA%E5%9B%A0%E7%BB%84%E6%B3%A8%E9%87%8A%E6%B5%81%E7%A8%8B"><span class="nav-number">3.6.</span> <span class="nav-text">2.6 全基因组注释流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-HMM-%E5%A6%82%E4%BD%95%E8%A1%A8%E7%A4%BA%E5%9F%BA%E5%9B%A0%E7%BB%93%E6%9E%84"><span class="nav-number">3.7.</span> <span class="nav-text">2.7 HMM 如何表示基因结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-8-%E4%BB%A3%E8%A1%A8%E6%96%B9%E6%B3%95%E4%B8%8E%E6%95%99%E6%9D%90%E5%AE%9E%E4%BE%8B"><span class="nav-number">3.8.</span> <span class="nav-text">2.8 代表方法与教材实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%AC%AC%E4%BA%8C%E8%8A%82-%E5%9F%BA%E5%9B%A0%E5%8A%9F%E8%83%BD%E6%B3%A8%E9%87%8A"><span class="nav-number">4.</span> <span class="nav-text">3. 第二节 基因功能注释</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%90%9C%E7%B4%A2%E6%8F%90%E4%BE%9B%E6%80%8E%E6%A0%B7%E7%9A%84%E8%AF%81%E6%8D%AE%E3%80%90%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E3%80%91"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 相似性搜索提供怎样的证据【必须掌握】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-InterPro-%E4%B8%8E%E7%BB%93%E6%9E%84%E5%9F%9F%E8%AF%81%E6%8D%AE"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 InterPro 与结构域证据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-GO-%E7%9A%84%E5%85%B3%E7%B3%BB%E4%B8%8E%E8%AF%81%E6%8D%AE%E7%A0%81"><span class="nav-number">4.3.</span> <span class="nav-text">3.3 GO 的关系与证据码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E5%AF%8C%E9%9B%86%E5%88%86%E6%9E%90%E7%9A%84%E7%BB%9F%E8%AE%A1%E5%AF%B9%E8%B1%A1"><span class="nav-number">4.4.</span> <span class="nav-text">3.4 富集分析的统计对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-KEGG%E3%80%81KAAS-%E4%B8%8E%E6%B3%A8%E9%87%8A%E6%95%B4%E5%90%88"><span class="nav-number">4.5.</span> <span class="nav-text">3.5 KEGG、KAAS 与注释整合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%AC%AC%E4%B8%89%E8%8A%82-%E8%9B%8B%E7%99%BD%E8%B4%A8%E7%BB%93%E6%9E%84%E9%A2%84%E6%B5%8B"><span class="nav-number">5.</span> <span class="nav-text">4. 第三节 蛋白质结构预测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E7%BB%93%E6%9E%84%E5%B1%82%E7%BA%A7%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%81%87%E8%AE%BE%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">5.1.</span> <span class="nav-text">4.1 结构层级与基本假设【应该理解】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E4%BA%8C%E7%BA%A7%E7%BB%93%E6%9E%84%E9%A2%84%E6%B5%8B"><span class="nav-number">5.2.</span> <span class="nav-text">4.2 二级结构预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%90%8C%E6%BA%90%E5%BB%BA%E6%A8%A1%E4%B8%8E%E8%B4%A8%E9%87%8F%E8%AF%84%E4%BC%B0"><span class="nav-number">5.3.</span> <span class="nav-text">4.3 同源建模与质量评估</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E6%8A%98%E5%8F%A0%E8%AF%86%E5%88%AB%E4%B8%8E%E4%B8%B2%E7%BA%BF"><span class="nav-number">5.4.</span> <span class="nav-text">4.4 折叠识别与串线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-%E7%89%A9%E7%90%86%E4%B8%8E%E7%BB%9F%E8%AE%A1%E5%8A%BF%E9%A9%B1%E5%8A%A8%E7%9A%84%E4%BB%8E%E5%A4%B4%E9%A2%84%E6%B5%8B"><span class="nav-number">5.5.</span> <span class="nav-text">4.5 物理与统计势驱动的从头预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-%E7%BB%93%E6%9E%84%E6%AF%94%E8%BE%83%E6%8C%87%E6%A0%87%E4%B8%8E%E7%BD%AE%E4%BF%A1%E5%BA%A6"><span class="nav-number">5.6.</span> <span class="nav-text">4.6 结构比较指标与置信度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-7-AlphaFold-%E5%90%84%E4%BB%A3%E4%B8%8E%E7%8E%B0%E4%BB%A3%E7%BB%93%E6%9E%84%E9%A2%84%E6%B5%8B"><span class="nav-number">5.7.</span> <span class="nav-text">4.7 AlphaFold 各代与现代结构预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-8-%E6%95%99%E6%9D%90%E8%A1%A8-8-2-%E7%9A%84%E5%B7%A5%E5%85%B7%E7%B1%BB%E5%88%AB"><span class="nav-number">5.8.</span> <span class="nav-text">4.8 教材表 8.2 的工具类别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-9-%E7%AA%81%E5%8F%98%E5%88%86%E6%9E%90%E4%B8%8E-FOXL2-%E5%AE%9E%E4%BE%8B"><span class="nav-number">5.9.</span> <span class="nav-text">4.9 突变分析与 FOXL2 实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%85%B3%E9%94%AE%E6%95%B0%E6%8D%AE%E5%AF%B9%E8%B1%A1%E4%B8%8E%E5%9D%90%E6%A0%87"><span class="nav-number">6.</span> <span class="nav-text">5. 关键数据对象与坐标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E7%BB%9F%E8%AE%A1%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC"><span class="nav-number">7.</span> <span class="nav-text">6. 统计模型与算法推导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-HMM-%E7%9A%84%E8%81%94%E5%90%88%E6%A6%82%E7%8E%87%E4%B8%8E%E8%BE%B9%E7%95%8C%E6%9D%A1%E4%BB%B6"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 HMM 的联合概率与边界条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-Viterbi-%E4%B8%8E%E5%89%8D%E5%90%91%E2%80%93%E5%90%8E%E5%90%91"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 Viterbi 与前向–后向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E8%87%AA%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%B9%BF%E4%B9%89-HMM"><span class="nav-number">7.3.</span> <span class="nav-text">6.3 自训练与广义 HMM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E5%86%85%E5%90%AB%E5%AD%90%E7%9B%B8%E4%BD%8D%E4%B8%8E%E4%B8%89%E5%91%A8%E6%9C%9F%E5%86%85%E5%AE%B9"><span class="nav-number">7.4.</span> <span class="nav-text">6.4 内含子相位与三周期内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-AC%E3%80%81%E7%B1%BB%E5%88%AB%E4%B8%8D%E5%B9%B3%E8%A1%A1%E4%B8%8E%E5%AF%B9%E8%B1%A1%E5%B1%82%E7%BA%A7"><span class="nav-number">7.5.</span> <span class="nav-text">6.5 AC、类别不平衡与对象层级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E5%AF%8C%E9%9B%86%E4%B8%8E-BH-%E6%A0%A1%E6%AD%A3%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-number">7.6.</span> <span class="nav-text">6.6 富集与 BH 校正的计算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%8F%AF%E8%BF%90%E8%A1%8C%E4%BB%A3%E7%A0%81%E4%B8%8E%E6%9C%AC%E6%9C%BA%E5%AE%9E%E9%99%85%E8%BE%93%E5%87%BA"><span class="nav-number">8.</span> <span class="nav-text">7. 可运行代码与本机实际输出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%85%AD%E6%A1%86-ORF%E3%80%81CpG-%E7%AA%97%E5%8F%A3%E4%B8%8E%E7%9B%B8%E4%BD%8D"><span class="nav-number">8.1.</span> <span class="nav-text">7.1 六框 ORF、CpG 窗口与相位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E7%8E%A9%E5%85%B7-HMM%EF%BC%9A%E6%9C%80%E4%BC%98%E8%B7%AF%E5%BE%84%E4%B8%8E%E8%BE%B9%E7%BC%98%E5%90%8E%E9%AA%8C"><span class="nav-number">8.2.</span> <span class="nav-text">7.2 玩具 HMM：最优路径与边缘后验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E6%A0%B8%E8%8B%B7%E9%85%B8%E4%B8%8E%E5%A4%96%E6%98%BE%E5%AD%90%E6%8C%87%E6%A0%87"><span class="nav-number">8.3.</span> <span class="nav-text">7.3 核苷酸与外显子指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-best-hit%E3%80%81%E8%B6%85%E5%87%A0%E4%BD%95%E4%B8%8E-BH"><span class="nav-number">8.4.</span> <span class="nav-text">7.4 best hit、超几何与 BH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-%E5%A4%8D%E7%8E%B0-DNA-%E6%8E%A5%E8%A7%A6%E8%B7%9D%E7%A6%BB"><span class="nav-number">8.5.</span> <span class="nav-text">7.5 复现 DNA 接触距离</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-AI-for-Science-%E6%89%A9%E5%B1%95%E3%80%90AI4S%E3%80%91"><span class="nav-number">9.</span> <span class="nav-text">8. AI for Science 扩展【AI4S】</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E5%9F%BA%E5%9B%A0%E9%A2%84%E6%B5%8B%E6%98%AF%E5%B8%A6%E7%94%9F%E7%89%A9%E7%BA%A6%E6%9D%9F%E7%9A%84%E7%BB%93%E6%9E%84%E5%8C%96%E9%A2%84%E6%B5%8B"><span class="nav-number">9.1.</span> <span class="nav-text">8.1 基因预测是带生物约束的结构化预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E5%8A%9F%E8%83%BD%E9%A2%84%E6%B5%8B%E7%9A%84%E6%A0%87%E7%AD%BE%E4%B8%8D%E5%AE%8C%E6%95%B4%E4%B8%8E%E7%B2%92%E5%BA%A6"><span class="nav-number">9.2.</span> <span class="nav-text">8.2 功能预测的标签不完整与粒度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E7%BB%93%E6%9E%84%E4%B8%8E%E5%8F%98%E5%BC%82%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AF%84%E6%B5%8B"><span class="nav-number">9.3.</span> <span class="nav-text">8.3 结构与变异模型的评测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-%E4%B8%80%E4%B8%AA%E5%8F%AF%E5%A4%8D%E6%9F%A5%E7%9A%84%E5%AE%9E%E9%AA%8C%E8%A1%A8"><span class="nav-number">9.4.</span> <span class="nav-text">8.4 一个可复查的实验表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E4%B8%8E-VirusBin-%E7%9A%84%E8%81%94%E7%B3%BB"><span class="nav-number">10.</span> <span class="nav-text">9. 与 VirusBin 的联系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E5%9F%BA%E5%9B%A0%E8%B0%83%E7%94%A8%E6%98%AF%E4%B8%8B%E6%B8%B8%E8%AF%81%E6%8D%AE%E7%9A%84%E5%89%8D%E6%8F%90"><span class="nav-number">10.1.</span> <span class="nav-text">9.1 基因调用是下游证据的前提</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E5%86%97%E4%BD%99%E5%9F%BA%E5%9B%A0%E4%B8%8E%E9%94%99%E8%AF%AF%E5%90%88%E5%B9%B6"><span class="nav-number">10.2.</span> <span class="nav-text">9.2 冗余基因与错误合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E5%8A%A0%E5%85%A5%E5%AE%9E%E9%AA%8C%E7%9A%84%E5%88%86%E6%9E%90"><span class="nav-number">10.3.</span> <span class="nav-text">9.3 可以直接加入实验的分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E6%95%99%E6%9D%90%E4%B9%A0%E9%A2%98%E8%A7%A3%E7%AD%94"><span class="nav-number">11.</span> <span class="nav-text">10. 教材习题解答</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E7%AE%80%E8%BF%B0%E5%9F%BA%E5%9B%A0%E6%B3%A8%E9%87%8A%E6%B5%81%E7%A8%8B"><span class="nav-number">11.1.</span> <span class="nav-text">10.1 简述基因注释流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E7%94%A8-FGENESH-%E6%B3%A8%E9%87%8A-KJ000047-1"><span class="nav-number">11.2.</span> <span class="nav-text">10.2 用 FGENESH 注释 KJ000047.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-%E7%94%A8-InterProScan-%E6%B3%A8%E9%87%8A-ALP29445-1"><span class="nav-number">11.3.</span> <span class="nav-text">10.3 用 InterProScan 注释 ALP29445.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-4-%E4%B8%BB%E8%A6%81%E8%9B%8B%E7%99%BD%E8%B4%A8%E4%B8%89%E7%BA%A7%E7%BB%93%E6%9E%84%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">11.4.</span> <span class="nav-text">10.4 主要蛋白质三级结构数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-5-%E4%B8%BB%E8%A6%81%E4%B8%89%E7%BA%A7%E7%BB%93%E6%9E%84%E9%A2%84%E6%B5%8B%E6%96%B9%E6%B3%95"><span class="nav-number">11.5.</span> <span class="nav-text">10.5 主要三级结构预测方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-6-SWISS-MODEL-%E5%8E%9F%E7%90%86%E3%80%81%E8%BF%87%E7%A8%8B%E5%8F%8A%E7%BB%93%E6%9E%9C"><span class="nav-number">11.6.</span> <span class="nav-text">10.6 SWISS-MODEL 原理、过程及结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E8%87%AA%E6%B5%8B%E9%A2%98"><span class="nav-number">12.</span> <span class="nav-text">11. 自测题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-%E5%8E%86%E5%8F%B2%E4%B8%8E%E4%BA%BA%E7%89%A9"><span class="nav-number">13.</span> <span class="nav-text">12. 历史与人物</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-%E5%85%A8%E7%AB%A0%E9%80%9F%E8%AE%B0"><span class="nav-number">14.</span> <span class="nav-text">13. 全章速记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">15.</span> <span class="nav-text">14. 下一步学习建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE%E4%B8%8E%E5%8E%9F%E5%A7%8B%E6%9D%A5%E6%BA%90"><span class="nav-number">16.</span> <span class="nav-text">15. 参考文献与原始来源</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

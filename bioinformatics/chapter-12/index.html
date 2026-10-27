@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="樊龙江《生物信息学》（第二版）学习笔记 · 第 12 章。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第 12 章 新类型组学数据分析与利用：学习笔记">
+<meta property="og:url" content="https://blog.agiopan.cn/bioinformatics/chapter-12/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="樊龙江《生物信息学》（第二版）学习笔记 · 第 12 章。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-00.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-01.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-02.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-03.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-04.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-05.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-06.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-07.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-08.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-09.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-10.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-11a.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-11b.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-12.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-13.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-14a.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-14bc.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-15.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-16.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-17a.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-17b.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-18.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-19.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-20.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-21.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-22.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-23.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-24.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-25.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-26.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-27.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-28.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/history.png">
+<meta property="article:published_time" content="2026-10-27T04:12:00.000Z">
+<meta property="article:modified_time" content="2026-10-27T04:12:00.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="生物信息">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch12/fig12-00.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/bioinformatics/chapter-12/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>第 12 章 新类型组学数据分析与利用：学习笔记 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/bioinformatics/chapter-12/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第 12 章 新类型组学数据分析与利用：学习笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-10-27 12:12:00" itemprop="dateCreated datePublished" datetime="2026-10-27T12:12:00+08:00">2026-10-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Bioinfomatics/" itemprop="url" rel="index"><span itemprop="name">Bioinfomatics</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>樊龙江《生物信息学》（第二版）学习笔记 · 第 12 章。</p>
+<span id="more"></span>
+
+<p><a href="/bioinformatics/chapter-02/">第 2 章</a> · <a href="/bioinformatics/chapter-03/">第 3 章</a> · <a href="/bioinformatics/chapter-04/">第 4 章</a> · <a href="/bioinformatics/chapter-05/">第 5 章</a> · <a href="/bioinformatics/chapter-06/">第 6 章</a> · <a href="/bioinformatics/chapter-07/">第 7 章</a> · <a href="/bioinformatics/chapter-08/">第 8 章</a> · <a href="/bioinformatics/chapter-09/">第 9 章</a> · <a href="/bioinformatics/chapter-10/">第 10 章</a> · <a href="/bioinformatics/chapter-11/">第 11 章</a> · <a href="/bioinformatics/chapter-12/">第 12 章</a> · <a href="/bioinformatics/chapter-13/">第 13 章</a> · <a href="/bioinformatics/chapter-14/">第 14 章</a></p>
+<hr>
+<blockquote>
+<p>教材：樊龙江主编《生物信息学》第二版（科学出版社，2021），第 12 章，印刷页 286–333。<br>标签：【重点】【易错】【现代实践】【AI4S】【已核实】【需查证】【补充推导】【研究设想】。<br>2026-10-23 审校；2026-10-27 续审。</p>
+</blockquote>
+<h2 id="0-教材范围与勘误"><a href="#0-教材范围与勘误" class="headerlink" title="0. 教材范围与勘误"></a>0. 教材范围与勘误</h2><p>本章包括三维基因组、单细胞组学、基因组预测，以及表型组、合成生物学和翻译组。原图沿用教材编号；补充推导与教学实验另列于§6–7。</p>
+<table>
+<thead>
+<tr>
+<th>教材结构</th>
+<th>印刷页</th>
+<th>本笔记</th>
+<th>应达到的深度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一节 三维基因组</td>
+<td>286—294</td>
+<td>§2</td>
+<td>从连接读段到接触矩阵，理解标准化、区室、TAD、环和辅助组装</td>
+</tr>
+<tr>
+<td>第二节 单细胞组学数据</td>
+<td>295—306，图续至 308</td>
+<td>§3</td>
+<td>理解测量噪声、单细胞 DNA、RNA 流程、聚类注释、拟时序和实验设计</td>
+</tr>
+<tr>
+<td>第三节 基因组预测与选择</td>
+<td>306—315</td>
+<td>§4</td>
+<td>推导岭回归与 GBLUP 联系，正确设置跨家系与跨环境评测</td>
+</tr>
+<tr>
+<td>第四节 其他：表型组</td>
+<td>315—323</td>
+<td>§5.1</td>
+<td>区分分类、检测、语义分割与实例分割，连接图像误差与性状误差</td>
+</tr>
+<tr>
+<td>第四节 其他：合成生物学</td>
+<td>323—328</td>
+<td>§5.2</td>
+<td>理解部件—装置—系统、动力学、DBTL 与约束设计</td>
+</tr>
+<tr>
+<td>第四节 其他：翻译组</td>
+<td>328—331</td>
+<td>§5.3</td>
+<td>理解 RPF、P-site、周期性、uORF 和差异翻译效率</td>
+</tr>
+<tr>
+<td>习题、历史与人物</td>
+<td>331—333</td>
+<td>§10、§12</td>
+<td>7 道习题全部解答；人物内容作历史背景</td>
+</tr>
+</tbody></table>
+<h3 id="0-1-会改变理解或实现的勘误"><a href="#0-1-会改变理解或实现的勘误" class="headerlink" title="0.1 会改变理解或实现的勘误"></a>0.1 会改变理解或实现的勘误</h3><p>以下把“原书内部矛盾”“由定义&#x2F;维度可直接检查”“需要外部证据”区分处理。人名拼写和旧网址不逐条堆在正文。</p>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>教材问题</th>
+<th>应怎样理解及依据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>p288 表 12.2</td>
+<td>SCN、ICE 被列入显式校正，正文又归入隐式</td>
+<td>ICE&#x2F;SCN&#x2F;KR 属于矩阵平衡类；HiCNorm 是显式偏差建模的代表。见 <a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3816492/">ICE 原论文</a></td>
+</tr>
+<tr>
+<td>p290</td>
+<td>“80% bin 至少 1000 次互作”被当作 TAD 鉴定标准</td>
+<td>这是特定研究的图谱分辨率判据，不能当作通用 TAD 定义；TAD 是相对于周围背景的域结构</td>
+</tr>
+<tr>
+<td>p298—299</td>
+<td>把单细胞变异检测写得类似普通重测序</td>
+<td>必须显式考虑等位脱扣、扩增错误与覆盖不均；未检出不能直接当作参考型</td>
+</tr>
+<tr>
+<td>p301</td>
+<td>BWA&#x2F;Bowtie2 作为一般 RNA 到基因组比对器；直接 htseq-count</td>
+<td>常规剪接 RNA 需要剪接感知比对；带 UMI 的数据还需 barcode 处理与分子去重</td>
+</tr>
+<tr>
+<td>p302</td>
+<td>10×“只生成一个数据文件”</td>
+<td>是混合建库后靠 barcode 区分细胞，不代表只有一个 FASTQ；可有多个 read、lane、分片文件</td>
+</tr>
+<tr>
+<td>p303</td>
+<td>t-SNE 保留局部和全局结构；5% 线粒体比例似通用阈值</td>
+<td>二维布局不能直接作全局距离证据；QC 阈值必须结合组织、物种、核&#x2F;整细胞与平台</td>
+</tr>
+<tr>
+<td>p304—305</td>
+<td>表达轨迹与细胞谱系容易混淆</td>
+<td>拟时序重构的是状态顺序；真实祖先—后代关系需谱系条码、遗传变异或追踪证据</td>
+</tr>
+<tr>
+<td>p306</td>
+<td>“约 5.7 个细胞”</td>
+<td>同段与图 12.14 对应约 5.7 万个细胞；属于单位遗漏</td>
+</tr>
+<tr>
+<td>p307</td>
+<td>phased diploid genome 译成“双链…二倍体基因组”</td>
+<td>指两套单倍型分别解析，不是 DNA 双链的意思</td>
+</tr>
+<tr>
+<td>p312</td>
+<td>BLUP 译为最佳线性无偏“估计”</td>
+<td>P 是 prediction；应为最佳线性无偏预测。固定效应估计常称 BLUE</td>
+</tr>
+<tr>
+<td>p314 图 12.18</td>
+<td>长度 <span class="math">\(p\)</span>、核长 3 的 valid 卷积末项写作 <span class="math">\(C_p\)</span></td>
+<td>步长 1、无填充时只有 <span class="math">\(p-2\)</span> 项，末项应为 <span class="math">\(C_{p-2}\)</span></td>
+</tr>
+<tr>
+<td>p314—315</td>
+<td>“总体非线性优于线性”；PL 注释成 MLP</td>
+<td>PL 是惩罚线性方法；本章图表不能支持非线性普遍占优。见 <a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/31533955/">Azodi 等原研究</a></td>
+</tr>
+<tr>
+<td>p320—321 表 12.7</td>
+<td>部分方法与“说明”列明显不匹配</td>
+<td>Mask R-CNN 的核心是实例掩模分支与 RoIAlign；大卷积核、金字塔池化等分别属于其他方法。§5.1 按原理重整，不照抄错位勾选</td>
+</tr>
+<tr>
+<td>p322</td>
+<td>Python 2 与旧 OpenCV API；人脸“识别”</td>
+<td>示例完成的是人脸检测，不识别身份；不要直接运行旧代码</td>
+</tr>
+<tr>
+<td>p326 图 12.25</td>
+<td>第三层“10 kb”</td>
+<td>应为约 100 kb，原研究在此阶段构建 11 个约 100 kb 片段；见 JCVI 2010 公告与 Gibson 原论文</td>
+</tr>
+<tr>
+<td>p326—327</td>
+<td>“最小基因组”与“必需基因集”混用</td>
+<td>单基因删除的必需性、联合删除的最小可存活集、特定培养条件下的合成底盘是不同对象</td>
+</tr>
+<tr>
+<td>p327</td>
+<td>DNA 水印、密码子重编码、非天然碱基混为一谈</td>
+<td>水印是信息编码；遗传密码重分配与碱基字母表扩展是另外两件事</td>
+</tr>
+<tr>
+<td>p328—329</td>
+<td>翻译组等同全部蛋白；P-site 被解释成某个碱基位置</td>
+<td>翻译组关注正在翻译的 RNA&#x2F;ORF 及翻译活动；P-site 是核糖体中容纳肽酰 tRNA 的位点，其对应密码子位置需从足迹推断</td>
+</tr>
+<tr>
+<td>p330 与图 12.28D</td>
+<td>文字称 RPF 主要分布于 5′UTR</td>
+<td>原图明确显示绝大部分在 CDS；5′UTR 的少量信号可支持进一步检查 uORF，不能颠倒主次</td>
+</tr>
+</tbody></table>
+<h3 id="0-2-怎么使用这份笔记"><a href="#0-2-怎么使用这份笔记" class="headerlink" title="0.2 怎么使用这份笔记"></a>0.2 怎么使用这份笔记</h3><p>第一遍读 §1—5，建立实验与分析的地图；第二遍读 §6—7，做推导并运行小实验；第三遍读 §8—11，判断哪些结论可靠、如何设计一个项目。教材图保留原号，笔记节号独立编号。公式中的新编号或无编号式均为解释用补充，不能误认为教材原式。</p>
+<h2 id="1-本章定位与知识地图"><a href="#1-本章定位与知识地图" class="headerlink" title="1. 本章定位与知识地图"></a>1. 本章定位与知识地图</h2><p>前几章主要问“序列是什么、有哪些基因、表达多少、环境中有哪些生物”。本章把观察范围扩大到空间结构、细胞异质性、复杂性状、可设计系统和翻译活动。</p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-00.png" alt="教材章首知识图"></p>
+<p><em>章首思维导图，p286。DNA、RNA、蛋白与性状之间有多个观测层次；图中箭头是教学关系，不意味着可以仅靠一个层次唯一恢复所有下游状态。</em></p>
+<table>
+<thead>
+<tr>
+<th>生物学问题</th>
+<th>实验输出</th>
+<th>计算任务</th>
+<th>最容易过度解释的地方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>哪些染色质区域经常接近？</td>
+<td>成对位点与接触计数</td>
+<td>偏差校正、分块、显著性、图排序</td>
+<td>接触频率不能直接当距离或调控因果</td>
+</tr>
+<tr>
+<td>组织中有哪些细胞状态？</td>
+<td>细胞×基因计数</td>
+<td>表示学习、图聚类、注释、轨迹</td>
+<td>聚类不是天然细胞类型；拟时序不是实际时间</td>
+</tr>
+<tr>
+<td>哪些材料值得选育？</td>
+<td>个体×标记，个体×表型</td>
+<td>高维回归、混合模型、选择决策</td>
+<td>预测相关性不是因果位点证据</td>
+</tr>
+<tr>
+<td>植物的生长和胁迫怎样变化？</td>
+<td>图像&#x2F;光谱&#x2F;点云&#x2F;时间序列</td>
+<td>分割、检测、定量、跨域预测</td>
+<td>图像标签与真实生理量可能有偏差</td>
+</tr>
+<tr>
+<td>怎样获得期望的系统行为？</td>
+<td>设计参数与实验测量</td>
+<td>动力学、优化、主动学习</td>
+<td>代理模型分数高不保证生物系统可实现</td>
+</tr>
+<tr>
+<td>哪些 ORF 正在翻译？</td>
+<td>核糖体保护片段</td>
+<td>定位、周期检测、交互效应检验</td>
+<td>核糖体占据量不等于最终蛋白产量</td>
+</tr>
+</tbody></table>
+<h3 id="1-1-CS-视角下本章的四个难点"><a href="#1-1-CS-视角下本章的四个难点" class="headerlink" title="1.1 CS 视角下本章的四个难点"></a>1.1 CS 视角下本章的四个难点</h3><p>这些数据首先来自不同的测量过程。 同样是一个计数，Hi-C 的一项是两个区间之间的连接读对，scRNA 的一项是捕获到的分子计数，Ribo-seq 的一项是受核糖体保护的足迹。不能只看矩阵维度就套同一套归一化。</p>
+<p>独立重复的单位也随实验改变。 一百万细胞可能只来自几个供体；一百万图像块可能来自几株植物；很多 SNP 可能只是同一个 LD 块的重复信息。计算样本数与统计信息量不是一回事。</p>
+<p>图和潜空间的生物学含义取决于建模假设。 Hi-C 图、单细胞近邻图、分箱图在代码层面相似，边的物理意义却不同。构造图的步骤本身就是科学建模。</p>
+<p>预测和干预还需要不同的证据。 预测现有材料表型、选择下一代亲本、编辑一个位点、设计一个新基因回路，需要不同证据强度。</p>
+<h3 id="1-2-与前面章节的衔接"><a href="#1-2-与前面章节的衔接" class="headerlink" title="1.2 与前面章节的衔接"></a>1.2 与前面章节的衔接</h3><ul>
+<li>第 2 章：重新调用建库、测序错误、barcode、UMI 等知识，解释“为什么会产生这类数据”。</li>
+<li>第 4—7 章：比对、图算法、单倍型与组装；Hi-C 为组装增加长程约束。</li>
+<li>第 8—9 章：基因结构、ORF、功能注释与 ncRNA；Ribo-seq 为编码潜能提供另一层证据。</li>
+<li>第 10 章：负二项、设计矩阵、多重检验、调控网络；单细胞与翻译效率分析都建立在这些基础上。</li>
+<li>第 11 章：成分性、覆盖度、图聚类、质量指标与真值；本章继续讨论不同数据中的共同统计问题。</li>
+<li>第 13—14 章：LD、群体结构、方差组分、概率图模型与推断，为本章提供进一步理论支撑。</li>
+</ul>
+<h2 id="2-第一节-三维基因组"><a href="#2-第一节-三维基因组" class="headerlink" title="2. 第一节 三维基因组"></a>2. 第一节 三维基因组</h2><h3 id="2-1-从染色质结构到-Hi-C-读对-【重点】"><a href="#2-1-从染色质结构到-Hi-C-读对-【重点】" class="headerlink" title="2.1 从染色质结构到 Hi-C 读对 【重点】"></a>2.1 从染色质结构到 Hi-C 读对 【重点】</h3><p>真核 DNA 不是在细胞核中任意散开的线。它与蛋白形成染色质，在多个尺度组织；基因组上远离的位点可能在空间上接近。三维基因组学研究这些空间关系与细胞状态、转录调控的联系。</p>
+<p>Hi-C 的概念流程为：交联固定近邻关系 → 切割染色质 → 标记末端 → 邻近连接 → 获取连接片段并测序 → 将两端分别映射回参考基因组。实验细节依方案变化，分析最重要的输入是一对基因组坐标。这个读对是一次被实验捕获的邻近事件，不是一把纳米尺，也不自动证明两个区域直接结合。</p>
+<table>
+<thead>
+<tr>
+<th>技术，重整教材表 12.1</th>
+<th>覆盖范围</th>
+<th>看到了什么</th>
+<th>限制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FISH、超分辨显微成像</td>
+<td>被标记的位点</td>
+<td>位置或距离分布</td>
+<td>位点选择、空间分辨率、成像成本</td>
+</tr>
+<tr>
+<td>3C</td>
+<td>一对指定区域</td>
+<td>靶向接触频率</td>
+<td>不能覆盖全基因组</td>
+</tr>
+<tr>
+<td>4C</td>
+<td>一对全</td>
+<td>一个视点的接触谱</td>
+<td>视点选择决定问题</td>
+</tr>
+<tr>
+<td>5C、Capture-C&#x2F;CHi-C</td>
+<td>多对多或靶向富集</td>
+<td>选定区域的较深接触</td>
+<td>捕获设计引入选择性</td>
+</tr>
+<tr>
+<td>Hi-C</td>
+<td>全对全</td>
+<td>全基因组二阶接触图</td>
+<td>深度、分辨率与偏差的权衡</td>
+</tr>
+<tr>
+<td>ChIA-PET、HiChIP</td>
+<td>蛋白相关的接触</td>
+<td>与指定蛋白&#x2F;标记相关的接触</td>
+<td>抗体与富集效率影响观测</td>
+</tr>
+<tr>
+<td>SPRITE、GAM、Pore-C 等</td>
+<td>方法不同，部分保留多位点联系</td>
+<td>高阶组织信息</td>
+<td>不能都归为同一种邻近连接实验</td>
+</tr>
+</tbody></table>
+<p>高阶信息为什么重要？ 一条记录同时涉及 A、B、C，与分别观察到 AB、AC、BC 三类接触不等价。把高阶事件展开为成对边会丢失“是否同时发生”的信息。CS 中可把前者看作超边，但实际建模要保留实验的背景率与采样偏差。</p>
+<h3 id="2-2-读对、bin-与接触矩阵-【重点】"><a href="#2-2-读对、bin-与接触矩阵-【重点】" class="headerlink" title="2.2 读对、bin 与接触矩阵 【重点】"></a>2.2 读对、bin 与接触矩阵 【重点】</h3><p>把基因组切成大小为 <span class="math">\(r\)</span> 的区间。若逐条染色体分 bin，染色体 <span class="math">\(k\)</span> 的长度为 <span class="math">\(L_k\)</span>，则总数为 <span class="math">\(N=\sum_k\lceil L_k/r\rceil\)</span>；忽略各条末端余数时才近似为 <span class="math">\(L/r\)</span>。令 <span class="math">\(C_{ij}\)</span> 表示两端分别落在 bin <span class="math">\(i\)</span>、<span class="math">\(j\)</span> 的有效接触数，则 <span class="math">\(C\)</span> 是 <span class="math">\(N\times N\)</span> 的非负对称矩阵。实际存储通常只保留上三角的非零项。</p>
+<p>流程应分别记录以下数量或分布：原始 read 数、可比对 read 对、唯一比对、PCR 重复、有效接触、cis&#x2F;trans 比例、距离分布、低覆盖 bin。无效连接、悬垂末端、自连接、重复和多重比对处理会改变矩阵。高原始测序量不等于高有效接触深度。</p>
+<p>若 <span class="math">\(r\)</span> 减半，<span class="math">\(N\)</span> 约翻倍，可能的矩阵元素约增至 4 倍。人类约 3 Gb 基因组在 10 kb 分辨率有约 30 万个 bin；稠密矩阵约 900 亿项，float64 仅数值就约 720 GB。因此要使用稀疏存储、分染色体计算、多分辨率容器，而不是直接建立全基因组 NumPy 稠密数组。</p>
+<p>对角线附近通常强，因为线性距离近的区域更易接触。不同染色体对不能直接套用同一条 cis 距离衰减曲线。bin 大小只是标称分辨率；信号稀疏时，不能因为输出了 1 kb 矩阵就声称可靠识别 1 kb 结构。</p>
+<h3 id="2-3-偏差校正与距离背景-【重点】"><a href="#2-3-偏差校正与距离背景-【重点】" class="headerlink" title="2.3 偏差校正与距离背景 【重点】"></a>2.3 偏差校正与距离背景 【重点】</h3><p>用一个简化模型理解：</p>
+<div class="math">\[
+\mathbb E[C_{ij}]=s\,b_i b_j\,f(d_{ij})\,S_{ij}.
+\]</div>
+
+<span class="math">\(s\)</span> 为测序规模，<span class="math">\(b_i\)</span> 是位点可见性偏差，<span class="math">\(f(d)\)</span> 是随基因组距离变化的背景，<span class="math">\(S_{ij}\)</span> 表示剩余结构信号。这里是教学分解，不是所有软件共同使用的完整生成模型。
+
+<p>显式校正用 GC、限制性片段长度、可比对性等协变量解释偏差，例如 HiCNorm。隐式校正从矩阵本身估计可见性，例如 ICE&#x2F;SCN&#x2F;KR。ICE 的核心目标是寻找权重，使有效 bin 的校正后行和接近一致。<a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3816492/">原论文</a></p>
+<div class="math">\[
+B_{ij}=w_i C_{ij} w_j,\qquad \sum_j B_{ij}\approx c.
+\]</div>
+
+<p>权重采用“乘”还是“除”取决于文件&#x2F;软件定义，必须检查。全零、低覆盖和难以比对的 bin 应先筛除，不能给无限权重。若真实拷贝数差异或生物效应本身改变行和，强制平衡可能一并削弱它们。</p>
+<p>距离标准化是另一件事。对同一条染色体，按距离 <span class="math">\(d\)</span> 估计背景 <span class="math">\(E(d)\)</span>，再计算：</p>
+<div class="math">\[
+\mathrm{OE}_{ij}=B_{ij}/E(|i-j|).
+\]</div>
+
+<p>高接触数可能只因为距离近；高 O&#x2F;E 才表示相对于该距离的背景富集。O&#x2F;E 仍不是显著性检验，低计数下一个很大的比值也可能极不稳定。差异分析还需要样本层面的重复、深度处理与统计模型。</p>
+<h3 id="2-4-从疆域到区室、TAD-与环-【重点】"><a href="#2-4-从疆域到区室、TAD-与环-【重点】" class="headerlink" title="2.4 从疆域到区室、TAD 与环 【重点】"></a>2.4 从疆域到区室、TAD 与环 【重点】</h3><p><img src="/bioinformatics-notes/images/ch12/fig12-01.png" alt="图 12.1 染色体分级结构"></p>
+<p><em>图 12.1，p289，教材引自 Bonev &amp; Cavalli（2016）。读图顺序可以从下到上：染色体疆域 → A&#x2F;B 区室 → TAD → 局部环。不同尺度对应不同统计问题，不应把图中的分辨率数字当作固定生物学定义。</em></p>
+<table>
+<thead>
+<tr>
+<th>结构</th>
+<th>热图表现</th>
+<th>常用分析思路</th>
+<th>解释边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>染色体疆域</td>
+<td>染色体内接触总体较多</td>
+<td>染色体间&#x2F;内模式、显微验证</td>
+<td>并非每个位点只能在一个固定位置</td>
+</tr>
+<tr>
+<td>A&#x2F;B 区室</td>
+<td>棋盘格或同类区段间富集</td>
+<td>O&#x2F;E、接触谱相关矩阵、特征向量</td>
+<td>特征向量符号任意，要用活性轨迹定向</td>
+</tr>
+<tr>
+<td>TAD</td>
+<td>对角附近内部富集的块&#x2F;三角形</td>
+<td>绝缘分数、方向指数、统计分段、社区发现</td>
+<td>边界依窗口、分辨率与细胞状态；不同物种机制不同</td>
+</tr>
+<tr>
+<td>染色质环</td>
+<td>局部点状富集</td>
+<td>与局部&#x2F;距离背景比较，控制多重检验</td>
+<td>点状富集不自动证明功能性增强子—启动子调控</td>
+</tr>
+</tbody></table>
+<p>区室分析。 相似接触偏好的两个区域，即使线性距离远，也可能属于同一类染色质状态。对接触谱做相关与特征分解后，结合基因密度、表达或组蛋白标记选择和定向区室轴。不能机械规定“PC1 正值就是 A”，因为向量整体变号不改变分解，且最强轴可能反映染色体臂等其他结构。</p>
+<p>TAD 分析。 绝缘分数衡量一个候选边界两侧有多少跨边界接触；局部低值可提示边界。方向指数比较一个 bin 与上游、下游的接触偏好，转折可提示域边界。统计模型可用变点&#x2F;分段、HMM 等描述结构；图方法把 bin 作为节点、接触作为边，寻找内部连接密集的模块。教材表 12.3 的四类思想——线性评分、统计模型、聚类、网络模块化——比记住全部工具名更重要。</p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-02.png" alt="图 12.2 TAD 鉴定示例"></p>
+<p><em>图 12.2，p292。上方是接触热图，中间是染色质状态，下方是不同窗口的评分曲线。比较“窗口改变后边界是否稳定”，再看边界是否得到独立生物学轨迹支持。原图使用颜色的描述在灰度教材中不能逐色辨认。</em></p>
+<p>环与差异环。 “某条件下显著、另一条件下不显著”不等于两条件显著不同。前者是两个独立检验，后者要求直接检验效应差异。Fit-Hi-C、HiCCUPS 等研究富集接触；diffHic 等面向条件差异，输入与零假设不同。保留重复，对候选接触报告效应量、计数、置信度和多重检验处理。</p>
+<h3 id="2-5-Hi-C-辅助组装与三维重建-【必须掌握区别】"><a href="#2-5-Hi-C-辅助组装与三维重建-【必须掌握区别】" class="headerlink" title="2.5 Hi-C 辅助组装与三维重建 【必须掌握区别】"></a>2.5 Hi-C 辅助组装与三维重建 【必须掌握区别】</h3><p>辅助组装输出一维染色体序列：将 contig 分组、排序、定向。三维重建输出空间坐标或构象集合。这两种“组装”不能混用。</p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-03.png" alt="图 12.3 Lachesis 组装流程"></p>
+<p><em>图 12.3，p293。先聚类到染色体，再排序，最后定向。接触数必须考虑长度、覆盖度、限制性位点和可比对性，不能仅凭原始最大边权贪心连接。</em></p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-04.png" alt="图 12.4 3d-dna 流程"></p>
+<p><em>图 12.4，p293。检查、纠错与 scaffolding 迭代进行。理想对角模式可辅助发现错拼，但图“更整齐”本身不是独立验证。</em></p>
+<p>同源染色体、重复和高杂合会造成错配边。多倍体时还要辨别等位 contig，避免不同单倍型被拼入同一条染色体。结果需要结合长读段、遗传图谱、独立组装等证据核验；同一批 Hi-C 数据可以帮助纠错，但由它优化得到的接触图不能再单独作为组装完全正确的证据。</p>
+<p>三维重建常把接触转成距离约束，再拟合坐标。问题可能不可辨识：不同构象或构象混合产生相近接触图。群体平均 Hi-C 尤其不应解读为“某一个细胞真实唯一的结构”。结果应交代分辨率、所用约束、重复一致性和构象的不确定性。</p>
+<h3 id="2-6-可视化、文件与可重复性-【应该理解】"><a href="#2-6-可视化、文件与可重复性-【应该理解】" class="headerlink" title="2.6 可视化、文件与可重复性 【应该理解】"></a>2.6 可视化、文件与可重复性 【应该理解】</h3><p><img src="/bioinformatics-notes/images/ch12/fig12-05.png" alt="图 12.5 三维基因组浏览器"></p>
+<p><em>图 12.5，p294。整合接触、RNA、ChIP 与遗传变异轨迹，是构建假设的起点；轨迹共定位不能替代功能验证。</em></p>
+<p>教材表 12.5 列出 3D Genome Browser、WashU、HiCPlotter、Juicebox 等。学习时保留“热图＋基因位置＋相关信号轨迹”的工作方式；旧网址或截图不作为可用性保证。需要记录参考基因组版本、bin 大小、有效接触过滤、标准化权重、mask、距离背景估计、边界窗口和环调用阈值。</p>
+<h2 id="3-第二节-单细胞组学数据"><a href="#3-第二节-单细胞组学数据" class="headerlink" title="3. 第二节 单细胞组学数据"></a>3. 第二节 单细胞组学数据</h2><h3 id="3-1-为什么要测单细胞-【重点】"><a href="#3-1-为什么要测单细胞-【重点】" class="headerlink" title="3.1 为什么要测单细胞 【重点】"></a>3.1 为什么要测单细胞 【重点】</h3><p>Bulk RNA 的平均变化可能来自两种完全不同的现象：每个细胞的表达发生变化，或组织内细胞类型比例改变。单细胞分析尝试拆开组成与状态，但“测到多少细胞”又受解离与捕获影响。</p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-06.png" alt="图 12.6 单细胞技术历程"></p>
+<p><em>图 12.6，p295，历史时间轴。重点看扩增、barcode&#x2F;UMI、液滴与多模态技术分别解决什么瓶颈，不要求背全部平台年份。</em></p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-07.png" alt="图 12.7 单细胞研究规模"></p>
+<p><em>图 12.7，p296。图中论文与细胞数统计截至教材所述时期。细胞规模增长使稀疏存储、近似近邻和批次建模变得重要，但不等于独立供体数量同步增长。</em></p>
+<p>植物细胞有细胞壁，原生质体制备可能选择性丢失某些类型，并诱导应激转录。单核测序可减少部分解离限制，但核 RNA 与整细胞 RNA 的组成不同。FACS、INTACT、LCM 分别利用流式特征、标记细胞核或组织位置富集材料；它们回答的采样问题不同，不能默认测到组织的无偏随机样本。</p>
+<table>
+<thead>
+<tr>
+<th>模态</th>
+<th>观测对象</th>
+<th>常见矩阵&#x2F;数据</th>
+<th>特有问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scDNA-seq</td>
+<td>单细胞基因组</td>
+<td>细胞×位点基因型&#x2F;似然；细胞×bin 深度</td>
+<td>扩增错误、等位脱扣、覆盖不均</td>
+</tr>
+<tr>
+<td>scRNA-seq</td>
+<td>捕获的转录本</td>
+<td>细胞×基因计数</td>
+<td>捕获率、环境 RNA、双细胞、批次</td>
+</tr>
+<tr>
+<td>scATAC-seq</td>
+<td>染色质可及区片段</td>
+<td>细胞×peak；fragment 列表</td>
+<td>极稀疏；可及性不等于表达或 TF 直接结合</td>
+</tr>
+<tr>
+<td>RNA＋表面蛋白</td>
+<td>同细胞的 RNA 与抗体标签</td>
+<td>两个共享 cell ID 的矩阵</td>
+<td>两种背景与动态范围不同</td>
+</tr>
+<tr>
+<td>空间转录组</td>
+<td>带空间定位的表达</td>
+<td>spot&#x2F;cell×基因＋坐标＋组织图</td>
+<td>一个 spot 可能混合细胞，分割与定位误差</td>
+</tr>
+<tr>
+<td>扰动单细胞</td>
+<td>扰动标签与响应</td>
+<td>细胞×基因＋guide&#x2F;处理元数据</td>
+<td>扰动成功率、剂量、时间、背景依赖</td>
+</tr>
+</tbody></table>
+<h3 id="3-2-单细胞-DNA：变异、克隆与定相-【重点】"><a href="#3-2-单细胞-DNA：变异、克隆与定相-【重点】" class="headerlink" title="3.2 单细胞 DNA：变异、克隆与定相 【重点】"></a>3.2 单细胞 DNA：变异、克隆与定相 【重点】</h3><p><img src="/bioinformatics-notes/images/ch12/fig12-08.png" alt="图 12.8 单细胞 DNA 应用"></p>
+<p><em>图 12.8，p298。CNV、突变与克隆组成用于描述异质性和演化；克隆树的可靠性依赖变异调用的不确定性。示意图不是具体患者的临床预测。</em></p>
+<p>单细胞 DNA 流程是 样本与扩增方案，然后 reads 质控，然后比对，然后 SNV&#x2F;Indel&#x2F;CNV 估计，然后跨细胞整合，然后克隆&#x2F;谱系或定相分析。不能把所有步骤简单替换为 bulk 流程默认参数。</p>
+<p>扩增造成三类问题：等位比例偏离 <span class="math">\(1:1\)</span>；ADO（allelic dropout）使杂合位点只看到一条等位；整个位置都未覆盖。前者改变基因型似然，后两者产生缺失与假纯合。一个细胞中全为等位 <span class="math">\(A\)</span> 的 reads，可能是真 <span class="math">\(AA\)</span>，也可能是 <span class="math">\(AB\)</span> 但等位 <span class="math">\(B\)</span> 没有扩增；深度加到已经偏倚的扩增产物上，并不必然恢复等位 <span class="math">\(B\)</span>。</p>
+<p>SNV 方法如 Monovar、SCcaller、SCAN-SNV 从跨细胞信息、局部等位平衡等方面建模；CNV 方法利用窗口深度、分段或 HMM。RNA 推断 CNV 可提供辅助证据，但表达调控也会改变信号，不能当作 DNA 直接测量。教材对具体平台、版本和“尚无 indel 软件”的表述属于历史背景，不能直接沿用为当前结论。</p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-09.png" alt="图 12.9 单倍体细胞用于定相"></p>
+<p><em>图 12.9，p298。多个精子的部分位点记录共同提供连锁信息；缺失、错误和减数分裂交叉要一起解释。A&#x2F;T 等是二倍体未定相基因型，底部两行才是解析出的单倍型。</em></p>
+<p>可把定相写成带噪声的约束问题：在精子这类单倍体细胞中，共同观测到的等位提供同一条染色体上的连锁信息，但交叉可使沿染色体的来源切换。HMM 中的隐藏状态可表示亲本单倍型，转移与重组有关，发射与测序&#x2F;扩增错误有关。只按全序列多数投票会漏掉交叉。</p>
+<h3 id="3-3-scRNA-seq-从-FASTQ-到矩阵-【重点】"><a href="#3-3-scRNA-seq-从-FASTQ-到矩阵-【重点】" class="headerlink" title="3.3 scRNA-seq 从 FASTQ 到矩阵 【重点】"></a>3.3 scRNA-seq 从 FASTQ 到矩阵 【重点】</h3><p><img src="/bioinformatics-notes/images/ch12/fig12-10.png" alt="图 12.10 历史软件统计"></p>
+<p><em>图 12.10，p300。工具数量与语言比例为历史统计，学习任务应围绕分析问题，而不是记忆工具排名。</em></p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-11a.png" alt="图 12.11A 总体流程"></p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-11b.png" alt="图 12.11B 分析任务"></p>
+<p><em>图 12.11，p301—302。原图的分类有历史局限；实际分析要把生物学重复、barcode&#x2F;UMI、环境 RNA 与双细胞处理放回流程。</em></p>
+<p>三个标签不能混。 sample index 区分文库&#x2F;样本；cell barcode 区分捕获单元；UMI 区分原始分子。cell barcode 相同不保证只有一个细胞，因为可能同一液滴含两个细胞；UMI 也不是全实验唯一的分子身份证，要在细胞、基因等上下文中纠错与去重。</p>
+<p>Smart-seq2 偏全长转录本，常见方案不含 UMI；液滴 3′&#x2F;5′端计数方案常用 UMI，适合大规模细胞。不能对前者凭空做 UMI 去重，也不能把后者 PCR 扩增后的 read 数直接当分子数。具体 read 结构以实验化学版本为准。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FASTQ + barcode结构 + 参考FASTA/GTF</span><br><span class="line">  → read/barcode质控与纠错</span><br><span class="line">  → 剪接感知比对或转录本映射</span><br><span class="line">  → 细胞、基因、UMI归属与分子折叠</span><br><span class="line">  → 原始barcode×gene矩阵</span><br><span class="line">  → 区分空液滴与真实细胞，处理背景/双细胞</span><br><span class="line">  → 保留原始计数及每一步过滤记录</span><br></pre></td></tr></table></figure>
+
+<p>Cell Ranger、STARsolo、alevin-fry 等解决前端定量问题；Seurat、Scanpy 等主要组织下游分析。AnnData 惯例是 cells×genes，Seurat 常用 genes×cells。文件读入后第一件事是检查维度、ID、总计数和重复基因名，转置应依据对象定义，而不是沿用其他软件的习惯。</p>
+<h3 id="3-4-质量控制是多证据判断-【重点】"><a href="#3-4-质量控制是多证据判断-【重点】" class="headerlink" title="3.4 质量控制是多证据判断 【重点】"></a>3.4 质量控制是多证据判断 【重点】</h3><table>
+<thead>
+<tr>
+<th>指标&#x2F;现象</th>
+<th>可能解释</th>
+<th>分析动作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>UMI&#x2F;基因数极低</td>
+<td>空液滴、细胞破损、天然 RNA 少的类型</td>
+<td>联合背景模型与 marker 判断</td>
+</tr>
+<tr>
+<td>UMI&#x2F;基因数极高</td>
+<td>双细胞，也可能是大细胞或高活性状态</td>
+<td>检查 doublet 评分与互斥 marker</td>
+</tr>
+<tr>
+<td>线粒体比例高</td>
+<td>损伤、应激，也可能是组织特性</td>
+<td>分样本&#x2F;类型看分布，不机械用 5%</td>
+</tr>
+<tr>
+<td>环境 RNA marker 普遍低表达</td>
+<td>裂解细胞 RNA 污染</td>
+<td>估计背景、检查去污染前后结果</td>
+</tr>
+<tr>
+<td>植物叶绿体转录本高</td>
+<td>细胞类型、细胞器状态、污染</td>
+<td>结合组织背景而非一律删除</td>
+</tr>
+<tr>
+<td>批次独有细胞群</td>
+<td>技术批次或真实生物特异群</td>
+<td>用实验设计与独立标记区分</td>
+</tr>
+</tbody></table>
+<p>细胞周期不是普遍应删除的噪声：研究增殖时它就是信号。应激基因、线粒体比例等也不能不加判断全部回归掉。阈值要分样本记录，并做敏感性检查，观察是否选择性移除某一类细胞。</p>
+<p>【现代实践】跨模态单细胞最佳实践强调按任务组织 QC、表示和整合，并区分不同模态的统计特性；可作为进一步阅读入口。<a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41576-023-00586-w.pdf">Heumos 等，2023</a></p>
+<h3 id="3-5-归一化、HVG、PCA-与近邻图-【重点】"><a href="#3-5-归一化、HVG、PCA-与近邻图-【重点】" class="headerlink" title="3.5 归一化、HVG、PCA 与近邻图 【重点】"></a>3.5 归一化、HVG、PCA 与近邻图 【重点】</h3><p>设 <span class="math">\(X_{cg}\)</span> 为细胞 <span class="math">\(c\)</span>、基因 <span class="math">\(g\)</span> 的 UMI 计数，<span class="math">\(s_c=\sum_gX_{cg}\)</span>。一种探索用变换为：</p>
+<div class="math">\[
+Y_{cg}=\log\left(1+10^4 X_{cg}/s_c\right).
+\]</div>
+
+<p>它减少文库规模差异，但不恢复绝对分子数量。某类基因大量上调时，固定总和归一化还可能被成分性影响。保留原始 <span class="math">\(X\)</span>；不要把 log 矩阵或整合 embedding 当作负二项模型的原始 count 输入。</p>
+<p>高变基因 HVG 选择应考虑均值—方差关系：均值高通常方差也高，不能只选原始方差最大的基因。HVG 用于表征状态的特征子集，并不意味着其他基因没有功能。若做预测评测，需要在训练折内估计特征选择和变换。</p>
+<p>PCA 对中心化数据求主要正交变化方向，得到 cells×<span class="math">\(K\)</span> 的表示。对细胞构建 kNN 图，再以 Louvain&#x2F;Leiden 等做社区划分。不同实现可用加权近邻图或 SNN 图；不能把 Seurat 和 Scanpy 的默认图构造概括成完全相同。聚类通常在较高维 PC&#x2F;潜空间上进行，二维 UMAP 主要用于展示。</p>
+<p>cluster 不等于 cell type。 分辨率参数可把同一类型拆成多个状态，也可把相近类型合并。应检查 marker、多样本一致性、细胞数、已知生物学与稳定性，保留不确定注释。</p>
+<h3 id="3-6-t-SNE、UMAP-与可视化边界-【必须掌握】"><a href="#3-6-t-SNE、UMAP-与可视化边界-【必须掌握】" class="headerlink" title="3.6 t-SNE、UMAP 与可视化边界 【必须掌握】"></a>3.6 t-SNE、UMAP 与可视化边界 【必须掌握】</h3><p>t-SNE 把高维邻居关系转成概率，低维用重尾分布，优化 KL 散度。UMAP 从局部邻域构建模糊图并优化低维布局。两者都受邻域大小、初始化、距离和随机种子影响；岛间距离不能直接解释为进化距离或分化时间，岛的面积也不等于细胞数量；图中点数与实际细胞数的对应须结合抽样和绘图方式确认。</p>
+<p>对可视化至少问四个问题：结构是否在原始&#x2F;较高维空间也存在？是否与批次重合？参数变化后是否稳定？是否有独立 marker 或实验支持？二维图的视觉分离程度不足以评价模型。</p>
+<h3 id="3-7-注释与跨样本整合-【重点】"><a href="#3-7-注释与跨样本整合-【重点】" class="headerlink" title="3.7 注释与跨样本整合 【重点】"></a>3.7 注释与跨样本整合 【重点】</h3><p>注释有三条主要证据：已知 marker 组合；参考表达谱&#x2F;映射；监督分类器。单个 marker 可能同时出现在多个类型，或因应激、环境 RNA 出现。自动分类应允许 unknown&#x2F;低置信结果；参考库没有的类型不应被强制归入最近标签。</p>
+<p>批次整合的目标是校正技术差异并保留相关生物差异。如果病例全部来自批次 A，而对照全部来自批次 B，条件和批次就完全混杂；仅靠这批数据无法把两者的影响分开。一个把所有细胞混在一起的 embedding 可能过度校正；只看 batch mixing 不足，应同时看类型&#x2F;状态保留与独立下游结论。</p>
+<p>配对多模态指同一个细胞上测到多个模态；非配对整合缺少这种直接对应，要依赖共享类型、锚点或建模假设。scATAC 的 peak 坐标、RNA 基因 ID 与蛋白标签并非天然同一特征空间。预测未测模态属于模型推断，不应称作新测量。</p>
+<h3 id="3-8-差异表达、差异丰度与伪重复-【重点】"><a href="#3-8-差异表达、差异丰度与伪重复-【重点】" class="headerlink" title="3.8 差异表达、差异丰度与伪重复 【重点】"></a>3.8 差异表达、差异丰度与伪重复 【重点】</h3><p>要分清两个问题：某类型内部的表达变化与某类型在样本中的比例变化。前者可按“供体×细胞类型”汇总原始计数做 pseudobulk，或采用合适的分层模型；后者分析样本层面的类型计数&#x2F;组成，并考虑总量约束与捕获偏差。</p>
+<p>同一供体的细胞共享遗传背景和处理条件，不是独立供体重复。即使每组有数万细胞，只有一个供体也不能可靠估计人群层面的组间差异。正确的重采样、置换和测试划分要尊重供体层级。<a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41467-021-21038-1">Zimmerman 等原研究</a></p>
+<p>用同一表达数据聚类，再检验聚类间差异得到的 marker 适合描述群体，但其显著性受选择过程影响，不能当作独立验证。对重要 marker 使用独立样本、原位检测或其他实验验证。</p>
+<h3 id="3-9-拟时序与真实谱系-【重点】"><a href="#3-9-拟时序与真实谱系-【重点】" class="headerlink" title="3.9 拟时序与真实谱系 【重点】"></a>3.9 拟时序与真实谱系 【重点】</h3><p><img src="/bioinformatics-notes/images/ch12/fig12-12.png" alt="图 12.12 拟时序意义与算法"></p>
+<p><em>图 12.12，p305。状态流形上的顺序由表达相似性与图结构估计；根节点需要生物学知识。图中细胞被投影到主图上，不表示实验中同一个细胞真的被连续观测。</em></p>
+<p>教材主要展示以反向图嵌入&#x2F;主树为核心的思路：选特征，然后降维，然后学主图，然后选根，然后计算沿图距离，然后分支分配。Monocle 不同代际的实现不同，不能把所有版本都说成“PCA 加最小生成树”。</p>
+<div class="math">\[
+t_c=d_G(r,\Pi_G(z_c)),
+\]</div>
+
+<p>其中 <span class="math">\(r\)</span> 为根，<span class="math">\(z_c\)</span> 为细胞潜表示，<span class="math">\(\Pi_G\)</span> 为投影到图上，<span class="math">\(d_G\)</span> 为图上的路径距离。这个 <span class="math">\(t\)</span> 是相对坐标，单位不是小时。稀疏采样、周期过程、多个起点、收敛轨迹都可能破坏树假设。</p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-13.png" alt="图 12.13 拟南芥根轨迹"></p>
+<p><em>图 12.13，p306。结合 WOX5 等标记和组织知识解释分支；图中的 SC、PM 等标签应按教材研究背景理解，不能仅凭几何位置自动命名。</em></p>
+<p>【现代实践】RNA velocity 利用未剪接&#x2F;已剪接 RNA 关系推断局部变化趋势，但依赖转录、剪接、降解模型与数据质量；箭头不等于实测细胞移动，更不直接证明祖先—后代关系。时间序列、脉冲标记、谱系条码与活细胞追踪可以提供额外证据。</p>
+<h3 id="3-10-细胞数、深度、重复数怎样权衡-【重点】"><a href="#3-10-细胞数、深度、重复数怎样权衡-【重点】" class="headerlink" title="3.10 细胞数、深度、重复数怎样权衡 【重点】"></a>3.10 细胞数、深度、重复数怎样权衡 【重点】</h3><p><img src="/bioinformatics-notes/images/ch12/fig12-14a.png" alt="图 12.14A 细胞数与聚类"></p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-14bc.png" alt="图 12.14BC 比例和轨迹"></p>
+<p><em>图 12.14，p307—308。特定拟南芥根数据的抽样实验。约 2 万细胞的经验观察不能推广为所有组织的最低标准；同一数据下采样也不能模拟增加供体的收益。</em></p>
+<p>若目标类型比例为 <span class="math">\(p\)</span>，独立随机捕获 <span class="math">\(N\)</span> 个细胞，至少看到一个目标细胞的概率为 <span class="math">\(1-(1-p)^N\)</span>。达到概率 <span class="math">\(q\)</span> 需要：</p>
+<div class="math">\[
+N\ge\left\lceil\frac{\log(1-q)}{\log(1-p)}\right\rceil.
+\]</div>
+
+<span class="math">\(p=0.001\)</span>、<span class="math">\(q=0.95\)</span> 时约需 2995 个细胞；但只看到 1 个不足以可靠注释或比较差异。希望至少 <span class="math">\(k\)</span> 个时需计算 <span class="math">\(\operatorname{Binomial}(N,p)\)</span> 的尾概率。真实采样还存在类型特异的解离损失、质控损失与供体差异，公式只能作理想规划下界。
+
+<p>增加深度主要改善同一细胞的检测，增加细胞数主要改善状态覆盖，增加生物学重复主要改善组间推断。预算设计应先明确研究问题，而不是最大化单个数字。</p>
+<h2 id="4-第三节-基因组预测与选择"><a href="#4-第三节-基因组预测与选择" class="headerlink" title="4. 第三节 基因组预测与选择"></a>4. 第三节 基因组预测与选择</h2><h3 id="4-1-从基因组资源到育种决策-【应该理解】"><a href="#4-1-从基因组资源到育种决策-【应该理解】" class="headerlink" title="4.1 从基因组资源到育种决策 【应该理解】"></a>4.1 从基因组资源到育种决策 【应该理解】</h3><p><img src="/bioinformatics-notes/images/ch12/fig12-15.png" alt="图 12.15 5G 育种策略"></p>
+<p><em>图 12.15，p309。1G 基因组组装、2G 种质资源鉴定、3G 基因功能鉴定、4G 基因组育种、5G 基因编辑。“5G”是本节的技术组织方式，不是通信技术，也不是所有项目必须顺序完成的五步。</em></p>
+<p>基因组提供候选变异和单倍型，种质库提供遗传多样性，功能研究解释候选基因，育种设计将预测转化为选择与交配，编辑可引入特定改变。它们解决的问题不同：知道一个 SNP 与性状关联，不代表改变它就会得到目标表型。</p>
+<p>资源群体、双亲群体、NAM 和 MAGIC 有不同的亲缘与重组结构。NAM 是 nested association mapping（巢式关联作图）；MAGIC 是多亲本高世代互交群体。群体如何构建，会影响 LD、统计功效及模型能泛化到哪些材料。</p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-16.png" alt="图 12.16 育种 4.0"></p>
+<p><em>图 12.16，p311。组学、表型采集、计算建模与实验干预构成反馈过程；“智能”不等于对所有环境都能准确预测。</em></p>
+<h3 id="4-2-MAS、GWAS、GS-和-GEBV-【重点】"><a href="#4-2-MAS、GWAS、GS-和-GEBV-【重点】" class="headerlink" title="4.2 MAS、GWAS、GS 和 GEBV 【重点】"></a>4.2 MAS、GWAS、GS 和 GEBV 【重点】</h3><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>主要任务</th>
+<th>输出</th>
+<th>不能混淆的地方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GWAS&#x2F;QTL 作图</td>
+<td>寻找与性状相关的位点&#x2F;区间</td>
+<td>关联效应、显著性、候选区域</td>
+<td>显著 SNP 可能只是与因果位点连锁</td>
+</tr>
+<tr>
+<td>MAS 标记辅助选择</td>
+<td>用已知有用标记选择材料</td>
+<td>标记组合与选留决策</td>
+<td>对少数大效应位点更直观，可能遗漏多基因小效应</td>
+</tr>
+<tr>
+<td>GP 基因组预测</td>
+<td>从全基因组标记预测性状或遗传值</td>
+<td>每个个体的预测值</td>
+<td>预测好不要求每个标记效应可因果解释</td>
+</tr>
+<tr>
+<td>GS 基因组选择</td>
+<td>将 GP 用于选择和育种</td>
+<td>排序、选留&#x2F;交配方案</td>
+<td>还需要考虑多性状、成本、近交与多样性</td>
+</tr>
+<tr>
+<td>EBV &#x2F; GEBV</td>
+<td>估计可传递的加性遗传价值</td>
+<td>育种值预测</td>
+<td>不等于一次试验中测到的原始表型</td>
+</tr>
+</tbody></table>
+<p>性状可简化写为 <span class="math">\(P=G+E+G\times E+\varepsilon\)</span>，其中 <span class="math">\(G\)</span> 还可分加性、显性、上位性。对繁殖选择，加性遗传值很重要；一个对当前个体表现很好的预测器，不一定准确预测后代平均表现。</p>
+<p>全基因组预测利用密集标记与因果变异的连锁关系，也利用材料的亲缘结构。标记不必逐个显著，但覆盖范围、等位频率和训练群体的代表性会限制预测。全基因组回归的高维性通常需要收缩或选择，不能直接做无约束最小二乘。<a target="_blank" rel="noopener" href="https://doi.org/10.1534/genetics.112.143313">全基因组回归综述</a></p>
+<h3 id="4-3-线性模型与混合模型-【重点】"><a href="#4-3-线性模型与混合模型-【重点】" class="headerlink" title="4.3 线性模型与混合模型 【重点】"></a>4.3 线性模型与混合模型 【重点】</h3><p>教材式（12.1）可统一记为：</p>
+<div class="math">\[
+y=Xb+Zu+e,\quad u\sim N(0,G\sigma_a^2),\quad e\sim N(0,R).
+\]</div>
+
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>维度</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><span class="math">\(y\)</span></td>
+<td><span class="math">\(n_{\mathrm{obs}}\times1\)</span></td>
+<td>表型记录；同一材料可以在多个环境有多次记录</td>
+</tr>
+<tr>
+<td><span class="math">\(X\)</span></td>
+<td><span class="math">\(n_{\mathrm{obs}}\times q\)</span></td>
+<td>截距、试验地点、批次等固定效应设计</td>
+</tr>
+<tr>
+<td><span class="math">\(b\)</span></td>
+<td><span class="math">\(q\times1\)</span></td>
+<td>固定效应参数</td>
+</tr>
+<tr>
+<td><span class="math">\(Z\)</span></td>
+<td><span class="math">\(n_{\mathrm{obs}}\times n_{\mathrm{ind}}\)</span></td>
+<td>将记录映射到个体</td>
+</tr>
+<tr>
+<td><span class="math">\(u\)</span></td>
+<td><span class="math">\(n_{\mathrm{ind}}\times1\)</span></td>
+<td>个体加性遗传值</td>
+</tr>
+<tr>
+<td><span class="math">\(G\)</span></td>
+<td><span class="math">\(n_{\mathrm{ind}}\times n_{\mathrm{ind}}\)</span></td>
+<td>由标记估计的基因组关系矩阵</td>
+</tr>
+<tr>
+<td><span class="math">\(R\)</span></td>
+<td><span class="math">\(n_{\mathrm{obs}}\times n_{\mathrm{obs}}\)</span></td>
+<td>残差协方差，最简为 <span class="math">\(\sigma_e^2I\)</span></td>
+</tr>
+</tbody></table>
+<p>“固定&#x2F;随机”不是“重要&#x2F;不重要”或“确定&#x2F;不确定”的分类。随机效应的协方差结构允许相似个体共享信息。GBLUP 在个体关系空间预测 <span class="math">\(u\)</span>；RR-BLUP 在标记空间对效应做高斯收缩；在一致编码、先验与缩放下，两者可给出等价预测，见§6.4。</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>主要假设&#x2F;惩罚</th>
+<th>适合怎样理解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RR-BLUP &#x2F; ridge</td>
+<td>标记效应共同方差，<span class="math">\(L_2\)</span> 收缩</td>
+<td>多个小效应共同贡献的强基线</td>
+</tr>
+<tr>
+<td>GBLUP</td>
+<td>个体遗传值按 <span class="math">\(G\)</span> 相关</td>
+<td>在亲缘核上做预测</td>
+</tr>
+<tr>
+<td>BayesA</td>
+<td>标记特异方差，厚尾效应</td>
+<td>允许部分较大效应</td>
+</tr>
+<tr>
+<td>BayesB</td>
+<td>零效应与非零效应混合</td>
+<td>同时建模稀疏性与效应异质性</td>
+</tr>
+<tr>
+<td>Bayesian LASSO</td>
+<td>效应的收缩先验</td>
+<td>与 <span class="math">\(L_1\)</span> 收缩思想联系，但后验推断不等于直接 LASSO 优化</td>
+</tr>
+<tr>
+<td>线性 SVR</td>
+<td>正则化线性预测，ε 不敏感损失</td>
+<td>目标函数与 ridge 不同</td>
+</tr>
+</tbody></table>
+<p>“线性”指预测函数对输入特征的组合形式，不代表生物系统没有非线性。关联标记也可能间接编码某些复杂结构。反过来，模型非线性也不自动意味着学到了真实上位性。</p>
+<h3 id="4-4-非线性模型与-1D-CNN-【必须掌握选择逻辑】"><a href="#4-4-非线性模型与-1D-CNN-【必须掌握选择逻辑】" class="headerlink" title="4.4 非线性模型与 1D CNN 【必须掌握选择逻辑】"></a>4.4 非线性模型与 1D CNN 【必须掌握选择逻辑】</h3><p><img src="/bioinformatics-notes/images/ch12/fig12-17a.png" alt="图 12.17A 方法与数据"></p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-17b.png" alt="图 12.17B 性能比较"></p>
+<p><em>图 12.17，p312—313，教材引自 Azodi 等（2019）。比较必须结合物种、性状、样本量、调参和数据划分；原图局部排版残留保留，不代表数据标签。该原研究没有发现对所有性状都最优的算法。<a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/31533955/">论文</a></em></p>
+<p>非线性候选包括核 SVR、随机森林、梯度提升、MLP 和 CNN。教材的“非线性总体更好”不能由图 12.17 或表 12.6 直接推出。小样本、高维标记、复杂 LD 与噪声表型会使强正则线性基线很难被稳定超过。</p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-18.png" alt="图 12.18 SNP 上的一维卷积"></p>
+<p><em>图 12.18，p314。卷积沿有明确顺序的 SNP 轴滑动，不应把个体排列当作可卷积的空间轴。图中核长 3、无 padding 时末项索引应为 <span class="math">\(p-2\)</span>。</em></p>
+<p>对二倍体样本 <span class="math">\(i\)</span> 的双等位标记剂量向量 <span class="math">\(x_i\in\{0,1,2\}^p\)</span>，核长 <span class="math">\(k\)</span> 的一维卷积可写为：</p>
+<div class="math">\[
+h_{i,j,c}=\phi\left(b_c+\sum_{a=0}^{k-1}W_{c,a}x_{i,j+a}\right).
+\]</div>
+
+<p>教材式（12.2）、（12.3）概括了层间线性映射和激活；具体实现要区分激活前 <span class="math">\(z\)</span> 与激活后 <span class="math">\(h\)</span>，写出 batch、channel、position 的维度。对输入长度 <span class="math">\(L\)</span>、padding <span class="math">\(P\)</span>、dilation <span class="math">\(D\)</span>、stride <span class="math">\(S\)</span>，输出长度为 <span class="math">\(\lfloor(L+2P-D(k-1)-1)/S\rfloor+1\)</span>。</p>
+<p>生物学归纳偏置要检查。 相邻 SNP 在物理距离上可能相差很大；不同染色体之间没有连续邻域；同一卷积核跨基因组共享权重是否合适，取决于任务。应考虑染色体分段、位置编码、局部 LD、缺失基因型与不同群体的等位频率。不能只把表格 reshape 成图像就赋予它生物学局部性。</p>
+<h3 id="4-5-基因组预测的评测与育种收益-【重点】"><a href="#4-5-基因组预测的评测与育种收益-【重点】" class="headerlink" title="4.5 基因组预测的评测与育种收益 【重点】"></a>4.5 基因组预测的评测与育种收益 【重点】</h3><p>至少分别评估：随机留出个体、留出家系、留出年份&#x2F;地点、留出新遗传背景。随机划分时近亲同时出现，可能准确回答“预测同一育种群体中的新个体”，却不能证明跨群体迁移。</p>
+<p>训练折内完成缺失填补、标准化、特征选择和超参数选择。测试材料的表型不能参与训练阶段的校正；若使用全体材料的无标签基因型建立某些变换，需明确是 transductive 设定，不能混称完全独立外推。</p>
+<p>报告 Pearson 相关之外，还要报告 RMSE、校准斜率、排名&#x2F;选中材料的实际表现，必要时按环境分层。原始表型含环境噪声，因此与表型的相关性不直接等于与真实育种值的相关性。一个相关性相同但系统性低估高值的模型，会给选择决策带来不同后果。</p>
+<p>【补充】经典选择反应的直觉为 <span class="math">\(\Delta G\approx i r\sigma_A\)</span>，若比较每年收益则还需除以世代间隔 <span class="math">\(L\)</span>。<span class="math">\(i\)</span> 为选择强度，<span class="math">\(r\)</span> 为选择依据与真实育种值的相关性，<span class="math">\(\sigma_A\)</span> 为加性遗传标准差。GS 的价值既可能来自 <span class="math">\(r\)</span> 提高，也可能来自 <span class="math">\(L\)</span> 缩短；长期还须控制近交与遗传多样性损失。</p>
+<h2 id="5-第四节-其他组学与设计任务"><a href="#5-第四节-其他组学与设计任务" class="headerlink" title="5. 第四节 其他组学与设计任务"></a>5. 第四节 其他组学与设计任务</h2><h3 id="5-1-表型组与图像识别"><a href="#5-1-表型组与图像识别" class="headerlink" title="5.1 表型组与图像识别"></a>5.1 表型组与图像识别</h3><h4 id="5-1-1-表型不是一张图片-【重点】"><a href="#5-1-1-表型不是一张图片-【重点】" class="headerlink" title="5.1.1 表型不是一张图片 【重点】"></a>5.1.1 表型不是一张图片 【重点】</h4><p>表型是特定遗传背景、环境与发育阶段下可观察的性状。表型组学希望系统测量多个尺度的形态、生理与生化状态。输入图像是测量媒介，目标往往是叶面积、株高、温度、水分状态、病斑比例或生长速率。</p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-19.png" alt="图 12.19 表型与表型组"></p>
+<p><em>图 12.19，p316。组织层级、环境、发育时期和遗传背景共同决定要采集哪些数据；有限实验只覆盖这个空间的一部分。</em></p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-20.png" alt="图 12.20 表型采集平台"></p>
+<p><em>图 12.20，p317。不同尺度与传感器观察不同性质。图中“激光”是光源类型，不是独立电磁波波段；光谱读数不能不经标定就当作生理量。</em></p>
+<p>RGB 适合颜色与形态；深度相机、立体视觉和激光点云补充三维形状；多&#x2F;高光谱可捕获反射特性；热成像反映温度；CT 可提供内部结构。每种测量都受光照、曝光、视角、遮挡、传感器漂移及标定影响。</p>
+<p>常见 <span class="math">\(\mathrm{NDVI}=(\mathrm{NIR}-\mathrm{Red})/(\mathrm{NIR}+\mathrm{Red})\)</span>，它是反射信号的指标而非直接生物量真值；土壤背景、饱和和采集条件会改变解释。二维叶片像素面积也不是天然的真实表面积，还需要进行尺度标定，并处理拍摄角度和叶片重叠。</p>
+<h4 id="5-1-2-处理流程与任务定义-【重点】"><a href="#5-1-2-处理流程与任务定义-【重点】" class="headerlink" title="5.1.2 处理流程与任务定义 【重点】"></a>5.1.2 处理流程与任务定义 【重点】</h4><p><img src="/bioinformatics-notes/images/ch12/fig12-21.png" alt="图 12.21 图像分析流程"></p>
+<p><em>图 12.21，p318。采集 → 预处理 → 分割 → 特征 → 分类&#x2F;定量。深度学习可以联合学习其中若干步骤，但不会消除采样和标定问题。</em></p>
+<table>
+<thead>
+<tr>
+<th>任务</th>
+<th>输出</th>
+<th>评价</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>分类</td>
+<td>一张图的类别</td>
+<td>混淆矩阵、平衡指标、校准</td>
+<td>是否存在病害</td>
+</tr>
+<tr>
+<td>检测</td>
+<td>对象类别与边框</td>
+<td>AP、召回、定位误差</td>
+<td>穗或果实的位置</td>
+</tr>
+<tr>
+<td>语义分割</td>
+<td>每个像素的类别</td>
+<td>IoU&#x2F;Dice、各类召回</td>
+<td>叶片与背景</td>
+</tr>
+<tr>
+<td>实例分割</td>
+<td>区分同类的不同个体</td>
+<td>实例 AP、匹配后的 IoU、计数误差</td>
+<td>每一片叶或每一个细胞</td>
+</tr>
+<tr>
+<td>性状回归</td>
+<td>连续量及单位</td>
+<td>MAE&#x2F;RMSE、偏差、区间覆盖</td>
+<td>株高、面积、生物量</td>
+</tr>
+</tbody></table>
+<p>传统阈值、Otsu、分水岭、GrabCut、主动轮廓仍可作为适当基线。若光照控制好、对象与背景区别明显，简单方法可能足够；复杂背景、遮挡和细粒度实例则可能需要更复杂模型。方法选择应由测量目标和数据条件决定。</p>
+<h4 id="5-1-3-R-CNN-家族怎样减少重复计算-【应该理解】"><a href="#5-1-3-R-CNN-家族怎样减少重复计算-【应该理解】" class="headerlink" title="5.1.3 R-CNN 家族怎样减少重复计算 【应该理解】"></a>5.1.3 R-CNN 家族怎样减少重复计算 【应该理解】</h4><p><img src="/bioinformatics-notes/images/ch12/fig12-22.png" alt="图 12.22 R-CNN 家族"></p>
+<p><em>图 12.22，p319。比较候选区域来源、卷积特征是否共享、RoI 操作和输出分支。</em></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>核心变化</th>
+<th>输出&#x2F;限制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>R-CNN</td>
+<td>外部候选区域，各区域分别 CNN 提特征</td>
+<td>多次前向计算，开销较大</td>
+</tr>
+<tr>
+<td>Fast R-CNN</td>
+<td>整图共享特征，RoI pooling</td>
+<td>候选区域仍来自外部步骤</td>
+</tr>
+<tr>
+<td>Faster R-CNN</td>
+<td>RPN 学习候选区域</td>
+<td>检测框，不直接给每个像素实例掩模</td>
+</tr>
+<tr>
+<td>Mask R-CNN</td>
+<td>增加掩模分支，RoIAlign 减少量化错位</td>
+<td>同时分类、定位、实例分割</td>
+</tr>
+</tbody></table>
+<p>教材表 12.7 的方法目录按原理重整：FCN 进行密集像素预测；U-Net 以编码—解码和跳跃连接融合尺度；SegNet 利用池化索引辅助上采样；PSPNet 聚合多尺度上下文；DeepLab 使用空洞卷积等设计；W-Net 代表无监督分割思路；交互式方法引入点、框或轮廓提示。该表部分说明与勾选错位，不建议逐格背诵。具体结构以相应原论文为准，例如<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1703.06870">Mask R-CNN</a>。</p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-23.png" alt="图 12.23 教材人脸检测示例"></p>
+<p><em>图 12.23，p323。保留教材示例供完整对照。检测框回答“脸在哪里”，没有证明知道“这个人是谁”；在表型任务中同样要区分检测对象与识别个体。</em></p>
+<h4 id="5-1-4-科学图像评测的重点-【重点】"><a href="#5-1-4-科学图像评测的重点-【重点】" class="headerlink" title="5.1.4 科学图像评测的重点 【重点】"></a>5.1.4 科学图像评测的重点 【重点】</h4><p>同一植物的连续帧、同一叶片裁出的 patch、同一视野的重叠图块必须一起划分，不能随机打散造成泄漏。根据应用目标留出植物、地块、地点、季节、设备或品种。标注可能有边界不确定性；除平均 Dice 外，还应说明标注规则、复核过程和难例表现。</p>
+<p>更关键的是误差如何传播到性状：Dice 很高仍可能在病斑小区域严重漏检；面积略有系统偏差可能改变生长曲线斜率。因此应同时评价像素&#x2F;对象指标与最终科学量，检查误差是否与大小、颜色或处理组相关。</p>
+<h3 id="5-2-合成生物学与基因组设计"><a href="#5-2-合成生物学与基因组设计" class="headerlink" title="5.2 合成生物学与基因组设计"></a>5.2 合成生物学与基因组设计</h3><h4 id="5-2-1-部件—装置—系统-【应该理解】"><a href="#5-2-1-部件—装置—系统-【应该理解】" class="headerlink" title="5.2.1 部件—装置—系统 【应该理解】"></a>5.2.1 部件—装置—系统 【应该理解】</h4><p>合成生物学把设计目标与可构建的生物系统联系起来。对于 CS 学生，重要的是理解抽象层级、接口、状态、动力学和约束，而不是把 DNA 看作任意可执行的软件。</p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-24.png" alt="图 12.24 层次结构"></p>
+<p><em>图 12.24，p323。部件组成装置，装置组成细胞系统，细胞系统可进一步组织为多细胞系统。层级抽象有用，但生物部件的行为常依赖上下文。</em></p>
+<p>启动子、编码区、终止子、报告基因等是部件；反相器、双稳态开关和振荡回路是装置；多个装置与宿主相互作用形成系统。报告基因提供可测输出，不保证完全代表目标过程。宿主资源竞争、代谢负担、随机表达、拷贝数和环境会改变装置行为。</p>
+<p>教材以 BioBrick 等历史标准说明接口统一。应学习“可组合接口、记录来源、验证连接和功能”的原则，不将某一装配标准当成所有现代设计的唯一方式。Golden Gate 是装配方法类别，配套设计软件与实验方法本身不是同一对象。</p>
+<h4 id="5-2-2-从逻辑门到动态系统-【重点】"><a href="#5-2-2-从逻辑门到动态系统-【重点】" class="headerlink" title="5.2.2 从逻辑门到动态系统 【重点】"></a>5.2.2 从逻辑门到动态系统 【重点】</h4><p>生物反相器可近似为抑制性 Hill 响应：</p>
+<div class="math">\[
+\frac{dx}{dt}=\frac{\alpha}{1+(u/K)^h}-\delta x.
+\]</div>
+
+<span class="math">\(u\)</span> 为输入抑制因子，<span class="math">\(x\)</span> 为输出，<span class="math">\(\alpha\)</span> 为最大产生速率，<span class="math">\(K\)</span> 为半响应尺度，<span class="math">\(h\)</span> 描述曲线陡峭程度，<span class="math">\(\delta\)</span> 为降解/稀释率。逻辑门是把连续响应离散化后的近似；输入改变后，输出需要经过产生、降解与稀释过程才会响应。稳态为 <span class="math">\(x^*=\alpha/[\delta(1+(u/K)^h)]\)</span>，时间尺度约 <span class="math">\(1/\delta\)</span>。
+
+<p>双稳态要求反馈与参数支持多个稳定状态，不能只画两条互相抑制的箭头就保证成立；振荡也需要合适反馈、延迟&#x2F;时间尺度及参数区域。确定性 ODE 适合平均动力学，低分子数情形还需考虑随机反应。第 10 章的布尔网络可视为另一层抽象，但省略了速率与分子数。</p>
+<h4 id="5-2-3-基因组设计中的三个不同问题-【必须区分】"><a href="#5-2-3-基因组设计中的三个不同问题-【必须区分】" class="headerlink" title="5.2.3 基因组设计中的三个不同问题 【必须区分】"></a>5.2.3 基因组设计中的三个不同问题 【必须区分】</h4><p><img src="/bioinformatics-notes/images/ch12/fig12-25.png" alt="图 12.25 人工基因组的分层构建示意"></p>
+<p><em>图 12.25，p326，教材引自 Gibson 等（2010）。重点理解分层构建、验证与版本一致性；图中第三层“10 kb”应为约 100 kb：原研究先组装约 10 kb 片段，再构建 11 个约 100 kb 片段，最后组装完整基因组（Gibson et al., 2010；JCVI 原始公告）。</em></p>
+<p>合成基因组是获得人工构建的基因组序列并在适当系统中实现其功能，不意味着细胞所有成分都由化学合成。最小基因组是在特定背景与条件下仍能维持所定义功能的精简基因组。必需基因集来自特定条件下的必需性判定；两个各自可删除的基因可能因功能冗余而不能同时删除。</p>
+<p>教材的 473 基因例子应理解为 2016 年的 JCVI-syn3.0 历史成果；环境依赖性是重要边界，不能据此断言所有生命只需 473 个基因。<a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41467-019-10837-2">环境与最小基因组研究</a></p>
+<p>基因组设计可以写为多目标、约束优化：维持存活与目标功能，减少不需要的负担，考虑稳定性、适应性和测量误差。目标间常有冲突；生长速度最高与产物产量最高不必是同一个设计。</p>
+<h4 id="5-2-4-DNA-水印、重编码与扩展字母表-【应该理解】"><a href="#5-2-4-DNA-水印、重编码与扩展字母表-【应该理解】" class="headerlink" title="5.2.4 DNA 水印、重编码与扩展字母表 【应该理解】"></a>5.2.4 DNA 水印、重编码与扩展字母表 【应该理解】</h4><p>DNA 水印是用核苷酸序列存储文本，类似人为定义字符编码，不等于核糖体采用了新的氨基酸编码规则。密码子重编码改变某些密码子的使用或解码关系；引入非天然碱基则改变字母表，需要配套信息存储、复制、转录与翻译机制。</p>
+<p>从 4 个字母到 6 个字母，三元组合数量由 <span class="math">\(4^3\)</span> 变为 <span class="math">\(6^3\)</span>，只表示组合空间变大，不能直接推导“获得了多少种新氨基酸”。教材把不同工作串成一个结论过于简化。Zhang 等的工作展示了特定非天然密码子的信息读取与蛋白掺入能力，不支持任意组合都有效。<a target="_blank" rel="noopener" href="https://www.nature.com/articles/nature24659">原论文</a></p>
+<h4 id="5-2-5-DBTL-与-AI4S-的接口-【重点】"><a href="#5-2-5-DBTL-与-AI4S-的接口-【重点】" class="headerlink" title="5.2.5 DBTL 与 AI4S 的接口 【重点】"></a>5.2.5 DBTL 与 AI4S 的接口 【重点】</h4><p><img src="/bioinformatics-notes/images/ch12/fig12-26.png" alt="图 12.26 GoldenBraid 历史界面"></p>
+<p><em>图 12.26，p328。是教材出版时的平台界面，说明部件库、设计与组合记录之间的关系，不代表现在的界面。</em></p>
+<p>教材表 12.8 可按任务理解：序列&#x2F;部件设计，拓扑与线路设计，动力学模拟，多细胞系统模拟。COPASI 等属于建模模拟工具；部件库或装配工具不能代替行为预测。</p>
+<p>DBTL 指 Design—Build—Test—Learn：提出候选 → 构建 → 测量 → 更新模型。对于昂贵实验，贝叶斯优化或主动学习用预测均值与不确定性选择下一批候选，但必须同时考虑约束、批次效应、失败实验和选择偏差。模型只见过成功设计时，其置信度可能严重失真。</p>
+<p>【研究设想】可用安全的抽象动力学模拟练习主动学习：在参数空间预测稳态输出与响应时间，比较随机采样与不确定性采样。模拟结果只能说明优化策略在所设模型中的表现，不构成真实生物线路性能证据。</p>
+<h3 id="5-3-翻译组与-Ribo-seq"><a href="#5-3-翻译组与-Ribo-seq" class="headerlink" title="5.3 翻译组与 Ribo-seq"></a>5.3 翻译组与 Ribo-seq</h3><h4 id="5-3-1-转录本、翻译活动与蛋白丰度-【重点】"><a href="#5-3-1-转录本、翻译活动与蛋白丰度-【重点】" class="headerlink" title="5.3.1 转录本、翻译活动与蛋白丰度 【重点】"></a>5.3.1 转录本、翻译活动与蛋白丰度 【重点】</h4><p>RNA-seq 估计 RNA 丰度；Ribo-seq 测量核糖体保护的 RNA 片段；蛋白质组测量蛋白质。三者有联系，但翻译速率、核糖体停顿和蛋白降解会使它们不同步。翻译组关注正在翻译的 RNA&#x2F;ORF 与其调控，不应直接定义为全部稳定蛋白的集合。</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>主要读出</th>
+<th>解释尺度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>polysome profiling</td>
+<td>RNA 在不同核糖体负载组分的分布</td>
+<td>负载与翻译状态</td>
+</tr>
+<tr>
+<td>RNC-seq</td>
+<td>与核糖体—新生链复合物相关的 RNA</td>
+<td>与翻译相关的转录本</td>
+</tr>
+<tr>
+<td>TRAP-seq</td>
+<td>经标记核糖体富集的 RNA</td>
+<td>可用于特定细胞群的翻译相关 RNA</td>
+</tr>
+<tr>
+<td>Ribo-seq</td>
+<td>核糖体保护足迹 RPF</td>
+<td>读框、ORF、局部占据与翻译调控</td>
+</tr>
+</tbody></table>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-27.png" alt="图 12.27 Ribo-seq 与 RNA-seq"></p>
+<p><em>图 12.27，p329。左侧区分实验读出，右侧展示 ORF 和周期性分析。图中的 read 长度是示例设置，不是所有实验的固定参数。</em></p>
+<h4 id="5-3-2-P-site-与三核苷酸周期-【重点】"><a href="#5-3-2-P-site-与三核苷酸周期-【重点】" class="headerlink" title="5.3.2 P-site 与三核苷酸周期 【重点】"></a>5.3.2 P-site 与三核苷酸周期 【重点】</h4><p>一个 RPF 覆盖核糖体保护的片段，read 起点并不是核糖体正在解码的密码子。按 read 长度与实验特点估计 5′或 3′端到 P-site 的 offset，再把足迹转换成 P-site 位置。负链必须按转录方向处理；剪接 read 需要跨 CIGAR 中的内含子计算，不能直接在基因组坐标上机械加一个常数。</p>
+<p>核糖体按密码子前进，汇总多个细胞&#x2F;分子的足迹后，真正翻译的 CDS 常呈三核苷酸读框偏好。应按足迹长度分层检查长度分布、读框、起止位置 metagene 图及重复一致性。一个短区域里 reads 数量很少却恰好落在同一读框，还不足以确认稳定翻译。</p>
+<p>RiboTaper 利用三核苷酸周期性识别翻译区域；riboWaltz 侧重 P-site 相关处理，RiboCode 等提供其他 ORF 识别方法。不同工具的假设与统计量不可互换。<a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/26657557/">RiboTaper 原研究</a></p>
+<h4 id="5-3-3-一条可解释的分析流程-【重点】"><a href="#5-3-3-一条可解释的分析流程-【重点】" class="headerlink" title="5.3.3 一条可解释的分析流程 【重点】"></a>5.3.3 一条可解释的分析流程 【重点】</h4><ol>
+<li>明确配对实验：同一生物学背景下 RNA-seq 与 Ribo-seq，保留处理、时间点、批次、重复信息。</li>
+<li>去接头、检查足迹长度，去 rRNA&#x2F;tRNA 等污染；保留过滤前后的数量。</li>
+<li>剪接感知比对到一致的参考与注释；处理多重比对、链方向和重复策略。</li>
+<li>用可信 CDS 的 metagene 模式估计长度依赖 offset，检查读框与起止位点。</li>
+<li>进行 ORF 发现、uORF 分析或已知 CDS 计数；新转录本注释主要由合适 RNA 证据支持，不能仅靠短足迹拼接。</li>
+<li>匹配 RNA 与 Ribo 的基因&#x2F;ORF 计数，使用重复和联合模型分析差异翻译。</li>
+<li>对重要新 ORF 结合质谱、报告系统或其他独立证据，区分“有翻译迹象”与“产生稳定且有功能的蛋白”。</li>
+</ol>
+<p>教材 p330 将重复 BAM 合并用于 ORF 发现，这一步不等于合并后做差异检验。差异分析仍须保留各独立样本的计数及配对信息。</p>
+<p>不要把所有相同坐标 Ribo reads 一律当 PCR 重复删除：真实核糖体停顿也会造成同位点堆积，去重策略需结合 UMI 和实验设计。</p>
+<h4 id="5-3-4-TE-的比值与差异检验-【重点】"><a href="#5-3-4-TE-的比值与差异检验-【重点】" class="headerlink" title="5.3.4 TE 的比值与差异检验 【重点】"></a>5.3.4 TE 的比值与差异检验 【重点】</h4><p>探索时常用 <span class="math">\(\mathrm{TE}_g=R_g^{\mathrm{norm}}/M_g^{\mathrm{norm}}\)</span>，分别表示标准化后的 Ribo 与 RNA 信号之比。它反映每单位 RNA 的核糖体占据程度；若延伸变慢，核糖体可能积累，即使蛋白合成通量没有提高。不要把 TE 无条件解释成每秒合成蛋白数。</p>
+<p>差异 TE 是“Ribo 变化是否超过 RNA 变化”：</p>
+<div class="math">\[
+\Delta\log TE_g=\log(R_{g,B}/R_{g,A})-\log(M_{g,B}/M_{g,A}).
+\]</div>
+
+<p>这里 <span class="math">\(R\)</span>、<span class="math">\(M\)</span> 须经过恰当规模处理。统计检验可用负二项联合模型中的 condition×assay 交互项，并处理批次与样本配对。分别检验两个 assay，得到一个显著、一个不显著的结果，并不能推出交互项显著。简单比值在分母低时不稳定；pseudocount 选择也会影响结果。</p>
+<h4 id="5-3-5-uORF-与玉米干旱案例-【必须掌握读图】"><a href="#5-3-5-uORF-与玉米干旱案例-【必须掌握读图】" class="headerlink" title="5.3.5 uORF 与玉米干旱案例 【必须掌握读图】"></a>5.3.5 uORF 与玉米干旱案例 【必须掌握读图】</h4><p>uORF 位于主 ORF 上游，可能影响扫描、再起始与主 ORF 翻译。不同 uORF 位置、长度、上下文和处理条件会产生不同作用，不可概括为所有 uORF 都抑制所有下游基因。</p>
+<p><img src="/bioinformatics-notes/images/ch12/fig12-28.png" alt="图 12.28 玉米 Ribo-seq 案例"></p>
+<p><em>图 12.28，p331，教材引自 Lei 等（2015）。A 看足迹长度，B 看三核苷酸周期，C 看起止周围占据，D 看区域分布。<span class="math">\(D\)</span> 的纵轴有断轴，CDS 占比远大于 UTR。原图 B、C 部分横轴文字与起止位置描述不一致，应结合图注与原论文解释。</em></p>
+<p>该案例说明可把转录和翻译层结合研究胁迫响应。教材列出干旱条件下 TE 变化、序列特征关系与 uORF 发现等结果；它们是特定样本、物种和分析设置下的发现，不是普适定律。尤其正文“RPF 主要位于 5′UTR”与图 D 相矛盾，应更正为主要位于 CDS。<a target="_blank" rel="noopener" href="https://onlinelibrary.wiley.com/doi/abs/10.1111/tpj.13073">原研究</a></p>
+<h2 id="6-关键数据对象与统计推导"><a href="#6-关键数据对象与统计推导" class="headerlink" title="6. 关键数据对象与统计推导"></a>6. 关键数据对象与统计推导</h2><h3 id="6-1-数据、shape、单位与坐标速查-【重点】"><a href="#6-1-数据、shape、单位与坐标速查-【重点】" class="headerlink" title="6.1 数据、shape、单位与坐标速查 【重点】"></a>6.1 数据、shape、单位与坐标速查 【重点】</h3><table>
+<thead>
+<tr>
+<th>数据对象</th>
+<th>典型 shape&#x2F;字段</th>
+<th>需要检查的语义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hi-C pairs</td>
+<td>read ID、chr1、pos1、chr2、pos2、strand 等</td>
+<td>坐标基准、排序、有效对定义</td>
+</tr>
+<tr>
+<td><code>.cool/.mcool</code></td>
+<td>bins 表＋稀疏 pixels 表</td>
+<td>resolution、count、balance 权重与 mask</td>
+</tr>
+<tr>
+<td>scRNA 计数</td>
+<td><span class="math">\(N_{\mathrm{cell}}\times G_{\mathrm{gene}}\)</span>（AnnData）</td>
+<td>原始 count&#x2F;log 值，ID 版本，稀疏格式</td>
+</tr>
+<tr>
+<td>细胞元数据</td>
+<td><span class="math">\(N_{\mathrm{cell}}\times K\)</span></td>
+<td>sample、donor、condition、batch、cell_type</td>
+</tr>
+<tr>
+<td>降维&#x2F;图</td>
+<td><span class="math">\(N_{\mathrm{cell}}\times d\)</span>；<span class="math">\(N_{\mathrm{cell}}\times N_{\mathrm{cell}}\)</span> 稀疏图</td>
+<td>训练特征、距离、邻居数和边定义</td>
+</tr>
+<tr>
+<td>scDNA</td>
+<td><span class="math">\(N_{\mathrm{cell}}\times N_{\mathrm{site}}\)</span> 或 <span class="math">\(N_{\mathrm{bin}}\)</span></td>
+<td>genotype probability、缺失、覆盖与 ADO</td>
+</tr>
+<tr>
+<td>scATAC fragments</td>
+<td>chr、start、end、barcode、count</td>
+<td>区间、细胞索引、片段与 read 的区别</td>
+</tr>
+<tr>
+<td>基因型</td>
+<td><span class="math">\(N_{\mathrm{ind}}\times P_{\mathrm{marker}}\)</span></td>
+<td>0&#x2F;1&#x2F;2 是哪一等位的剂量、缺失与倍性</td>
+</tr>
+<tr>
+<td>表型</td>
+<td>记录×性状＋个体&#x2F;环境&#x2F;时间</td>
+<td>单位、技术重复、生物重复、校准</td>
+</tr>
+<tr>
+<td>图像与掩模</td>
+<td><span class="math">\(H\times W\times C\)</span>；<span class="math">\(H\times W\)</span></td>
+<td>像素尺寸、类别&#x2F;实例 ID、配准</td>
+</tr>
+<tr>
+<td>Ribo P-site</td>
+<td>chr、pos、strand、read length 等</td>
+<td>offset、剪接、读框与参考注释</td>
+</tr>
+<tr>
+<td>ORF</td>
+<td>transcript ID、start、stop、frame</td>
+<td>转录本坐标与基因组坐标、终止包含规则</td>
+</tr>
+</tbody></table>
+<p>BED 通常为 0-based 半开区间，GTF&#x2F;GFF 通常为 1-based 闭区间；BAM 内部与文本&#x2F;库 API 可能不同。转换时用已知位点核对长度与边界。跨模态对齐依赖 ID 与坐标语义，不是按行号直接拼矩阵。</p>
+<h3 id="6-2-Hi-C-的平衡、绝缘与分辨率-【补充推导】"><a href="#6-2-Hi-C-的平衡、绝缘与分辨率-【补充推导】" class="headerlink" title="6.2 Hi-C 的平衡、绝缘与分辨率 【补充推导】"></a>6.2 Hi-C 的平衡、绝缘与分辨率 【补充推导】</h3><p>令 <span class="math">\(C\)</span> 为已过滤的正对称矩阵，<span class="math">\(B=\operatorname{diag}(w)C\operatorname{diag}(w)\)</span>，<span class="math">\(r_i=\sum_jB_{ij}\)</span>。教学迭代 <span class="math">\(w_i\leftarrow w_i/\sqrt{r_i}\)</span> 尝试把行和拉向 1；反复计算直至行和收敛。它展示对称矩阵缩放原理，不是生产级 ICE 完整实现：真实稀疏矩阵要处理支撑结构、低覆盖、对角屏蔽与收敛失败。</p>
+<p>对边界 <span class="math">\(b\)</span>，简化绝缘量：</p>
+<div class="math">\[
+I_b=\frac1{w^2}\sum_{i=b-w}^{b-1}\sum_{j=b}^{b+w-1}B_{ij}.
+\]</div>
+
+<p>低 <span class="math">\(I_b\)</span> 提示跨边界接触少。固定 <span class="math">\(w\)</span> 会选择一个尺度；边界附近缺失 bin 或低可比对性也会产生低值。实际方法可做距离校正、log 变换、局部背景标准化和多窗口整合。不要把所有局部最小值直接输出为生物 TAD 边界。</p>
+<h3 id="6-3-单细胞计数与伪重复-【补充推导】"><a href="#6-3-单细胞计数与伪重复-【补充推导】" class="headerlink" title="6.3 单细胞计数与伪重复 【补充推导】"></a>6.3 单细胞计数与伪重复 【补充推导】</h3><p>延续第 10 章：</p>
+<div class="math">\[
+X_{cg}\sim \operatorname{NB}(\mu_{cg},\theta_g),\quad \mu_{cg}=s_c\rho_{cg},\quad \operatorname{Var}(X_{cg})=\mu_{cg}+\mu_{cg}^2/\theta_g.
+\]</div>
+
+<span class="math">\(s_c\)</span> 描述规模，<span class="math">\(\rho_{cg}\)</span> 与表达组成有关，<span class="math">\(\theta_g\)</span> 为逆离散度。低均值本身就产生大量零：Poisson 均值 0.2 时 <span class="math">\(P(X=0)=e^{-0.2}\approx0.819\)</span>；NB 还可有更高零概率。因此“零多”不自动意味着必须额外零膨胀，也不意味着每个零都该插补。
+
+<p>若每个供体有 <span class="math">\(m\)</span> 个细胞，同供体内相关系数为 <span class="math">\(\rho\)</span>，等簇大小近似下的设计效应为 <span class="math">\(1+(m-1)\rho\)</span>。<span class="math">\(m=1000\)</span>、<span class="math">\(\rho=0.05\)</span> 时设计效应约 50.95；把全部细胞当独立会严重低估均值方差。这个公式只是直觉模型，真实差异表达还要建模计数、协变量与不等细胞数。</p>
+<p>pseudobulk 定义为 <span class="math">\(Y_{dg}=\sum_{c\in\mathcal C_d}X_{cg}\)</span>，其中 <span class="math">\(\mathcal C_d\)</span> 为供体 <span class="math">\(d\)</span> 中指定细胞类型的集合。输入是原始计数之和，不是先 log 再求均值后伪装成 count。细胞数影响精度，供体才提供人群层面的重复。某供体完全没有该类型时，需区分确实缺失与采样不足。</p>
+<h3 id="6-4-岭回归、贝叶斯收缩与-GBLUP-【补充推导】"><a href="#6-4-岭回归、贝叶斯收缩与-GBLUP-【补充推导】" class="headerlink" title="6.4 岭回归、贝叶斯收缩与 GBLUP 【补充推导】"></a>6.4 岭回归、贝叶斯收缩与 GBLUP 【补充推导】</h3><p>暂省略固定协变量，令 <span class="math">\(y\)</span> 和标记矩阵 <span class="math">\(M\)</span> 按训练集中心化：</p>
+<div class="math">\[
+y=M\beta+e,\qquad \hat\beta=\arg\min_\beta\{\|y-M\beta\|^2+\lambda\|\beta\|^2\}.
+\]</div>
+
+<p>求导得 <span class="math">\((M^\top M+\lambda I)\hat\beta=M^\top y\)</span>。在残差独立同方差、<span class="math">\(\sigma_e^2&gt;0\)</span> 且效应先验为 <span class="math">\(\beta\sim N(0,\sigma_\beta^2I)\)</span>、<span class="math">\(\sigma_\beta^2&gt;0\)</span> 时，后验均值和众数与岭估计一致，<span class="math">\(\lambda=\sigma_e^2/\sigma_\beta^2&gt;0\)</span>。</p>
+<p>当 <span class="math">\(p\gg n\)</span>，用对偶恒等式：</p>
+<div class="math">\[
+\hat\beta=M^T(MM^T+\lambda I)^{-1}y.
+\]</div>
+
+<p>对测试标记 <span class="math">\(M_*\)</span>，预测 <span class="math">\(\hat u_*=M_*M^\top(MM^\top+\lambda I)^{-1}y\)</span>。若定义 <span class="math">\(G=MM^\top/c\)</span>，相应正则参数要变为 <span class="math">\(\lambda/c\)</span>，才能比较 GBLUP 与 marker-space ridge；忽略缩放会得到“貌似不等价”的结果。</p>
+<p>一个常见关系矩阵构造是 <span class="math">\(M_{ij}=g_{ij}-2p_j\)</span>，<span class="math">\(c=2\sum_jp_j(1-p_j)\)</span>。这里 <span class="math">\(p_j\)</span> 是所选参考群体中的等位频率。若改用逐列标准化，实际上改变了不同频率标记的权重&#x2F;先验。固定效应、重复记录和复杂残差加入后，应使用一致的混合模型而非直接套省略版公式。</p>
+<h3 id="6-5-分割指标与性状误差-【补充推导】"><a href="#6-5-分割指标与性状误差-【补充推导】" class="headerlink" title="6.5 分割指标与性状误差 【补充推导】"></a>6.5 分割指标与性状误差 【补充推导】</h3><div class="math">\[
+IoU=\frac{|A\cap B|}{|A\cup B|},\qquad Dice=\frac{2|A\cap B|}{|A|+|B|}=\frac{2IoU}{1+IoU}.
+\]</div>
+
+<span class="math">\(A\)</span> 为预测前景，<span class="math">\(B\)</span> 为真值前景；都为空时要事先规定指标约定。对小病斑，背景像素很多，accuracy 可很高但病斑召回很低。实例任务还要先匹配预测与真值对象，否则把两片叶合成一个连通块可能有不错的语义 Dice，却完全错误地估计叶片数。
+
+<p>若像素面积标定为 <span class="math">\(a\)</span>，每个对象面积 <span class="math">\(\hat A=a|A|\)</span>；性状误差由分割与标定共同决定。模型的像素输出需要沿着这条链条传播到科学测量值。</p>
+<h3 id="6-6-Ribo-与-RNA-联合模型-【补充推导】"><a href="#6-6-Ribo-与-RNA-联合模型-【补充推导】" class="headerlink" title="6.6 Ribo 与 RNA 联合模型 【补充推导】"></a>6.6 Ribo 与 RNA 联合模型 【补充推导】</h3><p>设 <span class="math">\(a\in\{\mathrm{RNA},\mathrm{Ribo}\}\)</span>，<span class="math">\(t\in\{0,1\}\)</span>（0 为对照、1 为处理）。一个概念性模型为：</p>
+<div class="math">\[
+K_{gsa}\sim \operatorname{NB}(\mu_{gsa},\theta_g),
+\]</div>
+
+<div class="math">\[
+\log\mu_{gsa}=\log L_{sa}+\alpha_g+\beta_g t_s+\gamma_g I(a=Ribo)+\delta_g t_sI(a=Ribo)+\text{协变量}.
+\]</div>
+
+<span class="math">\(\delta_g\)</span> 就是处理条件对相对 Ribo/RNA 信号的额外影响。联合模型还须表示 RNA 与 Ribo 样本的配对关系。若加入每个生物样本的固定截距，而 condition 又完全由 sample 决定，就不能再无检查地把二者同时作为独立主效应列。应先检查设计矩阵是否满秩，再选择适合配对 assay 的参数化或模型。教学公式表达检验目标，不是可直接复制到所有数据的 DESeq2 设计字符串。
+
+<p>例：RNA 从 100 变 200，Ribo 从 200 变 400，TE 均为 2，<span class="math">\(\Delta\log_2\mathrm{TE}=0\)</span>。若 Ribo 从 200 变 800 而 RNA 仍从 100 变 200，则 <span class="math">\(\Delta\log_2\mathrm{TE}=1\)</span>。显著性还取决于重复、方差与测序深度，两个比值本身给不出 p 值。</p>
+<h3 id="6-7-潜变量模型怎样连接到-scVI-【AI4S】"><a href="#6-7-潜变量模型怎样连接到-scVI-【AI4S】" class="headerlink" title="6.7 潜变量模型怎样连接到 scVI 【AI4S】"></a>6.7 潜变量模型怎样连接到 scVI 【AI4S】</h3><p>一个教学版生成模型为 <span class="math">\(z_c\sim N(0,I)\)</span>，<span class="math">\(\rho_c=\operatorname{softmax}(f_\theta(z_c,b_c))\)</span>，<span class="math">\(b_c\)</span> 表示批次，<span class="math">\(X_{cg}\sim\operatorname{NB}(s_c\rho_{cg},\theta_g)\)</span>。用 <span class="math">\(q_\phi(z_c\mid X_c,b_c)\)</span> 近似后验，最大化：</p>
+<div class="math">\[
+\mathcal L=\mathbb E_q[\log p_\theta(X_c|z_c,s_c,b_c)]-\operatorname{KL}(q_\phi(z_c|X_c,b_c)\|p(z_c)).
+\]</div>
+
+<p>第一项要求模型解释计数，第二项约束潜变量。它把“编码器输出一个向量”与观测分布联系起来。scVI 原模型及软件还有文库大小、ZINB&#x2F;NB 和离散度等不同设定；不能用本简式替代全部实现。<a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41592-018-0229-2">scVI 论文</a>；<a target="_blank" rel="noopener" href="https://docs.scvi-tools.org/en/latest/api/reference/scvi.model.SCVI.html">官方 API</a></p>
+<span class="math">\(z\)</span> 包含什么生物因素需要验证；模型写入 batch 协变量并不保证条件与 batch 可辨识。ELBO 提高也不自动证明细胞类型注释或扰动外推更好。
+
+<h2 id="7-可运行教学实验与实际输出"><a href="#7-可运行教学实验与实际输出" class="headerlink" title="7. 可运行教学实验与实际输出"></a>7. 可运行教学实验与实际输出</h2><p>完整脚本：<a href="/bioinformatics-notes/code/ch12/ch12_examples.py">ch12_examples.py</a>。实际输出：<a href="/bioinformatics-notes/code/ch12/results.md">results.md</a>，机器可读结果：<a href="/bioinformatics-notes/code/ch12/results.json">results.json</a>。依赖 Python 与 NumPy；本次运行环境为 Python 3.13.14、NumPy 2.5.3。随机实验固定种子；脚本含数值一致性检查。</p>
+<p>在自己的 Python 环境运行：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\ark-ai\ComfyUI_windows_portable\python_embeded\python.exe -I -X utf8 ch12_examples.py</span><br></pre></td></tr></table></figure>
+
+<p>脚本无需下载数据，结果写在脚本所在目录。以下全部是构造例子或模拟，用来隔离一个机制；没有运行真实 Hi-C&#x2F;单细胞全流程，也没有训练大模型。模拟的检验统计量不冒充 DESeq2、ICE、scVI 或任何生产工具。</p>
+<h3 id="7-1-UMI-的计数单位"><a href="#7-1-UMI-的计数单位" class="headerlink" title="7.1 UMI 的计数单位"></a>7.1 UMI 的计数单位</h3><p>构造 10 条 reads，其中同一 cell、gene、UMI 组合重复出现。按三元组去重后为 3 个分子；其中 c1&#x2F;g1 有 2 个分子。若只按 UMI 全局去重，不同细胞的同名 UMI 会被错误合并。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">records = [(<span class="string">&#x27;c1&#x27;</span>,<span class="string">&#x27;g1&#x27;</span>,<span class="string">&#x27;AAAA&#x27;</span>)]*<span class="number">5</span> + [(<span class="string">&#x27;c1&#x27;</span>,<span class="string">&#x27;g1&#x27;</span>,<span class="string">&#x27;AAAT&#x27;</span>)]*<span class="number">2</span> + [(<span class="string">&#x27;c2&#x27;</span>,<span class="string">&#x27;g1&#x27;</span>,<span class="string">&#x27;AAAA&#x27;</span>)]*<span class="number">3</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(records), <span class="built_in">len</span>(<span class="built_in">set</span>(records)))  <span class="comment"># 10 3</span></span><br></pre></td></tr></table></figure>
+
+<p>实际输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10 3</span><br></pre></td></tr></table></figure>
+
+<p>边界：此例没有 UMI 测序错误、碰撞、基因归属歧义；真实流程需要纠错规则，不能直接用 set 替代完整定量器。</p>
+<h3 id="7-2-矩阵平衡不等于恢复真值"><a href="#7-2-矩阵平衡不等于恢复真值" class="headerlink" title="7.2 矩阵平衡不等于恢复真值"></a>7.2 矩阵平衡不等于恢复真值</h3><span class="math">\(24\times24\)</span> 的正对称接触矩阵含距离衰减、三个块和位点偏差。对称缩放 25 次后，行和最大/最小比从 45.5408 降到 1.00000000009。
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 节选：C和np来自上方链接的完整脚本</span></span><br><span class="line">w = np.ones(<span class="built_in">len</span>(C))</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10000</span>):</span><br><span class="line">    B = w[:, <span class="literal">None</span>] * C * w[<span class="literal">None</span>, :]</span><br><span class="line">    row = B.<span class="built_in">sum</span>(axis=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">if</span> np.<span class="built_in">max</span>(<span class="built_in">abs</span>(row - <span class="number">1</span>)) &lt; <span class="number">1e-10</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    w /= np.sqrt(row)</span><br></pre></td></tr></table></figure>
+
+<p>完整脚本对应的实际输出节选：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;iterations&quot;</span><span class="punctuation">:</span> <span class="number">25</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;raw_row_max_min&quot;</span><span class="punctuation">:</span> <span class="number">45.5408000426419</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;balanced_row_max_min&quot;</span><span class="punctuation">:</span> <span class="number">1.000000000085769</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;caution&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Equal row sums verify scaling only, not recovery of true biological structure.&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这验证算法完成了其数学目标；并未证明真实结构完全恢复。可以进一步人为让某个域真实总接触更高，再看平衡是否也消除了这部分差异。该修改能帮助理解“标准化假设可能误删生物信号”。</p>
+<h3 id="7-3-稀有细胞的最低捕获数量"><a href="#7-3-稀有细胞的最低捕获数量" class="headerlink" title="7.3 稀有细胞的最低捕获数量"></a>7.3 稀有细胞的最低捕获数量</h3><p>比例 0.1% 的类型，要以 95% 概率至少捕获 1 个，精确二项公式得到 2995 个细胞，实际概率 0.950038。要求至少 10 个、至少 50 个时应计算更高尾概率，不能简单把 2995 乘以目标数。</p>
+<p>进一步练习：加入 20% 的 QC 损失、类型特异的捕获概率和供体比例差异；比较理想公式为何不够。用于差异表达时，还要要求每个独立供体都拥有足够细胞。</p>
+<h3 id="7-4-为什么把细胞当重复会产生假阳性"><a href="#7-4-为什么把细胞当重复会产生假阳性" class="headerlink" title="7.4 为什么把细胞当重复会产生假阳性"></a>7.4 为什么把细胞当重复会产生假阳性</h3><p>零假设模拟：每组 6 个供体、每供体 500 个细胞，供体效应方差与细胞噪声方差均为 1；重复 20,000 次。用已知方差的正态模型隔离层级结构问题：</p>
+<table>
+<thead>
+<tr>
+<th>分析</th>
+<th align="right">名义 5% 双侧检验的拒绝比例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>错把所有细胞当独立</td>
+<td align="right">0.9007</td>
+</tr>
+<tr>
+<td>使用正确供体层级方差</td>
+<td align="right">0.0491</td>
+</tr>
+</tbody></table>
+<p>此处没有真实处理效应，因此拒绝率就是第一类错误率的模拟估计。正确模型下仍有约 5% 假阳性，不是“零假设下应完全没有显著结果”。真实计数数据还要估计方差、处理异质性，不应把这里的 90.07% 当成所有单细胞分析的实际错误率。</p>
+<h3 id="7-5-岭回归与-GBLUP-的数值等价"><a href="#7-5-岭回归与-GBLUP-的数值等价" class="headerlink" title="7.5 岭回归与 GBLUP 的数值等价"></a>7.5 岭回归与 GBLUP 的数值等价</h3><p>使用 40 个样本、90 个标记的中心化构造矩阵，<span class="math">\(\lambda=5\)</span>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 节选：M、y、lam和np来自完整脚本</span></span><br><span class="line">beta_primal = np.linalg.solve(M.T @ M + lam*np.eye(<span class="number">90</span>), M.T @ y)</span><br><span class="line">beta_dual = M.T @ np.linalg.solve(M @ M.T + lam*np.eye(<span class="number">40</span>), y)</span><br><span class="line">c = <span class="number">90.0</span></span><br><span class="line">G = M @ M.T / c</span><br><span class="line">u = G @ np.linalg.solve(G + (lam/c)*np.eye(<span class="number">40</span>), y)</span><br></pre></td></tr></table></figure>
+
+<p>完整脚本对应的实际输出节选：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;max_beta_difference&quot;</span><span class="punctuation">:</span> <span class="number">5.447031714567174e-16</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;max_prediction_difference&quot;</span><span class="punctuation">:</span> <span class="number">1.5543122344752192e-15</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>两种 <span class="math">\(\beta\)</span> 最大绝对差 <span class="math">\(5.45\times10^{-16}\)</span>；<span class="math">\(M\beta\)</span> 与 <span class="math">\(u\)</span> 最大差 <span class="math">\(1.55\times10^{-15}\)</span>，在浮点误差范围内。故“标记空间与关系空间”并不是两个互相矛盾的原理。把 <span class="math">\(\lambda/c\)</span> 故意改成 <span class="math">\(\lambda\)</span>，即可看到缩放不一致的影响。</p>
+<h3 id="7-6-随机划分与新家系预测是两个目标"><a href="#7-6-随机划分与新家系预测是两个目标" class="headerlink" title="7.6 随机划分与新家系预测是两个目标"></a>7.6 随机划分与新家系预测是两个目标</h3><p>构造 40 个家系，每家系 8 个个体；输入用 one-hot 表示家系身份，表型由家系效应与噪声相加得到。这个输入是极端的“家系身份标记”，不是实际 SNP 数据。</p>
+<table>
+<thead>
+<tr>
+<th>划分</th>
+<th align="right">RMSE</th>
+<th align="right">相对训练均值基线的技能分数 <span class="math">\(1-\mathrm{MSE}/\mathrm{MSE}_0\)</span></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>每个家系随机留出 2 个个体</td>
+<td align="right">0.2464</td>
+<td align="right">0.9500</td>
+</tr>
+<tr>
+<td>完整留出 10 个未见家系</td>
+<td align="right">0.8231</td>
+<td align="right">0.0000</td>
+</tr>
+</tbody></table>
+<p>模型很会记住见过的家系，却没有新家系效应的信息。这不是说随机划分总是错误，而是提醒报告必须匹配部署目标。真实遗传数据中应进一步比较标记相似性、LD 与环境结构。</p>
+<h3 id="7-7-P-site-偏移和-TE"><a href="#7-7-P-site-偏移和-TE" class="headerlink" title="7.7 P-site 偏移和 TE"></a>7.7 P-site 偏移和 TE</h3><p>构造 30 个正确读框的 P-site，读框计数为[30,0,0]。所有坐标错误加 1 后变为[0,30,0]。一个碱基的 offset 错误足以使周期性解释错位。</p>
+<p>同脚本核验：RNA 与 Ribo 均翻倍，<span class="math">\(\Delta\log_2\mathrm{TE}=0\)</span>；RNA 翻倍、Ribo 变 4 倍，<span class="math">\(\Delta\log_2\mathrm{TE}=1\)</span>。示例只验证效应定义，不提供差异显著性。它使用转录本局部坐标，没有处理基因组剪接与负链。</p>
+<h3 id="7-8-高-accuracy-可以完全漏掉目标"><a href="#7-8-高-accuracy-可以完全漏掉目标" class="headerlink" title="7.8 高 accuracy 可以完全漏掉目标"></a>7.8 高 accuracy 可以完全漏掉目标</h3><span class="math">\(100\times100\)</span> 图像只有 <span class="math">\(10\times10\)</span> 的前景，模型把所有像素预测为背景。输出是 <span class="math">\(\mathrm{accuracy}=0.99\)</span>，<span class="math">\(\mathrm{Dice}=0\)</span>，前景召回为 0。对于稀少病斑或小细胞，报告总体像素 accuracy 会掩盖完全失败。
+
+<h3 id="7-9-CNN-的维度检查"><a href="#7-9-CNN-的维度检查" class="headerlink" title="7.9 CNN 的维度检查"></a>7.9 CNN 的维度检查</h3><p>输入[0,1,2,0,1]，权重[1,2,1]，步长 1、无 padding，输出[4,5,3]，长度为 <span class="math">\(3=5-3+1\)</span>。常见深度学习 API 计算的是不翻转核的互相关，日常也称卷积。教材图 12.18 的末项索引可以用这个最小例子检查。</p>
+<h3 id="7-10-生物回路的稳态与时间尺度"><a href="#7-10-生物回路的稳态与时间尺度" class="headerlink" title="7.10 生物回路的稳态与时间尺度"></a>7.10 生物回路的稳态与时间尺度</h3><p>对§5.2 的 Hill 抑制 ODE 设 <span class="math">\(\alpha=10\)</span>、<span class="math">\(\delta=2\)</span>、<span class="math">\(u=3\)</span>、<span class="math">\(K=1\)</span>、<span class="math">\(h=2\)</span>，稳态解析值为 0.5。Euler 步长 0.001，模拟到 <span class="math">\(t=10\)</span> 得到 0.49999999899，误差约 <span class="math">\(1.01\times10^{-9}\)</span>。</p>
+<p>进一步练习：改变 <span class="math">\(\delta\)</span>，观察稳态与响应时间同时变化；再缩小步长检查数值误差。一个模拟器输出平滑曲线不保证模型正确，需分别检查数值求解与生物模型假设。</p>
+<h2 id="8-AI-for-Science-扩展"><a href="#8-AI-for-Science-扩展" class="headerlink" title="8. AI for Science 扩展"></a>8. AI for Science 扩展</h2><h3 id="8-1-从任务、标签和泛化目标选择模型"><a href="#8-1-从任务、标签和泛化目标选择模型" class="headerlink" title="8.1 从任务、标签和泛化目标选择模型"></a>8.1 从任务、标签和泛化目标选择模型</h3><table>
+<thead>
+<tr>
+<th>方向</th>
+<th>输入 → 输出</th>
+<th>必备基线</th>
+<th>评测应留出什么</th>
+<th>科学解释边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>三维接触预测</td>
+<td>DNA&#x2F;表观特征 → 接触图</td>
+<td>距离衰减、局部统计、简单回归</td>
+<td>染色体及相似序列、细胞状态</td>
+<td>热图相似不保证变异效应正确</td>
+</tr>
+<tr>
+<td>单细胞表示</td>
+<td>count＋batch → 潜空间</td>
+<td>HVG＋PCA、适当计数模型</td>
+<td>供体、批次、研究</td>
+<td>batch 混合不能代替生物信息保留</td>
+</tr>
+<tr>
+<td>细胞注释</td>
+<td>表达&#x2F;多模态 → 类型</td>
+<td>marker、参考近邻、线性分类器</td>
+<td>供体、数据集、未知类型</td>
+<td>已知标签分类不等于发现新类型</td>
+</tr>
+<tr>
+<td>扰动响应</td>
+<td>背景＋干预 → 表达变化</td>
+<td>无变化、均值、线性&#x2F;加性模型</td>
+<td>扰动、组合、细胞背景</td>
+<td>预测均值不能证明机制正确</td>
+</tr>
+<tr>
+<td>基因组预测</td>
+<td>SNP＋环境 → 表型&#x2F;GEBV</td>
+<td>ridge、GBLUP、环境基线</td>
+<td>家系、年份、地点</td>
+<td>预测关联不等于因果变异</td>
+</tr>
+<tr>
+<td>表型组</td>
+<td>图像&#x2F;光谱 → 性状</td>
+<td>阈值分割、传统回归、小模型</td>
+<td>植株、地块、设备、季节</td>
+<td>学到光照或背景也可能高分</td>
+</tr>
+<tr>
+<td>翻译调控</td>
+<td>序列＋RNA → Ribo&#x2F;TE</td>
+<td>RNA 丰度、长度&#x2F;GC 等简单回归</td>
+<td>基因家族、细胞背景、实验</td>
+<td>核糖体占据与蛋白通量不同</td>
+</tr>
+<tr>
+<td>DBTL</td>
+<td>设计＋条件 → 实验表现</td>
+<td>随机选择、简单代理模型</td>
+<td>设计族、实验批次</td>
+<td>离线性能不等于闭环实验收益</td>
+</tr>
+</tbody></table>
+<p>模型输入必须与预测时实际可获得的信息一致。 若目标是对未见扰动预测，但输入里含该扰动处理后才测得到的表达，预测任务已经发生改变；若做跨个体疾病预测，却在特征选择时用全数据标签，测试集已泄漏。预训练模型同样需要检查预训练语料与测试集的重叠。</p>
+<h3 id="8-2-基础模型怎样评，而不是列名字"><a href="#8-2-基础模型怎样评，而不是列名字" class="headerlink" title="8.2 基础模型怎样评，而不是列名字"></a>8.2 基础模型怎样评，而不是列名字</h3><p>单细胞基础模型可以学习表达上下文、基因关系与细胞表示，但不同目标需要不同评估：注释、批次整合、跨模态预测、扰动外推不是同一任务。参数量和预训练细胞数是资源描述，不能替代下游证据。</p>
+<p>2025 年 Ahlmann-Eltze 等比较若干基础模型和深度模型，在其单&#x2F;双扰动设置中未超过刻意简化的基线；2026 年的另一项研究则指出，在其校准指标与评测设置下部分深度模型可以占优。两者不能被简化成“深度模型总没用”或“基线已过时”。应核对数据、任务、指标与噪声校准，再判断结论能迁移到哪里。<a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41592-025-02772-6.pdf">2025 研究</a>；<a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41587-026-03307-w">2026 研究</a></p>
+<p>一个有用的扰动评测报告至少分别给出：绝对表达误差、相对对照的变化误差、差异响应基因、未见单扰动、已见单扰动的未见组合、未见细胞背景。总体表达相关很容易被大量稳定高表达基因主导，因此应预先定义目标指标，而不是看完结果后挑最有利的那个。</p>
+<h3 id="8-3-多模态与空间分析需要补的统计问题"><a href="#8-3-多模态与空间分析需要补的统计问题" class="headerlink" title="8.3 多模态与空间分析需要补的统计问题"></a>8.3 多模态与空间分析需要补的统计问题</h3><p>配对关系：同细胞 RNA&#x2F;ATAC 允许学习直接对应；不同样本模态整合只能在共享假设下匹配。</p>
+<p>缺失机制：某模态未测、低质量被删、真正生物缺失是三种情况。把未测值当 0 会教给模型错误含义。</p>
+<p>空间依赖：相邻 spot&#x2F;细胞共享组织环境，随机划分相邻图块会让测试过于容易；按切片、区域、个体留出更接近某些部署目标。空间图上的消息传递也要检查是否跨越测试边界使用了不可用标签。</p>
+<p>细胞通讯推断：配体&#x2F;受体表达与空间邻近可以提出相互作用假设，但不能单凭表达就确认发生了信号传递；还需蛋白、受体活性、扰动或其他证据。</p>
+<p>可辨识性：表达相近的类型在 spot 解卷积中可能互相替代；输出很精细的比例不代表信息足够，应报告置信度、参考依赖和敏感性。</p>
+<h3 id="8-4-可以直接落地的五个学习项目"><a href="#8-4-可以直接落地的五个学习项目" class="headerlink" title="8.4 可以直接落地的五个学习项目"></a>8.4 可以直接落地的五个学习项目</h3><p>这些是下一步实验方案，并未在本次笔记中宣称已经完成。</p>
+<ol>
+<li>Hi-C 分辨率敏感性：同一数据以两个 bin 尺度分析，比较边界位置与局部富集，按距离分层报告误差；不要只比较全矩阵相关性，因为对角附近会占主导。数据读写参考<a target="_blank" rel="noopener" href="https://cooler.readthedocs.io/en/latest/">Cooler 官方文档</a>。</li>
+<li>单细胞可重复分析：从<a target="_blank" rel="noopener" href="https://www.10xgenomics.com/datasets">10×公开数据</a>选择一个较小数据集，沿<a target="_blank" rel="noopener" href="https://scanpy.readthedocs.io/en/stable/tutorials/basics/clustering.html">Scanpy 官方教程</a>完成 QC、保留 counts、PCA、近邻、聚类、marker 注释。用单供体教学集只能练流程，不做病例&#x2F;对照人群推断。</li>
+<li>基因组预测划分对照：选 Azodi 等公开基准中的一个数据集，先做 ridge，再比较随机与结构化划分；若数据没有可靠家系&#x2F;环境标签，应如实说明，不人为假装获得这些信息。<a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6829122/">论文与数据说明</a></li>
+<li>Ribo offset 敏感性：在有配对 RNA 与生物重复的公开数据上，检查不同足迹长度的读框，比较 offset 改变±1 后 ORF 结果如何变化；重要候选回到浏览器逐位点检查。</li>
+<li>表型测量误差传播：对同一叶片的不同光照&#x2F;尺度图像，比较简单阈值与分割模型，不只报告 Dice，还报告面积、叶数和对环境变化的偏差。</li>
+</ol>
+<p>每个项目的交付应包括样本表、原始来源、参考&#x2F;软件版本、参数、基线、关键图、失败样本和结论边界。把“重跑得到同样数字”与“在新样本上重复成立”分开。</p>
+<h2 id="9-与-VirusBin-研究的联系"><a href="#9-与-VirusBin-研究的联系" class="headerlink" title="9. 与 VirusBin 研究的联系"></a>9. 与 VirusBin 研究的联系</h2><p>本节依据第 10、11 章笔记中描述的研究设想：组成表示、覆盖度剪边、无标记基因的聚类质量&#x2F;稳定性。以下是可研究的迁移方向，不表示现有 VirusBin 实现已经采用，也不预先保证收益。</p>
+<h3 id="9-1-三种图的边不能直接互换"><a href="#9-1-三种图的边不能直接互换" class="headerlink" title="9.1 三种图的边不能直接互换"></a>9.1 三种图的边不能直接互换</h3><p>Hi-C 边代表被实验捕获的接触，单细胞近邻边代表表示相似，contig 分箱边可能来自组成或共覆盖。相同社区算法能处理这些图，但“同一社区”在三个任务中的含义不同。迁移算法前先写出边的生成模型与错误来源。</p>
+<h3 id="9-2-不确定性应进入图构造"><a href="#9-2-不确定性应进入图构造" class="headerlink" title="9.2 不确定性应进入图构造"></a>9.2 不确定性应进入图构造</h3><p>短 contig 的组成估计更噪，低覆盖的丰度估计更噪。可以尝试用误差或置信度调节边权，而不是同样对待所有余弦相似度。但把置信度加入边权只是新模型，需要与不加置信度、简单长度过滤和统计收缩基线比较。</p>
+<p>借鉴单细胞计数模型时，要注意 contig 长度、GC、拷贝数、重复和病毒生命周期会改变覆盖度。不能直接复制“按总 count 归一化”的假设。</p>
+<h3 id="9-3-图稳定不等于基因组正确"><a href="#9-3-图稳定不等于基因组正确" class="headerlink" title="9.3 图稳定不等于基因组正确"></a>9.3 图稳定不等于基因组正确</h3><p>单细胞聚类随分辨率变化，与分箱随 Leiden 参数变化有相似之处。共识聚类可衡量扰动下的稳定性，但某个错误合并可能非常稳定。内部指标是模型选择线索，仍需独立真值或不同类型的证据。</p>
+<p>可按 contig 长度、覆盖度、近缘程度、嵌合情况分别评估。模型对长 contig 改善而短 contig 恶化时，整体平均值可能掩盖研究目标的失败。</p>
+<h3 id="9-4-“剪边检验”的统计方向"><a href="#9-4-“剪边检验”的统计方向" class="headerlink" title="9.4 “剪边检验”的统计方向"></a>9.4 “剪边检验”的统计方向</h3><p>若原假设是“两条 contig 来自同一基因组且符合某覆盖模型”，拒绝原假设可作为剪边证据。若采用 FDR 控制，控制对象是被拒绝假设中假拒绝比例的期望（没有拒绝时该比例约定为 0），在模型与依赖条件成立时可解释为错误剪边的某种控制；它并不直接控制最终 bin 的错误合并率。</p>
+<p>保留一条边通常意味着未拒绝差异，而未拒绝不等于证明相同。由边级检验到聚类级错误还有图传播、传递闭包与选择偏差。需要单独用模拟和独立基因组真值检验，不能仅凭 BH 校正就宣称全流程 FDR 受控。</p>
+<h3 id="9-5-数据划分与“合成视图”"><a href="#9-5-数据划分与“合成视图”" class="headerlink" title="9.5 数据划分与“合成视图”"></a>9.5 数据划分与“合成视图”</h3><p>同一参考基因组切出的所有片段应整体进入训练或测试；按近缘簇留出可检查更远的泛化。对比学习的两个视图是否共享大量重叠序列、是否仅学到 GC 或长度，需要消融。</p>
+<p>单细胞多模态启发组成与覆盖度联合建模，但真实分箱常只有少数样本，模态质量也不对称。建议比较“组成单独”“覆盖单独”“简单拼接”“学习融合”，而不是只与弱基线比较。若训练库含测试近亲，应明确这一设定。</p>
+<h2 id="10-教材习题解答"><a href="#10-教材习题解答" class="headerlink" title="10. 教材习题解答"></a>10. 教材习题解答</h2><h3 id="习题-1-简述-Hi-C-技术原理"><a href="#习题-1-简述-Hi-C-技术原理" class="headerlink" title="习题 1 简述 Hi-C 技术原理"></a>习题 1 简述 Hi-C 技术原理</h3><p>交联保留空间邻近关系，切割并标记染色质末端，通过邻近连接形成连接片段，测序并将两端分别定位到参考基因组。过滤无效与重复连接后按 bin 计数，得到接触矩阵；经偏差与背景处理研究空间组织。接触频率是群体与实验过程共同决定的相对读出，不能直接解释为精确空间距离。</p>
+<h3 id="习题-2-什么是-TAD，主要鉴定方法有哪些"><a href="#习题-2-什么是-TAD，主要鉴定方法有哪些" class="headerlink" title="习题 2 什么是 TAD，主要鉴定方法有哪些"></a>习题 2 什么是 TAD，主要鉴定方法有哪些</h3><p>TAD 是相对于周边区域具有较强内部接触的染色质域。主要思想包括绝缘分数&#x2F;方向指数等线性评分，变点、分段或 HMM 等统计模型，聚类，以及图社区&#x2F;模块化。不同尺度和算法可得到不同边界，应检查参数、重复与独立证据。不能把单一图谱深度阈值当作 TAD 定义。</p>
+<h3 id="习题-3-单细胞-RNA-主要降维方法"><a href="#习题-3-单细胞-RNA-主要降维方法" class="headerlink" title="习题 3 单细胞 RNA 主要降维方法"></a>习题 3 单细胞 RNA 主要降维方法</h3><p>PCA 用于线性主要变化方向，常作为建近邻图的输入；t-SNE 和 UMAP 用于非线性布局，强调邻域结构，二维簇间距离需谨慎解释；扩散映射可用于连续状态，潜变量生成模型可结合计数分布与协变量。选择取决于表示、可视化、轨迹或预测任务，不存在脱离目标的“最好降维”。</p>
+<h3 id="习题-4-拟时序分析的意义与算法"><a href="#习题-4-拟时序分析的意义与算法" class="headerlink" title="习题 4 拟时序分析的意义与算法"></a>习题 4 拟时序分析的意义与算法</h3><p>意义是利用不同细胞状态的连续变化，提出发育&#x2F;响应过程的相对顺序与分支假设。典型流程：选特征、降维或潜空间学习、构图&#x2F;主图学习、结合生物知识选根、按沿图距离排序、分析分支与动态基因。它不直接提供真实经过时间，也不替代真实谱系追踪；需验证根、采样完整性、拓扑与参数稳定性。</p>
+<h3 id="习题-5-基因组预测的线性与非线性方法"><a href="#习题-5-基因组预测的线性与非线性方法" class="headerlink" title="习题 5 基因组预测的线性与非线性方法"></a>习题 5 基因组预测的线性与非线性方法</h3><p>线性方法包括 RR-BLUP、GBLUP、BayesA&#x2F;B、Bayesian LASSO 及线性 SVR 等；非线性包括核 SVR、RF、梯度提升、MLP、CNN 等。线性方法中的收缩和关系矩阵适合高维小样本；非线性可表达复杂关系但需要足够信息与可靠调参。比较必须在同样数据划分与预算下进行，报告家系&#x2F;环境外推，不能预设深度学习一定更好。</p>
+<h3 id="习题-6-以-CNN-为例说明生物信息学应用"><a href="#习题-6-以-CNN-为例说明生物信息学应用" class="headerlink" title="习题 6 以 CNN 为例说明生物信息学应用"></a>习题 6 以 CNN 为例说明生物信息学应用</h3><p>可选教材基因组预测：每个个体按基因组顺序排列 SNP 剂量，1D 卷积提取局部组合特征，经过池化&#x2F;全连接输出性状。训练用回归损失与正则化；需要处理染色体边界、不均匀标记间距与 <span class="math">\(p\gg n\)</span>。以 ridge&#x2F;GBLUP 为基线，按目标留出家系或环境，用相关、RMSE 与校准检验。卷积特征被模型使用不意味着相应位点有因果作用。</p>
+<p>另一个应用是植物表型图像分割：2D 卷积提取纹理和形状，输出叶片&#x2F;病斑掩模，再转换成面积或计数；按植株&#x2F;地块划分，评价像素与最终性状两级误差。</p>
+<h3 id="习题-7-比较-Ribo-seq-与-RNA-seq"><a href="#习题-7-比较-Ribo-seq-与-RNA-seq" class="headerlink" title="习题 7 比较 Ribo-seq 与 RNA-seq"></a>习题 7 比较 Ribo-seq 与 RNA-seq</h3><table>
+<thead>
+<tr>
+<th>比较项</th>
+<th>RNA-seq</th>
+<th>Ribo-seq</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>实验读出</td>
+<td>捕获 RNA 的片段</td>
+<td>核糖体保护片段</td>
+</tr>
+<tr>
+<td>主要目标</td>
+<td>丰度、异构体、表达变化</td>
+<td>翻译 ORF、读框、占据与翻译调控</td>
+</tr>
+<tr>
+<td>特殊 QC</td>
+<td>文库质量、基因体覆盖、剪接等</td>
+<td>足迹长度、P-site offset、三核苷酸周期、起止 metagene</td>
+</tr>
+<tr>
+<td>核心计量</td>
+<td>基因&#x2F;转录本计数</td>
+<td>ORF&#x2F;P-site 计数与配对 RNA 比较</td>
+</tr>
+<tr>
+<td>联合分析</td>
+<td>提供 RNA 层背景</td>
+<td>用 condition×assay 效应检验相对翻译变化</td>
+</tr>
+<tr>
+<td>结论边界</td>
+<td>RNA 多不等于蛋白多</td>
+<td>RPF 多不等于通量一定高或蛋白稳定存在</td>
+</tr>
+</tbody></table>
+<p>两者都需要恰当质控、比对、注释、重复与多重检验；Ribo-seq 特有的周期性和 offset 处理不能省略。</p>
+<h2 id="11-自测题"><a href="#11-自测题" class="headerlink" title="11. 自测题"></a>11. 自测题</h2><p>先独立回答，再查看下面答案；能背术语但不能说清假设和反例，说明还需要复习。</p>
+<ol>
+<li>两个 Hi-C bin 的原始计数更高，是否一定更接近？</li>
+<li>矩阵平衡后所有行和一样，是否说明生物偏差都校正正确？</li>
+<li>区室特征向量整体乘−1 后，生物结论应不应该改变？</li>
+<li>TAD 内部富集与染色质环点状富集有何不同？</li>
+<li>同一 cell&#x2F;gene 的 100 条 reads 只有 5 个可靠 UMI，应怎样计量？</li>
+<li>一个供体测 10 万细胞，能代替 10 个供体各测 1 万细胞吗？</li>
+<li>为什么每种组织都用 5% 线粒体比例可能删错细胞？</li>
+<li>聚类在 UMAP 二维图上做，与在 PC 空间近邻图上做有什么风险差异？</li>
+<li>删除所有细胞周期信号，是否总能改善分析？</li>
+<li>拟时序 <span class="math">\(t=20\)</span> 能否解释成分化 20 小时？</li>
+<li>GS 与寻找显著 GWAS 位点的目标区别是什么？</li>
+<li>Ridge 与 GBLUP 比较时为什么要同时调整关系矩阵和 <span class="math">\(\lambda\)</span> 的缩放？</li>
+<li>一张叶片裁 100 块后随机划分训练测试，问题在哪里？</li>
+<li>为什么很高的像素 accuracy 可能没有表型测量价值？</li>
+<li>所有单独非必需的基因是否都可以同时删除？</li>
+<li><span class="math">\(6^3-4^3\)</span> 的组合数差能否直接解释成新氨基酸种类数？</li>
+<li>Ribo 信号翻倍、RNA 也翻倍，是差异 TE 吗？</li>
+<li>Ribo 显著、RNA 不显著，能否直接断言差异 TE 显著？</li>
+<li>为什么 P-site offset 错误 1nt 也很严重？</li>
+<li>一个 bin 在 100 次重采样中都稳定，是否说明没有错误合并？</li>
+</ol>
+<h3 id="参考答案"><a href="#参考答案" class="headerlink" title="参考答案"></a>参考答案</h3><ol>
+<li>不能；深度、距离背景、可见性与实验偏差共同影响计数。</li>
+<li>不能；满足了缩放目标，仍需检验假设是否伤害真实结构。</li>
+<li>不应；符号任意，A&#x2F;B 需独立活性证据定向。</li>
+<li>前者是域尺度内部相对富集，后者是局部像素&#x2F;区域相对背景富集。</li>
+<li>在纠错、碰撞与归属处理合理的前提下，按 5 个分子计，而非 100。</li>
+<li>不能；细胞是供体内子样本，独立重复提供不同层面的信息。</li>
+<li>组织、状态、平台、核&#x2F;整细胞本身会改变该比例。</li>
+<li>二维布局扭曲距离与密度；应检查高维表示和构图的稳定性。</li>
+<li>不总是；研究增殖或发育时它可能是目标生物信号。</li>
+<li>不能；它是相对轨迹坐标，需额外时间校准。</li>
+<li>GS 预测&#x2F;选择整体遗传价值，不要求每个标记显著或因果可解释。</li>
+<li>否则改变了先验&#x2F;正则强度，比较的不再是同一个模型。</li>
+<li>同一对象的纹理、背景、采集条件泄漏，不能评估新植株泛化。</li>
+<li>背景主导指标，少量前景可全部漏掉。</li>
+<li>不能；冗余与合成致死会导致联合删除不可行，且环境会改变必需性。</li>
+<li>不能；组合可表示与生化系统可复制、转录、解码是不同问题。</li>
+<li>按比值效应没有变化；是否存在其他变化另行研究。</li>
+<li>不能；要直接检验交互&#x2F;效应差异。</li>
+<li>密码子只有 3nt，1nt 错位可整体改变读框判断。</li>
+<li>不能；系统性错误也可高度稳定，需独立正确性证据。</li>
+</ol>
+<h2 id="12-历史与人物-【了解即可】"><a href="#12-历史与人物-【了解即可】" class="headerlink" title="12. 历史与人物 【了解即可】"></a>12. 历史与人物 【了解即可】</h2><p><img src="/bioinformatics-notes/images/ch12/history.png" alt="教材历史人物插图"></p>
+<p><em>教材 p332 的人物插图，顺序按教材为 Hinton、Bengio、LeCun。照片来源标注见原教材。</em></p>
+<p>教材介绍三人因深度学习方面的贡献共同获得 2018 年度图灵奖（2019 年宣布）。学习重点是表示学习、反向传播、卷积权重共享和大规模数据&#x2F;计算如何相互促进。教材中的任职介绍是出版时背景，不作当前履历使用；反向传播的发展也有更长的历史，不应概括成由某一个人单独发明。</p>
+<p>对本章最有用的历史认识：CNN 在图像中的局部性和权重共享有明确结构依据；把它迁移到 SNP、计数矩阵或接触图时，需要重新论证输入的邻域与不变性，而不是仅借用模型名称。</p>
+<h2 id="13-五视角总结"><a href="#13-五视角总结" class="headerlink" title="13. 五视角总结"></a>13. 五视角总结</h2><table>
+<thead>
+<tr>
+<th>视角</th>
+<th>本章应留下的能力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>分子与细胞生物学</td>
+<td>分清接触、可及性、表达、翻译、蛋白与表型；理解单细胞状态和谱系的区别</td>
+</tr>
+<tr>
+<td>算法</td>
+<td>理解矩阵平衡、谱分解、图社区、主图、岭回归、卷积与动力学模拟各自解决什么</td>
+</tr>
+<tr>
+<td>统计与实验</td>
+<td>选择独立重复单位、正确零假设、层级&#x2F;交互模型，区分可辨识性与拟合能力</td>
+</tr>
+<tr>
+<td>数据工程</td>
+<td>管理坐标与 ID、原始 count 和变换、稀疏表示、跨模态样本表、参考与软件版本</td>
+</tr>
+<tr>
+<td>科研与 AI4S</td>
+<td>先定义泛化目标和强基线，再决定复杂模型；把预测、解释、验证与干预分开</td>
+</tr>
+</tbody></table>
+<h2 id="14-全章速记-20-条"><a href="#14-全章速记-20-条" class="headerlink" title="14. 全章速记 20 条"></a>14. 全章速记 20 条</h2><ol>
+<li>Hi-<span class="math">\(C\)</span> 是接触频率测量，不是直接空间测距。</li>
+<li>矩阵偏差校正、距离背景校正、显著性检验是不同步骤。</li>
+<li>bin 变小不自动获得可靠的高分辨率结构。</li>
+<li>区室向量符号需要独立信号定向，不能机械正 A 负 B。</li>
+<li>TAD、环和染色体疆域不是同一种聚类结果。</li>
+<li>Hi-C 辅助一维组装与三维构象重建要分清。</li>
+<li>sample index、cell barcode、UMI 分别标记不同层级。</li>
+<li>单细胞 DNA 的未检出不等于没有变异，ADO 与覆盖要建模。</li>
+<li>QC 阈值依实验；细胞周期和应激并非总是噪声。</li>
+<li>原始 count、归一化表达、整合 embedding 不能随意互换。</li>
+<li>聚类不等于细胞类型，二维布局不等于真实全局距离。</li>
+<li>组间单细胞推断必须尊重独立供体&#x2F;生物学重复。</li>
+<li>拟时序不是钟表时间，也不是直接谱系证据。</li>
+<li>基因组预测的随机划分与跨家系外推回答不同问题。</li>
+<li>RR-BLUP、GBLUP 与 ridge 在一致设定下有紧密等价关系。</li>
+<li>非线性能力更强不等于有限样本泛化更好。</li>
+<li>表型图像要同时评价分割质量和最终性状误差。</li>
+<li>生物部件受上下文影响；最小基因组依赖条件与目标。</li>
+<li>Ribo-seq 必须检查足迹长度、P-site、读框和周期性。</li>
+<li>差异 TE 要检验 Ribo 相对 RNA 的额外变化；核糖体占据不等于蛋白合成通量。</li>
+</ol>
+<h2 id="15-下一步学习建议"><a href="#15-下一步学习建议" class="headerlink" title="15. 下一步学习建议"></a>15. 下一步学习建议</h2><p>进入第 13 章前，优先补等位频率、重组、LD、群体结构和遗传漂变。它们解释为什么基因组预测能利用标记，也解释为什么跨群体泛化可能失败。</p>
+<p>与第 14 章并行，把本章三个模型作为主线：单细胞计数的分层模型、GBLUP 的高斯模型、scVI 的潜变量模型。对每个模型写出观测、潜变量、参数、先验&#x2F;假设、目标函数、可辨识性与验证方式。</p>
+<p>建议的学习验收顺序：先独立复现§7 全部结果并解释输出；再选§8.4 中的一个真实数据项目。完成的标准是能解释一次失败、说明至少一个不成立的假设，并能把输入数据追溯到实验采样。没有必要为了“全面”同时安装本章列出的所有软件。</p>
+<h2 id="16-参考资料与核对记录"><a href="#16-参考资料与核对记录" class="headerlink" title="16. 参考资料与核对记录"></a>16. 参考资料与核对记录</h2><p>教材用于核对章节主线和原图。下表列出原笔记及本轮核查所用的原论文、官方资料；核查范围与待确认事项见本章审校记录。</p>
+<table>
+<thead>
+<tr>
+<th>来源</th>
+<th>本笔记用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3816492/">Imakaev et al. 2012，ICE</a></td>
+<td>隐式校正、矩阵平衡的依据</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41576-023-00586-w.pdf">Heumos et al. 2023，跨模态单细胞最佳实践</a></td>
+<td>多模态分析与实践入口</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41467-021-21038-1">Zimmerman et al. 2021，伪重复</a></td>
+<td>供体内细胞相关性与推断层级</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41592-018-0229-2">Lopez et al. 2018，scVI</a></td>
+<td>深度生成模型与计数分布</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://docs.scvi-tools.org/en/latest/api/reference/scvi.model.SCVI.html">scvi-tools 官方 API</a></td>
+<td>软件中 NB&#x2F;ZINB 等选项，不把简化模型等同实现</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://doi.org/10.1534/genetics.112.143313">de los Campos et al. 2013，全基因组回归</a></td>
+<td>收缩、全基因组回归及预测</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6829122/">Azodi et al. 2019，GP 基准</a></td>
+<td>不同算法与性状比较、公开数据入口</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1703.06870">He et al.，Mask R-CNN</a></td>
+<td>实例分割与掩模分支</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41467-019-10837-2">Environmental conditions shape the nature of a minimal bacterial genome，2019</a></td>
+<td>最小基因组的条件依赖性</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.nature.com/articles/nature24659">Zhang et al. 2017，半合成生物的信息读取</a></td>
+<td>区分字母表扩展与实际解码能力</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/26657557/">Calviello et al. 2016，RiboTaper</a></td>
+<td>周期性与翻译 ORF 识别</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://onlinelibrary.wiley.com/doi/abs/10.1111/tpj.13073">Lei et al. 2015，玉米干旱翻译组</a></td>
+<td>教材图 12.28 研究来源</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41592-025-02772-6.pdf">Ahlmann-Eltze et al. 2025，扰动预测基线比较</a></td>
+<td>任务特定的基线证据</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41587-026-03307-w">Deep learning perturbation models can outperform baselines on calibrated metrics，2026</a></td>
+<td>指标、校准与不同评测结论</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://scanpy.readthedocs.io/en/stable/tutorials/basics/clustering.html">Scanpy 官方教程</a></td>
+<td>真实单细胞实践路线</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://cooler.readthedocs.io/en/latest/">Cooler 官方文档</a></td>
+<td>稀疏多分辨率接触矩阵</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.10xgenomics.com/datasets">10×官方公开数据</a></td>
+<td>可选择的教学数据入口</td>
+</tr>
+</tbody></table>
+<h3 id="插图索引"><a href="#插图索引" class="headerlink" title="插图索引"></a>插图索引</h3><table>
+<thead>
+<tr>
+<th>原图</th>
+<th>主题</th>
+<th align="right">印刷页</th>
+<th>本笔记位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>章首</td>
+<td>知识地图</td>
+<td align="right">286</td>
+<td>§1</td>
+</tr>
+<tr>
+<td>12.1—12.2</td>
+<td>分级结构、TAD</td>
+<td align="right">289、292</td>
+<td>§2.4</td>
+</tr>
+<tr>
+<td>12.3—12.4</td>
+<td>辅助组装</td>
+<td align="right">293</td>
+<td>§2.5</td>
+</tr>
+<tr>
+<td>12.5</td>
+<td>浏览器</td>
+<td align="right">294</td>
+<td>§2.6</td>
+</tr>
+<tr>
+<td>12.6—12.7</td>
+<td>单细胞发展</td>
+<td align="right">295—296</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>12.8—12.9</td>
+<td>单细胞 DNA、定相</td>
+<td align="right">298</td>
+<td>§3.2</td>
+</tr>
+<tr>
+<td>12.10—12.11</td>
+<td>软件统计、流程</td>
+<td align="right">300—302</td>
+<td>§3.3</td>
+</tr>
+<tr>
+<td>12.12—12.13</td>
+<td>拟时序</td>
+<td align="right">305—306</td>
+<td>§3.9</td>
+</tr>
+<tr>
+<td>12.14</td>
+<td>细胞数影响，跨页</td>
+<td align="right">307—308</td>
+<td>§3.10</td>
+</tr>
+<tr>
+<td>12.15—12.16</td>
+<td>育种策略</td>
+<td align="right">309、311</td>
+<td>§4.1</td>
+</tr>
+<tr>
+<td>12.17—12.18</td>
+<td>模型比较、CNN</td>
+<td align="right">312—314</td>
+<td>§4.4</td>
+</tr>
+<tr>
+<td>12.19—12.23</td>
+<td>表型、成像、检测分割</td>
+<td align="right">316—319、323</td>
+<td>§5.1</td>
+</tr>
+<tr>
+<td>12.24—12.26</td>
+<td>合成系统与平台</td>
+<td align="right">323、326、328</td>
+<td>§5.2</td>
+</tr>
+<tr>
+<td>12.27—12.28</td>
+<td>翻译组流程与案例</td>
+<td align="right">329、331</td>
+<td>§5.3</td>
+</tr>
+<tr>
+<td>历史人物</td>
+<td>深度学习研究者</td>
+<td align="right">332</td>
+<td>§12</td>
+</tr>
+</tbody></table>
+<p>图像路径与教材页码见<a href="/bioinformatics-notes/images/ch12/manifest.json">manifest.json</a>。原书表 12.1—12.8 均已在相应主题中解释或按原理重整；本笔记不逐格复制旧软件目录、无法可靠对齐的勾选或当年网址。</p>
+<ul>
+<li>Gibson et al. 2010，合成基因组：<a target="_blank" rel="noopener" href="https://doi.org/10.1126/science.1190719">原论文</a>；<a target="_blank" rel="noopener" href="https://www.jcvi.org/media-center/first-self-replicating-synthetic-bacterial-cell-constructed-j-craig-venter-institute">JCVI 原始公告</a>。</li>
+<li>Rao et al. 2014，Hi-C 图谱分辨率：<a target="_blank" rel="noopener" href="https://doi.org/10.1016/j.cell.2014.11.021">原论文</a>。</li>
+</ul>
+<hr>
+<p><a href="/bioinformatics/chapter-11/">上一章</a> · <a href="/bioinformatics/chapter-13/">下一章</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF/" rel="tag"># 生物信息</a>
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/bioinformatics/chapter-11/" rel="prev" title="第 11 章 宏基因组分析：学习笔记">
+      <i class="fa fa-chevron-left"></i> 第 11 章 宏基因组分析：学习笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/bioinformatics/chapter-13/" rel="next" title="第 13 章 群体遗传分析：学习笔记">
+      第 13 章 群体遗传分析：学习笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E6%95%99%E6%9D%90%E8%8C%83%E5%9B%B4%E4%B8%8E%E5%8B%98%E8%AF%AF"><span class="nav-number">1.</span> <span class="nav-text">0. 教材范围与勘误</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-1-%E4%BC%9A%E6%94%B9%E5%8F%98%E7%90%86%E8%A7%A3%E6%88%96%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%8B%98%E8%AF%AF"><span class="nav-number">1.1.</span> <span class="nav-text">0.1 会改变理解或实现的勘误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-2-%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%E8%BF%99%E4%BB%BD%E7%AC%94%E8%AE%B0"><span class="nav-number">1.2.</span> <span class="nav-text">0.2 怎么使用这份笔记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%9C%AC%E7%AB%A0%E5%AE%9A%E4%BD%8D%E4%B8%8E%E7%9F%A5%E8%AF%86%E5%9C%B0%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">1. 本章定位与知识地图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-CS-%E8%A7%86%E8%A7%92%E4%B8%8B%E6%9C%AC%E7%AB%A0%E7%9A%84%E5%9B%9B%E4%B8%AA%E9%9A%BE%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 CS 视角下本章的四个难点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E4%B8%8E%E5%89%8D%E9%9D%A2%E7%AB%A0%E8%8A%82%E7%9A%84%E8%A1%94%E6%8E%A5"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 与前面章节的衔接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%AC%AC%E4%B8%80%E8%8A%82-%E4%B8%89%E7%BB%B4%E5%9F%BA%E5%9B%A0%E7%BB%84"><span class="nav-number">3.</span> <span class="nav-text">2. 第一节 三维基因组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BB%8E%E6%9F%93%E8%89%B2%E8%B4%A8%E7%BB%93%E6%9E%84%E5%88%B0-Hi-C-%E8%AF%BB%E5%AF%B9-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 从染色质结构到 Hi-C 读对 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E8%AF%BB%E5%AF%B9%E3%80%81bin-%E4%B8%8E%E6%8E%A5%E8%A7%A6%E7%9F%A9%E9%98%B5-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 读对、bin 与接触矩阵 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%81%8F%E5%B7%AE%E6%A0%A1%E6%AD%A3%E4%B8%8E%E8%B7%9D%E7%A6%BB%E8%83%8C%E6%99%AF-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">3.3.</span> <span class="nav-text">2.3 偏差校正与距离背景 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E4%BB%8E%E7%96%86%E5%9F%9F%E5%88%B0%E5%8C%BA%E5%AE%A4%E3%80%81TAD-%E4%B8%8E%E7%8E%AF-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">3.4.</span> <span class="nav-text">2.4 从疆域到区室、TAD 与环 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-Hi-C-%E8%BE%85%E5%8A%A9%E7%BB%84%E8%A3%85%E4%B8%8E%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA-%E3%80%90%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E5%8C%BA%E5%88%AB%E3%80%91"><span class="nav-number">3.5.</span> <span class="nav-text">2.5 Hi-C 辅助组装与三维重建 【必须掌握区别】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%81%E6%96%87%E4%BB%B6%E4%B8%8E%E5%8F%AF%E9%87%8D%E5%A4%8D%E6%80%A7-%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">3.6.</span> <span class="nav-text">2.6 可视化、文件与可重复性 【应该理解】</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%AC%AC%E4%BA%8C%E8%8A%82-%E5%8D%95%E7%BB%86%E8%83%9E%E7%BB%84%E5%AD%A6%E6%95%B0%E6%8D%AE"><span class="nav-number">4.</span> <span class="nav-text">3. 第二节 单细胞组学数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%B5%8B%E5%8D%95%E7%BB%86%E8%83%9E-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 为什么要测单细胞 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%8D%95%E7%BB%86%E8%83%9E-DNA%EF%BC%9A%E5%8F%98%E5%BC%82%E3%80%81%E5%85%8B%E9%9A%86%E4%B8%8E%E5%AE%9A%E7%9B%B8-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 单细胞 DNA：变异、克隆与定相 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-scRNA-seq-%E4%BB%8E-FASTQ-%E5%88%B0%E7%9F%A9%E9%98%B5-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.3.</span> <span class="nav-text">3.3 scRNA-seq 从 FASTQ 到矩阵 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6%E6%98%AF%E5%A4%9A%E8%AF%81%E6%8D%AE%E5%88%A4%E6%96%AD-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.4.</span> <span class="nav-text">3.4 质量控制是多证据判断 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E5%BD%92%E4%B8%80%E5%8C%96%E3%80%81HVG%E3%80%81PCA-%E4%B8%8E%E8%BF%91%E9%82%BB%E5%9B%BE-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.5.</span> <span class="nav-text">3.5 归一化、HVG、PCA 与近邻图 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-t-SNE%E3%80%81UMAP-%E4%B8%8E%E5%8F%AF%E8%A7%86%E5%8C%96%E8%BE%B9%E7%95%8C-%E3%80%90%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E3%80%91"><span class="nav-number">4.6.</span> <span class="nav-text">3.6 t-SNE、UMAP 与可视化边界 【必须掌握】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-%E6%B3%A8%E9%87%8A%E4%B8%8E%E8%B7%A8%E6%A0%B7%E6%9C%AC%E6%95%B4%E5%90%88-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.7.</span> <span class="nav-text">3.7 注释与跨样本整合 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-8-%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E3%80%81%E5%B7%AE%E5%BC%82%E4%B8%B0%E5%BA%A6%E4%B8%8E%E4%BC%AA%E9%87%8D%E5%A4%8D-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.8.</span> <span class="nav-text">3.8 差异表达、差异丰度与伪重复 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-9-%E6%8B%9F%E6%97%B6%E5%BA%8F%E4%B8%8E%E7%9C%9F%E5%AE%9E%E8%B0%B1%E7%B3%BB-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.9.</span> <span class="nav-text">3.9 拟时序与真实谱系 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-10-%E7%BB%86%E8%83%9E%E6%95%B0%E3%80%81%E6%B7%B1%E5%BA%A6%E3%80%81%E9%87%8D%E5%A4%8D%E6%95%B0%E6%80%8E%E6%A0%B7%E6%9D%83%E8%A1%A1-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.10.</span> <span class="nav-text">3.10 细胞数、深度、重复数怎样权衡 【重点】</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%AC%AC%E4%B8%89%E8%8A%82-%E5%9F%BA%E5%9B%A0%E7%BB%84%E9%A2%84%E6%B5%8B%E4%B8%8E%E9%80%89%E6%8B%A9"><span class="nav-number">5.</span> <span class="nav-text">4. 第三节 基因组预测与选择</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E4%BB%8E%E5%9F%BA%E5%9B%A0%E7%BB%84%E8%B5%84%E6%BA%90%E5%88%B0%E8%82%B2%E7%A7%8D%E5%86%B3%E7%AD%96-%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">5.1.</span> <span class="nav-text">4.1 从基因组资源到育种决策 【应该理解】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-MAS%E3%80%81GWAS%E3%80%81GS-%E5%92%8C-GEBV-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">5.2.</span> <span class="nav-text">4.2 MAS、GWAS、GS 和 GEBV 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8B-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">5.3.</span> <span class="nav-text">4.3 线性模型与混合模型 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E4%B8%8E-1D-CNN-%E3%80%90%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E9%80%89%E6%8B%A9%E9%80%BB%E8%BE%91%E3%80%91"><span class="nav-number">5.4.</span> <span class="nav-text">4.4 非线性模型与 1D CNN 【必须掌握选择逻辑】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-%E5%9F%BA%E5%9B%A0%E7%BB%84%E9%A2%84%E6%B5%8B%E7%9A%84%E8%AF%84%E6%B5%8B%E4%B8%8E%E8%82%B2%E7%A7%8D%E6%94%B6%E7%9B%8A-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">5.5.</span> <span class="nav-text">4.5 基因组预测的评测与育种收益 【重点】</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E7%AC%AC%E5%9B%9B%E8%8A%82-%E5%85%B6%E4%BB%96%E7%BB%84%E5%AD%A6%E4%B8%8E%E8%AE%BE%E8%AE%A1%E4%BB%BB%E5%8A%A1"><span class="nav-number">6.</span> <span class="nav-text">5. 第四节 其他组学与设计任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E8%A1%A8%E5%9E%8B%E7%BB%84%E4%B8%8E%E5%9B%BE%E5%83%8F%E8%AF%86%E5%88%AB"><span class="nav-number">6.1.</span> <span class="nav-text">5.1 表型组与图像识别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-1-%E8%A1%A8%E5%9E%8B%E4%B8%8D%E6%98%AF%E4%B8%80%E5%BC%A0%E5%9B%BE%E7%89%87-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.1.1.</span> <span class="nav-text">5.1.1 表型不是一张图片 【重点】</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-2-%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B%E4%B8%8E%E4%BB%BB%E5%8A%A1%E5%AE%9A%E4%B9%89-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.1.2.</span> <span class="nav-text">5.1.2 处理流程与任务定义 【重点】</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-3-R-CNN-%E5%AE%B6%E6%97%8F%E6%80%8E%E6%A0%B7%E5%87%8F%E5%B0%91%E9%87%8D%E5%A4%8D%E8%AE%A1%E7%AE%97-%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">6.1.3.</span> <span class="nav-text">5.1.3 R-CNN 家族怎样减少重复计算 【应该理解】</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-4-%E7%A7%91%E5%AD%A6%E5%9B%BE%E5%83%8F%E8%AF%84%E6%B5%8B%E7%9A%84%E9%87%8D%E7%82%B9-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.1.4.</span> <span class="nav-text">5.1.4 科学图像评测的重点 【重点】</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E5%90%88%E6%88%90%E7%94%9F%E7%89%A9%E5%AD%A6%E4%B8%8E%E5%9F%BA%E5%9B%A0%E7%BB%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">6.2.</span> <span class="nav-text">5.2 合成生物学与基因组设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-1-%E9%83%A8%E4%BB%B6%E2%80%94%E8%A3%85%E7%BD%AE%E2%80%94%E7%B3%BB%E7%BB%9F-%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">6.2.1.</span> <span class="nav-text">5.2.1 部件—装置—系统 【应该理解】</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-2-%E4%BB%8E%E9%80%BB%E8%BE%91%E9%97%A8%E5%88%B0%E5%8A%A8%E6%80%81%E7%B3%BB%E7%BB%9F-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.2.2.</span> <span class="nav-text">5.2.2 从逻辑门到动态系统 【重点】</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-3-%E5%9F%BA%E5%9B%A0%E7%BB%84%E8%AE%BE%E8%AE%A1%E4%B8%AD%E7%9A%84%E4%B8%89%E4%B8%AA%E4%B8%8D%E5%90%8C%E9%97%AE%E9%A2%98-%E3%80%90%E5%BF%85%E9%A1%BB%E5%8C%BA%E5%88%86%E3%80%91"><span class="nav-number">6.2.3.</span> <span class="nav-text">5.2.3 基因组设计中的三个不同问题 【必须区分】</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-4-DNA-%E6%B0%B4%E5%8D%B0%E3%80%81%E9%87%8D%E7%BC%96%E7%A0%81%E4%B8%8E%E6%89%A9%E5%B1%95%E5%AD%97%E6%AF%8D%E8%A1%A8-%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">6.2.4.</span> <span class="nav-text">5.2.4 DNA 水印、重编码与扩展字母表 【应该理解】</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-5-DBTL-%E4%B8%8E-AI4S-%E7%9A%84%E6%8E%A5%E5%8F%A3-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.2.5.</span> <span class="nav-text">5.2.5 DBTL 与 AI4S 的接口 【重点】</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E7%BF%BB%E8%AF%91%E7%BB%84%E4%B8%8E-Ribo-seq"><span class="nav-number">6.3.</span> <span class="nav-text">5.3 翻译组与 Ribo-seq</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-1-%E8%BD%AC%E5%BD%95%E6%9C%AC%E3%80%81%E7%BF%BB%E8%AF%91%E6%B4%BB%E5%8A%A8%E4%B8%8E%E8%9B%8B%E7%99%BD%E4%B8%B0%E5%BA%A6-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.3.1.</span> <span class="nav-text">5.3.1 转录本、翻译活动与蛋白丰度 【重点】</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-2-P-site-%E4%B8%8E%E4%B8%89%E6%A0%B8%E8%8B%B7%E9%85%B8%E5%91%A8%E6%9C%9F-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.3.2.</span> <span class="nav-text">5.3.2 P-site 与三核苷酸周期 【重点】</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-3-%E4%B8%80%E6%9D%A1%E5%8F%AF%E8%A7%A3%E9%87%8A%E7%9A%84%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.3.3.</span> <span class="nav-text">5.3.3 一条可解释的分析流程 【重点】</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-4-TE-%E7%9A%84%E6%AF%94%E5%80%BC%E4%B8%8E%E5%B7%AE%E5%BC%82%E6%A3%80%E9%AA%8C-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.3.4.</span> <span class="nav-text">5.3.4 TE 的比值与差异检验 【重点】</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-5-uORF-%E4%B8%8E%E7%8E%89%E7%B1%B3%E5%B9%B2%E6%97%B1%E6%A1%88%E4%BE%8B-%E3%80%90%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E8%AF%BB%E5%9B%BE%E3%80%91"><span class="nav-number">6.3.5.</span> <span class="nav-text">5.3.5 uORF 与玉米干旱案例 【必须掌握读图】</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%85%B3%E9%94%AE%E6%95%B0%E6%8D%AE%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%BB%9F%E8%AE%A1%E6%8E%A8%E5%AF%BC"><span class="nav-number">7.</span> <span class="nav-text">6. 关键数据对象与统计推导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E6%95%B0%E6%8D%AE%E3%80%81shape%E3%80%81%E5%8D%95%E4%BD%8D%E4%B8%8E%E5%9D%90%E6%A0%87%E9%80%9F%E6%9F%A5-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 数据、shape、单位与坐标速查 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-Hi-C-%E7%9A%84%E5%B9%B3%E8%A1%A1%E3%80%81%E7%BB%9D%E7%BC%98%E4%B8%8E%E5%88%86%E8%BE%A8%E7%8E%87-%E3%80%90%E8%A1%A5%E5%85%85%E6%8E%A8%E5%AF%BC%E3%80%91"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 Hi-C 的平衡、绝缘与分辨率 【补充推导】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E5%8D%95%E7%BB%86%E8%83%9E%E8%AE%A1%E6%95%B0%E4%B8%8E%E4%BC%AA%E9%87%8D%E5%A4%8D-%E3%80%90%E8%A1%A5%E5%85%85%E6%8E%A8%E5%AF%BC%E3%80%91"><span class="nav-number">7.3.</span> <span class="nav-text">6.3 单细胞计数与伪重复 【补充推导】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E5%B2%AD%E5%9B%9E%E5%BD%92%E3%80%81%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%94%B6%E7%BC%A9%E4%B8%8E-GBLUP-%E3%80%90%E8%A1%A5%E5%85%85%E6%8E%A8%E5%AF%BC%E3%80%91"><span class="nav-number">7.4.</span> <span class="nav-text">6.4 岭回归、贝叶斯收缩与 GBLUP 【补充推导】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E5%88%86%E5%89%B2%E6%8C%87%E6%A0%87%E4%B8%8E%E6%80%A7%E7%8A%B6%E8%AF%AF%E5%B7%AE-%E3%80%90%E8%A1%A5%E5%85%85%E6%8E%A8%E5%AF%BC%E3%80%91"><span class="nav-number">7.5.</span> <span class="nav-text">6.5 分割指标与性状误差 【补充推导】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-Ribo-%E4%B8%8E-RNA-%E8%81%94%E5%90%88%E6%A8%A1%E5%9E%8B-%E3%80%90%E8%A1%A5%E5%85%85%E6%8E%A8%E5%AF%BC%E3%80%91"><span class="nav-number">7.6.</span> <span class="nav-text">6.6 Ribo 与 RNA 联合模型 【补充推导】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-7-%E6%BD%9C%E5%8F%98%E9%87%8F%E6%A8%A1%E5%9E%8B%E6%80%8E%E6%A0%B7%E8%BF%9E%E6%8E%A5%E5%88%B0-scVI-%E3%80%90AI4S%E3%80%91"><span class="nav-number">7.7.</span> <span class="nav-text">6.7 潜变量模型怎样连接到 scVI 【AI4S】</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%8F%AF%E8%BF%90%E8%A1%8C%E6%95%99%E5%AD%A6%E5%AE%9E%E9%AA%8C%E4%B8%8E%E5%AE%9E%E9%99%85%E8%BE%93%E5%87%BA"><span class="nav-number">8.</span> <span class="nav-text">7. 可运行教学实验与实际输出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-UMI-%E7%9A%84%E8%AE%A1%E6%95%B0%E5%8D%95%E4%BD%8D"><span class="nav-number">8.1.</span> <span class="nav-text">7.1 UMI 的计数单位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E7%9F%A9%E9%98%B5%E5%B9%B3%E8%A1%A1%E4%B8%8D%E7%AD%89%E4%BA%8E%E6%81%A2%E5%A4%8D%E7%9C%9F%E5%80%BC"><span class="nav-number">8.2.</span> <span class="nav-text">7.2 矩阵平衡不等于恢复真值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E7%A8%80%E6%9C%89%E7%BB%86%E8%83%9E%E7%9A%84%E6%9C%80%E4%BD%8E%E6%8D%95%E8%8E%B7%E6%95%B0%E9%87%8F"><span class="nav-number">8.3.</span> <span class="nav-text">7.3 稀有细胞的最低捕获数量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8A%8A%E7%BB%86%E8%83%9E%E5%BD%93%E9%87%8D%E5%A4%8D%E4%BC%9A%E4%BA%A7%E7%94%9F%E5%81%87%E9%98%B3%E6%80%A7"><span class="nav-number">8.4.</span> <span class="nav-text">7.4 为什么把细胞当重复会产生假阳性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-%E5%B2%AD%E5%9B%9E%E5%BD%92%E4%B8%8E-GBLUP-%E7%9A%84%E6%95%B0%E5%80%BC%E7%AD%89%E4%BB%B7"><span class="nav-number">8.5.</span> <span class="nav-text">7.5 岭回归与 GBLUP 的数值等价</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6-%E9%9A%8F%E6%9C%BA%E5%88%92%E5%88%86%E4%B8%8E%E6%96%B0%E5%AE%B6%E7%B3%BB%E9%A2%84%E6%B5%8B%E6%98%AF%E4%B8%A4%E4%B8%AA%E7%9B%AE%E6%A0%87"><span class="nav-number">8.6.</span> <span class="nav-text">7.6 随机划分与新家系预测是两个目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-7-P-site-%E5%81%8F%E7%A7%BB%E5%92%8C-TE"><span class="nav-number">8.7.</span> <span class="nav-text">7.7 P-site 偏移和 TE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-8-%E9%AB%98-accuracy-%E5%8F%AF%E4%BB%A5%E5%AE%8C%E5%85%A8%E6%BC%8F%E6%8E%89%E7%9B%AE%E6%A0%87"><span class="nav-number">8.8.</span> <span class="nav-text">7.8 高 accuracy 可以完全漏掉目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-9-CNN-%E7%9A%84%E7%BB%B4%E5%BA%A6%E6%A3%80%E6%9F%A5"><span class="nav-number">8.9.</span> <span class="nav-text">7.9 CNN 的维度检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-10-%E7%94%9F%E7%89%A9%E5%9B%9E%E8%B7%AF%E7%9A%84%E7%A8%B3%E6%80%81%E4%B8%8E%E6%97%B6%E9%97%B4%E5%B0%BA%E5%BA%A6"><span class="nav-number">8.10.</span> <span class="nav-text">7.10 生物回路的稳态与时间尺度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-AI-for-Science-%E6%89%A9%E5%B1%95"><span class="nav-number">9.</span> <span class="nav-text">8. AI for Science 扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E4%BB%8E%E4%BB%BB%E5%8A%A1%E3%80%81%E6%A0%87%E7%AD%BE%E5%92%8C%E6%B3%9B%E5%8C%96%E7%9B%AE%E6%A0%87%E9%80%89%E6%8B%A9%E6%A8%A1%E5%9E%8B"><span class="nav-number">9.1.</span> <span class="nav-text">8.1 从任务、标签和泛化目标选择模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B%E6%80%8E%E6%A0%B7%E8%AF%84%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E5%88%97%E5%90%8D%E5%AD%97"><span class="nav-number">9.2.</span> <span class="nav-text">8.2 基础模型怎样评，而不是列名字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E5%A4%9A%E6%A8%A1%E6%80%81%E4%B8%8E%E7%A9%BA%E9%97%B4%E5%88%86%E6%9E%90%E9%9C%80%E8%A6%81%E8%A1%A5%E7%9A%84%E7%BB%9F%E8%AE%A1%E9%97%AE%E9%A2%98"><span class="nav-number">9.3.</span> <span class="nav-text">8.3 多模态与空间分析需要补的统计问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%90%BD%E5%9C%B0%E7%9A%84%E4%BA%94%E4%B8%AA%E5%AD%A6%E4%B9%A0%E9%A1%B9%E7%9B%AE"><span class="nav-number">9.4.</span> <span class="nav-text">8.4 可以直接落地的五个学习项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E4%B8%8E-VirusBin-%E7%A0%94%E7%A9%B6%E7%9A%84%E8%81%94%E7%B3%BB"><span class="nav-number">10.</span> <span class="nav-text">9. 与 VirusBin 研究的联系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E4%B8%89%E7%A7%8D%E5%9B%BE%E7%9A%84%E8%BE%B9%E4%B8%8D%E8%83%BD%E7%9B%B4%E6%8E%A5%E4%BA%92%E6%8D%A2"><span class="nav-number">10.1.</span> <span class="nav-text">9.1 三种图的边不能直接互换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%80%A7%E5%BA%94%E8%BF%9B%E5%85%A5%E5%9B%BE%E6%9E%84%E9%80%A0"><span class="nav-number">10.2.</span> <span class="nav-text">9.2 不确定性应进入图构造</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-%E5%9B%BE%E7%A8%B3%E5%AE%9A%E4%B8%8D%E7%AD%89%E4%BA%8E%E5%9F%BA%E5%9B%A0%E7%BB%84%E6%AD%A3%E7%A1%AE"><span class="nav-number">10.3.</span> <span class="nav-text">9.3 图稳定不等于基因组正确</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-4-%E2%80%9C%E5%89%AA%E8%BE%B9%E6%A3%80%E9%AA%8C%E2%80%9D%E7%9A%84%E7%BB%9F%E8%AE%A1%E6%96%B9%E5%90%91"><span class="nav-number">10.4.</span> <span class="nav-text">9.4 “剪边检验”的统计方向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-5-%E6%95%B0%E6%8D%AE%E5%88%92%E5%88%86%E4%B8%8E%E2%80%9C%E5%90%88%E6%88%90%E8%A7%86%E5%9B%BE%E2%80%9D"><span class="nav-number">10.5.</span> <span class="nav-text">9.5 数据划分与“合成视图”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E6%95%99%E6%9D%90%E4%B9%A0%E9%A2%98%E8%A7%A3%E7%AD%94"><span class="nav-number">11.</span> <span class="nav-text">10. 教材习题解答</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98-1-%E7%AE%80%E8%BF%B0-Hi-C-%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86"><span class="nav-number">11.1.</span> <span class="nav-text">习题 1 简述 Hi-C 技术原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98-2-%E4%BB%80%E4%B9%88%E6%98%AF-TAD%EF%BC%8C%E4%B8%BB%E8%A6%81%E9%89%B4%E5%AE%9A%E6%96%B9%E6%B3%95%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">11.2.</span> <span class="nav-text">习题 2 什么是 TAD，主要鉴定方法有哪些</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98-3-%E5%8D%95%E7%BB%86%E8%83%9E-RNA-%E4%B8%BB%E8%A6%81%E9%99%8D%E7%BB%B4%E6%96%B9%E6%B3%95"><span class="nav-number">11.3.</span> <span class="nav-text">习题 3 单细胞 RNA 主要降维方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98-4-%E6%8B%9F%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%9A%84%E6%84%8F%E4%B9%89%E4%B8%8E%E7%AE%97%E6%B3%95"><span class="nav-number">11.4.</span> <span class="nav-text">习题 4 拟时序分析的意义与算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98-5-%E5%9F%BA%E5%9B%A0%E7%BB%84%E9%A2%84%E6%B5%8B%E7%9A%84%E7%BA%BF%E6%80%A7%E4%B8%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%96%B9%E6%B3%95"><span class="nav-number">11.5.</span> <span class="nav-text">习题 5 基因组预测的线性与非线性方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98-6-%E4%BB%A5-CNN-%E4%B8%BA%E4%BE%8B%E8%AF%B4%E6%98%8E%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E5%BA%94%E7%94%A8"><span class="nav-number">11.6.</span> <span class="nav-text">习题 6 以 CNN 为例说明生物信息学应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98-7-%E6%AF%94%E8%BE%83-Ribo-seq-%E4%B8%8E-RNA-seq"><span class="nav-number">11.7.</span> <span class="nav-text">习题 7 比较 Ribo-seq 与 RNA-seq</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E8%87%AA%E6%B5%8B%E9%A2%98"><span class="nav-number">12.</span> <span class="nav-text">11. 自测题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88"><span class="nav-number">12.1.</span> <span class="nav-text">参考答案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-%E5%8E%86%E5%8F%B2%E4%B8%8E%E4%BA%BA%E7%89%A9-%E3%80%90%E4%BA%86%E8%A7%A3%E5%8D%B3%E5%8F%AF%E3%80%91"><span class="nav-number">13.</span> <span class="nav-text">12. 历史与人物 【了解即可】</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-%E4%BA%94%E8%A7%86%E8%A7%92%E6%80%BB%E7%BB%93"><span class="nav-number">14.</span> <span class="nav-text">13. 五视角总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-%E5%85%A8%E7%AB%A0%E9%80%9F%E8%AE%B0-20-%E6%9D%A1"><span class="nav-number">15.</span> <span class="nav-text">14. 全章速记 20 条</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">16.</span> <span class="nav-text">15. 下一步学习建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16-%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%E4%B8%8E%E6%A0%B8%E5%AF%B9%E8%AE%B0%E5%BD%95"><span class="nav-number">17.</span> <span class="nav-text">16. 参考资料与核对记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%9B%BE%E7%B4%A2%E5%BC%95"><span class="nav-number">17.1.</span> <span class="nav-text">插图索引</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

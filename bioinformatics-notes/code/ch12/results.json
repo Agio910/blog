@@ -1,0 +1,91 @@
+{
+  "environment": {
+    "python": "3.13.14",
+    "numpy": "2.5.3"
+  },
+  "results": {
+    "01_umi": {
+      "reads": 10,
+      "molecules": 3,
+      "c1_g1_molecules": 2
+    },
+    "02_balance": {
+      "iterations": 25,
+      "raw_row_max_min": 45.5408000426419,
+      "balanced_row_max_min": 1.000000000085769,
+      "caution": "Equal row sums verify scaling only, not recovery of true biological structure."
+    },
+    "03_rare_cell": {
+      "p": 0.001,
+      "target_probability": 0.95,
+      "N_min": 2995,
+      "probability": 0.9500382966026437
+    },
+    "04_pseudoreplication": {
+      "null_trials": 20000,
+      "donors_per_group": 6,
+      "cells_per_donor": 500,
+      "naive_rejection_fraction": 0.9007,
+      "known_variance_hierarchical_rejection_fraction": 0.0491
+    },
+    "05_ridge_gblup": {
+      "max_beta_difference": 5.447031714567174e-16,
+      "max_prediction_difference": 1.5543122344752192e-15
+    },
+    "06_split_target": {
+      "random_individual_split": {
+        "rmse": 0.24637287168708838,
+        "skill_vs_train_mean": 0.9499931134146448
+      },
+      "unseen_family_split": {
+        "rmse": 0.8231213011136194,
+        "skill_vs_train_mean": 0.0
+      },
+      "caution": "Constructed family-identity example, not an empirical estimate of genomic prediction performance."
+    },
+    "07_ribo": {
+      "correct_frame_counts": [
+        30,
+        0,
+        0
+      ],
+      "offset_plus_one_frame_counts": [
+        0,
+        30,
+        0
+      ],
+      "both_double_delta_log2_TE": 0.0,
+      "ribo_quadruples_rna_doubles_delta_log2_TE": 1.0
+    },
+    "08_segmentation": {
+      "pixel_accuracy": 0.99,
+      "dice": 0.0,
+      "foreground_recall": 0.0
+    },
+    "09_convolution": {
+      "input": [
+        0.0,
+        1.0,
+        2.0,
+        0.0,
+        1.0
+      ],
+      "kernel": [
+        1.0,
+        2.0,
+        1.0
+      ],
+      "output": [
+        4.0,
+        5.0,
+        3.0
+      ],
+      "length": 3
+    },
+    "10_dynamics": {
+      "analytic_steady_state": 0.5,
+      "euler_at_t10": 0.49999999898985664,
+      "absolute_error": 1.0101433578491026e-09
+    }
+  }
+}

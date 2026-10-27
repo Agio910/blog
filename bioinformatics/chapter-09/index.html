@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="樊龙江《生物信息学》（第二版）学习笔记 · 第 9 章。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第 9 章 非编码 RNA 鉴定与功能预测：学习笔记">
+<meta property="og:url" content="https://blog.agiopan.cn/bioinformatics/chapter-09/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="樊龙江《生物信息学》（第二版）学习笔记 · 第 9 章。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch09/fig09-00.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch09/fig09-01.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch09/fig09-01b.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch09/fig09-03.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch09/fig09-04.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch09/fig09-06.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch09/fig09-07.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch09/fig09-10.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch09/fig09-11.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch09/fig09-12.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch09/fig09-ex06.png">
+<meta property="article:published_time" content="2026-10-27T04:09:00.000Z">
+<meta property="article:modified_time" content="2026-10-27T04:09:00.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="生物信息">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch09/fig09-00.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/bioinformatics/chapter-09/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>第 9 章 非编码 RNA 鉴定与功能预测：学习笔记 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/bioinformatics/chapter-09/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第 9 章 非编码 RNA 鉴定与功能预测：学习笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-10-27 12:09:00" itemprop="dateCreated datePublished" datetime="2026-10-27T12:09:00+08:00">2026-10-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Bioinfomatics/" itemprop="url" rel="index"><span itemprop="name">Bioinfomatics</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>樊龙江《生物信息学》（第二版）学习笔记 · 第 9 章。</p>
+<span id="more"></span>
+
+<p><a href="/bioinformatics/chapter-02/">第 2 章</a> · <a href="/bioinformatics/chapter-03/">第 3 章</a> · <a href="/bioinformatics/chapter-04/">第 4 章</a> · <a href="/bioinformatics/chapter-05/">第 5 章</a> · <a href="/bioinformatics/chapter-06/">第 6 章</a> · <a href="/bioinformatics/chapter-07/">第 7 章</a> · <a href="/bioinformatics/chapter-08/">第 8 章</a> · <a href="/bioinformatics/chapter-09/">第 9 章</a> · <a href="/bioinformatics/chapter-10/">第 10 章</a> · <a href="/bioinformatics/chapter-11/">第 11 章</a> · <a href="/bioinformatics/chapter-12/">第 12 章</a> · <a href="/bioinformatics/chapter-13/">第 13 章</a> · <a href="/bioinformatics/chapter-14/">第 14 章</a></p>
+<hr>
+<blockquote>
+<p>教材：樊龙江主编《生物信息学》（第二版），科学出版社，2021 年 5 月。第 9 章，印刷页 p.214–237。</p>
+<p>标签：【重点】需要掌握的内容；【易错】概念或计算中常见混淆；【现代实践】教材之后的方法与数据；【AI4S】学习问题与评测；【已核实】本轮或前序实际查过原始来源；【需查证】证据仍不足。</p>
+<p>2026-10-23 审校；2026-10-27 续审。</p>
+</blockquote>
+<h2 id="0-教材范围与勘误"><a href="#0-教材范围与勘误" class="headerlink" title="0. 教材范围与勘误"></a>0. 教材范围与勘误</h2><h3 id="0-1-内容与对应位置"><a href="#0-1-内容与对应位置" class="headerlink" title="0.1 内容与对应位置"></a>0.1 内容与对应位置</h3><table>
+<thead>
+<tr>
+<th>教材部分</th>
+<th>印刷页</th>
+<th>对应内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一节 小 RNA 计算识别与靶基因预测</td>
+<td>p.214–224</td>
+<td>miRNA 生成与鉴定、siRNA 与相位、植物&#x2F;动物靶标；图 9.1–9.5，式（9.1）–（9.8）；§2</td>
+</tr>
+<tr>
+<td>第二节 长非编码 RNA 鉴定与功能预测</td>
+<td>p.225–235</td>
+<td>lncRNA、RNA 互作、circRNA 与翻译证据；图 9.6–9.13，式（9.9）–（9.11）；§3–§4</td>
+</tr>
+<tr>
+<td>习题与历史人物</td>
+<td>p.235–237</td>
+<td>六题、分析流程思维导图、中国生物信息学早期研究者；§10、§12</td>
+</tr>
+</tbody></table>
+<p>§5 整理数据对象，§6 推导统计与结构算法，§7 给出五个可运行示例，§8–§9 讨论 AI4S 及 VirusBin。网页界面图 9.5、9.9、9.13 的操作含义在正文解释，不将历史网页复制成现行操作承诺。</p>
+<h3 id="0-2-已核对的教材问题"><a href="#0-2-已核对的教材问题" class="headerlink" title="0.2 已核对的教材问题"></a>0.2 已核对的教材问题</h3><table>
+<thead>
+<tr>
+<th>位置</th>
+<th>教材问题</th>
+<th>更正或限定</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>p.214</td>
+<td>SE 写作 CZHZ；HEN1 全名写成 DsRBD protein-like protein 1</td>
+<td>SE 为 C2H2 锌指蛋白；HEN1 是 HUA ENHANCER 1 甲基转移酶。HEN1 本身也含 RNA 结合结构域，不能据此说只有 HYL1 有 dsRBD</td>
+</tr>
+<tr>
+<td>p.214</td>
+<td>HST1 间蛋白质</td>
+<td>HASTY（HST）；出核与 AGO 装载的现代机制需与教材简图分开理解</td>
+</tr>
+<tr>
+<td>p.214 思维导图</td>
+<td>“第 10 章—蛋白质编码基因”</td>
+<td>本书编码基因预测在第 8 章，第 10 章讨论转录与调控</td>
+</tr>
+<tr>
+<td>p.217</td>
+<td>长度差归于 Drosha 与 Dicer 差别</td>
+<td>植物没有动物式 Drosha 加工路线，成熟长度主要由相应 Dicer&#x2F;DCL 过程决定</td>
+</tr>
+<tr>
+<td>p.217</td>
+<td>“类似 RISC 的核糖体蛋白”</td>
+<td>核糖核蛋白复合物，不是核糖体蛋白</td>
+</tr>
+<tr>
+<td>p.217</td>
+<td>动物 miRNA 不影响 mRNA 稳定性</td>
+<td>哺乳动物 miRNA 可促进 mRNA 降解；植物也可抑制翻译，不是严格二分</td>
+</tr>
+<tr>
+<td>p.217</td>
+<td>所有内含子来源 miRNA 均称 mirtron</td>
+<td>mirtron 是通过剪接等形成前体并绕过典型 Drosha 加工的特定路线</td>
+</tr>
+<tr>
+<td>p.218</td>
+<td>BLAST 默认字长 13</td>
+<td>NCBI 官方说明：blastn 为 11，megablast 为 28，blastn-short 为 7；须写明任务</td>
+</tr>
+<tr>
+<td>p.219–223</td>
+<td>把全部 sRNA 读序称为 miRNA</td>
+<td>小 RNA 类别要先识别；相位检测主要计 siRNA&#x2F;phasiRNA</td>
+</tr>
+<tr>
+<td>p.220 等</td>
+<td>AGO&#x2F;Dicer 切割写成剪接</td>
+<td>切割与去内含子的剪接不同，不能与 circRNA 反向剪接混用</td>
+</tr>
+<tr>
+<td>p.220</td>
+<td>RNAi 发现史只到 1995 年</td>
+<td>区分 1990 年共抑制与 Fire et al., 1998 双链 RNA 触发 RNAi 的研究</td>
+</tr>
+<tr>
+<td>p.220</td>
+<td>RDR2 称 RNA 聚合酶 2</td>
+<td>RNA 依赖的 RNA 聚合酶 2，不是 Pol II；另有转录元件的错字</td>
+</tr>
+<tr>
+<td>p.221</td>
+<td>Chen 检验“P 越大相位越明显”</td>
+<td>超几何上尾 P 越小越显著；Howell 分数越大是另一种量</td>
+</tr>
+<tr>
+<td>p.221</td>
+<td>n、k 的“读序数量”不清</td>
+<td>区分 distinct 种类&#x2F;占据位置与重复测到的丰度，不能相互替代</td>
+</tr>
+<tr>
+<td>p.223 式（9.7）</td>
+<td>对 X 求和而被加项含固定 k</td>
+<td>被加项使用 X；否则不是上尾概率</td>
+</tr>
+<tr>
+<td>p.223 式（9.8）及解释</td>
+<td>相位排列为数字 1</td>
+<td>应为相位模式符号 <span class="math">\(l\)</span>；系数 9 与 De Paoli 原文 10 周期版本分开写</td>
+</tr>
+<tr>
+<td>p.223</td>
+<td>靶标第 1、11、12 位不能错配</td>
+<td>与常见强调第 10、11 位的规则不同，保留两套规则的出处和用途，不混写</td>
+</tr>
+<tr>
+<td>p.223</td>
+<td>探视算法 FASTA；psRNATarget 归 Zhao 等</td>
+<td>启发式；对应论文为 Dai and Zhao, 2011；miRecords 是数据库而非单一预测程序</td>
+</tr>
+<tr>
+<td>p.226</td>
+<td>Cufflink；lncRNA 转录本远多于 mRNA</td>
+<td>Cufflinks；数量须区分基因与转录本、物种与版本</td>
+</tr>
+<tr>
+<td>p.226 图 9.7</td>
+<td>CPC score≤0 与正文 CPC2 混用</td>
+<td>CPC1 分数和 CPC2 编码概率不是同一输出</td>
+</tr>
+<tr>
+<td>p.227</td>
+<td>Wu2013 称为 Ye2014 之后的新研究</td>
+<td>年代顺序不能倒置，两套规则分别说明</td>
+</tr>
+<tr>
+<td>p.227 式（9.10）</td>
+<td>系综自由能括号错、称集元能量</td>
+<td>用受限与全体结构的系综自由能之差，式子见§3.4</td>
+</tr>
+<tr>
+<td>p.228</td>
+<td>RPISeq 要求 RNA 和蛋白 3D 结构</td>
+<td>其原始方法只用序列；不要把预测的结构倾向与实测 3D 输入混淆</td>
+</tr>
+<tr>
+<td>p.228</td>
+<td>Bahler、帕尔斯分析</td>
+<td>Bähler、PARS；图 9.8 的 2015 与正文 2016 年份不一致，出处【需查证】</td>
+</tr>
+<tr>
+<td>p.229</td>
+<td>circRNA 一概为非编码并来自反向剪接</td>
+<td>有翻译实例；套索来源 ciRNA 与外显子反向剪接机制不同</td>
+</tr>
+<tr>
+<td>p.229</td>
+<td>发现环状 RNA 仅 20 年；RNAase R</td>
+<td>历史叙述不完整；酶名 RNase R</td>
+</tr>
+<tr>
+<td>p.230–232</td>
+<td>CIRC explorer、circaltas；circBase 链接指向 starBase</td>
+<td>CIRCexplorer、circAtlas；circBase 与 starBase 不是同一库</td>
+</tr>
+<tr>
+<td>p.230</td>
+<td>FDR 解释为假阳性率</td>
+<td>FDR 为错误发现率，区别于 FPR 及一次结果的 FDP</td>
+</tr>
+<tr>
+<td>p.235</td>
+<td>翻译产物一定跨越 BSJ</td>
+<td>产物未必跨越接头；跨 BSJ 的特异证据用于区分环与线性来源，仍需排除伪影</td>
+</tr>
+</tbody></table>
+<p>式（9.5）中的非相位位置是 <span class="math">\(440-42s\)</span>，教材此处自洽。pssRNAMiner 原论文相应位置印成 400，并不意味着教材也应改为 400。原稿还把 Chen 模型的 461&#x2F;21 改成 462&#x2F;22，现按原始研究与教材修正，详见§2.6。</p>
+<h3 id="0-3-数量与现状的适用范围"><a href="#0-3-数量与现状的适用范围" class="headerlink" title="0.3 数量与现状的适用范围"></a>0.3 数量与现状的适用范围</h3><p>GENCODE v50 的已核对统计为人类 lncRNA 基因 35 885 个、蛋白编码基因 19 442 个；对应位点的转录本分别为 191 063 和 278 455。前者基因多而转录本少，说明“有多少 lncRNA”必须先说明计数单位，不能用基因数证明转录本更多。</p>
+<p>MirGeneDB 3.0 论文报告 21 822 个基因、1 743 个家族，这是该版本的统计，不等于全部生物 miRNA 总量。miRBase 论文也讨论支持不足的条目，不能把“在某套读序中缺少支持”直接改写成已逐条证明为假。数据库条目需结合证据审查。</p>
+<p>psRNATarget 的现行服务地址在前序核查中未能稳定连接【需查证】；本章保留其算法思想及原始论文，不宣称某个网址当前可用。软件版本、提交限制和默认阈值不凭记忆补写。</p>
+<h2 id="1-本章定位与知识地图"><a href="#1-本章定位与知识地图" class="headerlink" title="1. 本章定位与知识地图"></a>1. 本章定位与知识地图</h2><p><img src="/bioinformatics-notes/images/ch09/fig09-00.png" alt="图 9.0 本章思维导图"></p>
+<p><em>图 9.0 小 RNA 与长 RNA 的鉴定和互作分析（教材 p.214）。编码基因预测的章节引用按§0 更正。</em></p>
+<p>非编码 RNA 的鉴定首先回答“测到了什么分子”，随后才是“它可能与谁作用、产生什么效果”。发夹、相位、BSJ 或非编码分数各自提供特定证据，不能把一次软件命中当成完整的功能结论。实验中的表达、定位和相互作用伙伴同样决定解释范围。</p>
+<p>教材把 miRNA 和 siRNA 归入小 RNA 部分，把 lncRNA 和 circRNA 放在长 RNA 部分，便于教学，但长度与拓扑是不同分类轴。circRNA 可以很短，也可以来自具有编码能力的外显子；lncRNA 是操作性非编码类别，边界会随翻译证据更新。rRNA、tRNA、snRNA 等也属于非编码 RNA，不因本章篇幅有限而被排除。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">小RNA测序 -&gt; 去接头、保留计数、映射</span><br><span class="line">          -&gt; miRNA：精确加工、双臂读序、前体结构</span><br><span class="line">          -&gt; phasiRNA：位置周期性、丰度、统计背景</span><br><span class="line">          -&gt; 靶标：配对规则、可及性、切割或互作证据</span><br><span class="line">总RNA/链特异转录组 -&gt; 转录本重建 -&gt; 编码潜能与其他证据 -&gt; lncRNA候选</span><br><span class="line">                  -&gt; BSJ检测、排除伪影、全长重建 -&gt; circRNA候选</span><br><span class="line">独立实验与功能分析 -&gt; 机制与效应，不与候选筛选混为一项</span><br></pre></td></tr></table></figure>
+
+<p>对 CS 背景，两个算法主线分别是 RNA 结构的动态规划，以及位置&#x2F;读段分布的统计检验。前者要分清最优单结构和整个结构系综，后者要分清出现位置、不同序列及丰度。许多错误不是公式本身算错，而是分母对应的数据对象用错。</p>
+<p>第七章的映射与组装影响参考可用性，第八章的编码判别影响 lncRNA 候选；第十章继续讨论表达与调控，第十四章补概率模型。VirusBin 与本章最直接的联系是 RNA 结构和重复对序列统计的影响、候选与真值的区别，以及分层评测方法，而不是把宿主 miRNA 通路直接套到全部病毒。</p>
+<h2 id="2-第一节-小-RNA-计算识别与靶基因预测"><a href="#2-第一节-小-RNA-计算识别与靶基因预测" class="headerlink" title="2. 第一节 小 RNA 计算识别与靶基因预测"></a>2. 第一节 小 RNA 计算识别与靶基因预测</h2><h3 id="2-1-miRNA-的生成与作用【必须掌握】"><a href="#2-1-miRNA-的生成与作用【必须掌握】" class="headerlink" title="2.1 miRNA 的生成与作用【必须掌握】"></a>2.1 miRNA 的生成与作用【必须掌握】</h3><p><img src="/bioinformatics-notes/images/ch09/fig09-01.png" alt="图 9.1A 植物 miRNA 生成与作用"></p>
+<p><em>图 9.1A 植物 miRNA 前体加工、修饰、装载及靶标调控（教材 p.215）。出核和装载的顺序应视具体通路，不把简图当全部机制。</em></p>
+<p>植物 MIR 位点经转录形成 pri-miRNA，DCL1、HYL1 与 SE 等因子参与加工，产生带有典型 3′端突出的小 RNA 双链。HEN1 对末端核糖进行 2′-O-甲基化，有助于保护小 RNA。引导链进入 AGO 复合物，以配对识别靶标；另一条链不一定在所有条件下完全消失，也可能有可检测丰度和功能。</p>
+<p>HEN1 是一种甲基转移酶，同时含参与 RNA 识别的结构域，不能从教材全名错误推断它没有 RNA 结合能力。SE、HYL1、HEN1、AGO 各承担不同步骤，术语相似不代表蛋白功能相同。小 RNA 末端修饰、加工偏移及异构体会改变实际读段分布。</p>
+<p>教材用 HASTY 概括出核，现代研究提出 AGO1 装载和核质穿梭相关机制。因此本章不把“所有植物 miRNA 先以裸双链经 HST 出核、再在胞质装载”写成唯一顺序。计算上更直接的证据仍是前体结构、双臂加工和相应小 RNA 分布。</p>
+<p><img src="/bioinformatics-notes/images/ch09/fig09-01b.png" alt="图 9.1B 动植物 miRNA 通路比较"></p>
+<p><em>图 9.1B 典型动植物加工与作用方式的比较（教材 p.216）。表述的是主要路线，不能排除非经典途径。</em></p>
+<table>
+<thead>
+<tr>
+<th>方面</th>
+<th>植物典型情况</th>
+<th>动物典型情况及限定</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>前体</td>
+<td>长度变化较大，局部形成发夹</td>
+<td>pre-miRNA 通常较短，初级转录本可以很长</td>
+</tr>
+<tr>
+<td>加工</td>
+<td>DCL1 等在核内加工多数 miRNA</td>
+<td>典型路线为核内 Drosha 与胞质 Dicer，另有例外</td>
+</tr>
+<tr>
+<td>成熟长度</td>
+<td>多为约 21 nt；24 nt 读段不能直接当 miRNA</td>
+<td>常见约 22 nt，长度不是充分分类条件</td>
+</tr>
+<tr>
+<td>末端与装载</td>
+<td>甲基化、5′端及双链性质影响稳定和 AGO 选择</td>
+<td>链选择与 AGO 装载同样依赖多种条件</td>
+</tr>
+<tr>
+<td>成簇</td>
+<td>存在但频率与定义相关</td>
+<td>共用 pri-miRNA 不等于全部成熟体来自同一个 pre-miRNA 发夹</td>
+</tr>
+<tr>
+<td>识别</td>
+<td>常见较广泛互补，可切割也可抑制翻译</td>
+<td>种子及上下文常重要，可促进 mRNA 降解与抑制翻译</td>
+</tr>
+<tr>
+<td>位点</td>
+<td>可位于多个转录本区域</td>
+<td>3′UTR 常见，不能据此排除其他区域</td>
+</tr>
+</tbody></table>
+<p>物种差异会影响工具和阈值，但原稿“所有工具都不能跨界使用”过强。通用折叠、联配和统计方法可以共用，具体生物模型和规则需要重新评价。比“植物切割、动物只抑制翻译”更可靠的做法，是说明目标通路和独立证据。</p>
+<p>动物 mirtron 通过内含子剪接等过程形成前体，绕过典型 Drosha 步骤；不是所有内含子来源 miRNA 都属于 mirtron。普通内含子也可包含仍需 Drosha 加工的 miRNA。位置分类与加工机制再次是不同维度。</p>
+<h3 id="2-2-前体结构与-MFEI"><a href="#2-2-前体结构与-MFEI" class="headerlink" title="2.2 前体结构与 MFEI"></a>2.2 前体结构与 MFEI</h3><p>最小自由能（MFE）是给定模型下能量最低结构的分数，通常更负表示模型上更稳定。长度和组成会影响 MFE，教材式（9.1）使用归一化指标：</p>
+<div class="math">\[
+\mathrm{AMFE}=\frac{|\mathrm{MFE}|}{L}\times100,
+\qquad
+\mathrm{MFEI}=\frac{\mathrm{AMFE}}{\mathrm{GC\%}}.
+\tag{9.1}
+\]</div>
+
+<p>其中 GC% 代入 42 这类百分数数值，而非 0.42，MFE 单位保持一致。MFE 为 <span class="math">\(-45\)</span> kcal&#x2F;mol、长度 110 nt、GC 为 42% 时，MFEI 约 0.974。若序列长度或 GC 为零，不能直接套除法；真实程序应先处理无效输入。</p>
+<p>教材的 0.85 是历史候选筛选阈值，不是 miRNA 的生物学必要条件，也不是充分条件。其他 RNA、反向重复和转座子片段也能形成稳定发夹；过度依赖该阈值既会产生假阳性，也可能漏掉不满足它的真实 miRNA。现代注释应结合生成机制和读序证据。</p>
+<p>最优结构也不等于全部可能结构。一个前体若有多个近似能量构象，单张 MFE 图可能掩盖局部不确定性。§6 与§7 分别用最大配对及简化配分函数说明这一区别，不把教学能量模型的输出当作真实 RNA 折叠能。</p>
+<h3 id="2-3-四类计算发现方法"><a href="#2-3-四类计算发现方法" class="headerlink" title="2.3 四类计算发现方法"></a>2.3 四类计算发现方法</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>使用的信号</th>
+<th>主要限制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>同源搜索</td>
+<td>已知成熟体或前体与目标序列相似</td>
+<td>偏向保守家族，短序列随机匹配与种子遗漏并存</td>
+</tr>
+<tr>
+<td>邻近发夹搜索</td>
+<td>已知 miRNA 附近可能有共同转录的位点</td>
+<td>依赖成簇规律，不能固定一个距离适用全部物种</td>
+</tr>
+<tr>
+<td>比较基因组</td>
+<td>保守发夹、共线性与序列模式</td>
+<td>保守并不自动等于 miRNA，物种特异位点可能遗漏</td>
+</tr>
+<tr>
+<td>小 RNA 测序发现</td>
+<td>双臂加工、精确端点及前体结构</td>
+<td>依赖表达、深度、文库偏倚和参考质量</td>
+</tr>
+</tbody></table>
+<p>图 9.2 展示这些思路。短联配的敏感性不能仅靠把 E 阈值放宽解决，因为种子阶段没有命中，后续不会延伸。NCBI 文档确认 blastn-short 的字长为 7，但短序列大规模映射还涉及多重位置、错配模式和参考完整性。不同任务的参数应明确，而不是把教材的旧默认值原样抄入命令。</p>
+<p>同源搜索后的侧翼折叠和蛋白&#x2F;结构 RNA 过滤有助于排除明显伪候选，但不是不可违反的硬规则。位于编码区或重复区域的候选可能需要额外证据，不能因为相交就断言不可能为 miRNA。尤其不应为了符合简化流程，把真实重叠生物学强行删除。</p>
+<h3 id="2-4-小-RNA-测序与注释证据"><a href="#2-4-小-RNA-测序与注释证据" class="headerlink" title="2.4 小 RNA 测序与注释证据"></a>2.4 小 RNA 测序与注释证据</h3><p>去接头对小 RNA 尤为重要：分子短，读序常读入接头，残留会改变长度与映射。过滤后可将相同序列折叠为一个条目并保存丰度。折叠不是把 PCR 重复可靠分离，更不是丢掉读段数；没有 UMI 时，真实高丰度分子与扩增冗余通常不能仅凭序列相同区分。</p>
+<p>映射需要记录多重位置和分配策略。只保留唯一映射提高定位确定性，却可能系统性丢掉重复家族；把每个位置全额计数则重复放大丰度。ShortStack 等方法研究过多重映射的处理，但其策略与版本有关，不能凭一个参数名推断所有数据的正确分配。</p>
+<p>候选 miRNA 通常要求前体上的精确加工、相应双链结构以及两臂证据。miRNA* 或 5p&#x2F;3p 读段的相对丰度受组织、时期、装载与稳定性影响，“至少相差五倍”不能当作普遍必要条件。教材的距离 400 nt、映射不超过 10 处、错配数量等应视历史算法阈值，不自动等同 Axtell and Meyers, 2018 的完整注释标准。</p>
+<p>精确堆积比“有低能发夹”更接近生成机制证据。若整段前体均匀铺满许多小 RNA，可能更像 siRNA 或降解来源；若只在单个样本看到少数读段，也不足以确认加工稳定。缺失另一臂证据时应降低结论强度，而不是通过参数调整强行找到配对。</p>
+<p>miRDeep2、miRDeep-P 和 ShortStack 针对的数据及生物学范围不完全相同。miRBase 和 MirGeneDB 的纳入标准也不同，数据库支持可作为参考，却不应循环定义测试真值。新位点验证要区分成熟体表达、前体转录起点和靶标切割：Northern、相应 RT-qPCR、RACE 及降解组并不测同一件事。</p>
+<h3 id="2-5-siRNA、相位与触发位点"><a href="#2-5-siRNA、相位与触发位点" class="headerlink" title="2.5 siRNA、相位与触发位点"></a>2.5 siRNA、相位与触发位点</h3><p>双链 RNA 可来自反向重复、天然反义、RNA 依赖聚合酶合成以及病毒复制等来源。不同来源会进入不同加工和装载路线；同样长度的小 RNA 不必具有相同来源。教材以植物内源小 RNA 为主要例子，不宜直接套成动物或所有病毒的通路表。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>教材主要信号</th>
+<th>需要保留的区别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hc-siRNA</td>
+<td>常见 24 nt，Pol IV&#x2F;RDR2&#x2F;DCL3 及 RdDM 相关</td>
+<td>RDR2 与 Pol II 不同；长度不能单独证明通路</td>
+</tr>
+<tr>
+<td>ta-siRNA</td>
+<td>TAS 转录本产生相位小 RNA，反式作用其他靶标</td>
+<td>TAS 是 PHAS 相关类别的一部分，不是全部相位位点</td>
+</tr>
+<tr>
+<td>nat-siRNA</td>
+<td>天然反义序列相关双链</td>
+<td>结构、来源与调控需分别验证</td>
+</tr>
+<tr>
+<td>phasiRNA</td>
+<td>按约 21 或 24 nt 步长连续加工</td>
+<td>21 与 24 nt 路线及物种背景不能合并成单一固定酶表</td>
+</tr>
+</tbody></table>
+<p>教材列 TAS1&#x2F;TAS2 与 miR173、TAS3 与 miR390、TAS4 与 miR828，帮助理解触发与加工的联系。TAS3 经典两位点模型中，两处识别位点的切割能力不同；“两位点”不意味着两处一定都发生切割。22 ntmiRNA 及某些双链不对称性与次级 siRNA 触发有关，但不是所有 PHAS 都只能由一个固定 22 nt 模板触发。</p>
+<p>病毒和转基因沉默可涉及 RDR6&#x2F;DCL4 的 21 nt 产物以及 DCL2 的 22 nt 产物，不能按原稿分别指定给病毒和转基因。干扰通路还依宿主与具体实验而变，观察到某长度峰只是一类证据。</p>
+<h3 id="2-6-相位检测的四种统计量【必须掌握】"><a href="#2-6-相位检测的四种统计量【必须掌握】" class="headerlink" title="2.6 相位检测的四种统计量【必须掌握】"></a>2.6 相位检测的四种统计量【必须掌握】</h3><p><img src="/bioinformatics-notes/images/ch09/fig09-03.png" alt="图 9.3 相位位点的小 RNA 分布与分数"></p>
+<p><em>图 9.3 小 RNA 起点的周期性与相位信号（教材 p.222）。丰度图、经验分数和概率检验必须分别解释。</em></p>
+<p>相位描述小 RNA 起点按固定步长排列，而不只是某区域总丰度很高。Dicer 类加工产生的双链具有突出端，正负链位置需要在明确坐标定义下校正。若使用最左参考坐标，与使用各链生物学 5′端坐标的平移公式不同；原稿笼统“负链平移 2 nt”不足以写出可靠 BAM 解析器。§7 模拟明确采用最左坐标，负链加 2。</p>
+<p>Howell 的窗口使用 8 个相位位置，设第 <span class="math">\(i\)</span> 个位置丰度为 <span class="math">\(k_i\)</span>，被占据的位置数为 <span class="math">\(n\)</span>，式（9.2）可写为</p>
+<div class="math">\[
+S_H=(n-2)\ln\left(1+\sum_{i=1}^{8}k_i\right),\qquad n\ge3.
+\tag{9.2}
+\]</div>
+
+<p>不足三处时教学实现记 0。它是分数，越大表示位置占据与丰度共同支持较强，不是概率 P 值。五处各 10 条时得 <span class="math">\(3\ln51\approx11.80\)</span>。公式只要求占据数达到阈值，不自动证明每个占据位置连续相邻；“至少连续三个”比公式本身更强。</p>
+<p><img src="/bioinformatics-notes/images/ch09/fig09-04.png" alt="图 9.4 Chen 模型的双链相位窗口"></p>
+<p><em>图 9.4 以选定小 RNA 起点为参照的相位位置（教材 p.222）。条件化后用于检验的位置数为 461，相位位置数为 21。</em></p>
+<p>Chen 模型在所选起点条件下，将其他起点分成 21 个相位位置和 440 个非相位位置。若 <span class="math">\(n\)</span> 个不同小 RNA 对应的占据事件中有 <span class="math">\(k\)</span> 个落入相位位置，</p>
+<div class="math">\[
+P(X=k)=\frac{\binom{21}{k}\binom{440}{n-k}}
+{\binom{461}{n}}.
+\tag{9.3}
+\]</div>
+
+<div class="math">\[
+p_{\mathrm{Chen}}=\sum_{x=k}^{\min(21,n)}
+\frac{\binom{21}{x}\binom{440}{n-x}}{\binom{461}{n}}.
+\tag{9.4}
+\]</div>
+
+<p>先把两条链各 231 个位置写成 462、再不排除已选参照，便得到原稿错误的 462&#x2F;22。条件化计数必须贯穿分子分母。<span class="math">\(n=10,k=6\)</span> 时，正确模型期望相位数约 0.46，尾概率约 <span class="math">\(7.87\times10^{-7}\)</span>；P 越小越反对所声明的随机位置背景。</p>
+<p>pssRNAMiner 引入允许偏移量 <span class="math">\(s\)</span>，教材式（9.5）–（9.6）为</p>
+<div class="math">\[
+P_s(X=k)=
+\frac{\binom{21}{k}\binom{440-42s}{n-k}}
+{\binom{461-42s}{n}},
+\tag{9.5}
+\]</div>
+
+<div class="math">\[
+p_s=\sum_{x=k}^{\min(21,n)}P_s(X=x).
+\tag{9.6}
+\]</div>
+
+<p>这是按原方法定义排除相应非相位区域后的模型，不能改写成“把所有偏移位置直接并入相位类别”。后者会使相位位置数成为 <span class="math">\(21(2s+1)\)</span>，产生另一种背景与概率。§7.3 同时算出两者，展示当 <span class="math">\(s&gt;0\)</span> 时差异明显。输入计数也必须遵循相同筛选，不能只替换分母。</p>
+<p>一般窗口若有 <span class="math">\(m\)</span> 个相位位置、总位置数为 <span class="math">\(lm\)</span>，教材式（9.7）修正后为</p>
+<div class="math">\[
+p=\sum_{x=k}^{\min(m,n)}
+\frac{\binom{m}{x}\binom{(l-1)m}{n-x}}
+{\binom{lm}{n}}.
+\tag{9.7}
+\]</div>
+
+<p>组合数超出有效范围时按零处理。教材印刷把被加项写成固定 <span class="math">\(k\)</span>，会把同一个质量点重复相加。对 <span class="math">\(l=21,m=9,n=10,k=5\)</span>，修正尾概率约 <span class="math">\(1.520\times10^{-5}\)</span>，照印刷字面为 <span class="math">\(7.456\times10^{-5}\)</span>。</p>
+<p>教材 9 周期相位分数为</p>
+<div class="math">\[
+S_9=(n-2)\ln\left(1+
+9\frac{\sum_{i=1}^{9}P_i}{1+\sum U}\right),\qquad n&gt;3.
+\tag{9.8}
+\]</div>
+
+<p>De Paoli 原始方法的 10 周期版本使用系数 10 及对应窗口，不能将两者拼成一个声称“教材原式”的模型。<span class="math">\(n=4,\sum P=40,\sum U=9\)</span> 时，两版分别约 7.22 和 7.43。经验分数不是已经校准的概率，不能直接与 0.05 比较。</p>
+<p>全基因组窗口高度重叠，显著性还依赖多重映射、丰度和背景。应声明实际检验单位及完整检验集合；对同一区域选最优相位后，还需考虑选择步骤，不能只校正最后保留的最佳窗口。模拟的 BH 示例用于展示计算，不保证真实重叠窗口在任意依赖结构下都满足其理论条件。</p>
+<h3 id="2-7-小-RNA-靶标：配对、可及性与验证"><a href="#2-7-小-RNA-靶标：配对、可及性与验证" class="headerlink" title="2.7 小 RNA 靶标：配对、可及性与验证"></a>2.7 小 RNA 靶标：配对、可及性与验证</h3><p>植物靶标常呈较广泛互补，动物常重视种子与位点上下文，但两者均不是“匹配就一定调控”。动物种子通常指第 2–7 位，7mer-m8 另加第 8 位，7mer-A1 在相应位置有 A，8mer 结合两种特征。教材把 2–8 作为宽泛种子区也常见，引用时说明定义即可。</p>
+<table>
+<thead>
+<tr>
+<th>信号</th>
+<th>能支持什么</th>
+<th>不能单独证明什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>序列互补或种子</td>
+<td>候选识别位点</td>
+<td>细胞内一定结合或产生功能效应</td>
+</tr>
+<tr>
+<td>保守性和上下文</td>
+<td>某些候选的支持和排序</td>
+<td>非保守位点一定无效</td>
+</tr>
+<tr>
+<td>RNA 可及性</td>
+<td>模型上的局部打开代价</td>
+<td>实际细胞内全部结构状态</td>
+</tr>
+<tr>
+<td>降解组&#x2F;RLM-5′-RACE</td>
+<td>可能的靶 RNA 切割位置</td>
+<td>每个命中都由指定 miRNA 直接造成</td>
+</tr>
+<tr>
+<td>CLIP&#x2F;相应互作数据</td>
+<td>特定条件下的结合证据</td>
+<td>必然改变蛋白量或表型</td>
+</tr>
+<tr>
+<td>报告与扰动实验</td>
+<td>候选位点和调控效应的因果检验</td>
+<td>无控制实验时的普遍机制</td>
+</tr>
+</tbody></table>
+<p>教材的植物四条规则是总错配不超过 3、前 10 位最多 1、1&#x2F;11&#x2F;12 位无错配、无三个连续错配；常见切割相关规则强调第 10&#x2F;11 位。它们不能混成一套声称精确实现某论文的方法。G:U 有时单独计分，空位和凸起也有专门规则；§7.4 只做无空位模式比较，明确未实现完整加权打分与优化联配。</p>
+<p>psRNATarget 结合互补打分及靶位点可及性，TAPIR 提供不同搜索路线，方法与版本决定灵敏度和代价。动物 TargetScan、miRanda 等也有不同模型；miRecords 与 miRTarBase 主要是靶标证据数据库。数据库中的预测、实验支持和具体实验条件应分别保存。</p>
+<p>miRNA 工具可帮助构建某些 siRNA 候选，但不能推成所有 siRNA 靶向都适合相同规则。引导长度、AGO、背景互补及实验目的不同，脱靶与功能效应也要单独分析。候选阈值应在验证集或已有依据上确定，不能看到某个期望靶标之后反复放宽。</p>
+<h2 id="3-第二节（一）长非编码-RNA-鉴定与功能预测"><a href="#3-第二节（一）长非编码-RNA-鉴定与功能预测" class="headerlink" title="3. 第二节（一）长非编码 RNA 鉴定与功能预测"></a>3. 第二节（一）长非编码 RNA 鉴定与功能预测</h2><h3 id="3-1-操作定义、位置与功能"><a href="#3-1-操作定义、位置与功能" class="headerlink" title="3.1 操作定义、位置与功能"></a>3.1 操作定义、位置与功能</h3><p>lncRNA 通常以长度约 200 nt 以上、没有被归为蛋白编码转录本的长 RNA 为操作性类别。200 nt 不是使功能突然改变的生物学边界，“没有已知编码证据”也比“永远不可能翻译”更符合数据分析实际。一些最初归入 lncRNA 的位点后来发现短肽或双重功能，分类可能随证据更新。</p>
+<p>按相对位置，可以描述反义、基因间、双向启动子相关、内含子来源和增强子相关转录。反义转录本只需在相反链与某区域重叠，不要求两条成熟 RNA 全长严格反向互补。增强子 RNA 又是功能&#x2F;来源描述，其长度和稳定性并不一定都符合某套 lncRNA 筛选阈值。这些标签不必互斥。</p>
+<p><img src="/bioinformatics-notes/images/ch09/fig09-06.png" alt="图 9.6 lncRNA 的作用方式"></p>
+<p><em>图 9.6 教材列出的转录、染色质、剪接、稳定性、翻译及 miRNA 相关功能线索（教材 p.225）。不同机制来自不同分子，不能给每条 lncRNA 同时赋予所有功能。</em></p>
+<p>图中九类信息包括增强子相关作用、招募染色质调节因子、调节转录因子、改变三维组织、影响剪接、mRNA 稳定性和翻译、竞争结合 miRNA，以及部分候选与小肽的关系。应分别考虑 RNA 产物本身、转录过程和 DNA 位点三个层面。删除一个位点改变邻近基因，不自动说明效应由成熟 lncRNA 分子介导。</p>
+<p>“表达低、组织特异、保守性弱”是许多研究集合的趋势，不是每条 lncRNA 的必要条件。低表达还会增加拼接不完整和噪声模型，保守性也可体现在局部结构、位置或作用，而不只是全长序列一致性。对某一条分子作功能推断，应优先看直接证据。</p>
+<h3 id="3-2-从转录组到候选集合"><a href="#3-2-从转录组到候选集合" class="headerlink" title="3.2 从转录组到候选集合"></a>3.2 从转录组到候选集合</h3><p><img src="/bioinformatics-notes/images/ch09/fig09-07.png" alt="图 9.7 lncRNA 筛选流程"></p>
+<p><em>图 9.7 转录本重建、长度&#x2F;表达过滤与编码潜能分析（教材 p.226）。图中 CPC≤0 属于旧版分数定义。</em></p>
+<p>先确认文库捕获的 RNA 范围。poly(A)富集会偏向带尾转录本，rRNA 去除可保留更广泛的 RNA；链特异信息帮助区分反义重叠。链特异文库很有价值，但不是所有 ncRNA 任务的绝对必要条件，非链特异数据仍可分析，只是某些归属更不确定。</p>
+<p>读序联配和转录本重建之后，保留链、外显子结构及与已知注释的关系。多样本合并需要避免把相邻转录本拼成嵌合，也不能把所有共享一段外显子的转录本视为同一个完整模型。长读长能补全连接关系，但仍有端点截断、错误与表达采样限制。</p>
+<p>“与所有编码基因无重叠”不能作为定义，因为反义和内含子来源 lncRNA 正是重要类别。过滤应按链、特征类型和研究目标设计；gffcompare 的类别是相对指定参考的关系，不是直接的功能标签。参考版本错误或缺失也会改变类别。</p>
+<p>单外显子转录本、较短或靠近已知基因的片段更容易受未完成转录、降解和组装影响，值得加强证据检查；统一删除则会漏掉真实对象。同样，FPKM≥0.5 属于某个流程的经验阈值，受测序深度、长度和定量模型影响，不能变成跨实验通用界线。</p>
+<p>编码潜能可以结合 ORF、密码子&#x2F;序列特征、蛋白同源、结构域与翻译数据。没有 Pfam 命中不证明不编码，尤其是短肽与新家族；有蛋白相似片段也未必说明整条转录本保持编码功能，假基因或衍生转录可保留片段。对冲突证据最好保留不确定类别。</p>
+<h3 id="3-3-编码潜能是模型预测"><a href="#3-3-编码潜能是模型预测" class="headerlink" title="3.3 编码潜能是模型预测"></a>3.3 编码潜能是模型预测</h3><p>CPC1 和 CPC2 的输出不能直接混用。CPC2 使用 ORF 长度、完整性、Fickett 分数、等电点等内在特征进行分类，输出编码概率相关结果；图中的旧 CPC 分数零阈值不是 CPC2 的同一尺度。CPAT、PLEK、CNCI 等使用不同特征与模型，选择时需核对训练和适用范围。</p>
+<p>不需要额外物种专用输入，不等于性能完全与物种无关。GC、遗传密码、短蛋白比例、基因结构及训练标注会造成分布偏移。一个来自训练分布的“0.9”，也不保证在新物种中有 90% 的真实频率；若将概率用于风险控制，应有独立校准检验。</p>
+<p>长度 300 nt 的 ORF 阈值可能把随机长 ORF 视为编码，也可能漏掉真正短肽。Ribo-Seq 提供核糖体保护片段，但还要检查读框、周期性、起止、来源及其他伪影；仅有 RNA 与核糖体相伴并不自动证明产生稳定功能蛋白。蛋白质组证据也有检索空间与假发现问题。</p>
+<p>因此候选表应分开保存“预测非编码”“缺少同源支持”“未检测翻译”与“已实验研究的非编码功能”，避免把几种不同否定句合成一个强结论。对于后续学习模型，这些层次还决定了标签噪声。</p>
+<h3 id="3-4-RNA–RNA-互作与可及性能量【应该理解】"><a href="#3-4-RNA–RNA-互作与可及性能量【应该理解】" class="headerlink" title="3.4 RNA–RNA 互作与可及性能量【应该理解】"></a>3.4 RNA–RNA 互作与可及性能量【应该理解】</h3><p>两条 RNA 互补不代表容易结合。位点若已参与各自分子内部配对，需要付出打开代价。IntaRNA 将分子间杂化与位点可及性结合，提供比仅看长互补片段更完整的能量近似；它仍依赖热力学模型与结构假设，不是细胞内互作的直接测量。</p>
+<p>以序列 <span class="math">\(S^1\)</span> 和 <span class="math">\(S^2\)</span> 的碱基 <span class="math">\((i,j)\)</span> 作为分子间配对，固定远端后，教材式（9.9）的杂化递推示意可写为</p>
+<div class="math">\[
+H(i,j)=
+\begin{cases}
+\displaystyle\min_{p,q}\{E^{\mathrm{loop}}(i,j,p,q)+H(p,q)\},
+&amp; S_i^1,S_j^2\text{可配对},\\
++\infty,&amp;\text{其他情形}.
+\end{cases}
+\tag{9.9}
+\]</div>
+
+<p>递推还需规定合法延伸的方向、环大小、初始化和终止，否则无穷递归或全为无穷。教材给的是思想式，不足以直接实现生产程序。近邻堆积、内环及起始能量也不能用一个统一配对分数完全代替。</p>
+<p>设允许的结构集合为 <span class="math">\(\Omega(S)\)</span>，结构能量为 <span class="math">\(E(Q)\)</span>，配分函数及系综自由能为</p>
+<div class="math">\[
+Z_S=\sum_{Q\in\Omega(S)}e^{-E(Q)/(RT)},
+\qquad
+F(S)=-RT\ln Z_S.
+\]</div>
+
+<p>记 <span class="math">\(\Omega_u(i,k)\)</span> 为区间 <span class="math">\([i,k]\)</span> 保持不配对的结构子集，其配分函数为 <span class="math">\(Z_u\)</span>。教材式（9.10）更正后为</p>
+<div class="math">\[
+ED(i,k)=F_u(i,k)-F(S)
+=-RT\ln\frac{Z_u(i,k)}{Z_S}\ge0.
+\tag{9.10}
+\]</div>
+
+<p>因为 <span class="math">\(0&lt;Z_u\le Z_S\)</span>，打开代价非负。这里比较的是两个结构系综，不是两张特定结构图，也不是先取一个 MFE 结构再数其中断掉几根键。若受限集合为空，可及性概率为零，对应打开代价趋于无穷。</p>
+<p>把两条 RNA 的打开代价与杂化能相加，候选互作的总分可写为</p>
+<div class="math">\[
+E_{\mathrm{int}}(i,k,j,l)
+=E_{\mathrm{hybrid}}(i,k,j,l)
++ED_1(i,k)+ED_2(j,l).
+\]</div>
+
+<p>教材式（9.11）用四坐标记住两端的结合范围，其递推形式为</p>
+<div class="math">\[
+H(i,j,k,l)=
+\begin{cases}
+\displaystyle\min_{p,q}\{E^{\mathrm{loop}}(i,j,p,q)+H(p,q,k,l)\},
+&amp; S_i^1,S_j^2\text{可配对},\\
++\infty,&amp;\text{其他情形}.
+\end{cases}
+\tag{9.11}
+\]</div>
+
+<p>四维表示的朴素候选数量可随两条序列长度乘积的平方增长，实际方法需要限制位点、种子与环范围。只算最负杂化能会偏向长 GC 富集互补；加入打开代价后，局部易展开的较短位点可能更有利。体内 RBP、离子、定位和浓度又是进一步条件。</p>
+<p>CopraRNA 加入比较基因组信息，主要围绕细菌小 RNA 靶标问题发展。教材图 9.8 组织 Raccess、重复屏蔽、种子搜索和互作能量计算，说明候选生成和精细评分可以分阶段；图注 2015 与正文 2016 尚未完全核实，不补造“正确年份”。</p>
+<h3 id="3-5-靶标模拟与-miRNA-竞争"><a href="#3-5-靶标模拟与-miRNA-竞争" class="headerlink" title="3.5 靶标模拟与 miRNA 竞争"></a>3.5 靶标模拟与 miRNA 竞争</h3><p>植物 IPS1 在 miR399 相关调控中提供经典的靶标模拟（eTM）例子。它与 miRNA 互补，但切割中心附近的凸起改变了切割条件，从而影响 miR399 对 PHO2 的作用。机制重点是互补结构和功能性竞争，不是“只要一条 lncRNA 有结合位点就一定是海绵”。</p>
+<p>教材分别引用 Ye et al., 2014 和 Wu et al., 2013 的规则。前者描述中央 3–5 nt 凸起、凸起外较少错配且不允许连续两处；后者强调第 9–12 位附近 3 nt 凸起、第 2–8 位较严格配对以及其他错配限制。先后年份不能倒置，不同标准也不能拼接后仍声称精确复现其中一个工具。</p>
+<p>G:U 在某些规则中允许，但允许不等于与 Watson–Crick 配对同分；具体计分应回查相应实现。§7.4 仅演示已经给定联配位置时的模式检查，不会自动寻找任意长度的最优空位联配，也不复现完整 eTM_finder。</p>
+<p>竞争是否达到调控效应取决于位点数、表达量、亲和性、亚细胞共定位及 miRNA&#x2F;靶标丰度。共表达和一个预测位点不足以证明 ceRNA 网络。应通过位点突变、分子扰动及适当对照，判断效应是否由该 RNA 产物和所提机制引起。</p>
+<h3 id="3-6-RNA–蛋白互作与综合注释"><a href="#3-6-RNA–蛋白互作与综合注释" class="headerlink" title="3.6 RNA–蛋白互作与综合注释"></a>3.6 RNA–蛋白互作与综合注释</h3><p>RPISeq 以 RNA 和蛋白序列特征建立分类器，不要求输入两者的三维结构。catRAPID 和 lncPRO 可从序列估计某些理化与结构倾向；“用到结构特征”可能只是内部预测，不等于必须提供实验结构。实验数据路线则可利用定位、半衰期、核糖体或 PARS 等信息。</p>
+<p>这类任务的负样本尤其困难。随机配对的 RNA 和蛋白可能只是未被观测，并不保证不结合；同一 RNA 或同一蛋白跨训练和测试重复，会让模型记住实体而非学到互作机制。应分别做新 RNA、新蛋白及双方均未见的评测，并检查长度、表达和实验批次偏差。</p>
+<p>AnnoLnc2 面向人和小鼠，教材图 9.9 展示其综合分析入口。其模块包括位置、二级结构、蛋白互作、共表达与 GO、组织表达、定位、转录调节、miRNA 结合、遗传关联和进化。整合平台提供多种证据，不意味着每条输出均已实验验证；对植物也不能直接套用人鼠注释库。</p>
+<p>本章不沿用“目前没有植物平台”的无日期现状判断。服务是否维护、提交范围和本地组件仍需按实际运行查文档；没有稳定核实的现行网址不写为可用承诺。</p>
+<h3 id="3-7-未在教材展开的结构-RNA-注释"><a href="#3-7-未在教材展开的结构-RNA-注释" class="headerlink" title="3.7 未在教材展开的结构 RNA 注释"></a>3.7 未在教材展开的结构 RNA 注释</h3><p>rRNA、tRNA 及其他保守结构 RNA 也属于非编码 RNA，单靠本章的 miRNA 和 lncRNA 路线无法完整注释。Rfam 用 RNA 家族联配、共有结构及相应协方差模型组织证据，Infernal 用于相应搜索。它与“先找一个很稳定的发夹”不同，利用的是家族层面的序列和结构约束。</p>
+<p>Rfam 命中仍需看覆盖、分值与家族阈值。一个短片段未命中，可能因为长度、发散或家族覆盖不足，不证明该片段不含功能 RNA。一个模型命中多个位置，也需核查是真实拷贝、重复序列还是映射&#x2F;组装冗余。家族来源与数据库版本应随注释保存。</p>
+<p>对第八章的叶绿体习题，蛋白编码模型、tRNA、rRNA 应分别用合适证据识别再整合，不能拿 FGENESH 的 CDS 数代替全部基因数。将不同对象放入统一 GFF 时，还需保持类型、坐标和 ID 层级，避免把结构 RNA 当作没有翻译产物的错误 CDS。</p>
+<h2 id="4-第二节（二）circRNA-鉴定与功能预测"><a href="#4-第二节（二）circRNA-鉴定与功能预测" class="headerlink" title="4. 第二节（二）circRNA 鉴定与功能预测"></a>4. 第二节（二）circRNA 鉴定与功能预测</h2><h3 id="4-1-拓扑、生成与类别"><a href="#4-1-拓扑、生成与类别" class="headerlink" title="4.1 拓扑、生成与类别"></a>4.1 拓扑、生成与类别</h3><p><img src="/bioinformatics-notes/images/ch09/fig09-10.png" alt="图 9.10 环状 RNA 的形成"></p>
+<p><em>图 9.10 反向剪接等形成环状分子的途径（教材 p.230）。套索来源 ciRNA 的机制应与外显子环分开。</em></p>
+<p>对正链的典型外显子环，下游供体连接到上游受体，生成反向剪接接头（BSJ）。在转录方向上的读序中，接头将较下游片段接回较上游片段；负链应按转录方向解释，不能只用“参考坐标变小”作为所有链的判定规则。</p>
+<p>外显子环、保留内含子的外显子–内含子环与套索衍生 ciRNA 有不同来源。后者可涉及逃脱去分支的内含子结构，不应都叫反向剪接。环状拓扑与非编码性也不同：一些环具有翻译证据，因此不能把所有 circRNA 定义为绝不编码的分子。</p>
+<p>教材列出的特点包括闭环、较稳定、与长侧翼内含子相关、表达和组织差异、部分保守、miRNA 竞争、部分翻译、仍可被降解以及内部和接头异构体。它们是不同研究对象的观察，不能逐条当每个环都必须满足的判据。动物 Alu 等侧翼机制也不能无条件推广到植物。</p>
+<p>RNase R 富集支持某些环形分子的稳定性，但并非所有环都抗降解，某些线性 RNA 也可因结构等原因耐受。富集倍数受输入量、处理条件和定量分母影响，不能把 RNase R 阳性当作单一充分证明。</p>
+<h3 id="4-2-BSJ-检测的四类路线"><a href="#4-2-BSJ-检测的四类路线" class="headerlink" title="4.2 BSJ 检测的四类路线"></a>4.2 BSJ 检测的四类路线</h3><table>
+<thead>
+<tr>
+<th>路线</th>
+<th>核心操作</th>
+<th>主要限制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>候选接头库</td>
+<td>根据注释生成可能的连接，再回贴读序</td>
+<td>受注释覆盖和组合数量限制</td>
+</tr>
+<tr>
+<td>分割&#x2F;锚点联配</td>
+<td>从一条读序两段的方向与位置找候选</td>
+<td>重复、多重映射和模板转换会产生相似信号</td>
+</tr>
+<tr>
+<td>特征分类</td>
+<td>使用转录本序列和相关特征评分</td>
+<td>缺少接头支持时证据较间接，标签可能泄漏</td>
+</tr>
+<tr>
+<td>全长重建</td>
+<td>结合 BSJ、内部连接及配对覆盖</td>
+<td>确定接头不等于确定内部异构体</td>
+</tr>
+</tbody></table>
+<p><img src="/bioinformatics-notes/images/ch09/fig09-11.png" alt="图 9.11 circRNA 检测流程"></p>
+<p><em>图 9.11 锚点&#x2F;分段映射及植物候选过滤（教材 p.231）。具体阈值属于相应方法，不构成全部工具的统一定义。</em></p>
+<p>find_circ 式思路先处理难以连续联配的读序，利用两端锚点找候选并精化断点，结合剪接信号、错配和唯一性过滤。教材中的 20 bp 锚点、两条支持等是特定设置；短环、非典型信号、低丰度和重复会改变性能。CIRCexplorer、CIRI 等也使用各自联配与过滤逻辑，不能全部等同“两端精确字符串查找”。</p>
+<p>PcircRNA_finder 结合多种候选来源及植物背景过滤。集成多个工具可提高候选覆盖，但并集与交集回答不同问题；共享同一映射器或偏差的工具结果不独立。取交集可能减少假阳性，也可能共同漏掉低覆盖对象，不能称为无需验证的规范充分条件。</p>
+<p>伪 BSJ 可来自模板转换、反式剪接、基因组串联重复、旁系同源、错误联配或基因组重排。发散引物 PCR 和 Sanger 能确认特定连接序列，但仍需排除基因组 DNA、线性异常转录和扩增伪影。多个实验对照组合起来，才比单一软件或单条读序更有解释力。</p>
+<h3 id="4-3-全长重建与定量"><a href="#4-3-全长重建与定量" class="headerlink" title="4.3 全长重建与定量"></a>4.3 全长重建与定量</h3><p><img src="/bioinformatics-notes/images/ch09/fig09-12.png" alt="图 9.12 环状 RNA 全长拼接"></p>
+<p><em>图 9.12 circseq_cup 的重复伪参考与 CIRI-full 的反向重叠信息（教材 p.233）。完整序列需要内部连接证据。</em></p>
+<p>将一个候选环序列 <span class="math">\(S\)</span> 复制为 <span class="math">\(SS\)</span>，跨原接头的短读序就可在该伪参考内连续联配。这解决的是参考线性化的问题，不是证明候选分子真实存在；错误候选同样可以被复制。若读序长于一圈或有多个滚环片段，还需要足够多次复制并检查来源。</p>
+<p>circseq_cup 利用候选区间、回贴读段与拼接恢复内部序列。CIRI-full 结合反向重叠和 BSJ 信息帮助重建；若内部存在可变剪接，具有同一 BSJ 的分子仍可能有不同全长。仅以 BSJ 坐标去重会合并这些异构体，影响功能区与 ORF 分析。</p>
+<p>定量还应区分 BSJ 支持数、内部外显子覆盖及环&#x2F;线性比例。内部外显子读序可能来自宿主线性转录本，不能全部归给环；改变分母会改变所谓“junction ratio”。重复读序、不同文库富集和跨样本深度也需一致处理。</p>
+<p>图 9.13 展示 PlantcircBase、circBase 等数据库及相关搜索。BLASTcirc 帮助判断输入序列是否支持候选接头，但比对结果仍需核查坐标与覆盖。starBase&#x2F;ENCORI、circAtlas 和 circBase 的内容及用途不同，不能沿教材错链把它们当作一个服务。</p>
+<h3 id="4-4-海绵、翻译与其他功能证据"><a href="#4-4-海绵、翻译与其他功能证据" class="headerlink" title="4.4 海绵、翻译与其他功能证据"></a>4.4 海绵、翻译与其他功能证据</h3><p>CDR1as&#x2F;ciRS-7 是 miR-7 位点丰富的经典例子，但它不是所有 circRNA 的代表。大多数环不能仅凭一两个预测位点推成有效海绵；分子数、位点数、亲和性与定位决定竞争能力。富集的位点还需排除背景长度与组成的影响。</p>
+<p>无帽、无普通线性尾并不排除翻译，部分环可利用 IRES 或 m6A 相关起始机制。预测到 IRES、长 ORF 或核糖体结合是候选证据，不能直接证明真实产物。若 ORF 完全在共享外显子内，检测到同序列肽段仍可能来自线性异构体。</p>
+<p>跨 BSJ 的独特肽段可提高来源区分度，但质谱也要控制搜索空间、假发现和其他能生成相同序列的来源；单个谱图不是无条件金标准。Ribo-Seq 跨接头读序支持相应分子与翻译相关过程，进一步还需读框、周期性和对照，不能与已检测到完整稳定蛋白画等号。</p>
+<p>CircCode 等流程利用 Ribo-Seq、去 rRNA、参考联配和候选环分析寻找编码候选。候选生成会筛选进入模型的对象，最终评价必须包括上游漏检。无终止 ORF 还可能涉及滚环翻译，但序列上容许这种过程，不等于样本中已经发生。</p>
+<p>功能实验应区分环产物、线性宿主转录本、DNA 位点和处理副作用。特异扰动 BSJ 后，应检查线性转录本是否同时改变；过表达构建还要排除异常线性副产物。把“差异表达的环”解释成机制前，需要对应的独立证据。</p>
+<h2 id="5-关键数据对象与计数单位"><a href="#5-关键数据对象与计数单位" class="headerlink" title="5. 关键数据对象与计数单位"></a>5. 关键数据对象与计数单位</h2><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>建议保留字段</th>
+<th>最容易混淆的含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原始小 RNA 读序</td>
+<td>序列、质量、样本、接头及可选 UMI</td>
+<td>测到一次不等于独立分子一次</td>
+</tr>
+<tr>
+<td>折叠后序列</td>
+<td>唯一序列及丰度</td>
+<td>distinct 序列数不等于总读段数</td>
+</tr>
+<tr>
+<td>映射记录</td>
+<td>参考、链、CIGAR、起止、多重位置及分配权重</td>
+<td>最左坐标不总是生物学 5′端</td>
+</tr>
+<tr>
+<td>位置计数</td>
+<td>明确按序列、位置还是丰度统计</td>
+<td>同位点不同异构体可能有不同计数</td>
+</tr>
+<tr>
+<td>前体与成熟体</td>
+<td>前体坐标、臂、端点、读段支持及结构</td>
+<td>发夹存在不等于加工已确认</td>
+</tr>
+<tr>
+<td>RNA 二级结构</td>
+<td>序列、点括号、能量模型、温度</td>
+<td>MFE 单结构不等于系综</td>
+</tr>
+<tr>
+<td>转录本候选</td>
+<td>外显子、链、表达、编码证据、参考关系</td>
+<td>未注释不等于非编码</td>
+</tr>
+<tr>
+<td>circRNA 候选</td>
+<td>BSJ 两端、链、支持数、内部结构、线性对照</td>
+<td>同一 BSJ 可有多个完整异构体</td>
+</tr>
+<tr>
+<td>互作预测</td>
+<td>两个实体及区域、打分、证据类型</td>
+<td>模型分值不等于体内作用概率</td>
+</tr>
+</tbody></table>
+<p>本章代码统一采用零起点坐标，只有展示 RNA 碱基对时转换为一基编号；闭区间与半开区间在注释中分别写明。实际 BAM 解析需要处理软剪切、插入缺失和负链，不能把 <code>start</code> 加读长就一概得到真实 5′端。相位比较还要记录坐标校正是在链合并前还是后完成。</p>
+<p>collapse 后应同时保留每条序列的读段数与所有候选位置。若同一条小 RNA 有多个位置，按位置重复计数会改变 <span class="math">\(n\)</span>；若同一位置有多个不同长度异构体，按位置去重又会改变 distinct 数。Chen 与 pssRNAMiner 的原始定义并非一切情况下完全相同，复现时应从原方法输入对象出发，而不只看变量字母。</p>
+<p>点括号的一对括号表示配对，点表示未配对；普通单类括号只表达非交叉结构。点括号看起来没有交叉，并不意味着 RNA 天然没有假结、三维接触或蛋白介导结构。计算模型允许什么，决定算法输出能解释什么。</p>
+<p>转录本、基因位点和成熟小 RNA 不能合并成同一个 ID 层级。一个 MIR 位点可有两臂产物和多个 isomiR，多条转录本可共享片段，多个不同位点也可产生相同成熟体。数据库对这些层级的计数不同，是数量表述必须附版本与对象的原因。</p>
+<h2 id="6-统计模型与算法推导"><a href="#6-统计模型与算法推导" class="headerlink" title="6. 统计模型与算法推导"></a>6. 统计模型与算法推导</h2><h3 id="6-1-超几何背景怎样得到"><a href="#6-1-超几何背景怎样得到" class="headerlink" title="6.1 超几何背景怎样得到"></a>6.1 超几何背景怎样得到</h3><p>设有限集合有 <span class="math">\(N\)</span> 个可能位置，其中 <span class="math">\(K\)</span> 个被定义为相位位置，无放回选择 <span class="math">\(n\)</span> 个占据事件，<span class="math">\(X\)</span> 为落在相位位置的个数。恰好 <span class="math">\(k\)</span> 个命中的组合数是从 <span class="math">\(K\)</span> 中取 <span class="math">\(k\)</span>，同时从 <span class="math">\(N-K\)</span> 中取 <span class="math">\(n-k\)</span>，所以</p>
+<div class="math">\[
+P(X=k)=\frac{\binom Kk\binom{N-K}{n-k}}{\binom Nn},
+\qquad E[X]=nK/N.
+\]</div>
+
+<p>可行范围为 <span class="math">\(\max(0,n-(N-K))\le k\le\min(K,n)\)</span>。若观测对象容许同一位置反复独立抽到，这已不是相同的无放回模型；若各位置背景概率不同，也不能仅凭组合计数声称均匀。丰富度高的热点、结构化降解及多重映射都会影响校准。</p>
+<p>用于相位时，候选起点本身可能由数据选择，相位长度和窗口又可能搜索过多个值。每一项选择都会改变最终统计问题。一个单窗口尾概率很小，仍需检查全流程的候选筛选和多重比较，而不是只在选好结果后附上一个 P 值。</p>
+<p>Howell 分数更强调丰度与占据数，Chen 检验更强调相对背景的位置分布。将一条相位读段复制一千次会明显改变前者，却不应把 distinct 事件数也乘一千。将许多相邻窗口作为“独立重复”计算误差条，同样会夸大证据量。</p>
+<h3 id="6-2-FDR、FDP-与-FPR"><a href="#6-2-FDR、FDP-与-FPR" class="headerlink" title="6.2 FDR、FDP 与 FPR"></a>6.2 FDR、FDP 与 FPR</h3><p>设一次分析发现 <span class="math">\(R\)</span> 个阳性，其中 <span class="math">\(V\)</span> 个为假阳性，则</p>
+<div class="math">\[
+\mathrm{FDP}=\frac{V}{\max(R,1)},
+\qquad\mathrm{FDR}=E[\mathrm{FDP}].
+\]</div>
+
+<p>FPR 为 <span class="math">\(FP/(FP+TN)\)</span>，分母是实际阴性对象；FDR 是随机过程下发现集合错误比例的期望。原稿直接把 <span class="math">\(FP/(FP+TP)\)</span> 称为 FDR，省略了 FDP 和期望的区别。名义 BH 水平 0.05 也不保证每一次输出恰有 5% 错误，更不保证任一候选只有 5% 错误概率。</p>
+<p>对完整检验集合排序后的 <span class="math">\(p_{(i)}\)</span>，BH 调整值由从后向前的累积最小值计算：</p>
+<div class="math">\[
+q_{(i)}=\min\left(1,\min_{j\ge i}\frac{m}{j}p_{(j)}\right).
+\]</div>
+
+<p>滑窗强依赖下，理论控制需要相应条件；也可用置换或模拟背景评估经验表现，但重排必须保留需要控制的序列与映射结构。完全随机打乱所有碱基可能摧毁真实背景相关性，生成过于容易的零模型。</p>
+<h3 id="6-3-Nussinov-最大配对动态规划"><a href="#6-3-Nussinov-最大配对动态规划" class="headerlink" title="6.3 Nussinov 最大配对动态规划"></a>6.3 Nussinov 最大配对动态规划</h3><p>设 <span class="math">\(D(i,j)\)</span> 为子串 <span class="math">\(i\ldots j\)</span> 在允许非交叉配对及最小发夹长度 <span class="math">\(\theta\)</span> 下的最大配对数。按最右端 <span class="math">\(j\)</span> 分情况：它不配对，或与某个 <span class="math">\(k\)</span> 配对。后一种情况把结构分成左侧 <span class="math">\(i\ldots k-1\)</span> 与内部 <span class="math">\(k+1\ldots j-1\)</span>，得到</p>
+<div class="math">\[
+D(i,j)=\max\left\{D(i,j-1),
+\max_{\substack{i\le k&lt;j-\theta\\(k,j)\ \mathrm{allowed}}}
+\left[D(i,k-1)+1+D(k+1,j-1)\right]\right\}.
+\]</div>
+
+<p>空区间及过短区间取 0。按区间长度递增填表，子问题均已求出；回溯保存满足最优值的选择。一个序列可能有许多最优结构，确定的平分规则只选择其中一个，并不证明其余结构错误。</p>
+<p>共有 <span class="math">\(O(n^2)\)</span> 个区间，每个枚举 <span class="math">\(O(n)\)</span> 个伙伴，时间 <span class="math">\(O(n^3)\)</span>、空间 <span class="math">\(O(n^2)\)</span>。限制配对跨度、稀疏化或其他加速会引入额外假设，不能将朴素复杂度视为所有 RNA 结构方法的统一复杂度。</p>
+<p>最大配对模型对每对碱基加 1，未考虑 GC 与 AU 差异、堆积、环能量或假结，因此不是 RNAfold 或完整 Zuker 能量模型。它的作用是解释分解和回溯。§7.1 的短串穷举验证递推正确，不能作为真实 RNA 准确率的验证。</p>
+<h3 id="6-4-从最优结构到配分函数"><a href="#6-4-从最优结构到配分函数" class="headerlink" title="6.4 从最优结构到配分函数"></a>6.4 从最优结构到配分函数</h3><p>将“最大化”改成对所有不重复结构求和，可得到同一非交叉文法下的配分函数。若每对碱基有独立教学能量 <span class="math">\(e_{kj}\)</span>，玻尔兹曼因子为 <span class="math">\(w_{kj}=e^{-e_{kj}/RT}\)</span>，则</p>
+<div class="math">\[
+Z(i,j)=Z(i,j-1)+
+\sum_{\substack{i\le k&lt;j-\theta\\(k,j)\ \mathrm{allowed}}}
+Z(i,k-1)w_{kj}Z(k+1,j-1),
+\]</div>
+
+<p>空区间取 1。这里按 <span class="math">\(j\)</span> 是否配对及唯一伙伴划分，每个结构只生成一次；如果使用有歧义的分解文法，直接将 max 换成 sum 会重复计数。这是实现配分函数时不能省略的正确性问题。</p>
+<p>概率由每个结构的权重除以总配分函数得到，碱基对边缘概率再对所有含该配对的结构求和。在教学代码里用穷举检查；更长序列需要相应内外递推或其他算法，不能枚举指数多结构。</p>
+<p>系综自由能满足 <span class="math">\(F\le E_{\min}\)</span>：因为总和至少包含最低能结构的权重，取 <span class="math">\(-RT\ln\)</span> 后不等号方向改变。若有大量近最低能结构，<span class="math">\(F\)</span> 会更低。这个关系说明 MFE 和系综自由能不是两个可直接互换的分数。</p>
+<p>令某区间保持不配对，仅需在递推中禁止涉及该区间的配对，得到 <span class="math">\(Z_u\)</span>，再计算 <span class="math">\(ED=-RT\ln(Z_u/Z)\)</span>。这不是“区间每个碱基单独未配对概率”的简单乘积，因为这些事件可能相关。§7.2 的 20 nt 例子展示总系综与受限系综的实际差别。</p>
+<h3 id="6-5-无空位靶标规则与一般联配"><a href="#6-5-无空位靶标规则与一般联配" class="headerlink" title="6.5 无空位靶标规则与一般联配"></a>6.5 无空位靶标规则与一般联配</h3><p>已知 miRNA 与等长靶位点时，把靶标反向排列，使两链按反平行方式逐位比较。Watson–Crick、G:U 和其他错配应分别标记。注意“反向排列用于比较”不等于再做一次互补：一旦输入本来是靶 RNA 序列，重复互补会改变实际配对含义。</p>
+<p>允许凸起之后，单纯 <code>zip</code> 会截短而掩盖长度问题，也不能通过删掉任意三位就宣称已求得生物学最优联配。完整算法需要声明空位罚分、可允许位置和能量或经验分数。§7.4 只在给定的有限规则中查找人工构造的模式，拒绝等长检查不满足的无空位输入。</p>
+<p>动物种子分型同样只是在序列上识别模式。出现 8mer 未必调控，缺少经典种子也不等于所有非经典结合不可能。模型或规则的灵敏度、精确率需由独立任务标签检验，不能用规则自己产生标签再宣布规则 100% 正确。</p>
+<h3 id="6-6-环形序列线性化的边界"><a href="#6-6-环形序列线性化的边界" class="headerlink" title="6.6 环形序列线性化的边界"></a>6.6 环形序列线性化的边界</h3><p>长度 <span class="math">\(n\)</span> 的环序列有 <span class="math">\(n\)</span> 个可能起点，而长度 <span class="math">\(L\)</span> 的线性读序跨接头与否取决于起点。将 <span class="math">\(S\)</span> 重复后，长度不超过 <span class="math">\(n\)</span> 的单圈片段均可在适当区域连续表示；比对器必须限制唯一代表起点，否则同一分子会在重复参考上有多个等价命中。</p>
+<p>内部序列恰好重复时，不同接头可能有相同短锚点，需延长或使用其他证据。精确匹配的教学代码只看正链无错误小基因组，遇到负链、多重位置、错配和复杂内含子时均需扩展。它证明“2n 可把已知接头展开”，不证明“连续比上 2n 就一定是环”。</p>
+<h3 id="6-7-统计选择与敏感性分析"><a href="#6-7-统计选择与敏感性分析" class="headerlink" title="6.7 统计选择与敏感性分析"></a>6.7 统计选择与敏感性分析</h3><p>对一个候选位点同时尝试 21、22 和 24 nt 周期，再只报告最显著的结果，等于增加了搜索自由度。对每一种长度分别给出单次 P 值后取最小，不是预先指定单个周期的检验。完整流程应包含周期、窗口、相位起点及筛选步骤，或者用相同搜索规则处理零模型样本，评价最终最优统计量。</p>
+<p>相邻窗口合并还会改变发现单位。一个真实 PHAS 覆盖 20 个显著窗口，可能最终只计一个位点；若两个相近真实位点被合并，则位点级召回和精确率的匹配规则需要处理。必须说明允许的坐标偏差、重叠阈值及一对多匹配，不能通过任意扩宽区域提高“命中率”。</p>
+<p>输入读段分配策略也应纳入敏感性分析。可以比较只用唯一映射、保留全部候选但按权重分配、以及特定局部方法，检查相位信号是否稳定。若某候选只在全额多重计数时显著，它更依赖重复定位假设；若只在严格唯一映射下消失，也不能立即判定是假位点。</p>
+<p>低丰度候选需要把缺失证据与反证区分。miRNA 另一臂未测到可能是深度不足，但也可能不符合预期加工；报告读段支持与检测能力，比直接把缺失强解释成“很快降解所以看不到”更可靠。同样，lncRNA 没有 Ribo-Seq 支持可能只是没有覆盖，不能单凭零读段证明绝不翻译。</p>
+<p>可把敏感性分析写成固定表：改变一个合理范围内的参数，记录候选总数、独立支持比例、困难类别及真值指标。参数应在看最终测试结果前确定，避免只保留能找到预期案例的配置。一个稳定的结果未必正确，但极端依赖某个任意阈值的结果应降低结论强度。</p>
+<p>对于重复序列和结构化背景，简单均匀随机位置往往不足。背景可以保留局部深度或位置热点，或者在同类区域内置换，但任何保留和破坏的结构都要与零假设对应。例如若问题正是检验 21 nt 周期，背景可以打破周期同时保留丰度分布；若连重复和 GC 偏倚也完全抹去，就难以判断显著性来自哪一种差异。</p>
+<p>零模型的正确性不能只靠“背景区域少有显著”证明，因为被挑为背景的区域也可能特别容易。更好的检查包括已知阴性、模拟控制、跨样本复现和不同条件下的假阳性分布；各自都要说明标签与覆盖的局限。对尚无可靠阴性的任务，宁可报告不确定性，也不要把自动过滤结果反过来当作完美真值。</p>
+<h3 id="6-8-一个计数与坐标的手算例子"><a href="#6-8-一个计数与坐标的手算例子" class="headerlink" title="6.8 一个计数与坐标的手算例子"></a>6.8 一个计数与坐标的手算例子</h3><p>假设三个不同小 RNA 序列 A、B、C 的观测丰度分别为 8、3、4。A 可映射到正链最左坐标 100 和 200；B 只映射到正链 100；C 只映射到负链 98。这里 A、B、C 只是序列标签，不是碱基，也不表示它们具有相同长度或已知功能。</p>
+<table>
+<thead>
+<tr>
+<th>序列标签</th>
+<th>原始丰度</th>
+<th>候选映射</th>
+<th>若均匀分配的每位置权重</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>8</td>
+<td>正链 100、正链 200</td>
+<td>各 4</td>
+</tr>
+<tr>
+<td>B</td>
+<td>3</td>
+<td>正链 100</td>
+<td>3</td>
+</tr>
+<tr>
+<td>C</td>
+<td>4</td>
+<td>负链 98</td>
+<td>4</td>
+</tr>
+</tbody></table>
+<p>原始总丰度是 15，不同序列有 3 种，映射记录有 4 条，未校正前的链–位置组合有 3 种。若把 A 在每个位置全额计 8，映射总丰度变成 23；这不是样本多出了 8 个分子，而是多重计数。按本例均匀分配，则总权重仍为 15。</p>
+<p>沿用教学脚本的最左坐标约定，把负链 98 加 2 后映到共同相位坐标 100。合并两链时，100 的权重为 <span class="math">\(4+3+4=11\)</span>，200 为 4。但三种不同序列并没有因此变成两种；若后续只保留位置字典，便无法恢复 100 上 A、B、C 各自的身份。</p>
+<p>所以“有两个占据位置”“有三个 distinct 序列”“共有 15 条观测读段”均可正确，却不能互换进同一个 <span class="math">\(n\)</span>。若一种算法统计位置占据，另一种按不同小 RNA 事件，需从各自输入和条件化定义实现。把不一致变量硬塞进同一个超几何函数，会得到数值格式正常但问题错误的 P 值。</p>
+<p>这个例子也展示为何不能只在方法中写“已处理多重映射”。均匀分配只是一个演示假设，不保证 A 真实来自两个位置各一半；唯一映射过滤会直接丢弃 A。实际研究应保存分配前记录及权重，并检查结论对合理策略是否敏感。</p>
+<p>若将最左坐标改成负链真实 5′端，C 的生物学起点还依赖读长和 CIGAR，不能继续机械加 2。使用不同软件输出时，应在一个已知双链小例上画出突出端并验证坐标，再推广到全基因组。坐标测试与统计背景核对分属两个步骤，都不可由最终得到“显著”来替代。</p>
+<h2 id="7-可运行代码与本机实际输出"><a href="#7-可运行代码与本机实际输出" class="headerlink" title="7. 可运行代码与本机实际输出"></a>7. 可运行代码与本机实际输出</h2><p>五个脚本均已用指定 Python 运行，只依赖标准库、NumPy、SciPy。运行方式是在笔记目录下把目标脚本传给解释器；输出不是手写的期望值。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp; <span class="string">&#x27;C:\ark-ai\ComfyUI_windows_portable\python_embeded\python.exe&#x27;</span> <span class="literal">-I</span> <span class="literal">-X</span> utf8 <span class="string">&#x27;code\ch09\ch09_nussinov.py&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7-1-最大配对与回溯"><a href="#7-1-最大配对与回溯" class="headerlink" title="7.1 最大配对与回溯"></a>7.1 最大配对与回溯</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;Nussinov 最大配对动态规划（含最小发夹环长 theta 与回溯），输出点括号结构。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">递推（0 起编号，N[i][j] 为子串 i..j 的最大配对数）：</span></span><br><span class="line"><span class="string">  N[i][j] = max( N[i][j-1],                                   # j 不配对</span></span><br><span class="line"><span class="string">                 max_&#123;i&lt;=k&lt;j-theta, (k,j) 可配&#125; N[i][k-1] + 1 + N[k+1][j-1] )</span></span><br><span class="line"><span class="string">j - i &lt;= theta 的子串不可能含配对，N = 0。时间 O(n^3)，空间 O(n^2)。</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line">PAIRS = &#123;(<span class="string">&quot;A&quot;</span>, <span class="string">&quot;U&quot;</span>), (<span class="string">&quot;U&quot;</span>, <span class="string">&quot;A&quot;</span>), (<span class="string">&quot;G&quot;</span>, <span class="string">&quot;C&quot;</span>), (<span class="string">&quot;C&quot;</span>, <span class="string">&quot;G&quot;</span>), (<span class="string">&quot;G&quot;</span>, <span class="string">&quot;U&quot;</span>), (<span class="string">&quot;U&quot;</span>, <span class="string">&quot;G&quot;</span>)&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fill</span>(<span class="params">seq, theta=<span class="number">3</span></span>):</span><br><span class="line">    n = <span class="built_in">len</span>(seq)</span><br><span class="line">    N = [[<span class="number">0</span>] * n <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n)]</span><br><span class="line">    ops = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> span <span class="keyword">in</span> <span class="built_in">range</span>(theta + <span class="number">1</span>, n):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n - span):</span><br><span class="line">            j = i + span</span><br><span class="line">            best = N[i][j - <span class="number">1</span>]</span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(i, j - theta):</span><br><span class="line">                ops += <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> (seq[k], seq[j]) <span class="keyword">in</span> PAIRS:</span><br><span class="line">                    left = N[i][k - <span class="number">1</span>] <span class="keyword">if</span> k &gt; i <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">                    best = <span class="built_in">max</span>(best, left + <span class="number">1</span> + N[k + <span class="number">1</span>][j - <span class="number">1</span>])</span><br><span class="line">            N[i][j] = best</span><br><span class="line">    <span class="keyword">return</span> N, ops</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">traceback</span>(<span class="params">seq, N, theta=<span class="number">3</span></span>):</span><br><span class="line">    pairs, stack = [], [(<span class="number">0</span>, <span class="built_in">len</span>(seq) - <span class="number">1</span>)]</span><br><span class="line">    <span class="keyword">while</span> stack:</span><br><span class="line">        i, j = stack.pop()</span><br><span class="line">        <span class="keyword">if</span> j - i &lt;= theta:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">if</span> N[i][j] == N[i][j - <span class="number">1</span>]:            <span class="comment"># 优先取&quot;j 不配对&quot;，结果之一</span></span><br><span class="line">            stack.append((i, j - <span class="number">1</span>))</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(i, j - theta):</span><br><span class="line">            <span class="keyword">if</span> (seq[k], seq[j]) <span class="keyword">in</span> PAIRS:</span><br><span class="line">                left = N[i][k - <span class="number">1</span>] <span class="keyword">if</span> k &gt; i <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">                <span class="keyword">if</span> N[i][j] == left + <span class="number">1</span> + N[k + <span class="number">1</span>][j - <span class="number">1</span>]:</span><br><span class="line">                    pairs.append((k, j))</span><br><span class="line">                    stack += [(i, k - <span class="number">1</span>), (k + <span class="number">1</span>, j - <span class="number">1</span>)]</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">    db = [<span class="string">&quot;.&quot;</span>] * <span class="built_in">len</span>(seq)</span><br><span class="line">    <span class="keyword">for</span> k, j <span class="keyword">in</span> pairs:</span><br><span class="line">        db[k], db[j] = <span class="string">&quot;(&quot;</span>, <span class="string">&quot;)&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;&quot;</span>.join(db)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">enumerate_structs</span>(<span class="params">seq, theta=<span class="number">3</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;穷举所有不交叉、发夹环 &gt;= theta 的结构（每个结构恰好生成一次），返回配对列表的列表。&quot;&quot;&quot;</span></span><br><span class="line">    memo = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">S</span>(<span class="params">i, j</span>):</span><br><span class="line">        <span class="keyword">if</span> j - i &lt;= theta:</span><br><span class="line">            <span class="keyword">return</span> [()]</span><br><span class="line">        <span class="keyword">if</span> (i, j) <span class="keyword">in</span> memo:</span><br><span class="line">            <span class="keyword">return</span> memo[(i, j)]</span><br><span class="line">        out = <span class="built_in">list</span>(S(i, j - <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(i, j - theta):</span><br><span class="line">            <span class="keyword">if</span> (seq[k], seq[j]) <span class="keyword">in</span> PAIRS:</span><br><span class="line">                <span class="keyword">for</span> a <span class="keyword">in</span> S(i, k - <span class="number">1</span>):</span><br><span class="line">                    <span class="keyword">for</span> b <span class="keyword">in</span> S(k + <span class="number">1</span>, j - <span class="number">1</span>):</span><br><span class="line">                        out.append(a + ((k, j),) + b)</span><br><span class="line">        memo[(i, j)] = out</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line">    <span class="keyword">return</span> S(<span class="number">0</span>, <span class="built_in">len</span>(seq) - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">for</span> name, seq <span class="keyword">in</span> [(<span class="string">&quot;hairpin&quot;</span>, <span class="string">&quot;GGGAAAUCCC&quot;</span>),</span><br><span class="line">                      (<span class="string">&quot;two hairpins&quot;</span>, <span class="string">&quot;GCGCUUCGGCGC&quot;</span> + <span class="string">&quot;AA&quot;</span> + <span class="string">&quot;GGACUUCGGUCC&quot;</span>)]:</span><br><span class="line">        N, _ = fill(seq)</span><br><span class="line">        db = traceback(seq, N)</span><br><span class="line">        allS = enumerate_structs(seq)</span><br><span class="line">        best = <span class="built_in">max</span>(<span class="built_in">len</span>(s) <span class="keyword">for</span> s <span class="keyword">in</span> allS)</span><br><span class="line">        n_opt = <span class="built_in">sum</span>(<span class="built_in">len</span>(s) == best <span class="keyword">for</span> s <span class="keyword">in</span> allS)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;name&#125;</span>: <span class="subst">&#123;seq&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;  DP 最大配对数 <span class="subst">&#123;N[<span class="number">0</span>][-<span class="number">1</span>]&#125;</span>，穷举 <span class="subst">&#123;best&#125;</span>；结构总数 <span class="subst">&#123;<span class="built_in">len</span>(allS)&#125;</span>，其中最优结构 <span class="subst">&#123;n_opt&#125;</span> 个&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;  回溯得到 <span class="subst">&#123;db&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    random.seed(<span class="number">1</span>)</span><br><span class="line">    agree = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">200</span>):</span><br><span class="line">        s = <span class="string">&quot;&quot;</span>.join(random.choice(<span class="string">&quot;ACGU&quot;</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(random.randint(<span class="number">8</span>, <span class="number">14</span>)))</span><br><span class="line">        agree += fill(s)[<span class="number">0</span>][<span class="number">0</span>][-<span class="number">1</span>] == <span class="built_in">max</span>(<span class="built_in">len</span>(t) <span class="keyword">for</span> t <span class="keyword">in</span> enumerate_structs(s))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;随机序列 200 条（长 8-14）：DP 与穷举一致 <span class="subst">&#123;agree&#125;</span> 条&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> (<span class="number">50</span>, <span class="number">100</span>, <span class="number">200</span>):</span><br><span class="line">        s = <span class="string">&quot;&quot;</span>.join(random.choice(<span class="string">&quot;ACGU&quot;</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n))</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;n=<span class="subst">&#123;n:3d&#125;</span> 内层循环次数 <span class="subst">&#123;fill(s)[<span class="number">1</span>]:&gt;<span class="number">9</span>,d&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>本机实际输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">hairpin: GGGAAAUCCC</span><br><span class="line">  DP 最大配对数 3，穷举 3；结构总数 35，其中最优结构 4 个</span><br><span class="line">  回溯得到 (((...))).</span><br><span class="line">two hairpins: GCGCUUCGGCGCAAGGACUUCGGUCC</span><br><span class="line">  DP 最大配对数 8，穷举 8；结构总数 179790，其中最优结构 262 个</span><br><span class="line">  回溯得到 (((((((...).)))(...))).)..</span><br><span class="line">随机序列 200 条（长 8-14）：DP 与穷举一致 200 条</span><br><span class="line">n= 50 内层循环次数    17,296</span><br><span class="line">n=100 内层循环次数   152,096</span><br><span class="line">n=200 内层循环次数 1,274,196</span><br></pre></td></tr></table></figure>
+
+<p>两个命名例子的最优结构数不止一个；第二个例子虽命名 two hairpins，模型可能选择跨段配对，因为它只最大化配对数。名称描述构造来源，不约束算法一定输出两只发夹。200 条随机短串与穷举一致，核对的是递推与实现的相容性。</p>
+<h3 id="7-2-教学配分函数与打开代价"><a href="#7-2-教学配分函数与打开代价" class="headerlink" title="7.2 教学配分函数与打开代价"></a>7.2 教学配分函数与打开代价</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;玩具版 McCaskill：配分函数、碱基配对概率与可及性 ED（对应教材式 9.10）。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">能量模型是教学用的&quot;每个碱基对独立计能&quot;（GC -3、AU -2、GU -1 kcal/mol），</span></span><br><span class="line"><span class="string">没有堆积能和环罚分，不是 Turner 最近邻模型；递推结构与 Nussinov 相同，</span></span><br><span class="line"><span class="string">只是把 max/+1 换成 求和/乘玻尔兹曼因子。</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> lru_cache</span><br><span class="line"></span><br><span class="line">RT = <span class="number">0.0019872</span> * <span class="number">310.15</span>          <span class="comment"># kcal/mol，37 摄氏度</span></span><br><span class="line">E = &#123;(<span class="string">&quot;G&quot;</span>, <span class="string">&quot;C&quot;</span>): -<span class="number">3.0</span>, (<span class="string">&quot;C&quot;</span>, <span class="string">&quot;G&quot;</span>): -<span class="number">3.0</span>, (<span class="string">&quot;A&quot;</span>, <span class="string">&quot;U&quot;</span>): -<span class="number">2.0</span>, (<span class="string">&quot;U&quot;</span>, <span class="string">&quot;A&quot;</span>): -<span class="number">2.0</span>,</span><br><span class="line">     (<span class="string">&quot;G&quot;</span>, <span class="string">&quot;U&quot;</span>): -<span class="number">1.0</span>, (<span class="string">&quot;U&quot;</span>, <span class="string">&quot;G&quot;</span>): -<span class="number">1.0</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">Z_dp</span>(<span class="params">seq, theta=<span class="number">3</span>, forbid=<span class="built_in">frozenset</span>(<span class="params"></span>)</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;forbid 中的位置不允许配对（用于计算&quot;区间不配对&quot;的受限配分函数）。&quot;&quot;&quot;</span></span><br><span class="line"><span class="meta">    @lru_cache(<span class="params"><span class="literal">None</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">Z</span>(<span class="params">i, j</span>):</span><br><span class="line">        <span class="keyword">if</span> j - i &lt;= theta:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1.0</span></span><br><span class="line">        z = Z(i, j - <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(i, j - theta):</span><br><span class="line">            <span class="keyword">if</span> (seq[k], seq[j]) <span class="keyword">in</span> E <span class="keyword">and</span> k <span class="keyword">not</span> <span class="keyword">in</span> forbid <span class="keyword">and</span> j <span class="keyword">not</span> <span class="keyword">in</span> forbid:</span><br><span class="line">                z += Z(i, k - <span class="number">1</span>) * math.exp(-E[(seq[k], seq[j])] / RT) * Z(k + <span class="number">1</span>, j - <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> z</span><br><span class="line">    <span class="keyword">return</span> Z(<span class="number">0</span>, <span class="built_in">len</span>(seq) - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">enumerate_structs</span>(<span class="params">seq, theta=<span class="number">3</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;穷举全部结构（与 ch09_nussinov.py 同一文法，每个结构只生成一次）。&quot;&quot;&quot;</span></span><br><span class="line"><span class="meta">    @lru_cache(<span class="params"><span class="literal">None</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">S</span>(<span class="params">i, j</span>):</span><br><span class="line">        <span class="keyword">if</span> j - i &lt;= theta:</span><br><span class="line">            <span class="keyword">return</span> [()]</span><br><span class="line">        out = <span class="built_in">list</span>(S(i, j - <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(i, j - theta):</span><br><span class="line">            <span class="keyword">if</span> (seq[k], seq[j]) <span class="keyword">in</span> E:</span><br><span class="line">                out += [a + ((k, j),) + b <span class="keyword">for</span> a <span class="keyword">in</span> S(i, k - <span class="number">1</span>) <span class="keyword">for</span> b <span class="keyword">in</span> S(k + <span class="number">1</span>, j - <span class="number">1</span>)]</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line">    <span class="keyword">return</span> S(<span class="number">0</span>, <span class="built_in">len</span>(seq) - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">energy</span>(<span class="params">seq, s</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(E[(seq[k], seq[j])] <span class="keyword">for</span> k, j <span class="keyword">in</span> s)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    seq = <span class="string">&quot;GGGACUUCGGUCCCAAUAUA&quot;</span></span><br><span class="line">    allS = enumerate_structs(seq)</span><br><span class="line">    w = [math.exp(-energy(seq, s) / RT) <span class="keyword">for</span> s <span class="keyword">in</span> allS]</span><br><span class="line">    Z_enum = <span class="built_in">sum</span>(w)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;序列 <span class="subst">&#123;seq&#125;</span>（<span class="subst">&#123;<span class="built_in">len</span>(seq)&#125;</span> nt），结构总数 <span class="subst">&#123;<span class="built_in">len</span>(allS)&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Z（递推）= <span class="subst">&#123;Z_dp(seq):<span class="number">.6</span>e&#125;</span>   Z（穷举）= <span class="subst">&#123;Z_enum:<span class="number">.6</span>e&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    mfe_s = <span class="built_in">min</span>(allS, key=<span class="keyword">lambda</span> s: energy(seq, s))</span><br><span class="line">    db = [<span class="string">&quot;.&quot;</span>] * <span class="built_in">len</span>(seq)</span><br><span class="line">    <span class="keyword">for</span> k, j <span class="keyword">in</span> mfe_s:</span><br><span class="line">        db[k], db[j] = <span class="string">&quot;(&quot;</span>, <span class="string">&quot;)&quot;</span></span><br><span class="line">    e_mfe = energy(seq, mfe_s)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;MFE 结构 <span class="subst">&#123;<span class="string">&#x27;&#x27;</span>.join(db)&#125;</span>  E = <span class="subst">&#123;e_mfe:<span class="number">.1</span>f&#125;</span>，&quot;</span></span><br><span class="line">          <span class="string">f&quot;该结构在系综中的概率 <span class="subst">&#123;math.exp(-e_mfe / RT) / Z_enum:<span class="number">.3</span>f&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;系综自由能 -RT ln Z = <span class="subst">&#123;-RT * math.log(Z_enum):<span class="number">.2</span>f&#125;</span>（低于 MFE）&quot;</span>)</span><br><span class="line"></span><br><span class="line">    P = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> s, ws <span class="keyword">in</span> <span class="built_in">zip</span>(allS, w):</span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> s:</span><br><span class="line">            P[p] = P.get(p, <span class="number">0.0</span>) + ws / Z_enum</span><br><span class="line">    top = <span class="built_in">sorted</span>(P.items(), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>])[:<span class="number">6</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;配对概率最高的 6 个碱基对:&quot;</span>,</span><br><span class="line">          <span class="string">&quot;, &quot;</span>.join(<span class="string">f&quot;<span class="subst">&#123;seq[k]&#125;</span><span class="subst">&#123;k + <span class="number">1</span>&#125;</span>-<span class="subst">&#123;seq[j]&#125;</span><span class="subst">&#123;j + <span class="number">1</span>&#125;</span>:<span class="subst">&#123;p:<span class="number">.3</span>f&#125;</span>&quot;</span> <span class="keyword">for</span> (k, j), p <span class="keyword">in</span> top))</span><br><span class="line"></span><br><span class="line">    Z = Z_dp(seq)</span><br><span class="line">    <span class="keyword">for</span> i, k <span class="keyword">in</span> [(<span class="number">1</span>, <span class="number">4</span>), (<span class="number">6</span>, <span class="number">9</span>), (<span class="number">15</span>, <span class="number">18</span>)]:          <span class="comment"># 0 起编号的闭区间</span></span><br><span class="line">        Zu = Z_dp(seq, forbid=<span class="built_in">frozenset</span>(<span class="built_in">range</span>(i, k + <span class="number">1</span>)))</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;区间 <span class="subst">&#123;i + <span class="number">1</span>&#125;</span>-<span class="subst">&#123;k + <span class="number">1</span>&#125;</span> 保持单链：Z_unpaired/Z = <span class="subst">&#123;Zu / Z:<span class="number">.3</span>e&#125;</span>，ED = <span class="subst">&#123;-RT * math.log(Zu / Z):<span class="number">.2</span>f&#125;</span> kcal/mol&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>本机实际输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">序列 GGGACUUCGGUCCCAAUAUA（20 nt），结构总数 2703</span><br><span class="line">Z（递推）= 4.515839e+11   Z（穷举）= 4.515839e+11</span><br><span class="line">MFE 结构 (((((...).))))(...).  E = -16.0，该结构在系综中的概率 0.416</span><br><span class="line">系综自由能 -RT ln Z = -16.54（低于 MFE）</span><br><span class="line">配对概率最高的 6 个碱基对: A4-U11:0.955, G3-C12:0.954, A15-U19:0.953, G1-C14:0.952, G2-C13:0.939, C5-G9:0.487</span><br><span class="line">区间 2-5 保持单链：Z_unpaired/Z = 3.163e-05，ED = 6.39 kcal/mol</span><br><span class="line">区间 7-10 保持单链：Z_unpaired/Z = 3.750e-03，ED = 3.44 kcal/mol</span><br><span class="line">区间 16-19 保持单链：Z_unpaired/Z = 3.722e-02，ED = 2.03 kcal/mol</span><br></pre></td></tr></table></figure>
+
+<p>独立配对能量不是 Turner 最近邻参数，因此这里的 MFE、配对概率和 ED 只属于教学模型。把这些数字当作真实 RNA 热力学值会误导；代码重点是结构不重计、受限集合与概率归一化。</p>
+<h3 id="7-3-相位公式、模拟扫描与-BH"><a href="#7-3-相位公式、模拟扫描与-BH" class="headerlink" title="7.3 相位公式、模拟扫描与 BH"></a>7.3 相位公式、模拟扫描与 BH</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;教材式（9.1）–（9.8）的数值核对，以及在模拟位点上做相位扫描与多重检验校正。&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> scipy.stats <span class="keyword">import</span> hypergeom</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------- 公式核对 ----------</span></span><br><span class="line">mfei = <span class="keyword">lambda</span> mfe, L, gc: (<span class="built_in">abs</span>(mfe) / L * <span class="number">100</span>) / gc          <span class="comment"># 式 9.1，gc 用百分数数值</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;式9.1  MFEI(MFE=-45, L=110, GC=42%) = <span class="subst">&#123;mfei(-<span class="number">45</span>, <span class="number">110</span>, <span class="number">42</span>):<span class="number">.3</span>f&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">howell</span>(<span class="params">k</span>):                                                <span class="comment"># 式 9.2，k 为 8 个相位位置的读段数</span></span><br><span class="line">    n = <span class="built_in">sum</span>(x &gt; <span class="number">0</span> <span class="keyword">for</span> x <span class="keyword">in</span> k)</span><br><span class="line">    <span class="keyword">return</span> (n - <span class="number">2</span>) * math.log(<span class="number">1</span> + <span class="built_in">sum</span>(k)) <span class="keyword">if</span> n &gt;= <span class="number">3</span> <span class="keyword">else</span> <span class="number">0.0</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;式9.2  Howell P(n=5, sum k=50) = <span class="subst">&#123;howell([<span class="number">10</span>] * <span class="number">5</span> + [<span class="number">0</span>] * <span class="number">3</span>):<span class="number">.2</span>f&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">chen = <span class="keyword">lambda</span> n, k, N=<span class="number">461</span>, K=<span class="number">21</span>: hypergeom.sf(k - <span class="number">1</span>, N, K, n)   <span class="comment"># 式 9.3-9.4：P(X&gt;=k)</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;式9.4  n=10,k=6: 461/21 -&gt; P=<span class="subst">&#123;chen(<span class="number">10</span>, <span class="number">6</span>):<span class="number">.2</span>e&#125;</span>（期望 k=<span class="subst">&#123;<span class="number">10</span> * <span class="number">21</span> / <span class="number">461</span>:<span class="number">.2</span>f&#125;</span>）；&quot;</span></span><br><span class="line">      <span class="string">f&quot;误用 462/22 -&gt; <span class="subst">&#123;chen(<span class="number">10</span>, <span class="number">6</span>, <span class="number">462</span>, <span class="number">22</span>):<span class="number">.2</span>e&#125;</span>&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> s <span class="keyword">in</span> (<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>):                                           <span class="comment"># 式 9.5-9.6（pssRNAMiner）</span></span><br><span class="line">    p_pss = hypergeom.sf(<span class="number">5</span>, <span class="number">461</span> - <span class="number">42</span> * s, <span class="number">21</span>, <span class="number">10</span>)</span><br><span class="line">    p_alt = hypergeom.sf(<span class="number">5</span>, <span class="number">461</span>, <span class="number">21</span> * (<span class="number">2</span> * s + <span class="number">1</span>), <span class="number">10</span>)        <span class="comment"># 把 +-s 窗口内的位置都算作&quot;相位&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;式9.6  s=<span class="subst">&#123;s&#125;</span>: 单个位置落入相位的概率 <span class="subst">&#123;<span class="number">21</span> / (<span class="number">461</span> - <span class="number">42</span> * s):<span class="number">.3</span>f&#125;</span> vs <span class="subst">&#123;<span class="number">21</span> * (<span class="number">2</span> * s + <span class="number">1</span>) / <span class="number">461</span>:<span class="number">.3</span>f&#125;</span>；&quot;</span></span><br><span class="line">          <span class="string">f&quot;P=<span class="subst">&#123;p_pss:<span class="number">.2</span>e&#125;</span> vs <span class="subst">&#123;p_alt:<span class="number">.2</span>e&#125;</span>&quot;</span>)</span><br><span class="line">l, m, n, k = <span class="number">21</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">5</span>                                     <span class="comment"># 式 9.7：印刷版 vs 按 X 求和</span></span><br><span class="line">pmf = <span class="keyword">lambda</span> x: math.comb((l - <span class="number">1</span>) * m, n - x) * math.comb(m, x) / math.comb(l * m, n)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;式9.7  l=21,m=9,n=10,k=5：按 X 求和 <span class="subst">&#123;<span class="built_in">sum</span>(pmf(x) <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(k, m + <span class="number">1</span>)):<span class="number">.3</span>e&#125;</span>；&quot;</span></span><br><span class="line">      <span class="string">f&quot;照印刷版（被加项含 k）<span class="subst">&#123;(m - k + <span class="number">1</span>) * pmf(k):<span class="number">.3</span>e&#125;</span>&quot;</span>)</span><br><span class="line">score = <span class="keyword">lambda</span> n, P, U, c: (n - <span class="number">2</span>) * math.log(<span class="number">1</span> + c * P / (<span class="number">1</span> + U)) <span class="keyword">if</span> n &gt; <span class="number">3</span> <span class="keyword">else</span> <span class="number">0.0</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;式9.8  n=4,sumP=40,sumU=9：De Paoli（系数10）<span class="subst">&#123;score(<span class="number">4</span>, <span class="number">40</span>, <span class="number">9</span>, <span class="number">10</span>):<span class="number">.2</span>f&#125;</span>；教材（系数9）<span class="subst">&#123;score(<span class="number">4</span>, <span class="number">40</span>, <span class="number">9</span>, <span class="number">9</span>):<span class="number">.2</span>f&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------- 模拟位点：背景 sRNA + 一个 21 nt 相位位点 ----------</span></span><br><span class="line">rng = np.random.default_rng(<span class="number">7</span>)</span><br><span class="line">L, start, cycles = <span class="number">3000</span>, <span class="number">1200</span>, <span class="number">10</span></span><br><span class="line">reads = &#123;&#125;                                     <span class="comment"># (链, 比对最左坐标) -&gt; 读段数</span></span><br><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">range</span>(cycles):                        <span class="comment"># 相位位点：正链 5&#x27; 端在 start+21c，反义链最左坐标偏 -2</span></span><br><span class="line">    reads[(<span class="string">&quot;+&quot;</span>, start + <span class="number">21</span> * c)] = <span class="built_in">int</span>(rng.poisson(<span class="number">15</span>)) + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> rng.random() &lt; <span class="number">0.7</span>:</span><br><span class="line">        reads[(<span class="string">&quot;-&quot;</span>, start + <span class="number">21</span> * c - <span class="number">2</span>)] = <span class="built_in">int</span>(rng.poisson(<span class="number">8</span>)) + <span class="number">1</span></span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">400</span>):                           <span class="comment"># 背景：随机位置、低丰度</span></span><br><span class="line">    key = (<span class="built_in">str</span>(rng.choice([<span class="string">&quot;+&quot;</span>, <span class="string">&quot;-&quot;</span>])), <span class="built_in">int</span>(rng.integers(<span class="number">0</span>, L)))</span><br><span class="line">    reads[key] = reads.get(key, <span class="number">0</span>) + <span class="built_in">int</span>(rng.geometric(<span class="number">0.4</span>))</span><br><span class="line">merged = &#123;&#125;                                    <span class="comment"># 两链合并：负链坐标 +2</span></span><br><span class="line"><span class="keyword">for</span> (strand, x), cnt <span class="keyword">in</span> reads.items():</span><br><span class="line">    key = (strand, x + <span class="number">2</span> <span class="keyword">if</span> strand == <span class="string">&quot;-&quot;</span> <span class="keyword">else</span> x)</span><br><span class="line">    merged[key] = merged.get(key, <span class="number">0</span>) + cnt</span><br><span class="line"></span><br><span class="line">tot = np.zeros(L + <span class="number">3</span>)</span><br><span class="line"><span class="keyword">for</span> (_, x), cnt <span class="keyword">in</span> merged.items():</span><br><span class="line">    tot[x] += cnt</span><br><span class="line">P_howell = np.array([howell([tot[w + <span class="number">21</span> * i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>)]) <span class="keyword">if</span> w + <span class="number">147</span> &lt; <span class="built_in">len</span>(tot) <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">                     <span class="keyword">for</span> w <span class="keyword">in</span> <span class="built_in">range</span>(L)])</span><br><span class="line">w_best = <span class="built_in">int</span>(P_howell.argmax())</span><br><span class="line">inside = <span class="keyword">lambda</span> x: start - <span class="number">21</span> &lt;= x &lt;= start + <span class="number">21</span> * cycles</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Howell 最大 P=<span class="subst">&#123;P_howell[w_best]:<span class="number">.1</span>f&#125;</span>，窗口起点 <span class="subst">&#123;w_best&#125;</span>；相位位点以外最大 P=&quot;</span></span><br><span class="line">      <span class="string">f&quot;<span class="subst">&#123;<span class="built_in">max</span>(p <span class="keyword">for</span> w, p <span class="keyword">in</span> <span class="built_in">enumerate</span>(P_howell) <span class="keyword">if</span> <span class="keyword">not</span> inside(w + <span class="number">63</span>)):<span class="number">.1</span>f&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">anchors, pvals = <span class="built_in">sorted</span>(merged), []</span><br><span class="line">pos = <span class="built_in">set</span>(merged)</span><br><span class="line"><span class="keyword">for</span> (s0, a) <span class="keyword">in</span> anchors:                        <span class="comment"># Chen 2007：以每个 sRNA 为起点的 231 nt 窗口</span></span><br><span class="line">    others = [(s, x) <span class="keyword">for</span> (s, x) <span class="keyword">in</span> pos <span class="keyword">if</span> a &lt;= x &lt;= a + <span class="number">230</span> <span class="keyword">and</span> (s, x) != (s0, a)]</span><br><span class="line">    k = <span class="built_in">sum</span>((x - a) % <span class="number">21</span> == <span class="number">0</span> <span class="keyword">for</span> (_, x) <span class="keyword">in</span> others)</span><br><span class="line">    pvals.append(chen(<span class="built_in">len</span>(others), k) <span class="keyword">if</span> others <span class="keyword">else</span> <span class="number">1.0</span>)</span><br><span class="line">pvals = np.array(pvals)</span><br><span class="line">m_t = <span class="built_in">len</span>(pvals)                               <span class="comment"># Benjamini-Hochberg</span></span><br><span class="line">order = np.argsort(pvals)</span><br><span class="line">q = np.minimum.accumulate((pvals[order] * m_t / np.arange(<span class="number">1</span>, m_t + <span class="number">1</span>))[::-<span class="number">1</span>])[::-<span class="number">1</span>]</span><br><span class="line">sig = np.zeros(m_t, <span class="built_in">bool</span>)</span><br><span class="line">sig[order] = q &lt;= <span class="number">0.05</span></span><br><span class="line">in_locus = np.array([start - <span class="number">232</span> &lt;= a &lt;= start + <span class="number">21</span> * cycles <span class="keyword">for</span> (_, a) <span class="keyword">in</span> anchors])  <span class="comment"># 窗口与位点重叠</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;检验窗口 <span class="subst">&#123;m_t&#125;</span> 个：名义 P&lt;0.05 的背景窗口 <span class="subst">&#123;<span class="built_in">int</span>(((pvals &lt; <span class="number">0.05</span>) &amp; ~in_locus).<span class="built_in">sum</span>())&#125;</span> 个；&quot;</span></span><br><span class="line">      <span class="string">f&quot;BH(FDR 0.05) 后显著 <span class="subst">&#123;<span class="built_in">int</span>(sig.<span class="built_in">sum</span>())&#125;</span> 个，其中窗口与相位位点重叠的 <span class="subst">&#123;<span class="built_in">int</span>((sig &amp; in_locus).<span class="built_in">sum</span>())&#125;</span> 个；&quot;</span></span><br><span class="line">      <span class="string">f&quot;最小 P=<span class="subst">&#123;pvals.<span class="built_in">min</span>():<span class="number">.1</span>e&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>本机实际输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">式9.1  MFEI(MFE=-45, L=110, GC=42%) = 0.974</span><br><span class="line">式9.2  Howell P(n=5, sum k=50) = 11.80</span><br><span class="line">式9.4  n=10,k=6: 461/21 -&gt; P=7.87e-07（期望 k=0.46）；误用 462/22 -&gt; 1.06e-06</span><br><span class="line">式9.6  s=0: 单个位置落入相位的概率 0.046 vs 0.046；P=7.87e-07 vs 7.87e-07</span><br><span class="line">式9.6  s=1: 单个位置落入相位的概率 0.050 vs 0.137；P=1.38e-06 vs 7.02e-04</span><br><span class="line">式9.6  s=2: 单个位置落入相位的概率 0.056 vs 0.228；P=2.58e-06 vs 1.15e-02</span><br><span class="line">式9.7  l=21,m=9,n=10,k=5：按 X 求和 1.520e-05；照印刷版（被加项含 k）7.456e-05</span><br><span class="line">式9.8  n=4,sumP=40,sumU=9：De Paoli（系数10）7.43；教材（系数9）7.22</span><br><span class="line">Howell 最大 P=31.6，窗口起点 1242；相位位点以外最大 P=12.5</span><br><span class="line">检验窗口 406 个：名义 P&lt;0.05 的背景窗口 7 个；BH(FDR 0.05) 后显著 14 个，其中窗口与相位位点重叠的 14 个；最小 P=1.6e-14</span><br></pre></td></tr></table></figure>
+
+<p>该模拟包含植入相位区和均匀低丰度背景，所有检验窗口及校正对象明确保留。输出中的 14 个显著窗口重叠同一植入区域，不能称为发现 14 个独立 PHAS 基因。实际分析还需把相邻窗口组织成位点，并评估位点层面错误。</p>
+<h3 id="7-4-植物规则、eTM-和动物种子"><a href="#7-4-植物规则、eTM-和动物种子" class="headerlink" title="7.4 植物规则、eTM 和动物种子"></a>7.4 植物规则、eTM 和动物种子</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;植物靶位点规则（教材版 vs 常用版）、eTM 规则（Wu et al. 2013）、动物种子位点分型。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">位置编号一律按 miRNA 5&#x27;-&gt;3&#x27; 从 1 开始；靶位点序列按 mRNA 5&#x27;-&gt;3&#x27; 书写，</span></span><br><span class="line"><span class="string">miRNA 第 i 位与靶位点倒数第 i 个碱基配对。示例中的靶位点都是人工构造的。</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">COMP = &#123;<span class="string">&quot;A&quot;</span>: <span class="string">&quot;U&quot;</span>, <span class="string">&quot;U&quot;</span>: <span class="string">&quot;A&quot;</span>, <span class="string">&quot;G&quot;</span>: <span class="string">&quot;C&quot;</span>, <span class="string">&quot;C&quot;</span>: <span class="string">&quot;G&quot;</span>&#125;</span><br><span class="line">WOBBLE = &#123;(<span class="string">&quot;G&quot;</span>, <span class="string">&quot;U&quot;</span>), (<span class="string">&quot;U&quot;</span>, <span class="string">&quot;G&quot;</span>)&#125;</span><br><span class="line">revcomp = <span class="keyword">lambda</span> s: <span class="string">&quot;&quot;</span>.join(COMP[c] <span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">reversed</span>(s))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">duplex</span>(<span class="params">mir, site</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;逐位比较：&#x27;|&#x27; 配对，&#x27;:&#x27; G:U，&#x27;x&#x27; 错配。&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(mir) != <span class="built_in">len</span>(site):</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">&quot;此演示只支持已对齐的等长无空位位点&quot;</span>)</span><br><span class="line">    t = site[::-<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;&quot;</span>.join(<span class="string">&quot;|&quot;</span> <span class="keyword">if</span> COMP[a] == b <span class="keyword">else</span> <span class="string">&quot;:&quot;</span> <span class="keyword">if</span> (a, b) <span class="keyword">in</span> WOBBLE <span class="keyword">else</span> <span class="string">&quot;x&quot;</span> <span class="keyword">for</span> a, b <span class="keyword">in</span> <span class="built_in">zip</span>(mir, t))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">plant_rules</span>(<span class="params">mir, site, forbidden</span>):</span><br><span class="line">    d = duplex(mir, site)</span><br><span class="line">    mm = [i + <span class="number">1</span> <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="built_in">enumerate</span>(d) <span class="keyword">if</span> c == <span class="string">&quot;x&quot;</span>]</span><br><span class="line">    ok = (<span class="built_in">len</span>(mm) &lt;= <span class="number">3</span>                                   <span class="comment"># 1. 错配不超过 3 个</span></span><br><span class="line">          <span class="keyword">and</span> <span class="built_in">sum</span>(p &lt;= <span class="number">10</span> <span class="keyword">for</span> p <span class="keyword">in</span> mm) &lt;= <span class="number">1</span>              <span class="comment"># 2. 5&#x27; 端前 10 位至多 1 个错配</span></span><br><span class="line">          <span class="keyword">and</span> <span class="keyword">not</span> <span class="built_in">set</span>(mm) &amp; forbidden                    <span class="comment"># 3. 关键位置不许错配</span></span><br><span class="line">          <span class="keyword">and</span> <span class="string">&quot;xxx&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> d)                            <span class="comment"># 4. 无 &gt;=3 个连续错配</span></span><br><span class="line">    <span class="keyword">return</span> d, ok</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">etm_ok</span>(<span class="params">mir, site</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Wu et al. 2013：凸起只在 miRNA 第 9-12 位之间、恰为 3 nt；2-8 位完全配对（允许 G:U）；凸起外错配+G:U &lt;= 3。&quot;&quot;&quot;</span></span><br><span class="line">    n = <span class="built_in">len</span>(mir)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(site) != n + <span class="number">3</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> b <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">9</span>, <span class="number">13</span>):              <span class="comment"># 凸起插在 miRNA 第 b 位与第 b+1 位之间</span></span><br><span class="line">        cut = n - b                     <span class="comment"># 凸起在靶位点（5&#x27;-&gt;3&#x27;）中占 cut..cut+2</span></span><br><span class="line">        core = site[:cut] + site[cut + <span class="number">3</span>:]</span><br><span class="line">        d = duplex(mir, core)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;x&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> d[<span class="number">1</span>:<span class="number">8</span>] <span class="keyword">and</span> <span class="built_in">sum</span>(c != <span class="string">&quot;|&quot;</span> <span class="keyword">for</span> c <span class="keyword">in</span> d) &lt;= <span class="number">3</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">animal_sites</span>(<span class="params">mir, utr</span>):</span><br><span class="line">    core = revcomp(mir[<span class="number">1</span>:<span class="number">7</span>])                          <span class="comment"># 与种子（2-7 位）互补的 6 nt</span></span><br><span class="line">    off = revcomp(mir[<span class="number">2</span>:<span class="number">8</span>])                           <span class="comment"># offset 6mer：与 3-8 位互补</span></span><br><span class="line">    out = []</span><br><span class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(utr) - <span class="number">5</span>):</span><br><span class="line">        <span class="keyword">if</span> utr[p:p + <span class="number">6</span>] == core:</span><br><span class="line">            m8 = p &gt; <span class="number">0</span> <span class="keyword">and</span> utr[p - <span class="number">1</span>] == COMP[mir[<span class="number">7</span>]]</span><br><span class="line">            a1 = p + <span class="number">6</span> &lt; <span class="built_in">len</span>(utr) <span class="keyword">and</span> utr[p + <span class="number">6</span>] == <span class="string">&quot;A&quot;</span></span><br><span class="line">            out.append((p, &#123;(<span class="number">1</span>, <span class="number">1</span>): <span class="string">&quot;8mer&quot;</span>, (<span class="number">1</span>, <span class="number">0</span>): <span class="string">&quot;7mer-m8&quot;</span>, (<span class="number">0</span>, <span class="number">1</span>): <span class="string">&quot;7mer-A1&quot;</span>, (<span class="number">0</span>, <span class="number">0</span>): <span class="string">&quot;6mer&quot;</span>&#125;[(m8, a1)]))</span><br><span class="line">        <span class="keyword">elif</span> utr[p:p + <span class="number">6</span>] == off <span class="keyword">and</span> utr[p + <span class="number">1</span>:p + <span class="number">7</span>] != core:</span><br><span class="line">            out.append((p, <span class="string">&quot;offset 6mer&quot;</span>))</span><br><span class="line">    <span class="keyword">return</span> out</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    mir156 = <span class="string">&quot;UGACAGAAGAGAGUGAGCAC&quot;</span>                   <span class="comment"># ath-miR156a 成熟序列（20 nt）</span></span><br><span class="line">    perfect = revcomp(mir156)</span><br><span class="line">    mutate = <span class="keyword">lambda</span> s, i, b: s[:<span class="built_in">len</span>(s) - i] + b + s[<span class="built_in">len</span>(s) - i + <span class="number">1</span>:]   <span class="comment"># 改动与 miRNA 第 i 位相对的碱基</span></span><br><span class="line">    cases = &#123;<span class="string">&quot;完全互补&quot;</span>: perfect,</span><br><span class="line">             <span class="string">&quot;第1位错配&quot;</span>: mutate(perfect, <span class="number">1</span>, <span class="string">&quot;C&quot;</span>),</span><br><span class="line">             <span class="string">&quot;第10位错配&quot;</span>: mutate(perfect, <span class="number">10</span>, <span class="string">&quot;G&quot;</span>),</span><br><span class="line">             <span class="string">&quot;第6位G:U+第20位错配&quot;</span>: mutate(mutate(perfect, <span class="number">6</span>, <span class="string">&quot;U&quot;</span>), <span class="number">20</span>, <span class="string">&quot;U&quot;</span>)&#125;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;miR156:&quot;</span>, mir156)</span><br><span class="line">    <span class="keyword">for</span> name, site <span class="keyword">in</span> cases.items():</span><br><span class="line">        d, ok_tb = plant_rules(mir156, site, &#123;<span class="number">1</span>, <span class="number">11</span>, <span class="number">12</span>&#125;)</span><br><span class="line">        _, ok_cm = plant_rules(mir156, site, &#123;<span class="number">10</span>, <span class="number">11</span>&#125;)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;name:&lt;<span class="number">14</span>&#125;</span> <span class="subst">&#123;site&#125;</span>  <span class="subst">&#123;d&#125;</span>  教材规则 <span class="subst">&#123;<span class="string">&#x27;通过&#x27;</span> <span class="keyword">if</span> ok_tb <span class="keyword">else</span> <span class="string">&#x27;不通过&#x27;</span>&#125;</span>；第10-11位规则 <span class="subst">&#123;<span class="string">&#x27;通过&#x27;</span> <span class="keyword">if</span> ok_cm <span class="keyword">else</span> <span class="string">&#x27;不通过&#x27;</span>&#125;</span>&quot;</span>)</span><br><span class="line">    mimic = perfect[:<span class="number">10</span>] + <span class="string">&quot;CUA&quot;</span> + perfect[<span class="number">10</span>:]      <span class="comment"># 在 miRNA 第 10/11 位对面插入 3 nt 凸起</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;eTM 构造位点 <span class="subst">&#123;mimic&#125;</span>：符合 Wu 2013 规则 = <span class="subst">&#123;etm_ok(mir156, mimic)&#125;</span>；&quot;</span></span><br><span class="line">          <span class="string">f&quot;同处插 2 nt = <span class="subst">&#123;etm_ok(mir156, perfect[:<span class="number">10</span>] + <span class="string">&#x27;CU&#x27;</span> + perfect[<span class="number">10</span>:])&#125;</span>；&quot;</span></span><br><span class="line">          <span class="string">f&quot;凸起移到第 5/6 位之间 = <span class="subst">&#123;etm_ok(mir156, perfect[:<span class="number">15</span>] + <span class="string">&#x27;CUA&#x27;</span> + perfect[<span class="number">15</span>:])&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    let7a = <span class="string">&quot;UGAGGUAGUAGGUUGUAUAGUU&quot;</span>                 <span class="comment"># let-7a 成熟序列</span></span><br><span class="line">    utr = <span class="string">&quot;AAACUACCUCAUUU&quot;</span> + <span class="string">&quot;GGCUACCUCGG&quot;</span> + <span class="string">&quot;UUUACCUCAGG&quot;</span> + <span class="string">&quot;GGUACCUCGG&quot;</span> + <span class="string">&quot;AACUACCUGG&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;let-7a 种子(2-7):&quot;</span>, let7a[<span class="number">1</span>:<span class="number">7</span>], <span class="string">&quot; 3&#x27;UTR 位点:&quot;</span>, animal_sites(let7a, utr))</span><br></pre></td></tr></table></figure>
+
+<p>本机实际输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">miR156: UGACAGAAGAGAGUGAGCAC</span><br><span class="line">完全互补           GUGCUCACUCUCUUCUGUCA  ||||||||||||||||||||  教材规则 通过；第10-11位规则 通过</span><br><span class="line">第1位错配          GUGCUCACUCUCUUCUGUCC  x|||||||||||||||||||  教材规则 不通过；第10-11位规则 通过</span><br><span class="line">第10位错配         GUGCUCACUCGCUUCUGUCA  |||||||||x||||||||||  教材规则 通过；第10-11位规则 不通过</span><br><span class="line">第6位G:U+第20位错配  UUGCUCACUCUCUUUUGUCA  |||||:|||||||||||||x  教材规则 通过；第10-11位规则 通过</span><br><span class="line">eTM 构造位点 GUGCUCACUCCUAUCUUCUGUCA：符合 Wu 2013 规则 = True；同处插 2 nt = False；凸起移到第 5/6 位之间 = False</span><br><span class="line">let-7a 种子(2-7): GAGGUA  3&#x27;UTR 位点: [(4, &#x27;8mer&#x27;), (17, &#x27;7mer-m8&#x27;), (27, &#x27;7mer-A1&#x27;), (38, &#x27;6mer&#x27;), (48, &#x27;offset 6mer&#x27;)]</span><br></pre></td></tr></table></figure>
+
+<p>教材规则与第 10&#x2F;11 位规则在人工错配例中给出不同结论，正是为了显示两者不可混写。G:U 保留单独字符，植物无空位演示不对它加完整经验罚分；不能把输出作为 psRNATarget 或某论文完整评分的复现。eTM 位点与 UTR 背景除所写演示序列外均为人工构造。</p>
+<h3 id="7-5-BSJ-锚点与重复伪参考"><a href="#7-5-BSJ-锚点与重复伪参考" class="headerlink" title="7.5 BSJ 锚点与重复伪参考"></a>7.5 BSJ 锚点与重复伪参考</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;反向剪接（BSJ）读段识别：两端锚点拆分比对 + GT/AG 断点校正，以及 circseq_cup 的&quot;2n&quot;伪参考。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">玩具基因组 + 精确字符串匹配代替比对器；只演示信号本身，不是可用的鉴定工具。</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line">random.seed(<span class="number">3</span>)</span><br><span class="line">rnd = <span class="keyword">lambda</span> n: <span class="string">&quot;&quot;</span>.join(random.choice(<span class="string">&quot;ACGT&quot;</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n))</span><br><span class="line">E1, E2, E3, E4 = rnd(<span class="number">80</span>), rnd(<span class="number">60</span>), rnd(<span class="number">70</span>), rnd(<span class="number">70</span>)</span><br><span class="line">I1, I2, I3 = (<span class="string">&quot;GT&quot;</span> + rnd(n) + <span class="string">&quot;AG&quot;</span> <span class="keyword">for</span> n <span class="keyword">in</span> (<span class="number">150</span>, <span class="number">200</span>, <span class="number">120</span>))</span><br><span class="line">genome = rnd(<span class="number">100</span>) + E1 + I1 + E2 + I2 + E3 + I3 + E4 + rnd(<span class="number">100</span>)</span><br><span class="line">e2_start, e3_end = genome.index(E2), genome.index(E3) + <span class="built_in">len</span>(E3)</span><br><span class="line">linear, circ = E1 + E2 + E3 + E4, E2 + E3          <span class="comment"># 环：E3 的 3&#x27; 端（供体）接回 E2 的 5&#x27; 端（受体）</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sample</span>(<span class="params">t, n, L=<span class="number">60</span>, circular=<span class="literal">False</span></span>):</span><br><span class="line">    s = t + t[:L - <span class="number">1</span>] <span class="keyword">if</span> circular <span class="keyword">else</span> t</span><br><span class="line">    starts = [random.randrange(<span class="built_in">len</span>(t) <span class="keyword">if</span> circular <span class="keyword">else</span> <span class="built_in">len</span>(t) - L + <span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n)]</span><br><span class="line">    <span class="keyword">return</span> [s[i:i + L] <span class="keyword">for</span> i <span class="keyword">in</span> starts]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">split_align</span>(<span class="params">r, A=<span class="number">20</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;两端各取 A nt 锚点；返回 (&#x27;contig&#x27;|&#x27;linear&#x27;|&#x27;BSJ&#x27;|&#x27;none&#x27;, (受体, 供体))。&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> r <span class="keyword">in</span> genome:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;contig&quot;</span>, <span class="literal">None</span></span><br><span class="line">    p5, p3 = genome.find(r[:A]), genome.find(r[-A:])</span><br><span class="line">    <span class="keyword">if</span> p5 &lt; <span class="number">0</span> <span class="keyword">or</span> p3 &lt; <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;none&quot;</span>, <span class="literal">None</span></span><br><span class="line">    best = <span class="literal">None</span></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(A, <span class="built_in">len</span>(r) - A + <span class="number">1</span>):                 <span class="comment"># 断点：r[:x] | r[x:]</span></span><br><span class="line">        donor, acc = p5 + x, p3 + A - (<span class="built_in">len</span>(r) - x)</span><br><span class="line">        <span class="keyword">if</span> r[:x] == genome[p5:donor] <span class="keyword">and</span> r[x:] == genome[acc:acc + <span class="built_in">len</span>(r) - x]:</span><br><span class="line">            gtag = genome[donor:donor + <span class="number">2</span>] == <span class="string">&quot;GT&quot;</span> <span class="keyword">and</span> genome[acc - <span class="number">2</span>:acc] == <span class="string">&quot;AG&quot;</span></span><br><span class="line">            <span class="keyword">if</span> best <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> gtag:</span><br><span class="line">                best = (acc, donor, gtag)</span><br><span class="line">    <span class="keyword">if</span> best <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;none&quot;</span>, <span class="literal">None</span></span><br><span class="line">    acc, donor, gtag = best</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> gtag:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;none&quot;</span>, <span class="literal">None</span></span><br><span class="line">    <span class="keyword">return</span> (<span class="string">&quot;BSJ&quot;</span> <span class="keyword">if</span> acc &lt; donor <span class="keyword">else</span> <span class="string">&quot;linear&quot;</span>), (acc, donor)</span><br><span class="line"></span><br><span class="line">reads = sample(circ, <span class="number">300</span>, circular=<span class="literal">True</span>) + sample(linear, <span class="number">300</span>)</span><br><span class="line">calls = Counter()</span><br><span class="line">kinds = Counter()</span><br><span class="line"><span class="keyword">for</span> r <span class="keyword">in</span> reads:</span><br><span class="line">    kind, j = split_align(r)</span><br><span class="line">    kinds[kind] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> kind == <span class="string">&quot;BSJ&quot;</span>:</span><br><span class="line">        calls[j] += <span class="number">1</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;真实 BSJ：受体（E2 起点）<span class="subst">&#123;e2_start&#125;</span>，供体（E3 终点）<span class="subst">&#123;e3_end&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;600 条读段分类:&quot;</span>, <span class="built_in">dict</span>(kinds))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;BSJ 调用（受体, 供体）: 支持读段数 =&quot;</span>, <span class="built_in">dict</span>(calls))</span><br><span class="line">bsj_reads = [r <span class="keyword">for</span> r <span class="keyword">in</span> reads <span class="keyword">if</span> split_align(r)[<span class="number">0</span>] == <span class="string">&quot;BSJ&quot;</span>]</span><br><span class="line">two_n = circ + circ</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;BSJ 读段在 2n 伪参考上连续比对: <span class="subst">&#123;<span class="built_in">sum</span>(r <span class="keyword">in</span> two_n <span class="keyword">for</span> r <span class="keyword">in</span> bsj_reads)&#125;</span>/<span class="subst">&#123;<span class="built_in">len</span>(bsj_reads)&#125;</span>；&quot;</span></span><br><span class="line">      <span class="string">f&quot;在线性 mRNA 上: <span class="subst">&#123;<span class="built_in">sum</span>(r <span class="keyword">in</span> linear <span class="keyword">for</span> r <span class="keyword">in</span> bsj_reads)&#125;</span>/<span class="subst">&#123;<span class="built_in">len</span>(bsj_reads)&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>本机实际输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">真实 BSJ：受体（E2 起点）334，供体（E3 终点）668</span><br><span class="line">600 条读段分类: &#123;&#x27;contig&#x27;: 73, &#x27;none&#x27;: 332, &#x27;linear&#x27;: 141, &#x27;BSJ&#x27;: 54&#125;</span><br><span class="line">BSJ 调用（受体, 供体）: 支持读段数 = &#123;(334, 668): 54&#125;</span><br><span class="line">BSJ 读段在 2n 伪参考上连续比对: 54/54；在线性 mRNA 上: 0/54</span><br></pre></td></tr></table></figure>
+
+<p>600 条模拟读段中只有满足锚点与剪接条件的部分可分类，其余 <code>none</code> 不是已经证明无效。54 条支持读段只对应同一个植入 BSJ。对真实数据，多个起点、PCR 重复及唯一分子支持也需要区分，不能把该小例输出推广成灵敏度基准。</p>
+<h2 id="8-AI-for-Science-扩展【AI4S】"><a href="#8-AI-for-Science-扩展【AI4S】" class="headerlink" title="8. AI for Science 扩展【AI4S】"></a>8. AI for Science 扩展【AI4S】</h2><h3 id="8-1-把候选鉴定、实体分类和功能推断拆开"><a href="#8-1-把候选鉴定、实体分类和功能推断拆开" class="headerlink" title="8.1 把候选鉴定、实体分类和功能推断拆开"></a>8.1 把候选鉴定、实体分类和功能推断拆开</h3><p>本章涉及多个学习问题。miRNA 识别预测一个位点是否有相应加工机制，编码潜能预测转录本是否更像编码类，BSJ 识别判断连接证据，互作预测判断一对分子在某条件下是否作用。它们的标签、输入与负样本不同，不能共同使用一个没有单位的“准确率”。</p>
+<p>例如以发夹为单位的 miRNA 分类器，先由另一个程序提出候选。如果真位点没有进入候选集合，后续分类器再准确也无法恢复它。评价全流程要包括接头处理、映射、候选提出和分类，而不只评估已经过滤的容易样本。circRNA 和靶标预测也有相同的候选召回限制。</p>
+<p>功能推断又比实体鉴定多一步。一个真实环可以没有所预测的海绵功能，一个真实 miRNA 可能在某组织不表达，一个体外可结合的 RNA–蛋白对可能在体内不共定位。模型应与具体实验条件和效应标签对应，不能把多个层次合成“功能阳性”。</p>
+<h3 id="8-2-负样本与未标注对象"><a href="#8-2-负样本与未标注对象" class="headerlink" title="8.2 负样本与未标注对象"></a>8.2 负样本与未标注对象</h3><p>从随机基因组区域抽取负样本很方便，却可能让 miRNA 模型只学会区分“发夹”和“完全随机串”，无法区分真实 miRNA 与其他稳定发夹。更有意义的对照应包括表达的发夹、其他小 RNA 来源、重复及降解片段，同时清楚说明哪些只是未标注而非已确认阴性。</p>
+<p>lncRNA 与编码 RNA 分类同样受标注定义影响。已知长蛋白和明显非编码 RNA 之间容易得到高分，但短蛋白、伪基因衍生转录和双功能位点更困难。测试集应保留这些边界对象，而不是为提高指标提前删去。若目标是实际筛选，拒绝分类或不确定类别有实际价值。</p>
+<p>互作数据中的“未报道配对”不是可靠阴性。实验更容易发现高表达、易溶或常研究的分子，随机负配对可能与阳性在长度、表达和测定条件上不同。模型可通过这些捷径预测实验采样而非真实互作。负样本应尽可能来自相同实验的可检出但未支持集合，并报告其不确定性。</p>
+<p>环状 RNA 任务也不能把全部线性转录本视为在特征上与环完全分离。线性宿主和环共享大段序列，候选生成与标注方式决定了差异。若阳性全来自一个数据库、阴性来自另一个数据库，元数据与处理批次可能泄漏标签。</p>
+<h3 id="8-3-数据划分与相似性泄漏"><a href="#8-3-数据划分与相似性泄漏" class="headerlink" title="8.3 数据划分与相似性泄漏"></a>8.3 数据划分与相似性泄漏</h3><p>成熟 miRNA 家族、重复前体、旁系同源和同一转录本的局部片段可能高度相似。随机按条目划分会把同一家族放进训练和测试，测到的主要是近邻恢复。若研究新家族或新物种外推，应按家族、物种或更高分类层级划分，并报告实际序列相似性。</p>
+<p>RNA 互作的边随机划分还有实体重复问题。训练和测试共享同一 RNA 与同一蛋白时，模型可能记住各实体的平均“活跃度”。至少区分已见实体的新配对、新 RNA、新蛋白以及双方均未见四种任务。它们的难度和实际用途不同，结果不应合并为一个数字。</p>
+<p>同一基因座的多个转录本、同一 BSJ 的多个全长环以及同一测序样本的重叠窗口，也应视目标合并划分。按读段随机划分尤其容易使几乎同一个分子同时出现两边。时间划分还要检查旧数据库是否已经间接收录了未来标注信息。</p>
+<p>预训练模型并不免除这些问题。模型可能在无监督阶段见过测试序列，或在结构训练中见过相似折叠。应说明预训练数据边界以及该评测旨在检验何种泛化，而不是只宣称微调标签没有重复。</p>
+<h3 id="8-4-结构作为特征时的公平比较"><a href="#8-4-结构作为特征时的公平比较" class="headerlink" title="8.4 结构作为特征时的公平比较"></a>8.4 结构作为特征时的公平比较</h3><p>RNA 序列可能有多个构象，把单一 MFE 结构编码成图，是选择了一个模型输出，并非引入无误差的实验结构。若结构预测器对长、GC 高或重复序列存在系统偏差，下游模型也会继承。可比较序列、MFE 图、配对概率以及实验约束在相同测试集合上的增益。</p>
+<p>不同方法若使用不同信息源，比较时应明示。一个方法有 CLIP、表达和定位信息，另一个只有序列，性能差异不能全部归因于网络架构。数据量、候选集合、数据库和超参数选择预算也需一致或单独分析。</p>
+<p>可及性特征还涉及长度和局部范围。全长折叠得到的局部概率与滑窗折叠可能不同；对长 lncRNA 计算成本更高，且天然状态可能由蛋白和转录动力学影响。结构特征的计算区域与温度、能量模型应随结果保存，以便复查。</p>
+<h3 id="8-5-指标、校准和可解释性"><a href="#8-5-指标、校准和可解释性" class="headerlink" title="8.5 指标、校准和可解释性"></a>8.5 指标、校准和可解释性</h3><p>类别稀少时，总体准确率可以由大量阴性贡献。对 miRNA 新位点、低丰度 BSJ 或互作检索，应同时看精确率、召回、PR 曲线及实际阳性比例；ROC 曲线也可以报告，但不能忽略在实际筛选规模下会产生多少候选。</p>
+<p>按样本或位点计算置信区间时，不能把强相关读段当独立重复。跨生物重复或独立数据集的变动，通常比同一样本读段自助抽样更接近实际复现问题。阈值在验证集冻结，测试集不用于反复挑选最佳配置。</p>
+<p>模型注意到种子、凸起或相位位置，只说明这些输入影响输出，不证明生物学机制。更强的检验是提出可测的扰动：改变关键配对但尽量保持组成，改变位点位置，或者在保留背景丰度的情况下打乱相位。实验需要排除同时改变其他信号的混杂。</p>
+<p>概率校准也应独立评价。模型分值 0.9 若对应真实成功率很低，仍可能有较好排序，但不适合直接用于风险筛选。数据库阳性本身有漏标时，校准结论还受标签不完整影响，应明确评价的是“被现有证据支持的概率”还是某个真实生物事件。</p>
+<h3 id="8-6-一个可以执行的研究比较设计"><a href="#8-6-一个可以执行的研究比较设计" class="headerlink" title="8.6 一个可以执行的研究比较设计"></a>8.6 一个可以执行的研究比较设计</h3><table>
+<thead>
+<tr>
+<th>设计部分</th>
+<th>具体安排</th>
+<th>解释目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>任务单位</td>
+<td>以独立位点、转录本或分子对为单位</td>
+<td>防止用读段数代替生物样本数</td>
+</tr>
+<tr>
+<td>候选集合</td>
+<td>所有方法共享，并另评候选产生召回</td>
+<td>分开上游检索与模型分类贡献</td>
+</tr>
+<tr>
+<td>划分</td>
+<td>家族&#x2F;实体&#x2F;样本分组，冻结测试集</td>
+<td>检验目标外推能力</td>
+</tr>
+<tr>
+<td>负例</td>
+<td>简单与困难对照、未标注类别分开</td>
+<td>避免只学会随机串或批次差异</td>
+</tr>
+<tr>
+<td>消融</td>
+<td>序列、结构、丰度、位置分别移除</td>
+<td>检验哪种信息提供增益</td>
+</tr>
+<tr>
+<td>分层</td>
+<td>长度、丰度、重复、多重映射、物种距离</td>
+<td>找出总体均值掩盖的失效条件</td>
+</tr>
+<tr>
+<td>独立证据</td>
+<td>与训练标签不同来源的验证</td>
+<td>防止特征和真值循环定义</td>
+</tr>
+</tbody></table>
+<p>这个设计不要求先训练一个大模型。先用简单规则、线性模型或已有方法建立分层基准，可以判断最主要瓶颈是观测缺失、候选生成、标签质量还是表示能力。若真值本身不稳定，架构改进的微小收益很难解释。</p>
+<h2 id="9-与-VirusBin-的联系"><a href="#9-与-VirusBin-的联系" class="headerlink" title="9. 与 VirusBin 的联系"></a>9. 与 VirusBin 的联系</h2><h3 id="9-1-RNA-结构对序列组成的影响"><a href="#9-1-RNA-结构对序列组成的影响" class="headerlink" title="9.1 RNA 结构对序列组成的影响"></a>9.1 RNA 结构对序列组成的影响</h3><p>某些病毒序列的结构约束会影响互补模式和词频，重复及局部功能模块也会使同一基因组内的片段组成不同。这能解释为什么单纯组成相似不是归属的充分依据，但不能反过来断言任何特定 5-mer 模式都由某种 RNA 结构造成。DNA 病毒和 RNA 病毒的结构与生命周期还需具体区分。</p>
+<p>对比学习增强若随机替换或打乱序列，可能同时破坏词频、局部重复和配对信号。要判断增强是否保留实体信息，可以分别控制 GC、k-mer 频率与局部配对模式，再观察表示变化。这里研究的是模型对输入信号的依赖，不等于已经证明其学到了真实结构机制。</p>
+<p>将预测结构直接加入所有 1 kb contig 也有成本与可靠性问题。部分片段缺少完整上下文，单条 MFE 图不稳定；长序列折叠复杂度与模型适用范围都要考虑。应先在独立小集合检验它是否改善短片段 FMR 与召回，再决定是否扩展。</p>
+<h3 id="9-2-多重映射、丰度与重复计数"><a href="#9-2-多重映射、丰度与重复计数" class="headerlink" title="9.2 多重映射、丰度与重复计数"></a>9.2 多重映射、丰度与重复计数</h3><p>小 RNA 中的多重映射问题与宏基因组覆盖估计有共通处：同一读段可能落到多个近缘或重复片段。全额重复分配会制造相似覆盖，唯一映射则偏向容易区分的区域。VirusBin 输入覆盖矩阵应记录映射器、过滤和分配规则，特别关注近缘病毒及共享模块。</p>
+<p>读段数、唯一序列数和独立分子数不能互换。高覆盖可能来自生物丰度，也可能受重复折叠、扩增和映射策略影响。对分箱模型，覆盖是有偏观测而非实体丰度真值；跨样本相关性也可能来自共同批次或共享生态响应。</p>
+<p>消融覆盖特征时，应保持候选 contig 集合与归一化一致。否则模型差异可能由删除难映射对象或改变样本筛选造成，而不是覆盖是否有效。长度分层与多重映射比例分层可帮助区分这些影响。</p>
+<h3 id="9-3-环状拓扑与完整病毒基因组"><a href="#9-3-环状拓扑与完整病毒基因组" class="headerlink" title="9.3 环状拓扑与完整病毒基因组"></a>9.3 环状拓扑与完整病毒基因组</h3><p>一个组装图或序列具有首尾连接，不等于已经证明是完整病毒基因组。重复、串联拷贝、末端冗余、质粒和组装策略都可能产生相似图形。circRNA 中的“2n 连续联配不证明环存在”提醒我们区分表示便利、序列证据和生物学完整性。</p>
+<p>如果用长读长组装构建 VirusBin 真值，应检查连接处有多少独立长分子跨越，是否存在替代联配及重复结构，覆盖是否连续。仅因组装器标记 circular 就强行给所有短片段唯一真值，可能把未解决的重复歧义传给分箱评价。</p>
+<p>这些是方法层面的联系。宿主 miRNA、RdDM 及植物 PHAS 机制并不自动适用于所有病毒 contig，不将它们写成 VirusBin 的现成生物特征。具体病毒功能需要另外的实验与文献支持。</p>
+<h3 id="9-4-候选、标签与评测的分离"><a href="#9-4-候选、标签与评测的分离" class="headerlink" title="9.4 候选、标签与评测的分离"></a>9.4 候选、标签与评测的分离</h3><p>如果同一组 k-mer 或结构特征既用于构建训练正样本，又用于确认测试集“同一病毒”，测试就缺少独立性。长读长真值、独立配对及人工审查可以提供不同来源证据，但每种也有不确定区域。对无法唯一归属的短片段，保留不确定比强赋标签更合理。</p>
+<p>评价 FMR 应明确是 contig 对、碱基、bin 还是实体平均。若把一个真基因组切成更多片段，contig 对的数量会平方增长，指标权重也随之改变。需要在同一输入集合上比较，并同时报告归箱率、同组召回和 singleton 比例。</p>
+<p>可以专门设置困难对照：同丰度不同病毒、不同丰度同一病毒、近缘病毒共享模块，以及来自重复区域的短片段。它们分别检验覆盖捷径、组成异质性与共享序列的处理能力，比只在随机不同物种之间采负对更接近 false merging 问题。</p>
+<h2 id="10-教材习题解答"><a href="#10-教材习题解答" class="headerlink" title="10. 教材习题解答"></a>10. 教材习题解答</h2><h3 id="10-1-简述非编码-RNA-类型"><a href="#10-1-简述非编码-RNA-类型" class="headerlink" title="10.1 简述非编码 RNA 类型"></a>10.1 简述非编码 RNA 类型</h3><p>先按功能和生成机制区分，再用长度补充描述。rRNA、tRNA、snRNA、snoRNA 等参与翻译、剪接和 RNA 加工；调控性小 RNA 包括 miRNA、siRNA 及动物 piRNA 等，不能都称为 miRNA。植物 siRNA 还可按来源与通路讨论 hc-siRNA、nat-siRNA、ta-siRNA 与其他 phasiRNA。</p>
+<p>lncRNA 通常作为约 200 nt 以上、未归为蛋白编码的长转录本类别，可用相对位置和证据继续分类。circRNA 则是按环状拓扑组织的对象，可有不同长度、生成路线和翻译能力，不能简单放进“全部大于 200 nt 且绝不编码”这一格。</p>
+<p>回答还应指出分类不是单一树状互斥划分。一个具有相位加工的长前体可以产生许多小 RNA，拓扑、长度、功能和生物合成机制描述不同层级。具体分子未有功能证据时，使用候选或已知类别名称，不把表达本身当作已知调控功能。</p>
+<h3 id="10-2-基于高通量测序预测-miRNA"><a href="#10-2-基于高通量测序预测-miRNA" class="headerlink" title="10.2 基于高通量测序预测 miRNA"></a>10.2 基于高通量测序预测 miRNA</h3><p>先明确样本与文库捕获的小 RNA 长度范围，去接头、检查质量及长度分布，保留折叠后的序列丰度。映射到适当参考并保存多重位置及分配策略，识别已知结构 RNA、重复和其他来源，避免把降解片段统称 miRNA。</p>
+<p>对已知家族可做相似性注释，同时用小 RNA 读段提出新候选。围绕位点获得前体序列，检查两臂、突出端、配对质量和加工精确性，评价其他 siRNA 样分布的可能。折叠与 MFEI 提供辅助，0.85 不能作为所有真实 miRNA 的硬必要条件。</p>
+<p>参考植物或动物相应注释标准，保存前体坐标、成熟体、臂、结构、各样本读段支持与不确定项。生物重复和独立证据帮助区别稳定加工与偶然片段。成熟体表达、前体起点和靶标切割分别用适当实验验证，不能声称一项 RACE 覆盖所有问题。</p>
+<p>该路线可以发现没有已知保守家族的新位点，但不等于完全摆脱模型先验。训练模型、参考质量和候选生成规则仍决定发现范围。评测应包括候选召回，而不是只统计最终保留的漂亮发夹。</p>
+<h3 id="10-3-什么是-lncRNA？举两个功能例子"><a href="#10-3-什么是-lncRNA？举两个功能例子" class="headerlink" title="10.3 什么是 lncRNA？举两个功能例子"></a>10.3 什么是 lncRNA？举两个功能例子</h3><p>lncRNA 是操作性长非编码转录本类别，分类依据为长度、编码证据及注释约定，并非统一的单一分子机制。表达、结构、作用位置和证据应分别描述；一些候选可能随短肽或其他证据更新分类。</p>
+<p>XIST 是与哺乳动物 X 染色体失活相关的经典长 RNA，体现 RNA 与染色质组织及调控的关系。植物 IPS1 通过 miR399 相关靶标模拟影响 PHO2 调控，体现特定配对构型及竞争的作用。两例机制不同，不能把它们的全部属性推广到所有 lncRNA。</p>
+<p>结合图 9.6，还可讨论转录因子调节、剪接、稳定性和翻译等方向。作答应说明“某分子有某种实验证据”，而不是说每条 lncRNA 都能同时执行图中的九种功能。若从邻近或共表达推断，则只列作候选机制。</p>
+<h3 id="10-4-什么是-phasiRNA-基因，怎样鉴定"><a href="#10-4-什么是-phasiRNA-基因，怎样鉴定" class="headerlink" title="10.4 什么是 phasiRNA 基因，怎样鉴定"></a>10.4 什么是 phasiRNA 基因，怎样鉴定</h3><p>PHAS 位点是产生相位小 RNA 的来源区域或相应前体，不能将每一条成熟 phasiRNA 都当作独立编码基因。植物中典型路线涉及触发 miRNA、双链 RNA 形成及连续加工，21 nt 和 24 nt 路线的酶与生物背景有差异；TAS 是具有反式调控意义的相关类别。</p>
+<p>鉴定时先选目标长度小 RNA 映射，保留链、起点、distinct 信息与丰度。按明确定义校正双链坐标，计算 Howell 分数、Chen&#x2F;pssRNAMiner 检验或指定周期分数。使用正确的位置集合与相位类别，不能将 461&#x2F;21 无条件改成 462&#x2F;22，也不能把丰度替代 distinct 占据数。</p>
+<p>对完整扫描集合处理多重比较与候选选择，将重叠窗口组织成位点，并保留相位一致性、覆盖及多重映射信息。随后寻找候选触发位点，结合降解组等检查切割及生物背景。强相位可支持候选，不自动证明触发分子和全部下游靶标。</p>
+<p>例如 <span class="math">\(n=10,k=6\)</span> 在 Chen 背景下约 <span class="math">\(7.87\times10^{-7}\)</span>，说明相对该随机位置模型富集；它不是“该位点为 PHAS 的后验概率”。若实际位置存在非均匀偏倚，仍需检查零模型是否合理。</p>
+<h3 id="10-5-非编码-RNA-与作物育种有何关系"><a href="#10-5-非编码-RNA-与作物育种有何关系" class="headerlink" title="10.5 非编码 RNA 与作物育种有何关系"></a>10.5 非编码 RNA 与作物育种有何关系</h3><p>非编码 RNA 可通过发育、株型、产量组成、胁迫及育性相关网络影响性状。应用可针对 RNA 位点、靶位点、表达和加工，也可利用人工小 RNA、RNAi 或靶标模拟作研究工具。需要区分机制研究、受控条件下表型和实际田间育种效果。</p>
+<p>前序文献核查已确认，水稻 miR156–OsSPL14 相关工作将 miRNA 靶向与理想株型联系起来；PMS1T 产生 phasiRNA 的研究涉及光周期敏感雄性不育；LDMAR 也是与光敏雄性不育相关的长 RNA 实例。它们分别说明靶位点和调控 RNA 可以成为遗传研究对象，不意味着任意调节同一家族就必然增产。</p>
+<p>从候选走向应用需要验证因果等位变异、组织与时期、剂量、遗传背景和多环境稳定性。改变 miRNA 可能同时影响多个靶标，获得某个有利性状也可能带来发育或抗逆代价。因此表达差异或一个预测互作只能提出育种候选，不能直接许诺田间收益。</p>
+<p>phasiRNA 与育性的联系可服务于杂交育种研究；具体材料还需验证环境响应、恢复与稳定性。circRNA 目前可以作为功能研究方向，但多数表达关联不足以构成可操作育种靶点。证据不足时不为覆盖类别而编造成功案例。</p>
+<h3 id="10-6-依据教材所附图搭建-ncRNA-流程"><a href="#10-6-依据教材所附图搭建-ncRNA-流程" class="headerlink" title="10.6 依据教材所附图搭建 ncRNA 流程"></a>10.6 依据教材所附图搭建 ncRNA 流程</h3><p><img src="/bioinformatics-notes/images/ch09/fig09-ex06.png" alt="习题 9.6 ncRNA 测序分析思维导图"></p>
+<p><em>习题 9.6 教材给出的小 RNA 与 lncRNA 分析知识点和软件（教材 p.235）。本图确实存在，不能按旧提取结果称其缺失。</em></p>
+<p>原图列出 miRNA 与 lncRNA 分析主线，包含 miRDeep2、miRDeep-P、miRanda、psRNATarget、miRTarBase、miRBase、CPC、CPAT、PLEK、NONCODE。它不是只让罗列软件，而是要求把对象、证据和输出接起来。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">小RNA测序</span><br><span class="line">  -&gt; 接头与质量检查 -&gt; 长度/丰度统计 -&gt; 映射与多重位置处理</span><br><span class="line">  -&gt; 已知miRNA注释（参考miRBase等，保留证据）</span><br><span class="line">  -&gt; 新miRNA候选（按生物对象选miRDeep2、miRDeep-P等）</span><br><span class="line">  -&gt; 前体结构、精确加工与两臂检查</span><br><span class="line">  -&gt; 靶标候选（植物psRNATarget，动物miRanda等相应模型）</span><br><span class="line">  -&gt; 对照miRTarBase等证据 -&gt; 切割/互作/扰动验证</span><br><span class="line"></span><br><span class="line">总RNA或适合的链特异转录组</span><br><span class="line">  -&gt; 质量检查 -&gt; 联配与转录本重建 -&gt; 样本合并及结构检查</span><br><span class="line">  -&gt; 长度、表达、参考关系分类（保留合理重叠类别）</span><br><span class="line">  -&gt; CPC/CPC2、CPAT、PLEK等编码潜能证据</span><br><span class="line">  -&gt; 蛋白同源、结构域与可用翻译证据 -&gt; lncRNA候选</span><br><span class="line">  -&gt; NONCODE等参考匹配 -&gt; 功能假说及独立验证</span><br></pre></td></tr></table></figure>
+
+<p>同一阶段的工具不是都必须顺序运行。CPC、CPAT、PLEK 通常是可比较的编码潜能证据，不应简单把全部交集定义为真值。miRDeep2 和 miRDeep-P 也要依据动物与植物等背景选择。数据库匹配是注释和证据查阅，不替代自己样本中的表达与加工检查。</p>
+<p>若扩展到本章的 siRNA 和 circRNA，可增加相位分支及 BSJ 分支，分别保留统计分母和接头验证。所有分支共用样本元数据、版本、坐标和命名规则，并对未确定候选留出状态；不能先把不确定项强制判阴性，再在评测中当作无误标签。</p>
+<h2 id="11-自测题"><a href="#11-自测题" class="headerlink" title="11. 自测题"></a>11. 自测题</h2><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>核对答案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>检出发夹且 MFEI 大于 0.85 是否证明 miRNA？</td>
+<td>只能是部分候选证据，其他 RNA 也可能满足</td>
+</tr>
+<tr>
+<td>MFE 越小应怎样理解？</td>
+<td>在同一模型和单位下更负，比较还需考虑长度与组成</td>
+</tr>
+<tr>
+<td>pri-miRNA 和 pre-miRNA 是否同一层级？</td>
+<td>不同，成簇初级转录本可产生多个发夹前体</td>
+</tr>
+<tr>
+<td>所有内含子 miRNA 都是 mirtron 吗？</td>
+<td>不是，mirtron 强调特定加工路线</td>
+</tr>
+<tr>
+<td>植物仅切割、动物仅抑制翻译吗？</td>
+<td>不是，不能作严格二分</td>
+</tr>
+<tr>
+<td>Howell P 是概率吗？</td>
+<td>是经验相位分数，不能与超几何 P 混用</td>
+</tr>
+<tr>
+<td>distinct 数与总读段数能互换吗？</td>
+<td>不能，重复丰度不等于新增占据事件</td>
+</tr>
+<tr>
+<td>为什么 Chen 参数不是 462&#x2F;22？</td>
+<td>条件化于已选参照后排除相应位置</td>
+</tr>
+<tr>
+<td>负链平移 2 nt 是否足够写 BAM 解析？</td>
+<td>不足，需声明最左坐标或 5′端及 CIGAR 处理</td>
+</tr>
+<tr>
+<td>9 周期和 10 周期相位分数能只改系数吗？</td>
+<td>不能，窗口及计数应相容</td>
+</tr>
+<tr>
+<td>FDR 和一次结果 FP&#x2F;R 有何区别？</td>
+<td>前者是 FDP 的期望，后者是一次实现的比例</td>
+</tr>
+<tr>
+<td>RNA 打开代价为什么非负？</td>
+<td>受限结构集合的配分函数不大于总集合</td>
+</tr>
+<tr>
+<td>系综自由能是否就是 MFE？</td>
+<td>不同，系综包含多个结构权重</td>
+</tr>
+<tr>
+<td>lncRNA 与编码基因重叠是否必删？</td>
+<td>不必，反义、内含子等类别可合理重叠</td>
+</tr>
+<tr>
+<td>CPC2 是否性能与物种完全无关？</td>
+<td>输入可通用，泛化与概率校准仍需检验</td>
+</tr>
+<tr>
+<td>RNase R 阳性能否单独确认环？</td>
+<td>不能，需要多种证据与对照</td>
+</tr>
+<tr>
+<td>相同 BSJ 能否保证相同全长？</td>
+<td>不能，内部可变剪接可不同</td>
+</tr>
+<tr>
+<td>跨 BSJ Ribo-Seq 是否等于证明功能蛋白？</td>
+<td>不是，仍需读框、来源和产物等证据</td>
+</tr>
+<tr>
+<td>多工具取交集是否就是独立验证？</td>
+<td>不是，共享偏差与共同漏检仍可能存在</td>
+</tr>
+<tr>
+<td>一条环序列复制两遍是否证明分子环状？</td>
+<td>仅改变参考表示，生物学结论需另证</td>
+</tr>
+</tbody></table>
+<h2 id="12-历史与人物"><a href="#12-历史与人物" class="headerlink" title="12. 历史与人物"></a>12. 历史与人物</h2><p>教材 p.236–237 介绍首届中国生物信息学终身成就奖的六位获奖者：陈润生、郝柏林、李衍达、罗辽复、张春霆和孙之荣。此处按教材历史语境记录，现任职务与数量不作为实时信息引用。</p>
+<p>陈润生的工作涉及基因组与非编码 RNA 研究；郝柏林将统计物理和序列组分等方法引入生物问题；李衍达推动信息论、复杂系统与生物信息教育；罗辽复发展理论生物物理及序列信息研究；张春霆提出 Z 曲线等序列几何表示；孙之荣参与生物信息、控制信息与蛋白结构等方向研究。</p>
+<p>这些例子体现数学、计算与生物问题的交叉，不能将教材“完美解决所有争论”之类纪念性措辞当作方法论结论。序列组成、物理模型或机器学习都必须通过明确任务和独立数据评价；人物贡献与具体算法适用条件应分别认识。</p>
+<h2 id="13-全章速记"><a href="#13-全章速记" class="headerlink" title="13. 全章速记"></a>13. 全章速记</h2><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>需要保留的区别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ncRNA 类别</td>
+<td>长度、拓扑、生成与功能是不同分类轴</td>
+</tr>
+<tr>
+<td>小 RNA 测序</td>
+<td>原始读段、distinct 序列、位置与独立分子各有计数</td>
+</tr>
+<tr>
+<td>miRNA 发现</td>
+<td>加工证据与结构共同支持，不能只靠低能发夹</td>
+</tr>
+<tr>
+<td>siRNA 相位</td>
+<td>位置周期、丰度分数与零模型 P 值不相同</td>
+</tr>
+<tr>
+<td>超几何</td>
+<td>位置集合与条件化决定分母</td>
+</tr>
+<tr>
+<td>规则检验</td>
+<td>历史规则与完整能量&#x2F;联配模型需区分</td>
+</tr>
+<tr>
+<td>lncRNA 候选</td>
+<td>未识别编码不等于已证明永不翻译</td>
+</tr>
+<tr>
+<td>RNA 互作</td>
+<td>杂化收益与打开代价共同影响评分</td>
+</tr>
+<tr>
+<td>结构预测</td>
+<td>单一最优结构与系综分布不同</td>
+</tr>
+<tr>
+<td>circRNA</td>
+<td>接头、拓扑、全长异构体和功能分别验证</td>
+</tr>
+<tr>
+<td>翻译</td>
+<td>ORF、核糖体关联和特异产物是不同证据层级</td>
+</tr>
+<tr>
+<td>评测</td>
+<td>候选生成、实体泄漏、负例和分母决定结论</td>
+</tr>
+</tbody></table>
+<h2 id="14-下一步学习建议"><a href="#14-下一步学习建议" class="headerlink" title="14. 下一步学习建议"></a>14. 下一步学习建议</h2><p>先手算 Chen 窗口参数、Howell 分数和 MFEI 例子，再对照§7 检查输出。把 <span class="math">\(n\)</span> 和 <span class="math">\(k\)</span> 从 distinct 改为丰度，观察为什么虽然程序还能算数，统计对象已不符合模型；用偏移位置并入相位的另一种定义，再比较结果差异。</p>
+<p>结构方面可用短串画出 Nussinov 的区间分解，检查平分时有多少最优结构；再看配分函数为何不能简单重复计数。深入 RNAfold 或 IntaRNA 前，明确教学配对能与真实近邻热力学不同，避免将演示数值误用于实验结论。</p>
+<p>实际数据先选一个边界明确的小任务，保存读段、参考、映射和候选原表，再比较工具。把新位点、无支持、冲突和已验证分别记录。第十章的表达与调控可帮助解释这些候选在什么条件下可能发挥作用。</p>
+<h2 id="15-参考文献与核查来源"><a href="#15-参考文献与核查来源" class="headerlink" title="15. 参考文献与核查来源"></a>15. 参考文献与核查来源</h2><p>下列原始工作沿用前序已完成的文献核查。全文、图公式与数据库缓存保存在本章临时目录，未确认的现行服务状态不据文献年份推断。</p>
+<ul>
+<li>Axtell and Meyers, 2018. Revisiting Criteria for Plant MicroRNA Annotation in the Era of Big Data. <em>The Plant Cell</em>。本章植物注释标准的主要依据。</li>
+<li>Huang et al., 2009. HEN1 识别与甲基化小 RNA 的结构研究。<a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/19812675/">PubMed 记录</a>。</li>
+<li>Guo et al., 2010. Mammalian microRNAs predominantly act to decrease target mRNA levels. <em>Nature</em>。<a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/20703300/">PubMed 记录</a>。</li>
+<li>Brodersen et al., 2008. Widespread translational inhibition by plant miRNAs and siRNAs。植物翻译抑制的原始研究。</li>
+<li>Ruby et al., 2007；Okamura et al., 2007. mirtron 及绕过典型 Drosha 加工的内含子前体研究。</li>
+<li>Bartel, 2009. MicroRNAs: Target Recognition and Regulatory Functions。<a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/19167326/">PubMed 记录</a>。</li>
+<li>Fire et al., 1998. Potent and specific genetic interference by double-stranded RNA in <em>Caenorhabditis elegans</em>。RNAi 机制的里程碑工作。</li>
+<li>Howell et al., 2007. Genome-Wide Analysis of the RNA-DEPENDENT RNA POLYMERASE6&#x2F;DICER-LIKE4 Pathway in Arabidopsis Reveals Dependency on miRNA- and tasiRNA-Directed Targeting. <em>The Plant Cell</em>. <a target="_blank" rel="noopener" href="https://doi.org/10.1105/tpc.107.050062">DOI:10.1105&#x2F;tpc.107.050062</a>。</li>
+<li>Chen et al., 2007. Bioinformatic prediction and experimental validation of a microRNA-directed tandem trans-acting siRNA cascade in Arabidopsis. <em>PNAS</em>. <a target="_blank" rel="noopener" href="https://doi.org/10.1073/pnas.0611119104">DOI:10.1073&#x2F;pnas.0611119104</a>。</li>
+<li>Dai and Zhao, 2008. pssRNAMiner: a plant short small RNA regulatory cascade analysis server. <em>Nucleic Acids Research</em>. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/nar/gkn297">DOI:10.1093&#x2F;nar&#x2F;gkn297</a>。</li>
+<li>De Paoli et al., 2009. Distinct extremely abundant siRNAs associated with cosuppression in petunia. <em>RNA</em>. <a target="_blank" rel="noopener" href="https://doi.org/10.1261/rna.1706109">DOI:10.1261&#x2F;rna.1706109</a>。</li>
+<li>Zhai et al., 2011. MicroRNAs as master regulators of the plant NB-LRR defense gene family via the production of phased, trans-acting siRNAs. <a target="_blank" rel="noopener" href="https://doi.org/10.1101/gad.177527.111">DOI:10.1101&#x2F;gad.177527.111</a>。</li>
+<li>Dai and Zhao, 2011；Dai et al., 2018. psRNATarget 原始方法与更新。<a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/21622958/">2011 年 PubMed 记录</a>，2018 全文缓存 <code>psrnatarget2018.txt</code>。</li>
+<li>Schwab et al., 2005；Allen et al., 2005. 植物小 RNA 识别及切割相关位点规则的原始依据。</li>
+<li>Friedländer et al., 2012. miRDeep2 准确识别已知与新 miRNA 的原始工作。<a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3245920/">全文</a>。</li>
+<li>Kozomara et al., 2019. miRBase: from microRNA sequences to function。数据库证据质量讨论。</li>
+<li>Clarke et al., 2025. MirGeneDB 3.0。该版基因与家族数见§0。</li>
+<li>Kong et al., 2007；Kang et al., 2017. CPC 与 CPC2；Wang et al., 2013. CPAT。模型输出与适用范围需区分。</li>
+<li>Busch et al., 2008. IntaRNA：结合杂化与可及性的 RNA 互作预测；Wright et al., 2013. CopraRNA。</li>
+<li>Muppirala et al., 2011. Predicting RNA–protein interactions using only sequence information。RPISeq 的输入依据。</li>
+<li>Ke et al., 2020. AnnoLnc2，人和小鼠 lncRNA 综合注释平台。</li>
+<li>Zhang et al., 2013. 套索衍生内含子环状 RNA 的原始研究。</li>
+<li>Memczak et al., 2013；Zheng et al., 2019. find_circ 相关研究及 CIRI-full 全长重建方法。</li>
+<li>Ye et al., 2017. circseq_cup；Sun and Li, 2019. CircCode。分别对应全长重建与翻译潜能候选分析。</li>
+<li>水稻育种相关原始工作：Regulation of OsSPL14 by OsmiR156 defines ideal plant architecture in rice；PMS1T, producing phased small-interfering RNAs, regulates photoperiod-sensitive male sterility in rice；A long noncoding RNA regulates photoperiod-sensitive male sterility, an essential component of hybrid rice。均由前序文献批次核对，不将表型外推为全部遗传背景的田间结论。</li>
+<li><a target="_blank" rel="noopener" href="https://www.ncbi.nlm.nih.gov/books/NBK279684/table/appendices.T.blastn_application_options/">NCBI BLAST 任务与默认选项</a>，2026-10-27 续查，用于区分 11&#x2F;28&#x2F;7 字长。</li>
+<li><a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9759028/">circRNA 最佳实践标准</a>、<a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7926241/">circRNA 实验与翻译证据的注意事项</a>，2026-10-27 续查。</li>
+<li><a target="_blank" rel="noopener" href="https://www.gencodegenes.org/human/stats.html">GENCODE 人类统计页</a>，本轮缓存为 v50，使用该版统计而非实时常数。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.rfam.org/en/latest/building-families.html">Rfam 家族与协方差模型说明</a>、<a target="_blank" rel="noopener" href="https://docs.rfam.org/en/latest/glossary.html">Rfam 术语</a>，用于§3.7 的结构 RNA 补充。</li>
+</ul>
+<hr>
+<p><a href="/bioinformatics/chapter-08/">上一章</a> · <a href="/bioinformatics/chapter-10/">下一章</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF/" rel="tag"># 生物信息</a>
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/bioinformatics/chapter-08/" rel="prev" title="第 8 章 基因预测及其功能和结构注释：学习笔记">
+      <i class="fa fa-chevron-left"></i> 第 8 章 基因预测及其功能和结构注释：学习笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/bioinformatics/chapter-10/" rel="next" title="第 10 章 基因转录与调控网络：学习笔记">
+      第 10 章 基因转录与调控网络：学习笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E6%95%99%E6%9D%90%E8%8C%83%E5%9B%B4%E4%B8%8E%E5%8B%98%E8%AF%AF"><span class="nav-number">1.</span> <span class="nav-text">0. 教材范围与勘误</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-1-%E5%86%85%E5%AE%B9%E4%B8%8E%E5%AF%B9%E5%BA%94%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.1.</span> <span class="nav-text">0.1 内容与对应位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-2-%E5%B7%B2%E6%A0%B8%E5%AF%B9%E7%9A%84%E6%95%99%E6%9D%90%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">0.2 已核对的教材问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-3-%E6%95%B0%E9%87%8F%E4%B8%8E%E7%8E%B0%E7%8A%B6%E7%9A%84%E9%80%82%E7%94%A8%E8%8C%83%E5%9B%B4"><span class="nav-number">1.3.</span> <span class="nav-text">0.3 数量与现状的适用范围</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%9C%AC%E7%AB%A0%E5%AE%9A%E4%BD%8D%E4%B8%8E%E7%9F%A5%E8%AF%86%E5%9C%B0%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">1. 本章定位与知识地图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%AC%AC%E4%B8%80%E8%8A%82-%E5%B0%8F-RNA-%E8%AE%A1%E7%AE%97%E8%AF%86%E5%88%AB%E4%B8%8E%E9%9D%B6%E5%9F%BA%E5%9B%A0%E9%A2%84%E6%B5%8B"><span class="nav-number">3.</span> <span class="nav-text">2. 第一节 小 RNA 计算识别与靶基因预测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-miRNA-%E7%9A%84%E7%94%9F%E6%88%90%E4%B8%8E%E4%BD%9C%E7%94%A8%E3%80%90%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E3%80%91"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 miRNA 的生成与作用【必须掌握】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%89%8D%E4%BD%93%E7%BB%93%E6%9E%84%E4%B8%8E-MFEI"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 前体结构与 MFEI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%9B%9B%E7%B1%BB%E8%AE%A1%E7%AE%97%E5%8F%91%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">2.3 四类计算发现方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E5%B0%8F-RNA-%E6%B5%8B%E5%BA%8F%E4%B8%8E%E6%B3%A8%E9%87%8A%E8%AF%81%E6%8D%AE"><span class="nav-number">3.4.</span> <span class="nav-text">2.4 小 RNA 测序与注释证据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-siRNA%E3%80%81%E7%9B%B8%E4%BD%8D%E4%B8%8E%E8%A7%A6%E5%8F%91%E4%BD%8D%E7%82%B9"><span class="nav-number">3.5.</span> <span class="nav-text">2.5 siRNA、相位与触发位点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E7%9B%B8%E4%BD%8D%E6%A3%80%E6%B5%8B%E7%9A%84%E5%9B%9B%E7%A7%8D%E7%BB%9F%E8%AE%A1%E9%87%8F%E3%80%90%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E3%80%91"><span class="nav-number">3.6.</span> <span class="nav-text">2.6 相位检测的四种统计量【必须掌握】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-%E5%B0%8F-RNA-%E9%9D%B6%E6%A0%87%EF%BC%9A%E9%85%8D%E5%AF%B9%E3%80%81%E5%8F%AF%E5%8F%8A%E6%80%A7%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="nav-number">3.7.</span> <span class="nav-text">2.7 小 RNA 靶标：配对、可及性与验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%AC%AC%E4%BA%8C%E8%8A%82%EF%BC%88%E4%B8%80%EF%BC%89%E9%95%BF%E9%9D%9E%E7%BC%96%E7%A0%81-RNA-%E9%89%B4%E5%AE%9A%E4%B8%8E%E5%8A%9F%E8%83%BD%E9%A2%84%E6%B5%8B"><span class="nav-number">4.</span> <span class="nav-text">3. 第二节（一）长非编码 RNA 鉴定与功能预测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%93%8D%E4%BD%9C%E5%AE%9A%E4%B9%89%E3%80%81%E4%BD%8D%E7%BD%AE%E4%B8%8E%E5%8A%9F%E8%83%BD"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 操作定义、位置与功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E4%BB%8E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%B0%E5%80%99%E9%80%89%E9%9B%86%E5%90%88"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 从转录组到候选集合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E7%BC%96%E7%A0%81%E6%BD%9C%E8%83%BD%E6%98%AF%E6%A8%A1%E5%9E%8B%E9%A2%84%E6%B5%8B"><span class="nav-number">4.3.</span> <span class="nav-text">3.3 编码潜能是模型预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-RNA%E2%80%93RNA-%E4%BA%92%E4%BD%9C%E4%B8%8E%E5%8F%AF%E5%8F%8A%E6%80%A7%E8%83%BD%E9%87%8F%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">4.4.</span> <span class="nav-text">3.4 RNA–RNA 互作与可及性能量【应该理解】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E9%9D%B6%E6%A0%87%E6%A8%A1%E6%8B%9F%E4%B8%8E-miRNA-%E7%AB%9E%E4%BA%89"><span class="nav-number">4.5.</span> <span class="nav-text">3.5 靶标模拟与 miRNA 竞争</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-RNA%E2%80%93%E8%9B%8B%E7%99%BD%E4%BA%92%E4%BD%9C%E4%B8%8E%E7%BB%BC%E5%90%88%E6%B3%A8%E9%87%8A"><span class="nav-number">4.6.</span> <span class="nav-text">3.6 RNA–蛋白互作与综合注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-%E6%9C%AA%E5%9C%A8%E6%95%99%E6%9D%90%E5%B1%95%E5%BC%80%E7%9A%84%E7%BB%93%E6%9E%84-RNA-%E6%B3%A8%E9%87%8A"><span class="nav-number">4.7.</span> <span class="nav-text">3.7 未在教材展开的结构 RNA 注释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%AC%AC%E4%BA%8C%E8%8A%82%EF%BC%88%E4%BA%8C%EF%BC%89circRNA-%E9%89%B4%E5%AE%9A%E4%B8%8E%E5%8A%9F%E8%83%BD%E9%A2%84%E6%B5%8B"><span class="nav-number">5.</span> <span class="nav-text">4. 第二节（二）circRNA 鉴定与功能预测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E6%8B%93%E6%89%91%E3%80%81%E7%94%9F%E6%88%90%E4%B8%8E%E7%B1%BB%E5%88%AB"><span class="nav-number">5.1.</span> <span class="nav-text">4.1 拓扑、生成与类别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-BSJ-%E6%A3%80%E6%B5%8B%E7%9A%84%E5%9B%9B%E7%B1%BB%E8%B7%AF%E7%BA%BF"><span class="nav-number">5.2.</span> <span class="nav-text">4.2 BSJ 检测的四类路线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%85%A8%E9%95%BF%E9%87%8D%E5%BB%BA%E4%B8%8E%E5%AE%9A%E9%87%8F"><span class="nav-number">5.3.</span> <span class="nav-text">4.3 全长重建与定量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E6%B5%B7%E7%BB%B5%E3%80%81%E7%BF%BB%E8%AF%91%E4%B8%8E%E5%85%B6%E4%BB%96%E5%8A%9F%E8%83%BD%E8%AF%81%E6%8D%AE"><span class="nav-number">5.4.</span> <span class="nav-text">4.4 海绵、翻译与其他功能证据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%85%B3%E9%94%AE%E6%95%B0%E6%8D%AE%E5%AF%B9%E8%B1%A1%E4%B8%8E%E8%AE%A1%E6%95%B0%E5%8D%95%E4%BD%8D"><span class="nav-number">6.</span> <span class="nav-text">5. 关键数据对象与计数单位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E7%BB%9F%E8%AE%A1%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC"><span class="nav-number">7.</span> <span class="nav-text">6. 统计模型与算法推导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E8%B6%85%E5%87%A0%E4%BD%95%E8%83%8C%E6%99%AF%E6%80%8E%E6%A0%B7%E5%BE%97%E5%88%B0"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 超几何背景怎样得到</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-FDR%E3%80%81FDP-%E4%B8%8E-FPR"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 FDR、FDP 与 FPR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-Nussinov-%E6%9C%80%E5%A4%A7%E9%85%8D%E5%AF%B9%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92"><span class="nav-number">7.3.</span> <span class="nav-text">6.3 Nussinov 最大配对动态规划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E4%BB%8E%E6%9C%80%E4%BC%98%E7%BB%93%E6%9E%84%E5%88%B0%E9%85%8D%E5%88%86%E5%87%BD%E6%95%B0"><span class="nav-number">7.4.</span> <span class="nav-text">6.4 从最优结构到配分函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E6%97%A0%E7%A9%BA%E4%BD%8D%E9%9D%B6%E6%A0%87%E8%A7%84%E5%88%99%E4%B8%8E%E4%B8%80%E8%88%AC%E8%81%94%E9%85%8D"><span class="nav-number">7.5.</span> <span class="nav-text">6.5 无空位靶标规则与一般联配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E7%8E%AF%E5%BD%A2%E5%BA%8F%E5%88%97%E7%BA%BF%E6%80%A7%E5%8C%96%E7%9A%84%E8%BE%B9%E7%95%8C"><span class="nav-number">7.6.</span> <span class="nav-text">6.6 环形序列线性化的边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-7-%E7%BB%9F%E8%AE%A1%E9%80%89%E6%8B%A9%E4%B8%8E%E6%95%8F%E6%84%9F%E6%80%A7%E5%88%86%E6%9E%90"><span class="nav-number">7.7.</span> <span class="nav-text">6.7 统计选择与敏感性分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-8-%E4%B8%80%E4%B8%AA%E8%AE%A1%E6%95%B0%E4%B8%8E%E5%9D%90%E6%A0%87%E7%9A%84%E6%89%8B%E7%AE%97%E4%BE%8B%E5%AD%90"><span class="nav-number">7.8.</span> <span class="nav-text">6.8 一个计数与坐标的手算例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%8F%AF%E8%BF%90%E8%A1%8C%E4%BB%A3%E7%A0%81%E4%B8%8E%E6%9C%AC%E6%9C%BA%E5%AE%9E%E9%99%85%E8%BE%93%E5%87%BA"><span class="nav-number">8.</span> <span class="nav-text">7. 可运行代码与本机实际输出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E6%9C%80%E5%A4%A7%E9%85%8D%E5%AF%B9%E4%B8%8E%E5%9B%9E%E6%BA%AF"><span class="nav-number">8.1.</span> <span class="nav-text">7.1 最大配对与回溯</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E6%95%99%E5%AD%A6%E9%85%8D%E5%88%86%E5%87%BD%E6%95%B0%E4%B8%8E%E6%89%93%E5%BC%80%E4%BB%A3%E4%BB%B7"><span class="nav-number">8.2.</span> <span class="nav-text">7.2 教学配分函数与打开代价</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E7%9B%B8%E4%BD%8D%E5%85%AC%E5%BC%8F%E3%80%81%E6%A8%A1%E6%8B%9F%E6%89%AB%E6%8F%8F%E4%B8%8E-BH"><span class="nav-number">8.3.</span> <span class="nav-text">7.3 相位公式、模拟扫描与 BH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-%E6%A4%8D%E7%89%A9%E8%A7%84%E5%88%99%E3%80%81eTM-%E5%92%8C%E5%8A%A8%E7%89%A9%E7%A7%8D%E5%AD%90"><span class="nav-number">8.4.</span> <span class="nav-text">7.4 植物规则、eTM 和动物种子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-BSJ-%E9%94%9A%E7%82%B9%E4%B8%8E%E9%87%8D%E5%A4%8D%E4%BC%AA%E5%8F%82%E8%80%83"><span class="nav-number">8.5.</span> <span class="nav-text">7.5 BSJ 锚点与重复伪参考</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-AI-for-Science-%E6%89%A9%E5%B1%95%E3%80%90AI4S%E3%80%91"><span class="nav-number">9.</span> <span class="nav-text">8. AI for Science 扩展【AI4S】</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E6%8A%8A%E5%80%99%E9%80%89%E9%89%B4%E5%AE%9A%E3%80%81%E5%AE%9E%E4%BD%93%E5%88%86%E7%B1%BB%E5%92%8C%E5%8A%9F%E8%83%BD%E6%8E%A8%E6%96%AD%E6%8B%86%E5%BC%80"><span class="nav-number">9.1.</span> <span class="nav-text">8.1 把候选鉴定、实体分类和功能推断拆开</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E8%B4%9F%E6%A0%B7%E6%9C%AC%E4%B8%8E%E6%9C%AA%E6%A0%87%E6%B3%A8%E5%AF%B9%E8%B1%A1"><span class="nav-number">9.2.</span> <span class="nav-text">8.2 负样本与未标注对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E6%95%B0%E6%8D%AE%E5%88%92%E5%88%86%E4%B8%8E%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%B3%84%E6%BC%8F"><span class="nav-number">9.3.</span> <span class="nav-text">8.3 数据划分与相似性泄漏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-%E7%BB%93%E6%9E%84%E4%BD%9C%E4%B8%BA%E7%89%B9%E5%BE%81%E6%97%B6%E7%9A%84%E5%85%AC%E5%B9%B3%E6%AF%94%E8%BE%83"><span class="nav-number">9.4.</span> <span class="nav-text">8.4 结构作为特征时的公平比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-5-%E6%8C%87%E6%A0%87%E3%80%81%E6%A0%A1%E5%87%86%E5%92%8C%E5%8F%AF%E8%A7%A3%E9%87%8A%E6%80%A7"><span class="nav-number">9.5.</span> <span class="nav-text">8.5 指标、校准和可解释性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-6-%E4%B8%80%E4%B8%AA%E5%8F%AF%E4%BB%A5%E6%89%A7%E8%A1%8C%E7%9A%84%E7%A0%94%E7%A9%B6%E6%AF%94%E8%BE%83%E8%AE%BE%E8%AE%A1"><span class="nav-number">9.6.</span> <span class="nav-text">8.6 一个可以执行的研究比较设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E4%B8%8E-VirusBin-%E7%9A%84%E8%81%94%E7%B3%BB"><span class="nav-number">10.</span> <span class="nav-text">9. 与 VirusBin 的联系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-RNA-%E7%BB%93%E6%9E%84%E5%AF%B9%E5%BA%8F%E5%88%97%E7%BB%84%E6%88%90%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">10.1.</span> <span class="nav-text">9.1 RNA 结构对序列组成的影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E5%A4%9A%E9%87%8D%E6%98%A0%E5%B0%84%E3%80%81%E4%B8%B0%E5%BA%A6%E4%B8%8E%E9%87%8D%E5%A4%8D%E8%AE%A1%E6%95%B0"><span class="nav-number">10.2.</span> <span class="nav-text">9.2 多重映射、丰度与重复计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-%E7%8E%AF%E7%8A%B6%E6%8B%93%E6%89%91%E4%B8%8E%E5%AE%8C%E6%95%B4%E7%97%85%E6%AF%92%E5%9F%BA%E5%9B%A0%E7%BB%84"><span class="nav-number">10.3.</span> <span class="nav-text">9.3 环状拓扑与完整病毒基因组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-4-%E5%80%99%E9%80%89%E3%80%81%E6%A0%87%E7%AD%BE%E4%B8%8E%E8%AF%84%E6%B5%8B%E7%9A%84%E5%88%86%E7%A6%BB"><span class="nav-number">10.4.</span> <span class="nav-text">9.4 候选、标签与评测的分离</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E6%95%99%E6%9D%90%E4%B9%A0%E9%A2%98%E8%A7%A3%E7%AD%94"><span class="nav-number">11.</span> <span class="nav-text">10. 教材习题解答</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E7%AE%80%E8%BF%B0%E9%9D%9E%E7%BC%96%E7%A0%81-RNA-%E7%B1%BB%E5%9E%8B"><span class="nav-number">11.1.</span> <span class="nav-text">10.1 简述非编码 RNA 类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E5%9F%BA%E4%BA%8E%E9%AB%98%E9%80%9A%E9%87%8F%E6%B5%8B%E5%BA%8F%E9%A2%84%E6%B5%8B-miRNA"><span class="nav-number">11.2.</span> <span class="nav-text">10.2 基于高通量测序预测 miRNA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-%E4%BB%80%E4%B9%88%E6%98%AF-lncRNA%EF%BC%9F%E4%B8%BE%E4%B8%A4%E4%B8%AA%E5%8A%9F%E8%83%BD%E4%BE%8B%E5%AD%90"><span class="nav-number">11.3.</span> <span class="nav-text">10.3 什么是 lncRNA？举两个功能例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-4-%E4%BB%80%E4%B9%88%E6%98%AF-phasiRNA-%E5%9F%BA%E5%9B%A0%EF%BC%8C%E6%80%8E%E6%A0%B7%E9%89%B4%E5%AE%9A"><span class="nav-number">11.4.</span> <span class="nav-text">10.4 什么是 phasiRNA 基因，怎样鉴定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-5-%E9%9D%9E%E7%BC%96%E7%A0%81-RNA-%E4%B8%8E%E4%BD%9C%E7%89%A9%E8%82%B2%E7%A7%8D%E6%9C%89%E4%BD%95%E5%85%B3%E7%B3%BB"><span class="nav-number">11.5.</span> <span class="nav-text">10.5 非编码 RNA 与作物育种有何关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-6-%E4%BE%9D%E6%8D%AE%E6%95%99%E6%9D%90%E6%89%80%E9%99%84%E5%9B%BE%E6%90%AD%E5%BB%BA-ncRNA-%E6%B5%81%E7%A8%8B"><span class="nav-number">11.6.</span> <span class="nav-text">10.6 依据教材所附图搭建 ncRNA 流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E8%87%AA%E6%B5%8B%E9%A2%98"><span class="nav-number">12.</span> <span class="nav-text">11. 自测题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-%E5%8E%86%E5%8F%B2%E4%B8%8E%E4%BA%BA%E7%89%A9"><span class="nav-number">13.</span> <span class="nav-text">12. 历史与人物</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-%E5%85%A8%E7%AB%A0%E9%80%9F%E8%AE%B0"><span class="nav-number">14.</span> <span class="nav-text">13. 全章速记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">15.</span> <span class="nav-text">14. 下一步学习建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE%E4%B8%8E%E6%A0%B8%E6%9F%A5%E6%9D%A5%E6%BA%90"><span class="nav-number">16.</span> <span class="nav-text">15. 参考文献与核查来源</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

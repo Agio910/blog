@@ -1,0 +1,257 @@
+{
+  "source_pdf": "生物信息学/生物信息学_第十四章_生物信息学统计与算法基础.pdf",
+  "printed_page_offset": 374,
+  "coordinate_width": 500,
+  "figures": {
+    "fig14-00": {
+      "pdf_page": 1,
+      "printed_page": 375,
+      "box": [
+        120,
+        280,
+        385,
+        655
+      ]
+    },
+    "fig14-01": {
+      "pdf_page": 2,
+      "printed_page": 376,
+      "box": [
+        60,
+        445,
+        250,
+        562
+      ]
+    },
+    "fig14-02": {
+      "pdf_page": 6,
+      "printed_page": 380,
+      "box": [
+        50,
+        285,
+        445,
+        450
+      ]
+    },
+    "fig14-03": {
+      "pdf_page": 7,
+      "printed_page": 381,
+      "box": [
+        300,
+        70,
+        450,
+        160
+      ]
+    },
+    "fig14-04": {
+      "pdf_page": 8,
+      "printed_page": 382,
+      "box": [
+        50,
+        155,
+        180,
+        265
+      ]
+    },
+    "fig14-05": {
+      "pdf_page": 8,
+      "printed_page": 382,
+      "box": [
+        260,
+        350,
+        445,
+        430
+      ]
+    },
+    "fig14-06": {
+      "pdf_page": 9,
+      "printed_page": 383,
+      "box": [
+        260,
+        70,
+        450,
+        175
+      ]
+    },
+    "fig14-07": {
+      "pdf_page": 9,
+      "printed_page": 383,
+      "box": [
+        55,
+        305,
+        260,
+        420
+      ]
+    },
+    "fig14-08": {
+      "pdf_page": 10,
+      "printed_page": 384,
+      "box": [
+        50,
+        70,
+        240,
+        115
+      ]
+    },
+    "fig14-09": {
+      "pdf_page": 10,
+      "printed_page": 384,
+      "box": [
+        110,
+        330,
+        375,
+        490
+      ]
+    },
+    "fig14-10": {
+      "pdf_page": 13,
+      "printed_page": 387,
+      "box": [
+        100,
+        250,
+        390,
+        465
+      ]
+    },
+    "fig14-11": {
+      "pdf_page": 14,
+      "printed_page": 388,
+      "box": [
+        90,
+        365,
+        410,
+        625
+      ]
+    },
+    "fig14-12": {
+      "pdf_page": 16,
+      "printed_page": 390,
+      "box": [
+        60,
+        395,
+        440,
+        650
+      ]
+    },
+    "fig14-13": {
+      "pdf_page": 17,
+      "printed_page": 391,
+      "box": [
+        90,
+        270,
+        435,
+        470
+      ]
+    },
+    "fig14-14": {
+      "pdf_page": 18,
+      "printed_page": 392,
+      "box": [
+        55,
+        235,
+        445,
+        425
+      ]
+    },
+    "fig14-15": {
+      "pdf_page": 21,
+      "printed_page": 395,
+      "box": [
+        60,
+        145,
+        445,
+        610
+      ]
+    },
+    "fig14-16": {
+      "pdf_page": 24,
+      "printed_page": 398,
+      "box": [
+        50,
+        525,
+        250,
+        650
+      ]
+    },
+    "fig14-17": {
+      "pdf_page": 26,
+      "printed_page": 400,
+      "box": [
+        60,
+        80,
+        440,
+        525
+      ]
+    },
+    "fig14-18": {
+      "pdf_page": 27,
+      "printed_page": 401,
+      "box": [
+        280,
+        365,
+        455,
+        570
+      ]
+    },
+    "fig14-19": {
+      "pdf_page": 28,
+      "printed_page": 402,
+      "box": [
+        55,
+        265,
+        445,
+        415
+      ]
+    },
+    "fig14-20": {
+      "pdf_page": 28,
+      "printed_page": 402,
+      "box": [
+        50,
+        475,
+        240,
+        650
+      ]
+    },
+    "fig14-21": {
+      "pdf_page": 29,
+      "printed_page": 403,
+      "box": [
+        245,
+        70,
+        450,
+        260
+      ]
+    },
+    "fig14-22": {
+      "pdf_page": 31,
+      "printed_page": 405,
+      "box": [
+        65,
+        285,
+        445,
+        510
+      ]
+    },
+    "history-bayes": {
+      "pdf_page": 32,
+      "printed_page": 406,
+      "box": [
+        60,
+        145,
+        170,
+        270
+      ]
+    },
+    "table14-01": {
+      "pdf_page": 11,
+      "printed_page": 385,
+      "box": [
+        55,
+        230,
+        450,
+        515
+      ]
+    }
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "environment": {
+    "python": "3.13.14",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  },
+  "results": {
+    "01_exercise3_hwe": {
+      "N": 6129,
+      "observed_frequencies": [
+        0.29156469244574973,
+        0.49583945178658834,
+        0.21259585576766193
+      ],
+      "p_A": 0.5394844183390439,
+      "expected_frequencies": [
+        0.2910434376306166,
+        0.49688196141685476,
+        0.2120746009525287
+      ],
+      "expected_counts": [
+        1783.805229238049,
+        3045.3895415239026,
+        1299.8052292380485
+      ],
+      "chi2": 0.02698008484946643,
+      "df": 1,
+      "p_asymptotic": 0.8695294951169857,
+      "p_exact": 0.8774204675149778,
+      "F": 0.0020981031939532047
+    },
+    "02_wahlund": {
+      "within_H": 0.32,
+      "pooled_expected_H": 0.5,
+      "pooled_deficit_F": 0.36,
+      "heterozygosity_Fst": 0.36
+    },
+    "03_sfs": {
+      "singletons": {
+        "n": 10,
+        "S": 10,
+        "theta_W_region": 3.5348576237901534,
+        "pi_region": 2.0,
+        "Tajima_D": -1.9245824474724218,
+        "theta_H_region": 0.2222222222222222
+      },
+      "intermediate": {
+        "n": 10,
+        "S": 10,
+        "theta_W_region": 3.5348576237901534,
+        "pi_region": 5.555555555555555,
+        "Tajima_D": 2.5337853562704287,
+        "theta_H_region": 5.555555555555555
+      },
+      "high_derived": {
+        "n": 10,
+        "S": 10,
+        "theta_W_region": 3.5348576237901534,
+        "pi_region": 2.0,
+        "Tajima_D": -1.9245824474724218,
+        "theta_H_region": 18.0
+      }
+    },
+    "04_ld": {
+      "D0": 0.15000000000000002,
+      "r_squared0": 0.3600000000000001,
+      "D_after_10_c01": 0.05230176601500002
+    },
+    "05_drift": {
+      "50": {
+        "empirical_variance": 0.0020966002855899997,
+        "theory_variance": 0.0021
+      },
+      "5000": {
+        "empirical_variance": 2.1110338593884002e-05,
+        "theory_variance": 2.1e-05
+      }
+    },
+    "06_coalescent": {
+      "mean_TMRCA_generations": 35845.21890656767,
+      "theory_TMRCA": 36000.0,
+      "mean_total_branch": 112700.95763842207,
+      "theory_total_branch": 113158.73015873015
+    },
+    "07_exercise4_ttest": {
+      "mean_MM": 68.1888888888889,
+      "mean_Mm": 62.57777777777777,
+      "variance_MM": 8.531111111111102,
+      "variance_Mm": 10.55444444444444,
+      "difference": 5.6111111111111285,
+      "pooled_t": 3.8531660074334666,
+      "df": 16,
+      "pooled_p": 0.0014059087972112477,
+      "welch_t": 3.8531660074334666,
+      "welch_df": 15.822175556097543,
+      "welch_p": 0.001431821642202614,
+      "mean_difference_95CI": [
+        2.5240330677524847,
+        8.698189154469773
+      ]
+    },
+    "08_exercise5_genotype_association": {
+      "table": [
+        [
+          45,
+          10,
+          5
+        ],
+        [
+          15,
+          10,
+          5
+        ],
+        [
+          5,
+          0,
+          5
+        ]
+      ],
+      "expected": [
+        [
+          39.0,
+          12.0,
+          9.0
+        ],
+        [
+          19.5,
+          6.0,
+          4.5
+        ],
+        [
+          6.5,
+          2.0,
+          1.5
+        ]
+      ],
+      "chi2": 17.307692307692307,
+      "df": 4,
+      "asymptotic_p": 0.0016841576473362397,
+      "fixed_margin_MC_p": 0.0019199808001919981,
+      "MC_replicates": 100000,
+      "MC_standard_error_approx": 0.000138430288373567,
+      "p_A": 0.75,
+      "p_B": 0.75,
+      "D_possible_min_max": [
+        0.012499999999999956,
+        0.0625
+      ],
+      "r2_possible_min_max": [
+        0.004444444444444413,
+        0.1111111111111111
+      ]
+    },
+    "09_confounding": {
+      "unadjusted": {
+        "snp_beta": 1.4482389287297002,
+        "z_known_sigma1": 58.77351664409402,
+        "two_sided_p_float": 0.0,
+        "log10_two_sided_p": -751.9647836758553
+      },
+      "adjusted_known_group": {
+        "snp_beta": -0.06625733688751678,
+        "z_known_sigma1": -1.2884198725735059,
+        "two_sided_p_float": 0.19759984474579229,
+        "log10_two_sided_p": -0.7042134009734523
+      },
+      "true_direct_snp_effect": 0
+    },
+    "10_gls": {
+      "max_beta_difference": 1.249000902703301e-16
+    },
+    "11_abc": {
+      "simulations": 200000,
+      "accepted": 18324,
+      "ABC_mean": 0.6656190860834419,
+      "exact_Beta_8_4_mean": 0.6666666666666666,
+      "ABC_95_interval": [
+        0.38479339438973703,
+        0.8889062871188708
+      ],
+      "exact_95_interval": [
+        0.39025744042757876,
+        0.8907365561809019
+      ]
+    },
+    "12_poolseq": {
+      "100": {
+        "empirical_variance": 0.0049869684,
+        "theory_variance": 0.004975,
+        "incorrect_read_only_variance": 0.0025,
+        "infinite_depth_floor": 0.0025
+      },
+      "1000": {
+        "empirical_variance": 0.0027382880655831003,
+        "theory_variance": 0.0027475,
+        "incorrect_read_only_variance": 0.00025,
+        "infinite_depth_floor": 0.0025
+      },
+      "10000": {
+        "empirical_variance": 0.002530191072170544,
+        "theory_variance": 0.00252475,
+        "incorrect_read_only_variance": 2.5e-05,
+        "infinite_depth_floor": 0.0025
+      }
+    },
+    "13_scan_permutation": {
+      "n": 80,
+      "markers": 100,
+      "permutations": 2000,
+      "pointwise_lod95_first_marker": 0.8798495987465612,
+      "genome_max_lod95": 2.730042110529534
+    }
+  }
+}

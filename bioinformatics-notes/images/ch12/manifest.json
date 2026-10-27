@@ -1,0 +1,337 @@
+{
+  "source_pdf": "生物信息学/生物信息学_第十二章_新类型组学数据分析与利用.pdf",
+  "page_to_printed": "printed = PDF page + 285",
+  "coordinate_width": 1438,
+  "figures": {
+    "fig12-00": {
+      "pdf_page": 1,
+      "printed_page": 286,
+      "box": [
+        285,
+        760,
+        1280,
+        1290
+      ]
+    },
+    "fig12-01": {
+      "pdf_page": 4,
+      "printed_page": 289,
+      "box": [
+        222,
+        432,
+        1238,
+        1712
+      ]
+    },
+    "fig12-02": {
+      "pdf_page": 7,
+      "printed_page": 292,
+      "box": [
+        165,
+        212,
+        1262,
+        720
+      ]
+    },
+    "fig12-03": {
+      "pdf_page": 8,
+      "printed_page": 293,
+      "box": [
+        795,
+        205,
+        1278,
+        728
+      ]
+    },
+    "fig12-04": {
+      "pdf_page": 8,
+      "printed_page": 293,
+      "box": [
+        183,
+        903,
+        1270,
+        1332
+      ]
+    },
+    "fig12-05": {
+      "pdf_page": 9,
+      "printed_page": 294,
+      "box": [
+        248,
+        1055,
+        1178,
+        1722
+      ]
+    },
+    "fig12-06": {
+      "pdf_page": 10,
+      "printed_page": 295,
+      "box": [
+        175,
+        1025,
+        1255,
+        1690
+      ]
+    },
+    "fig12-07": {
+      "pdf_page": 11,
+      "printed_page": 296,
+      "box": [
+        325,
+        835,
+        1095,
+        1440
+      ]
+    },
+    "fig12-08": {
+      "pdf_page": 13,
+      "printed_page": 298,
+      "box": [
+        340,
+        195,
+        1085,
+        860
+      ]
+    },
+    "fig12-09": {
+      "pdf_page": 13,
+      "printed_page": 298,
+      "box": [
+        185,
+        1055,
+        665,
+        1565
+      ]
+    },
+    "fig12-10": {
+      "pdf_page": 15,
+      "printed_page": 300,
+      "box": [
+        205,
+        845,
+        1250,
+        1770
+      ]
+    },
+    "fig12-11a": {
+      "pdf_page": 16,
+      "printed_page": 301,
+      "box": [
+        170,
+        1385,
+        1285,
+        1640
+      ]
+    },
+    "fig12-11b": {
+      "pdf_page": 17,
+      "printed_page": 302,
+      "box": [
+        150,
+        205,
+        1270,
+        1125
+      ]
+    },
+    "fig12-12": {
+      "pdf_page": 20,
+      "printed_page": 305,
+      "box": [
+        295,
+        420,
+        1185,
+        1475
+      ]
+    },
+    "fig12-13": {
+      "pdf_page": 21,
+      "printed_page": 306,
+      "box": [
+        340,
+        200,
+        1080,
+        700
+      ]
+    },
+    "fig12-14a": {
+      "pdf_page": 22,
+      "printed_page": 307,
+      "box": [
+        200,
+        700,
+        1235,
+        1705
+      ]
+    },
+    "fig12-14bc": {
+      "pdf_page": 23,
+      "printed_page": 308,
+      "box": [
+        210,
+        205,
+        1215,
+        1825
+      ]
+    },
+    "fig12-15": {
+      "pdf_page": 24,
+      "printed_page": 309,
+      "box": [
+        200,
+        215,
+        1262,
+        680
+      ]
+    },
+    "fig12-16": {
+      "pdf_page": 26,
+      "printed_page": 311,
+      "box": [
+        380,
+        935,
+        1075,
+        1385
+      ]
+    },
+    "fig12-17a": {
+      "pdf_page": 27,
+      "printed_page": 312,
+      "box": [
+        205,
+        700,
+        1210,
+        1405
+      ]
+    },
+    "fig12-17b": {
+      "pdf_page": 28,
+      "printed_page": 313,
+      "box": [
+        225,
+        215,
+        1225,
+        1050
+      ]
+    },
+    "fig12-18": {
+      "pdf_page": 29,
+      "printed_page": 314,
+      "box": [
+        285,
+        510,
+        1135,
+        1170
+      ]
+    },
+    "fig12-19": {
+      "pdf_page": 31,
+      "printed_page": 316,
+      "box": [
+        180,
+        210,
+        1262,
+        650
+      ]
+    },
+    "fig12-20": {
+      "pdf_page": 32,
+      "printed_page": 317,
+      "box": [
+        190,
+        205,
+        1265,
+        1265
+      ]
+    },
+    "fig12-21": {
+      "pdf_page": 33,
+      "printed_page": 318,
+      "box": [
+        175,
+        205,
+        1250,
+        1085
+      ]
+    },
+    "fig12-22": {
+      "pdf_page": 34,
+      "printed_page": 319,
+      "box": [
+        745,
+        205,
+        1285,
+        1120
+      ]
+    },
+    "fig12-24": {
+      "pdf_page": 38,
+      "printed_page": 323,
+      "box": [
+        705,
+        1385,
+        1285,
+        1820
+      ]
+    },
+    "fig12-23": {
+      "pdf_page": 38,
+      "printed_page": 323,
+      "box": [
+        310,
+        215,
+        1090,
+        720
+      ]
+    },
+    "fig12-25": {
+      "pdf_page": 41,
+      "printed_page": 326,
+      "box": [
+        265,
+        200,
+        1160,
+        1090
+      ]
+    },
+    "fig12-26": {
+      "pdf_page": 43,
+      "printed_page": 328,
+      "box": [
+        210,
+        580,
+        1210,
+        1355
+      ]
+    },
+    "fig12-27": {
+      "pdf_page": 44,
+      "printed_page": 329,
+      "box": [
+        165,
+        1100,
+        1275,
+        1725
+      ]
+    },
+    "fig12-28": {
+      "pdf_page": 46,
+      "printed_page": 331,
+      "box": [
+        190,
+        355,
+        1260,
+        935
+      ]
+    },
+    "history": {
+      "pdf_page": 47,
+      "printed_page": 332,
+      "box": [
+        285,
+        430,
+        1135,
+        830
+      ]
+    }
+  }
+}

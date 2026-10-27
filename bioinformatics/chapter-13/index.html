@@ -1,0 +1,2400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.agiopan.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="樊龙江《生物信息学》（第二版）学习笔记 · 第 13 章。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第 13 章 群体遗传分析：学习笔记">
+<meta property="og:url" content="https://blog.agiopan.cn/bioinformatics/chapter-13/index.html">
+<meta property="og:site_name" content="Blog of AgioPan">
+<meta property="og:description" content="樊龙江《生物信息学》（第二版）学习笔记 · 第 13 章。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-00.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-01.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-02.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-03.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-04.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-05.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-06.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-07.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-08.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-09.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-10.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-11.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-12.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-13.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-14.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/history-malecot.png">
+<meta property="og:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/history-cockerham.png">
+<meta property="article:published_time" content="2026-10-27T04:13:00.000Z">
+<meta property="article:modified_time" content="2026-10-27T04:13:00.000Z">
+<meta property="article:author" content="AgioPan">
+<meta property="article:tag" content="生物信息">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.agiopan.cn/bioinformatics-notes/images/ch13/fig13-00.png">
+
+<link rel="canonical" href="https://blog.agiopan.cn/bioinformatics/chapter-13/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>第 13 章 群体遗传分析：学习笔记 | Blog of AgioPan</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog of AgioPan</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-academic">
+
+    <a href="https://agiopan.cn/" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Academic</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.agiopan.cn/bioinformatics/chapter-13/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="AgioPan">
+      <meta itemprop="description" content="Solving equations, decoding life, exploring minds.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog of AgioPan">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第 13 章 群体遗传分析：学习笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-10-27 12:13:00" itemprop="dateCreated datePublished" datetime="2026-10-27T12:13:00+08:00">2026-10-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Notes/Bioinfomatics/" itemprop="url" rel="index"><span itemprop="name">Bioinfomatics</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>樊龙江《生物信息学》（第二版）学习笔记 · 第 13 章。</p>
+<span id="more"></span>
+
+<p><a href="/bioinformatics/chapter-02/">第 2 章</a> · <a href="/bioinformatics/chapter-03/">第 3 章</a> · <a href="/bioinformatics/chapter-04/">第 4 章</a> · <a href="/bioinformatics/chapter-05/">第 5 章</a> · <a href="/bioinformatics/chapter-06/">第 6 章</a> · <a href="/bioinformatics/chapter-07/">第 7 章</a> · <a href="/bioinformatics/chapter-08/">第 8 章</a> · <a href="/bioinformatics/chapter-09/">第 9 章</a> · <a href="/bioinformatics/chapter-10/">第 10 章</a> · <a href="/bioinformatics/chapter-11/">第 11 章</a> · <a href="/bioinformatics/chapter-12/">第 12 章</a> · <a href="/bioinformatics/chapter-13/">第 13 章</a> · <a href="/bioinformatics/chapter-14/">第 14 章</a></p>
+<hr>
+<blockquote>
+<p>教材：樊龙江主编《生物信息学》第二版（科学出版社，2021），第 13 章，印刷页 334–374。<br>标签：【重点】【易错】【现代实践】【AI4S】【已核实】【需查证】【补充推导】【研究设想】。<br>2026-10-23 审校；2026-10-27 续审。</p>
+</blockquote>
+<h2 id="0-教材范围与勘误"><a href="#0-教材范围与勘误" class="headerlink" title="0. 教材范围与勘误"></a>0. 教材范围与勘误</h2><p>本章依次讨论群体多样性与结构、自然选择检验、溯祖与人口史，以及数量性状的连锁和关联分析。</p>
+<table>
+<thead>
+<tr>
+<th>教材部分</th>
+<th>印刷页</th>
+<th>本笔记位置</th>
+<th>重点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>群体遗传多态性与结构</td>
+<td>334—339</td>
+<td>§2</td>
+<td>HWE、<span class="math">\(F\)</span> 统计量、<span class="math">\(\pi\)</span>、<span class="math">\(\theta\)</span>、PCA、祖源模型、LD</td>
+</tr>
+<tr>
+<td>自然选择统计检验</td>
+<td>339—347</td>
+<td>§3</td>
+<td>SFS、单倍型、分化、系谱、MK&#x2F;HKA&#x2F;<span class="math">\(d_N/d_S\)</span></td>
+</tr>
+<tr>
+<td>种群历史溯祖分析</td>
+<td>347—355</td>
+<td>§4</td>
+<td>Wright–Fisher、Kingman、ARG、ABC、SFS、PSMC&#x2F;MSMC&#x2F;SMC++</td>
+</tr>
+<tr>
+<td>数量遗传：QTL</td>
+<td>355—362</td>
+<td>§5.1—5.4</td>
+<td>作图群体、混合似然、CIM&#x2F;ICIM&#x2F;MCIM、置换</td>
+</tr>
+<tr>
+<td>数量遗传：GWAS</td>
+<td>362—369</td>
+<td>§5.5—5.10</td>
+<td>回归、TDT、LMM、多位点、k-mer、文件与 QC</td>
+</tr>
+<tr>
+<td>数量遗传：BSA</td>
+<td>369—372</td>
+<td>§5.11</td>
+<td>混池、SNP-index、两层抽样、分级池、BRM</td>
+</tr>
+<tr>
+<td>5 道习题</td>
+<td>372</td>
+<td>§10</td>
+<td>2 道综述、3 道完整数值解答</td>
+</tr>
+<tr>
+<td>历史与人物</td>
+<td>373—374</td>
+<td>§12</td>
+<td>Malécot、Cockerham、IBD 与方差分解</td>
+</tr>
+</tbody></table>
+<h3 id="0-1-先修正会影响建模的内容"><a href="#0-1-先修正会影响建模的内容" class="headerlink" title="0.1 先修正会影响建模的内容"></a>0.1 先修正会影响建模的内容</h3><table>
+<thead>
+<tr>
+<th>位置</th>
+<th>原述或容易误读处</th>
+<th>本笔记处理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>p335</td>
+<td>HWE 条件仅列随机交配、群体不变等</td>
+<td>区分“随机配子结合产生的基因型比例”与“等位频率长期不变”；后者还涉及选择、迁移、突变、漂变</td>
+</tr>
+<tr>
+<td>p335—336</td>
+<td><span class="math">\(F\)</span> 与 <span class="math">\(F_{ST}\)</span> 紧接着出现</td>
+<td><span class="math">\(F_{IS}\)</span> 的杂合缺失与群体间 <span class="math">\(F_{ST}\)</span> 不是同一个量；<span class="math">\(F_{ST}\)</span> 估计值可能因抽样出现负值</td>
+</tr>
+<tr>
+<td>p336</td>
+<td>无限位点模型被定义成无重组</td>
+<td>无限位点约束的是突变不重复命中同一位置；无重组是另外的假设，影响方差与连锁</td>
+</tr>
+<tr>
+<td>p336 式 13.9</td>
+<td><span class="math">\(q\)</span> 被定义为不同等位型数，却写 <span class="math">\(q/(q-1)\)</span> 修正</td>
+<td>有限样本的常用无偏修正是 <span class="math">\(n/(n-1)\)</span>，<span class="math">\(n\)</span> 为抽到的序列拷贝数；见§2.4</td>
+</tr>
+<tr>
+<td>p338</td>
+<td><span class="math">\(\Delta K\)</span> 峰等于真实亚群数量</td>
+<td>它是启发式准则，不能检验 <span class="math">\(K=1\)</span>；需重复运行、标签对齐和模型诊断</td>
+</tr>
+<tr>
+<td>p338</td>
+<td>基因流与 <span class="math">\(F_{ST}\)</span>&#x2F;地理距离普遍成反比</td>
+<td>只在特定迁移—漂变平衡模型下有近似关系；不能从任意 <span class="math">\(F_{ST}\)</span> 直接反推迁移率</td>
+</tr>
+<tr>
+<td>p340</td>
+<td>适合度只定义为存活概率；<span class="math">\(s\)</span>、<span class="math">\(h\)</span> 和 <span class="math">\(A_1/A_2\)</span> 文字混乱</td>
+<td>适合度涉及对下一代的相对遗传贡献；统一写出基因型表再推导</td>
+</tr>
+<tr>
+<td>p340</td>
+<td><span class="math">\(1\)</span>、<span class="math">\(1-hs\)</span>、<span class="math">\(1-s\)</span> 下，<span class="math">\(s&gt;0\)</span> 且 <span class="math">\(h&gt;1\)</span> 为杂合优势</td>
+<td>此时杂合子反而低于两个纯合子；<span class="math">\(s&gt;0\)</span> 下杂合优势要求 <span class="math">\(h&lt;0\)</span>，且适合度须非负</td>
+</tr>
+<tr>
+<td>p341—345</td>
+<td>中性检验显著、长单倍型、高 <span class="math">\(F_{ST}\)</span> 等被直接联系选择</td>
+<td>先说明完整零模型；人口史、结构、重组、测序误差可造成相似图样</td>
+</tr>
+<tr>
+<td>p344—345</td>
+<td>选择“总是”增加 IBD</td>
+<td>该推导有具体初始条件和模型，不推广到所有选择方式及历史阶段</td>
+</tr>
+<tr>
+<td>p346</td>
+<td>MK 不受种群大小等影响</td>
+<td>弱有害变异及人口史变化等仍会影响解释，不能当作无假设检验</td>
+</tr>
+<tr>
+<td>p347</td>
+<td>溯祖时间“呈指数增长”</td>
+<td>等待时间近似服从指数分布，均值随谱系数减少而变长；不是时间按指数规律增长</td>
+</tr>
+<tr>
+<td>p348</td>
+<td>小样本反映整个群体 MRCA；ABC 从统计量先验抽样</td>
+<td>样本 MRCA 不同于全群体 MRCA；ABC 通常从参数&#x2F;模型先验抽样，再生成数据</td>
+</tr>
+<tr>
+<td>p349、354</td>
+<td>模拟规模、MSMC 最多 8 条等被写成固定上限</td>
+<td>属于当时版本和实践背景；现代算法、目标精度、资源不同，不能作理论上限</td>
+</tr>
+<tr>
+<td>p351</td>
+<td>folded SFS 用于解决缺失数据</td>
+<td>折叠处理祖先状态未知；缺失需 mask、投影、似然或合理过滤单独处理</td>
+</tr>
+<tr>
+<td>p352</td>
+<td>AIC 权重最高即真实起源</td>
+<td>仅为候选模型集合中的相对支持；复合似然相关性、模型遗漏、参数不确定性都要检查</td>
+</tr>
+<tr>
+<td>p354</td>
+<td>重测序比对后“是定相的”，随后又说无法知道组合</td>
+<td>普通变异调用常为未定相；0&#x2F;1 与 0|1 不同。图 13.9 若不区分两条同源染色体标签，只有两种不同配对</td>
+</tr>
+<tr>
+<td>p355</td>
+<td>SMC++不需定相，因此一定更准；近期阈值以年固定</td>
+<td>优势有适用条件，时间还依赖 <span class="math">\(\mu\)</span>、世代长度、历史模型与数据质量</td>
+</tr>
+<tr>
+<td>p355</td>
+<td>数量性状通常呈连续正态分布，容易被当成普遍规律</td>
+<td>数量性状可以偏态、多峰或受限；正态通常是某个回归模型的条件残差近似</td>
+</tr>
+<tr>
+<td>p362 表 13.3</td>
+<td>case 行出现重复 <span class="math">\(n_{12}\)</span></td>
+<td>按列索引应为 <span class="math">\(n_{10}\)</span>、<span class="math">\(n_{11}\)</span>、<span class="math">\(n_{12}\)</span>；检验对象是 2×3 列联表</td>
+</tr>
+<tr>
+<td>p363</td>
+<td>标准连接函数 <span class="math">\(\log[(1-p)/p]\)</span>；概率式加入普通残差</td>
+<td>常用 logit 为 <span class="math">\(\log[p/(1-p)]\)</span>，与 sigmoid 互逆；随机性由 Bernoulli 响应表示</td>
+</tr>
+<tr>
+<td>p364</td>
+<td>TDT 要求患病且杂合的亲本</td>
+<td>经典设计围绕患病子代及其亲本，提供传递信息的亲本需杂合，不要求亲本也患病</td>
+</tr>
+<tr>
+<td>p364</td>
+<td>高斯 LMM 与 GLMM 的参数估计方法混写</td>
+<td>高斯 LMM 常用 ML&#x2F;REML；PQL&#x2F;PIRLS 主要与非高斯扩展等有关</td>
+</tr>
+<tr>
+<td>p367</td>
+<td>Bonferroni 不准确就不适用</td>
+<td>有效单检验 <span class="math">\(p\)</span> 值下 Bonferroni 不要求独立；强相关时通常保守，置换阈值需满足可交换性</td>
+</tr>
+<tr>
+<td>p369—372</td>
+<td>混池个体数、深度与表型分布给出固定要求</td>
+<td>依群体类型、效应大小、重组和抽样设计确定；reads 不能替代生物个体</td>
+</tr>
+</tbody></table>
+<p>这些修正按定义、公式内部一致性、页面核对及外部方法来源分别判断。对无法直接验证的历史案例，保留“教材报告”的限定，不自行补造证据。</p>
+<h3 id="0-2-三遍读法"><a href="#0-2-三遍读法" class="headerlink" title="0.2 三遍读法"></a>0.2 三遍读法</h3><p>第一遍读§1—5，回答“测到了什么、想推断什么”。第二遍读§6—7，手算并运行模型。第三遍读§8—11，检查可辨识性、模型失配和研究设计。学习时可先分清个体、单倍型、位点、基因组窗口和重复实验。</p>
+<h2 id="1-本章定位与知识地图"><a href="#1-本章定位与知识地图" class="headerlink" title="1. 本章定位与知识地图"></a>1. 本章定位与知识地图</h2><p><img src="/bioinformatics-notes/images/ch13/fig13-00.png" alt="教材章首知识图"></p>
+<p><em>章首知识图，p334；扫码说明为原页面的一部分。自然群体与实验群体提供不同历史和重组信息，不能直接共用同一套零模型。</em></p>
+<p>本章讨论的是：今天看到的遗传变异，如何由突变、漂变、迁移、重组、选择和采样共同产生；又怎样利用这些变异理解性状。</p>
+<table>
+<thead>
+<tr>
+<th>科学问题</th>
+<th>观测</th>
+<th>隐含对象</th>
+<th>常见计算方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>群体有多大差异？</td>
+<td>基因型&#x2F;等位计数</td>
+<td>群体频率、亲缘与结构</td>
+<td><span class="math">\(\pi\)</span>、<span class="math">\(F_{ST}\)</span>、PCA、混合模型</td>
+</tr>
+<tr>
+<td>哪些区域受过选择？</td>
+<td>SFS、单倍型、种间差异</td>
+<td>选择方式、强度、时间</td>
+<td>假设检验、复合似然、模拟分类</td>
+</tr>
+<tr>
+<td>历史上群体怎样变化？</td>
+<td>全基因组变异</td>
+<td><span class="math">\(N_{e}\)</span>(<span class="math">\(t\)</span>)、分化、迁移、局部树</td>
+<td>溯祖、HMM、SFS 似然、ABC</td>
+</tr>
+<tr>
+<td>哪些区域与性状相关？</td>
+<td>基因型＋表型＋设计</td>
+<td>QTL 位置、效应、遗传背景</td>
+<td>回归、混合似然、LMM</td>
+</tr>
+<tr>
+<td>哪些材料值得选择？</td>
+<td>标记＋历史表型</td>
+<td>新个体遗传值</td>
+<td>第 12 章 GP&#x2F;GS，重在外推预测</td>
+</tr>
+</tbody></table>
+<h3 id="1-1-CS-学生需要建立的三层模型-【重点】"><a href="#1-1-CS-学生需要建立的三层模型-【重点】" class="headerlink" title="1.1 CS 学生需要建立的三层模型 【重点】"></a>1.1 CS 学生需要建立的三层模型 【重点】</h3><p>进化过程怎样产生数据：参数 <span class="math">\(\eta\)</span> 控制历史、选择、重组，产生基因谱系和真实基因型。</p>
+<p>测序与处理怎样改变观测：测序深度、比对、参考偏倚、定相与缺失，将真实基因型变成我们分析的数据 <span class="math">\(X\)</span>。</p>
+<p>怎样从观测进行推断：统计量或神经网络由 <span class="math">\(X\)</span> 推断 <span class="math">\(\eta\)</span>、候选区域或性状，输出必须经校准与独立验证。</p>
+<p>因此模拟训练数据时不能只生成完美 0&#x2F;1 矩阵。若真实数据含低覆盖、缺失和参考偏倚，而训练模拟没有，网络可能在模拟中表现很好，却不能识别真实历史。</p>
+<h3 id="1-2-与前几章和-VirusBin-的衔接"><a href="#1-2-与前几章和-VirusBin-的衔接" class="headerlink" title="1.2 与前几章和 VirusBin 的衔接"></a>1.2 与前几章和 VirusBin 的衔接</h3><ul>
+<li>第 2—7 章提供读序、变异调用、组装、单倍型和图算法；本章依赖这些输入正确。</li>
+<li>第 10 章提供回归、协变量、多重检验和因果解释边界；GWAS 是这些问题在遗传数据中的实例。</li>
+<li>第 11 章提供采样、组成、异质性与分箱；群体结构同样说明“相似不一定来自同一种机制”。</li>
+<li>第 12 章的 GBLUP 与本章 LMM 共享数学结构，但一个主要预测遗传值，一个主要检验某个标记效应。</li>
+<li>对 VirusBin，近缘株系、重组和水平转移会破坏“一个基因组只有一棵树&#x2F;一个稳定组成模式”的简化；迁移思想要先核对生物单位。</li>
+</ul>
+<h2 id="2-第一节-群体遗传多态性与结构分析"><a href="#2-第一节-群体遗传多态性与结构分析" class="headerlink" title="2. 第一节 群体遗传多态性与结构分析"></a>2. 第一节 群体遗传多态性与结构分析</h2><h3 id="2-1-群体、位点、等位基因与单倍型-【重点】"><a href="#2-1-群体、位点、等位基因与单倍型-【重点】" class="headerlink" title="2.1 群体、位点、等位基因与单倍型 【重点】"></a>2.1 群体、位点、等位基因与单倍型 【重点】</h3><p>位点是基因组位置；等位基因是该位点的不同状态；基因型描述一个个体在该位点的拷贝组合；单倍型描述同一条染色体上多个位点的联合状态。</p>
+<p>对二倍体常染色体、<span class="math">\(N\)</span> 个无缺失个体，一个双等位位点有 <span class="math">\(2N\)</span> 个拷贝。若 AA、Aa、aa 计数分别为 <span class="math">\(n_{AA}\)</span>、<span class="math">\(n_{Aa}\)</span>、<span class="math">\(n_{aa}\)</span>：</p>
+<div class="math">\[
+\hat p_A=\frac{2n_{AA}+n_{Aa}}{2N},\qquad \hat p_a=1-\hat p_A.
+\]</div>
+
+<p>频率的分母必须与对象一致：基因型频率除以 <span class="math">\(N\)</span>，等位频率除以 <span class="math">\(2N\)</span>。单倍体、多倍体、性染色体、部分缺失都需要改变分母。VCF 中的 REF 只是参考序列状态，ALT 不自动等于衍生状态或有害状态；minor 也不自动等于 derived。</p>
+<p>教材用 1% 区分“多态”与罕见变异是历史惯例。实际分析要明确 MAF&#x2F;MAC 过滤阈值，罕见变异仍然是真实遗传变异，尤其可能携带人口史与选择信息。</p>
+<h3 id="2-2-Hardy–Weinberg-平衡与固定系数-【重点】"><a href="#2-2-Hardy–Weinberg-平衡与固定系数-【重点】" class="headerlink" title="2.2 Hardy–Weinberg 平衡与固定系数 【重点】"></a>2.2 Hardy–Weinberg 平衡与固定系数 【重点】</h3><p>随机抽取两个配子，若 A 频率为 <span class="math">\(p\)</span>、<span class="math">\(a\)</span> 为 <span class="math">\(q=1-p\)</span>，则合子基因型概率为：</p>
+<div class="math">\[
+P(AA)=p^2,\quad P(Aa)=2pq,\quad P(aa)=q^2.
+\]</div>
+
+<p>这是两次独立配子抽样的乘法规则。随机交配可使一个位点恢复此比例，但选择、迁移等仍能改变代际 <span class="math">\(p\)</span>；观察到 HWE 比例不等于群体从未受过选择，也不等于多个位点处于连锁平衡。</p>
+<p>用 <span class="math">\(F\)</span> 参数描述杂合缺失：</p>
+<div class="math">\[
+P(AA)=p^2+Fpq,\quad P(Aa)=2pq(1-F),\quad P(aa)=q^2+Fpq,
+\]</div>
+
+<div class="math">\[
+F=1-H_O/H_E,\qquad H_E=2pq.
+\]</div>
+
+<span class="math">\(F&gt;0\)</span> 表示相对于指定参考群体的杂合缺失，<span class="math">\(F&lt;0\)</span> 表示杂合过量；<span class="math">\(F\)</span> 的可行范围还受三种概率非负约束。缺失原因可以是近交、群体混合、基因分型错误等，不能只归因于近交。
+
+<p>Wahlund 效应：两个同样大小的亚群，各自在 HWE，<span class="math">\(p\)</span> 分别为 0.2 和 0.8，群内杂合率都是 0.32。混合后 <span class="math">\(p=0.5\)</span>，若忽略亚群，HWE 期望为 0.5，而实际仍为 0.32，得到 <span class="math">\(F=0.36\)</span>。混合操作本身就制造了“相对 HWE 的缺失”。</p>
+<p>HWE 检验。 从同一数据估计 <span class="math">\(p\)</span> 后，三类计数的 Pearson 拟合优度检验自由度是 <span class="math">\(3-1-1=1\)</span>。低频位点尤其要注意渐近近似，可使用条件精确检验；样本很大也不能只凭 <span class="math">\(N\)</span> 判断近似可靠。病例组、亚群、近亲样本的过滤策略需结合研究目的。<a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/15789306/">Wigginton 等，2005</a></p>
+<h3 id="2-3-、、-与分化-【重点】"><a href="#2-3-、、-与分化-【重点】" class="headerlink" title="2.3 、、 与分化 【重点】"></a>2.3 <span class="math">\(F_{IS}\)</span>、<span class="math">\(F_{ST}\)</span>、<span class="math">\(F_{IT}\)</span> 与分化 【重点】</h3><p>用 <span class="math">\(H_{I}\)</span> 表示个体层面的平均观测杂合度，<span class="math">\(H_{S}\)</span> 表示各亚群内按频率计算的平均期望杂合度，<span class="math">\(H_{T}\)</span> 表示合并频率下的总期望杂合度。概念性定义为：</p>
+<div class="math">\[
+F_{IS}=1-\frac{H_I}{H_S},\quad F_{ST}=1-\frac{H_S}{H_T},\quad F_{IT}=1-\frac{H_I}{H_T},
+\]</div>
+
+<div class="math">\[
+1-F_{IT}=(1-F_{IS})(1-F_{ST}).
+\]</div>
+
+<table>
+<thead>
+<tr>
+<th>统计量</th>
+<th>比较</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><span class="math">\(F_{IS}\)</span></td>
+<td>个体相对亚群</td>
+<td>群内杂合缺失&#x2F;过量</td>
+</tr>
+<tr>
+<td><span class="math">\(F_{ST}\)</span></td>
+<td>亚群相对总群体</td>
+<td>群间频率差异占总变异的相对程度</td>
+</tr>
+<tr>
+<td><span class="math">\(F_{IT}\)</span></td>
+<td>个体相对总群体</td>
+<td>两个层次共同作用</td>
+</tr>
+</tbody></table>
+<p>这些比例解释不等于直接复现 Weir–Cockerham 估计量。实际估计要处理样本量、亚群权重、位点间汇总和有限样本修正；“先逐位点求比值再平均”与“先累积分子分母再求比值”一般不同。理论分化量的非负性质，不排除某些无偏&#x2F;近无偏估计出现负值；报告软件定义及处理方式。</p>
+<span class="math">\(F_{ST}\)</span> 不是绝对距离。 它依赖群内多样性；同样的群间差异，在不同 <span class="math">\(H_{S}\)</span> 下可得到不同 <span class="math">\(F_{ST}\)</span>。扫描时可同时检查 <span class="math">\(\pi\)</span>、群间每位点差异 <span class="math">\(d_{XY}\)</span>、覆盖和重组背景。高 <span class="math">\(F_{ST}\)</span> 可以提示局部分化，但可能来自漂变、低重组或背景选择，并非自动证明局部适应。
+
+<p>经典对称海岛、漂变—迁移平衡模型可导出类似 <span class="math">\(F_{ST}\approx1/(4N_em+1)\)</span> 的近似。它不是普适换算式；近期分化、非对称迁移、自交、选择和结构会改变关系。Nm 在该模型中是有效迁入量的尺度，不是“基因流”概念的全部。</p>
+<h3 id="2-4-分离位点-、核苷酸多样性-与-【重点】"><a href="#2-4-分离位点-、核苷酸多样性-与-【重点】" class="headerlink" title="2.4 分离位点 、核苷酸多样性  与  【重点】"></a>2.4 分离位点 <span class="math">\(S\)</span>、核苷酸多样性 <span class="math">\(\pi\)</span> 与 <span class="math">\(\theta\)</span> 【重点】</h3><p><img src="/bioinformatics-notes/images/ch13/fig13-01.png" alt="图 13.1 分离位点"></p>
+<p><em>图 13.1，p336。按列寻找不同碱基；同一个变异位点不因多个样本携带而重复计入 <span class="math">\(S\)</span>。箭头只是所示联配的变异位置，不能用截图代替原始联配进行可靠定量。</em></p>
+<p>设 <span class="math">\(n\)</span> 为单倍型序列条数，<span class="math">\(L\)</span> 为可比较序列长度，<span class="math">\(S\)</span> 为分离位点数，<span class="math">\(d_{ij}\)</span> 为序列 <span class="math">\(i\)</span> 与 <span class="math">\(j\)</span> 的差异碱基数：</p>
+<div class="math">\[
+\hat\pi=\frac{1}{L{n\choose2}}\sum_{i&lt;j}d_{ij}.
+\]</div>
+
+<p>对于无缺失双等位位点，观察频率为 <span class="math">\(\hat p\)</span> 时，每位点的有限样本修正为 <span class="math">\(\frac{n}{n-1}2\hat p(1-\hat p)\)</span>。若按不同单倍型频率 <span class="math">\(x_{i}\)</span> 归并：</p>
+<div class="math">\[
+\hat\pi=\frac{n}{n-1}\sum_i\sum_j\hat x_i\hat x_j d_{ij}^{(\mathrm{per\ site})}.
+\]</div>
+
+<p>修正因子中的 <span class="math">\(n\)</span> 是抽样序列数，不是不同单倍型类别数。<span class="math">\(\pi\)</span> 的总体定义不以样本数为参数，但估计精度、偏差和可检出变异会受样本量与观测质量影响。</p>
+<p>在中性、恒定有效群体、随机交配等经典假设下，二倍体常染色体每位点参数 <span class="math">\(\theta=4N_e\mu\)</span>。令 <span class="math">\(a_1=\sum_{i=1}^{n-1}1/i\)</span>：</p>
+<div class="math">\[
+E[S]=a_1\theta L,\qquad \hat\theta_W=\frac{S}{a_1L},\qquad E[\hat\pi]=\theta.
+\]</div>
+
+<span class="math">\(S\)</span> 随 <span class="math">\(n\)</span> 增加而增加；Watterson 估计通过 <span class="math">\(a_{1}\)</span> 校正这种依赖。<span class="math">\(\theta _{W}\)</span> 和 <span class="math">\(\pi\)</span> 都估计 <span class="math">\(\theta\)</span>，但对频率谱的权重不同，这正是 Tajima’s <span class="math">\(D\)</span> 的基础。
+
+<p>单位陷阱。 <span class="math">\(\Theta=4N_e\mu L\)</span> 是整个区域的参数，<span class="math">\(\theta=4N_e\mu\)</span> 是每位点参数；平均差异数 <span class="math">\(k=\pi L\)</span>。把区域总数与每位点值代入同一个差值&#x2F;方差会造成严重错误。<span class="math">\(\mu\)</span> 单位通常为每位点每代，不是每年。</p>
+<p>callable 长度比“VCF 有多少行”重要。 只含变异位点的 VCF 不提供全部可靠不变位点。不能用 SNP 行数当 <span class="math">\(L\)</span>，也不能把无覆盖位置当纯合参考。跨窗口比较应使用一致 callable mask；缺失导致每个位点样本数不同，要用明确的缺失处理&#x2F;投影方法，而不是把所有位点硬套一个 <span class="math">\(n\)</span>。</p>
+<h3 id="2-5-频率谱-SFS：把序列压缩成统计量-【重点】"><a href="#2-5-频率谱-SFS：把序列压缩成统计量-【重点】" class="headerlink" title="2.5 频率谱 SFS：把序列压缩成统计量 【重点】"></a>2.5 频率谱 SFS：把序列压缩成统计量 【重点】</h3><p>展开 SFS 中 <span class="math">\(\xi _{i}\)</span> 表示衍生等位基因恰好出现 <span class="math">\(i\)</span> 次的位点数，<span class="math">\(i=1,\ldots,n-1\)</span>。<span class="math">\(S=\sum_i\xi_i\)</span>；<span class="math">\(\xi _{1}\)</span> 是 singleton 数量。SFS 丢掉了位点顺序和单倍型连锁信息，因此不同历史可能具有相似 SFS。</p>
+<p>未知祖先状态时可用折叠谱，按 minor allele count 归类：<span class="math">\(\xi_i\)</span> 与 <span class="math">\(\xi_{n-i}\)</span> 合并，<span class="math">\(n\)</span> 为偶数时中间项只计一次。折叠解决方向不确定性；投影解决样本拷贝数不一致，两者不是同一步。</p>
+<p>联合 SFS 是多个群体的多维计数表，用于观察共享与私有变异。若群体样本拷贝数为 <span class="math">\(n_{1}\)</span>、<span class="math">\(n_{2}\)</span>，表的基本维度为 <span class="math">\((n_1+1)\times(n_2+1)\)</span>，是否保留边界、不变位点及如何折叠由方法定义。<a target="_blank" rel="noopener" href="https://tskit.dev/tskit/docs/stable/stats.html">tskit 统计接口</a></p>
+<p>MAF 过滤会系统删除谱的低频部分。用于 PCA 的 LD-pruned 常见 SNP 集合，通常不应原样交给人口史 SFS 模型；不同任务需要不同数据筛选记录。</p>
+<h3 id="2-6-群体结构模型与-PCA-【必须掌握】"><a href="#2-6-群体结构模型与-PCA-【必须掌握】" class="headerlink" title="2.6 群体结构模型与 PCA 【必须掌握】"></a>2.6 群体结构模型与 PCA 【必须掌握】</h3><p>教材列出的模型包括距离隔离、陆岛、海岛和阶石。它们对应连续空间、方向不对称迁移、群体间对称迁移或邻近迁移的不同简化。</p>
+<p>IBD 缩写有两个含义：此处 isolation by distance 是距离隔离；后文 identity by descent 是同祖遗传。读论文时必须看全称。</p>
+<p>对 <span class="math">\(N\)</span> 个个体、<span class="math">\(M\)</span> 个位点的剂量矩阵 <span class="math">\(G\)</span>，常见标准化为：</p>
+<div class="math">\[
+Z_{ij}=\frac{G_{ij}-2\hat p_j}{\sqrt{2\hat p_j(1-\hat p_j)}},\qquad K\approx ZZ^T/M.
+\]</div>
+
+<p>PCA 对 <span class="math">\(Z\)</span> 做 SVD，或对 <span class="math">\(K\)</span> 做特征分解。PC 是变化方向，不是“群体身份的真值”。轴的正负任意；批次、亲缘、长 LD 区、缺失和样本不均衡均可主导 PC。低频位点的缩放可能放大噪声，应核对过滤和标准化策略。</p>
+<p>实践顺序是先 QC、考虑亲缘、选择适当标记、LD pruning，再 PCA 并检查与已知元数据的关系。pruning 是为避免大 LD 块重复支配结构估计，不意味着 GWAS 只能测试这些 pruned 位点。</p>
+<h3 id="2-7-STRUCTURE-与-ADMIXTURE：模型分解，不是历史录像-【重点】"><a href="#2-7-STRUCTURE-与-ADMIXTURE：模型分解，不是历史录像-【重点】" class="headerlink" title="2.7 STRUCTURE 与 ADMIXTURE：模型分解，不是历史录像 【重点】"></a>2.7 STRUCTURE 与 ADMIXTURE：模型分解，不是历史录像 【重点】</h3><p>基础混合祖源近似中，<span class="math">\(q_{ik}\)</span> 表示个体 <span class="math">\(i\)</span> 的 <span class="math">\(K\)</span> 个成分权重，<span class="math">\(f_{kj}\)</span> 表示第 <span class="math">\(k\)</span> 成分在位点 <span class="math">\(j\)</span> 的等位频率：</p>
+<div class="math">\[
+p_{ij}=\sum_{k=1}^Kq_{ik}f_{kj},\quad \sum_kq_{ik}=1,\quad G_{ij}\sim\mathrm{Binomial}(2,p_{ij}).
+\]</div>
+
+<p>这是便于 CS 理解的简化。STRUCTURE 通过贝叶斯模型&#x2F;MCMC 推断，ADMIXTURE 采用似然优化；完整模型可有祖源、连锁及频率先验的不同设定。核心假设与位点依赖、群内 HWE 有关，不能忽略模型选项。</p>
+<span class="math">\(K\)</span> 选择：比较多个 <span class="math">\(K\)</span>、重复随机初值和拟合稳定性；匹配不同运行的成分标签后再比较，避免 label switching。Evanno <span class="math">\(\Delta K\)</span> 依赖 <span class="math">\(L\)</span>(<span class="math">\(K\)</span>)二阶差分，<span class="math">\(K=1\)</span> 没有需要的左邻点，因此不能由此排除单群体情形。[Evanno 等原论文](https://ms.mcmaster.ca/~bolker/eeid/evolution/Popgen_EEID_2012/References/Evanno_et_al_Delta_K_structure_2005.pdf)
+
+<p>柱状图中的颜色是模型成分，不必对应曾独立存在的真实祖先群体；连续地理梯度、漂变或参考群体缺失也会产生“混合”图样。用样本平衡、替代历史模拟和独立证据检查解释。<a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6092366">Lawson 等，2018</a></p>
+<p><img src="/bioinformatics-notes/images/ch13/fig13-02.png" alt="图 13.2 水稻及杂草稻群体结构"></p>
+<p><em>图 13.2，p339。A 中每根柱对应材料，先看分组、<span class="math">\(K\)</span> 和成分变化；<span class="math">\(B\)</span> 比较驯化&#x2F;非驯化区域 <span class="math">\(F_{ST}\)</span> 分布。原图为灰度，不能可靠按颜色逐类辨认。教材报告非驯化区域分化较强；这属于特定数据与区域定义下的结果，不能由一张柱图独立确认完整野化历史。</em></p>
+<h3 id="2-8-LD、相位、IBS-与-IBD-【重点】"><a href="#2-8-LD、相位、IBS-与-IBD-【重点】" class="headerlink" title="2.8 LD、相位、IBS 与 IBD 【重点】"></a>2.8 LD、相位、IBS 与 IBD 【重点】</h3><p>两个双等位位点的单倍型频率记为 <span class="math">\(f_{AB}\)</span>、<span class="math">\(f_{Ab}\)</span>、<span class="math">\(f_{aB}\)</span>、<span class="math">\(f_{ab}\)</span>：</p>
+<div class="math">\[
+D=f_{AB}-p_Ap_B=f_{AB}f_{ab}-f_{Ab}f_{aB},
+\]</div>
+
+<div class="math">\[
+r^2=\frac{D^2}{p_A(1-p_A)p_B(1-p_B)}.
+\]</div>
+
+<span class="math">\(D\)</span> 有方向、受等位频率约束；<span class="math">\(r^2\)</span> 是相关强度，频率为 0 或 1 时分母为 0，不能计算。<span class="math">\(D\)</span>′用 <span class="math">\(D\)</span> 的频率依赖可达极值标准化；|<span class="math">\(D\)</span>′|=1 不保证 <span class="math">\(r^2\)</span> 高，因此不保证一个标记能很好预测另一个标记。
+
+<p>物理连锁不等于 LD：连锁指遗传传递关系；LD 是特定群体中的非随机组合。不同染色体也可因混合或选择出现 LD，同染色体远距离位点也可近似平衡。</p>
+<p>在随机交配、无其他作用的简化模型中，若重组比例为 <span class="math">\(c\)</span>，则 <span class="math">\(D_{t+1}=(1-c)D_t\)</span>。高频且很长的单倍型可提示近期快速上升，但局部低重组也会延长连锁。</p>
+<p>IBS（identity by state）表示观察状态相同；IBD 表示相对于某个祖先&#x2F;时间参考确由共同祖先传来。同样碱基不自动证明近期 IBD；相同基因型也不告诉你两个杂合位点的相位。对未定相数据，剂量相关可以计算，但不能在任何群体假设下都无条件等同单倍型 <span class="math">\(r^2\)</span>。</p>
+<h2 id="3-第二节-自然选择的统计检验"><a href="#3-第二节-自然选择的统计检验" class="headerlink" title="3. 第二节 自然选择的统计检验"></a>3. 第二节 自然选择的统计检验</h2><h3 id="3-1-从适合度推导频率变化-【重点】"><a href="#3-1-从适合度推导频率变化-【重点】" class="headerlink" title="3.1 从适合度推导频率变化 【重点】"></a>3.1 从适合度推导频率变化 【重点】</h3><p>统一按教材参数化：</p>
+<table>
+<thead>
+<tr>
+<th>基因型</th>
+<th align="right">A1A1</th>
+<th align="right">A1A2</th>
+<th align="right">A2A2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>相对适合度</td>
+<td align="right">1</td>
+<td align="right"><span class="math">\(1-hs\)</span></td>
+<td align="right"><span class="math">\(1-s\)</span></td>
+</tr>
+</tbody></table>
+<p>设 A1 频率 <span class="math">\(p\)</span>，A2 频率 <span class="math">\(q=1-p\)</span>，选择前为 HWE，则：</p>
+<div class="math">\[
+\bar w=p^2w_{11}+2pqw_{12}+q^2w_{22},
+\]</div>
+
+<div class="math">\[
+p'=\frac{p^2w_{11}+pqw_{12}}{\bar w}.
+\]</div>
+
+<p>适合度表示所设生命周期中对繁殖贡献的相对权重，不只有存活。若 <span class="math">\(s&gt;0\)</span> 且 0&lt;<span class="math">\(h&lt;1\)</span>，A2 受到不利选择；用 <span class="math">\(s&lt;0\)</span> 描述 A2 有利也可以，但要始终一致。<span class="math">\(s=0\)</span> 只表示这一步没有选择，不阻止漂变、迁移或突变改变频率。</p>
+<p>杂合优势的定义是 <span class="math">\(w_{12}\)</span> 同时大于 <span class="math">\(w_{11}\)</span> 和 <span class="math">\(w_{22}\)</span>。在上表且 <span class="math">\(s&gt;0\)</span> 时，需要 <span class="math">\(h&lt;0\)</span>；<span class="math">\(h&gt;1\)</span> 反而是杂合劣势。另一种直观参数化为 <span class="math">\(w_{AA}=1-s_1\)</span>、<span class="math">\(w_{Aa}=1\)</span>、<span class="math">\(w_{aa}=1-s_2\)</span>（<span class="math">\(s_1,s_2&gt;0\)</span>），稳定平衡 <span class="math">\(p_A=s_2/(s_1+s_2)\)</span>。这是平衡选择的一种机制，不代表所有平衡选择都来自杂合优势。</p>
+<p>选择与漂变比较的是尺度。效应是否有效常与 <span class="math">\(N_e s\)</span> 的量级有关；新有利突变也可能在早期随机丢失。有利突变也不能保证最终固定。</p>
+<h3 id="3-2-选择信号的来源与非唯一性-【重点】"><a href="#3-2-选择信号的来源与非唯一性-【重点】" class="headerlink" title="3.2 选择信号的来源与非唯一性 【重点】"></a>3.2 选择信号的来源与非唯一性 【重点】</h3><table>
+<thead>
+<tr>
+<th>机制&#x2F;历史</th>
+<th>可能的观测模式</th>
+<th>不能省略的替代解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>近期硬扫荡</td>
+<td>局部 <span class="math">\(\pi\)</span> 低、长单倍型、频谱改变</td>
+<td>瓶颈、低重组、背景选择、比对问题</td>
+</tr>
+<tr>
+<td>软扫荡&#x2F;既存变异选择</td>
+<td>多个携带有利等位的单倍型</td>
+<td>单一硬扫荡模板可能漏检</td>
+</tr>
+<tr>
+<td>平衡选择</td>
+<td>中频变异、深分歧单倍型、局部多样性</td>
+<td>结构混合、旁系同源错配</td>
+</tr>
+<tr>
+<td>净化&#x2F;背景选择</td>
+<td>有害变异低频、连锁中性多样性下降</td>
+<td>扩张也可富集低频变异</td>
+</tr>
+<tr>
+<td>局部适应</td>
+<td>群体间频率差异</td>
+<td>中性漂变、迁移史与环境混杂</td>
+</tr>
+<tr>
+<td>多基因适应</td>
+<td>许多位点小幅变化</td>
+<td>GWAS 效应偏差、结构、效应迁移失败</td>
+</tr>
+</tbody></table>
+<p>中性检验拒绝的是“中性＋指定人口史＋采样与数据模型”的组合。一个统计量偏离零，不会自动识别是哪一个假设错了。复杂模型也需要比较公平基线，而不是只与最简单恒定群体零模型比较。</p>
+<h3 id="3-3-Tajima’s-：对同一频谱施加不同权重-【重点】"><a href="#3-3-Tajima’s-：对同一频谱施加不同权重-【重点】" class="headerlink" title="3.3 Tajima’s ：对同一频谱施加不同权重 【重点】"></a>3.3 Tajima’s <span class="math">\(D\)</span>：对同一频谱施加不同权重 【重点】</h3><p>区域尺度下：</p>
+<div class="math">\[
+\hat\theta_{W,L}=S/a_1,\qquad k=\sum_{i=1}^{n-1}\frac{2i(n-i)}{n(n-1)}\xi_i,
+\]</div>
+
+<div class="math">\[
+D_T=\frac{k-S/a_1}{\sqrt{e_1S+e_2S(S-1)}}.
+\]</div>
+
+<span class="math">\(\theta _{W}\)</span> 对每个分离位点相同计权；<span class="math">\(\pi\)</span> 对中频变异赋予较大权重。因此：
+
+<ul>
+<li><span class="math">\(D_{T}\)</span><0：低频相对中频偏多，可能与扩张、扫荡恢复、净化选择等有关。</li>
+<li><span class="math">\(D_{T}\)</span>>0：中频相对偏多，可能与平衡选择、结构或某些瓶颈历史有关。</li>
+<li><span class="math">\(D_{T}\)</span> 接近 0：未显示该类偏离，不等于证明中性。</li>
+</ul>
+<p>完整 <span class="math">\(e_{1}\)</span>&#x2F;<span class="math">\(e_{2}\)</span> 公式见§6.2。<span class="math">\(S=0\)</span> 或分母为 0 时，应返回未定义，不能人为记成 <span class="math">\(D=0\)</span>。统计显著性依赖合适零分布，不能普遍以 <span class="math">\(|D|&gt;1.96\)</span> 代替检验。<a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC1203831/">Tajima 原论文</a></p>
+<h3 id="3-4-Fu-Li、Fay-Wu：突变位于树的哪里-【应该理解】"><a href="#3-4-Fu-Li、Fay-Wu：突变位于树的哪里-【应该理解】" class="headerlink" title="3.4 Fu &amp; Li、Fay &amp; Wu：突变位于树的哪里 【应该理解】"></a>3.4 Fu &amp; Li、Fay &amp; Wu：突变位于树的哪里 【应该理解】</h3><p><img src="/bioinformatics-notes/images/ch13/fig13-03.png" alt="图 13.3 外部与内部树枝"></p>
+<p><em>图 13.3，p342。叶端枝上的突变常只出现在少数样本中；内部枝上的突变由该枝后代共享。<span class="math">\(t_{k}\)</span> 是有 <span class="math">\(k\)</span> 条谱系时直到下一次合并的等待时间，不是样本的真实年龄。</em></p>
+<p>Fu &amp; Li 的统计量比较外部枝突变与总突变&#x2F;平均差异，含需要外群与不需要外群的不同版本。singleton 是样本定义，祖先&#x2F;衍生判定与“突变发生在哪条枝”仍需假设；不能把所有 singleton 都无条件当成同一种时间信息。</p>
+<p>Fay &amp; Wu’s H 增加对高频衍生等位基因的关注：</p>
+<div class="math">\[
+\hat\theta_{H,L}=\sum_{i=1}^{n-1}\frac{2i^2}{n(n-1)}\xi_i,\qquad H_{\mathrm{raw}}=k-\hat\theta_{H,L}.
+\]</div>
+
+<p>高频衍生变异会推高 <span class="math">\(\theta _{H}\)</span>，常使这个符号约定下 H 为负；归一化 H 还需要其方差。教材公式&#x2F;软件可能使用相反差值，必须注明方向。参考等位、主要等位与祖先等位不是同义词，外群误判可以把低频衍生错翻成高频衍生。</p>
+<p>教学例中 <span class="math">\(n=10\)</span>、10 个 singleton 与 10 个 <span class="math">\(9/10\)</span> 频率衍生位点的 <span class="math">\(\pi\)</span> 和 Tajima <span class="math">\(D\)</span> 完全相同，<span class="math">\(\theta _{H}\)</span> 却分别为 0.2222 与 18。这说明折叠谱丢掉的信息恰是 H 所需要的方向信息。</p>
+<h3 id="3-5-单倍型检验：EHH、LRH、HS、iHS、XP-EHH-【重点】"><a href="#3-5-单倍型检验：EHH、LRH、HS、iHS、XP-EHH-【重点】" class="headerlink" title="3.5 单倍型检验：EHH、LRH、HS、iHS、XP-EHH 【重点】"></a>3.5 单倍型检验：EHH、LRH、HS、iHS、XP-EHH 【重点】</h3><p><img src="/bioinformatics-notes/images/ch13/fig13-04.png" alt="图 13.4 核心单倍型"></p>
+<p><em>图 13.4，p343。核心附近 SNP 与延伸区域用于观察单倍型保留长度；物理距离相同不代表遗传距离或重组机会相同。</em></p>
+<p>给定携带某个核心等位&#x2F;单倍型的 <span class="math">\(n_{c}\)</span> 条染色体，延伸到距离 x 后分为若干完整单倍型，计数 <span class="math">\(n_{h}\)</span>：</p>
+<div class="math">\[
+EHH(x)=\frac{\sum_h{n_h\choose2}}{{n_c\choose2}}.
+\]</div>
+
+<p>它是在给定核心背景下抽两条染色体，延伸段仍相同的概率。忽略这一条件就会混淆核心频率与延伸纯合性。积分 <span class="math">\(\mathrm{iHH}=\int\mathrm{EHH}(x)\,dx\)</span> 要说明按物理还是遗传距离，以及尾部截断和插值规则。</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>对比对象</th>
+<th>适用直觉与限制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LRH</td>
+<td>核心频率与延伸纯合性</td>
+<td>同频率背景下异常长的单倍型</td>
+</tr>
+<tr>
+<td>HS</td>
+<td>一组关联染色体在滑窗中的单倍型相似性</td>
+<td>窗口、样本大小与频率需匹配</td>
+</tr>
+<tr>
+<td>iHS</td>
+<td>同群体祖先与衍生等位的 iHH</td>
+<td>常用于尚未完全固定的扫荡；需频率分层标准化</td>
+</tr>
+<tr>
+<td>XP-EHH</td>
+<td>两群体延伸单倍型信号</td>
+<td>对群间接近固定差异有用，仍受历史和重组影响</td>
+</tr>
+<tr>
+<td>LDD</td>
+<td>单倍型&#x2F;LD 随距离衰减</td>
+<td>检测异常保留，模型与对照决定结论</td>
+</tr>
+<tr>
+<td>IBD sharing</td>
+<td>共享祖先片段数和长度</td>
+<td>近亲、瓶颈和近期选择均可能增加共享</td>
+</tr>
+</tbody></table>
+<p>以教材符号为例，<span class="math">\(\mathrm{iHS}_{\mathrm{raw}}=\ln(\mathrm{iHH}_A/\mathrm{iHH}_D)\)</span>，之后按频率箱减均值、除标准差。正负号跟比值方向有关；关注哪一等位携带长单倍型时必须查看软件定义。未定相、switch error、参考偏倚和稀有核心小样本都可能改变结果。</p>
+<h3 id="3-6-分化、系谱与复合方法-【应该理解】"><a href="#3-6-分化、系谱与复合方法-【应该理解】" class="headerlink" title="3.6 分化、系谱与复合方法 【应该理解】"></a>3.6 分化、系谱与复合方法 【应该理解】</h3><span class="math">\(F_{ST}\)</span>、LSBL、hapFLK 等利用群体间差异；MFDM、Du 等利用衍生变异或系谱不平衡；CLR、XP-CLR、DH、CMS 等组合频谱、连锁或分化信息。教材表 13.1 可按“需要哪种数据、对哪类历史敏感、怎样构造零模型”理解，不必先背全部缩写。
+
+<p>树的异常拓扑和分支长度可能含选择信号，但树本身往往是估计结果。重组、祖先状态误判、未建模迁移和树推断误差都要进入验证。教材称某些方法“不受人口史影响”，应理解为其理论条件&#x2F;模拟范围内的稳健性，而非对任意现实情形成立。</p>
+<p>多个相关统计量同时显著不等于多份独立证据。复合似然把部分相关性简化后，普通似然比的渐近 <span class="math">\(\chi ^2\)</span> 分布未必成立；可通过匹配零模型的模拟、块级重采样和独立实验检查校准。</p>
+<h3 id="3-7-MK：多态性与固定差异的-2×2-比较-【重点】"><a href="#3-7-MK：多态性与固定差异的-2×2-比较-【重点】" class="headerlink" title="3.7 MK：多态性与固定差异的 2×2 比较 【重点】"></a>3.7 MK：多态性与固定差异的 2×2 比较 【重点】</h3><table>
+<thead>
+<tr>
+<th></th>
+<th align="right">非同义</th>
+<th align="right">同义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>种内多态</td>
+<td align="right"><span class="math">\(P_{N}\)</span></td>
+<td align="right"><span class="math">\(P_{S}\)</span></td>
+</tr>
+<tr>
+<td>种间固定差异</td>
+<td align="right"><span class="math">\(D_{N}\)</span></td>
+<td align="right"><span class="math">\(D_{S}\)</span></td>
+</tr>
+</tbody></table>
+<p>简单中性期望是 <span class="math">\(D_N/D_S\approx P_N/P_S\)</span>。可用 Fisher 精确检验或适当列联检验；非同义固定差异相对过量与适应性替换相容。常见派生量：</p>
+<div class="math">\[
+NI=\frac{P_N/P_S}{D_N/D_S},\qquad \alpha=1-\frac{D_SP_N}{D_NP_S}.
+\]</div>
+
+<span class="math">\(\alpha\)</span> 是特定假设下适应性非同义替换比例的估计，不是每个基因“有多少概率受选择”。零计数使比值不稳；弱有害变异可暂留种内多态但很少固定，同义位点也未必完全中性。人口史、比对质量、外群选择和多重检验仍重要。
+
+<h3 id="3-8-HKA-与-【必须掌握区别】"><a href="#3-8-HKA-与-【必须掌握区别】" class="headerlink" title="3.8 HKA 与  【必须掌握区别】"></a>3.8 HKA 与 <span class="math">\(d_N/d_S\)</span> 【必须掌握区别】</h3><p>HKA 利用多个区域的种内多态与种间分歧，借助分歧吸收不同区域突变率差异。一个区域的多态性相对于分歧异常，可提示偏离模型。不能把 HKA 简单理解成任意两个数做 <span class="math">\(\chi ^2\)</span>；期望、方差、共享历史及区域独立性需按模型计算。</p>
+<span class="math">\(d_N/d_S=\omega\)</span> 比较每个非同义位点的替换率与每个同义位点的替换率，已经按可发生的替换机会等校正，绝不是“非同义突变数/同义突变数”。<span class="math">\(\omega &lt;1\)</span> 通常与净化选择相容，<span class="math">\(\omega &gt;1\)</span> 在恰当模型和检验下支持正选择。
+
+<p>全基因平均 <span class="math">\(\omega &lt;1\)</span> 不排除少数位点或分支受正选择；dS 接近 0、饱和、多核苷酸变化、错配旁系同源、重组与密码子联配错误会影响结果。位点模型、分支模型、分支—位点模型检验不同问题，不能拿一个平均比值替代它们。</p>
+<h3 id="3-9-从扫描峰到可检验生物假设-【重点】"><a href="#3-9-从扫描峰到可检验生物假设-【重点】" class="headerlink" title="3.9 从扫描峰到可检验生物假设 【重点】"></a>3.9 从扫描峰到可检验生物假设 【重点】</h3><p>先建立可靠变异与 callable 区，检查结构和历史；选择适合时间尺度&#x2F;数据类型的统计量；在匹配的零模型下校准并处理多重检验；将相邻窗口合并成候选区；查看原始覆盖、重组与注释；最后用独立群体、功能证据或实验验证。</p>
+<p>“窗口内有一个熟悉功能基因”不是充分证据。报告背景比较如何选、窗口长度和步长如何影响峰、是否因可比对性造成低 <span class="math">\(\pi\)</span>。扫描完成的结果应是带不确定性的候选区域及竞争解释。</p>
+<h2 id="4-第三节-种群历史的溯祖分析"><a href="#4-第三节-种群历史的溯祖分析" class="headerlink" title="4. 第三节 种群历史的溯祖分析"></a>4. 第三节 种群历史的溯祖分析</h2><h3 id="4-1-Wright–Fisher：向前看频率，向后看祖先-【重点】"><a href="#4-1-Wright–Fisher：向前看频率，向后看祖先-【重点】" class="headerlink" title="4.1 Wright–Fisher：向前看频率，向后看祖先 【重点】"></a>4.1 Wright–Fisher：向前看频率，向后看祖先 【重点】</h3><p>最简单二倍体模型每代 <span class="math">\(N\)</span> 个个体、<span class="math">\(2N\)</span> 个基因拷贝，各子代拷贝从上一代独立抽取亲本拷贝。忽略选择、迁移与突变时：</p>
+<div class="math">\[
+K_{t+1}\mid p_t\sim\mathrm{Binomial}(2N,p_t),\quad p_{t+1}=K_{t+1}/(2N),
+\]</div>
+
+<div class="math">\[
+E[p_{t+1}\mid p_t]=p_t,\quad \mathrm{Var}(p_{t+1}\mid p_t)=\frac{p_t(1-p_t)}{2N}.
+\]</div>
+
+<p>频率的条件期望不变，并不意味着每次抽样后的频率都保持原值。小群体波动更大，最终可能丢失或固定；无突变模型下 0 和 1 是吸收态。加入选择时，先依生命周期把 <span class="math">\(p\)</span> 更新为选择后的 <span class="math">\(p_{s}\)</span>，再进行抽样；次序代表模型假设。</p>
+<p>有效群体大小 <span class="math">\(N_{e}\)</span> 把真实群体某种漂变&#x2F;近交&#x2F;溯祖行为匹配到理想模型。它不等于普查个体数 <span class="math">\(N_{c}\)</span>，也不总是一个可跨方法互换的常数。性比、繁殖成功差异、重叠世代、结构和历史变化都会影响它。</p>
+<h3 id="4-2-Kingman-溯祖的等待时间-【重点】"><a href="#4-2-Kingman-溯祖的等待时间-【重点】" class="headerlink" title="4.2 Kingman 溯祖的等待时间 【重点】"></a>4.2 Kingman 溯祖的等待时间 【重点】</h3><p><img src="/bioinformatics-notes/images/ch13/fig13-05.png" alt="图 13.5 四条谱系的合并"></p>
+<p><em>图 13.5，p348。教材写“4 个个体”；数学推导时应明确追踪 4 条基因谱系，若取 4 个二倍体个体的两套同源拷贝，初始可为 8 条谱系。</em></p>
+<p>一对谱系回到上一代选中同一个亲本拷贝的概率约 <span class="math">\(1/(2N_e)\)</span>。<span class="math">\(k\)</span> 条谱系共有 <span class="math">\(\binom{k}{2}\)</span> 对，在大群体、固定有限样本的经典近似下：</p>
+<div class="math">\[
+T_k\sim\mathrm{Exp}\!\left(\frac{{k\choose2}}{2N_e}\right),\quad E[T_k]=\frac{4N_e}{k(k-1)}.
+\]</div>
+
+<p>只有两条谱系时，平均还要等 2<span class="math">\(N_{e}\)</span> 代；很多谱系时可合并的对数很多，下一次合并更快。总样本 MRCA 时间为 <span class="math">\(\sum_{k=2}^nT_k\)</span>：</p>
+<div class="math">\[
+E[T_{MRCA}]=4N_e(1-1/n).
+\]</div>
+
+<p>指数分布不是指数增长。不同 <span class="math">\(k\)</span> 有不同等待时间分布；单次随机树可与期望差很远。这个 MRCA 是该位点、该样本的基因祖先，不是物种起源时间，也不是整个物种全部个体的谱系 MRCA。</p>
+<h3 id="4-3-从树枝到突变，再到-SFS-【重点】"><a href="#4-3-从树枝到突变，再到-SFS-【重点】" class="headerlink" title="4.3 从树枝到突变，再到 SFS 【重点】"></a>4.3 从树枝到突变，再到 SFS 【重点】</h3><p>中性模型下可先生成祖先树，再沿枝放置突变。给定总枝长 <span class="math">\(B\)</span>、每位点突变率 <span class="math">\(\mu\)</span>、长度 <span class="math">\(L\)</span>，突变数量可按 <span class="math">\(\operatorname{Poisson}(\mu LB)\)</span> 生成；无限位点模型进一步避免重复命中。</p>
+<div class="math">\[
+E[B]=\sum_{k=2}^n kE[T_k]=4N_e\sum_{i=1}^{n-1}\frac1i.
+\]</div>
+
+<p>于是 <span class="math">\(E[S]=\mu L E[B]=4N_e\mu L a_1\)</span>，连接到 <span class="math">\(\theta _{W}\)</span>；两条谱系平均总枝长为 4<span class="math">\(N_{e}\)</span>，连接到 <span class="math">\(E[\pi]=4N_e\mu\)</span>。这解释了“<span class="math">\(\theta\)</span> 既可从变异数估计，也可从平均差异估计”的共同来源。</p>
+<p>突变不改变中性个体的繁殖成功，所以可在生成系谱后附加；这不意味着所有带选择的模型都可这样随意拆开。经典恒定、无结构溯祖中某些拓扑&#x2F;等待时间独立性质，也不能自动推广到结构、选择和时变过程。</p>
+<h3 id="4-4-重组使全基因组成为树的序列：ARG-与-SMC-【重点】"><a href="#4-4-重组使全基因组成为树的序列：ARG-与-SMC-【重点】" class="headerlink" title="4.4 重组使全基因组成为树的序列：ARG 与 SMC 【重点】"></a>4.4 重组使全基因组成为树的序列：ARG 与 SMC 【重点】</h3><p>一个无重组区域可由一棵局部树描述。向后追踪时，重组将一条谱系携带的不同祖先片段分开，后续又发生合并，构成祖先重组图 ARG。沿染色体向右看，不同片段有不同局部树，但相邻树往往共享大量结构。</p>
+<p>SMC 用沿基因组的马尔可夫近似描述局部树变化，降低完整 ARG 处理的复杂度。基因组位置是扫描轴，树的时间是另一个轴；二者不能混淆。</p>
+<p>tree sequence 紧凑记录相邻局部树共享的节点与边。常见边含[left,right)、parent、child，节点有 time，位点&#x2F;突变表再记录状态变化。它不是简单把上百万棵 Newick 字符串存起来，也不自动包含所有完整 ARG 事件。<a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9176297/">msprime 1.0 原论文</a></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>追踪对象</th>
+<th>优势</th>
+<th>局限</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>向前模拟</td>
+<td>群体个体、繁殖、选择和环境</td>
+<td>容易表达复杂选择与生态过程</td>
+<td>世代多、群体大时昂贵；burn-in 需检查</td>
+</tr>
+<tr>
+<td>向后溯祖模拟</td>
+<td>样本祖先及片段</td>
+<td>中性&#x2F;指定人口史下常很高效</td>
+<td>模型适用条件需明确，复杂选择不总方便</td>
+</tr>
+<tr>
+<td>SMC 近似</td>
+<td>顺序局部系谱</td>
+<td>适合序列 HMM 和历史推断</td>
+<td>近似改变依赖结构</td>
+</tr>
+<tr>
+<td>tree-sequence recording</td>
+<td>共享祖先的数据结构</td>
+<td>压缩、统计和混合工作流</td>
+<td>是表示方式，不能代替生物模型</td>
+</tr>
+</tbody></table>
+<p>教材 ms、MaCS、fastsimcoal2 等体现不同模拟&#x2F;推断思路。现代实践可从 msprime 与 tskit 理解祖先&#x2F;突变分离和紧凑表示；不能把 SMC++这样的推断工具只当成通用模拟器。<a target="_blank" rel="noopener" href="https://tskit.dev/msprime/docs/latest/ancestry.html">msprime 官方模拟说明</a></p>
+<h3 id="4-5-从模拟到推断：ABC、似然与可辨识性-【重点】"><a href="#4-5-从模拟到推断：ABC、似然与可辨识性-【重点】" class="headerlink" title="4.5 从模拟到推断：ABC、似然与可辨识性 【重点】"></a>4.5 从模拟到推断：ABC、似然与可辨识性 【重点】</h3><p>设历史参数 <span class="math">\(\eta\)</span> 包含有效群体大小、分化时间、迁移率等，数据为 <span class="math">\(X\)</span>。推断目标是 <span class="math">\(p(\eta\mid X)\propto p(X\mid\eta)p(\eta)\)</span>。难点在于 <span class="math">\(X\)</span> 的似然可能要对大量未知系谱积分。</p>
+<p>拒绝式 ABC：从参数先验 <span class="math">\(p(\eta)\)</span> 抽样 ，随后 按 <span class="math">\(\eta\)</span> 模拟 <span class="math">\(X_{sim}\)</span> ，随后 计算摘要 <span class="math">\(S(X_{\mathrm{sim}})\)</span> ，随后 与 <span class="math">\(S(X_{\mathrm{obs}})\)</span> 比较 ，随后 若距离≤<span class="math">\(\varepsilon\)</span> 则保留 <span class="math">\(\eta\)</span>。得到的是依赖摘要与容差的近似后验。</p>
+<p>距离需考虑各摘要尺度；<span class="math">\(\varepsilon\)</span> 小会降低接受率，<span class="math">\(\varepsilon\)</span> 大造成更强近似。摘要不充分时，<span class="math">\(\varepsilon\)</span>，随后 0 仍不能恢复完整数据后验。先验很宽、参数不可辨识时，需要看后验形状和相关性，不能只报一个最优点。</p>
+<p>SFS 似然&#x2F;复合似然把观测频谱与给定人口模型的期望比较；忽略位点连锁可加快推断，但置信区间需用适当块 bootstrap、参数模拟等校准。折叠谱不需要可靠祖先方向，却损失一部分辨别历史的能力。</p>
+<p>可辨识性反例：<span class="math">\(\pi\)</span> 主要约束 <span class="math">\(4N_e\mu\)</span>；只知道 <span class="math">\(\pi\)</span> 而不知道 <span class="math">\(\mu\)</span>，就不能唯一分开 <span class="math">\(N_{e}\)</span> 与 <span class="math">\(\mu\)</span>。相似 SFS 也可能由不同瓶颈&#x2F;迁移历史产生。增加数据类型有时能改善，但不能靠换更深网络消除数据中不存在的信息。</p>
+<h3 id="4-6-教材案例：瓶颈零模型与银杏起源-【应该理解】"><a href="#4-6-教材案例：瓶颈零模型与银杏起源-【应该理解】" class="headerlink" title="4.6 教材案例：瓶颈零模型与银杏起源 【应该理解】"></a>4.6 教材案例：瓶颈零模型与银杏起源 【应该理解】</h3><p><img src="/bioinformatics-notes/images/ch13/fig13-06.png" alt="图 13.6 驯化瓶颈模型"></p>
+<p><em>图 13.6，p350。A、<span class="math">\(B\)</span> 是不同简化历史；线宽&#x2F;分支与参数含义按图注理解。A 图注将 <span class="math">\(r\)</span> 写成等位频率相关系数，而邻文讨论重组参数【需查证】；具体模拟时应回查原模型单位，不能把两种 <span class="math">\(r\)</span> 直接代入同一软件。</em></p>
+<p>若所有区域都经历瓶颈，局部低多样性可能是共同人口史所致。可先用相对合适的背景区域拟合人口模型，再模拟候选区域在该模型下的 <span class="math">\(S\)</span>&#x2F;<span class="math">\(\pi\)</span> 分布；观察值进一步异常时，才形成超出瓶颈背景的候选信号。背景区域未必完全中性，需检查功能、重组和可比对性。</p>
+<p>教材表 13.2 很有教学价值：Waxy 在两个糯玉米亚群中有低多样性及多个检验信号；但其他基因不同检验并不一致。例如 sh2 有负 Tajima <span class="math">\(D\)</span>，而教材 CS <span class="math">\(p\)</span> 值接近 1。零模型不同，显著性不同，不是计算“坏了”。</p>
+<p>若以低 <span class="math">\(S\)</span> 为异常，单侧 Monte Carlo <span class="math">\(p\)</span> 值可写成 <span class="math">\((1+\#\{S_{\mathrm{sim}}\le S_{\mathrm{obs}}\})/(B+1)\)</span>。1 万次模拟中零次更极端，只能说明分辨率到约 <span class="math">\(10^{-4}\)</span> 量级，不能报告 <span class="math">\(p=0\)</span>。多个候选区域仍需处理多重检验和参数估计不确定性。</p>
+<p><img src="/bioinformatics-notes/images/ch13/fig13-07.png" alt="图 13.7 银杏起源候选模型"></p>
+<p><em>图 13.7，p353。先看分化拓扑、混合来源与迁移箭头，再看参数拟合。它展示预设的 10 种基础模型，而不是 10 次独立观察到的历史。</em></p>
+<p>教材银杏案例以 SFS 比较候选模型并报告相对支持。<span class="math">\(\mathrm{AIC}=2k-2\ln L\)</span>，权重 <span class="math">\(w_m\propto\exp(-\Delta\mathrm{AIC}_m/2)\)</span>。权重高意味着在这些模型及其拟合准则中更有支持，不是“不在候选集中的历史概率为零”。用复合似然时还要考虑有效信息量，不能机械把权重当严格贝叶斯后验概率。</p>
+<p>模型检查应包括多初值优化、参数边界、可辨识性、bootstrap&#x2F;参数模拟、未用于拟合的摘要以及 <span class="math">\(\mu\)</span> 和世代长度敏感性。不能把非编码区全部当中性，也不能只因某模型能拟合 SFS 就证明全部历史正确。</p>
+<h3 id="4-7-PSMC、MSMC、SMC-的输入与含义-【重点】"><a href="#4-7-PSMC、MSMC、SMC-的输入与含义-【重点】" class="headerlink" title="4.7 PSMC、MSMC、SMC++的输入与含义 【重点】"></a>4.7 PSMC、MSMC、SMC++的输入与含义 【重点】</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>典型输入&#x2F;信息</th>
+<th>核心想法</th>
+<th>关键限制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PSMC</td>
+<td>一个二倍体基因组的杂合&#x2F;纯合&#x2F;缺失模式</td>
+<td>以成对 TMRCA 为隐状态的序列 HMM</td>
+<td>近期合并事件信息少；需可靠 mask 和杂合检测</td>
+</tr>
+<tr>
+<td>MSMC</td>
+<td>多条通常需定相的序列</td>
+<td>利用多谱系的合并信息</td>
+<td>相位错误、样本数和计算代价影响结果</td>
+</tr>
+<tr>
+<td>SMC++</td>
+<td>多个未定相二倍体样本</td>
+<td>联合局部成对信息与频率信息</td>
+<td>不需定相不等于无偏；历史、缺失和模型仍重要</td>
+</tr>
+</tbody></table>
+<p>PSMC 中隐状态是时间区间，观测是局部杂合模式，转移反映重组相关变化，发射与突变积累相关。从一份基因组恢复历史曲线不是逐代数古代个体，而是在模型下从大量片段汇总推断。<a target="_blank" rel="noopener" href="https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/2011_Li_Nature_2.pdf">Li 与 Durbin，2011</a></p>
+<p>SMC++原研究展示了利用大量未定相基因组改善近期推断的能力，但效果仍依赖模型、数据及调参。<a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5470542/">Terhorst 等，2017</a> PSMC&#x2F;MSMC&#x2F;SMC++不同曲线相近，可以作为一致性线索，但共享假设也可能让它们共享偏差。</p>
+<p><img src="/bioinformatics-notes/images/ch13/fig13-08.png" alt="图 13.8 有效群体大小历史曲线"></p>
+<p><em>图 13.8，p354。A 大熊猫、<span class="math">\(B\)</span> 非洲栽培稻、<span class="math">\(C\)</span> 拟态&#x2F;非拟态稗草。注意横轴方向、对数尺度、年代&#x2F;代数以及 <span class="math">\(\mu\)</span>、世代长度。曲线拐点与气候或社会事件时间接近只提供关联线索，不单独证明因果。</em></p>
+<p>若 <span class="math">\(\theta_0=4N_0\mu\)</span> 是每碱基参数，则 <span class="math">\(N_0=\theta_0/(4\mu)\)</span>、<span class="math">\(t_{\mathrm{gen}}=2N_0\tau\)</span>、<span class="math">\(t_{\mathrm{year}}=g t_{\mathrm{gen}}\)</span>。但 PSMC 输出中的突变参数涉及输入 bin 长度：若 <span class="math">\(\theta_{\mathrm{bin}}=4N_0\mu\ell\)</span>，必须先除以 <span class="math">\(\ell\)</span>，得到 <span class="math">\(N_0=\theta_{\mathrm{bin}}/(4\mu\ell)\)</span>；实际绘图还可能包含 mask、漏检与其他缩放修正。不能把每 bin 参数直接当成每 base 参数。<span class="math">\(\mu\)</span> 增大一倍通常使这类换算的 <span class="math">\(N\)</span> 和代数缩小一半；<span class="math">\(g\)</span> 改变年份换算。不同软件的缩放参数定义可能不同，先看文档再代公式。</p>
+<p>真实群体结构也能产生看似变化的“有效大小”曲线。置信带通常只覆盖所设模型下部分抽样不确定性，不包含所有系统误差；对近期、极古老区间及 mask 敏感区域要单独评估。</p>
+<h3 id="4-8-定相：基因型已知，组合仍未知-【重点】"><a href="#4-8-定相：基因型已知，组合仍未知-【重点】" class="headerlink" title="4.8 定相：基因型已知，组合仍未知 【重点】"></a>4.8 定相：基因型已知，组合仍未知 【重点】</h3><p><img src="/bioinformatics-notes/images/ch13/fig13-09.png" alt="图 13.9 两个杂合位点的定相"></p>
+<p><em>图 13.9，p354。A&#x2F;T 和 <span class="math">\(C\)</span>&#x2F;<span class="math">\(G\)</span> 可组成 AC|TG 或 AG|TC；若把两条同源染色体上下交换视为同一结果，图中四幅只表示两种无序配对。</em></p>
+<p>VCF 的 0&#x2F;1 通常表示未定相杂合，0|1 表示有相位关系，还要看 phase set 及其有效区间。远隔两个位点均写竖线，不一定意味着它们已经在同一个可靠相位块内。</p>
+<p>统计定相利用群体 LD、参考面板等，读段定相利用覆盖多个变异的分子信息，家系定相利用遗传传递。定相、填补和变异调用是不同步骤。switch error 会把真实长单倍型切断，对 EHH、IBD 和多谱系历史方法都有影响。</p>
+<h2 id="5-第四节-数量遗传学分析"><a href="#5-第四节-数量遗传学分析" class="headerlink" title="5. 第四节 数量遗传学分析"></a>5. 第四节 数量遗传学分析</h2><h3 id="5-1-从表型方差到遗传效应-【重点】"><a href="#5-1-从表型方差到遗传效应-【重点】" class="headerlink" title="5.1 从表型方差到遗传效应 【重点】"></a>5.1 从表型方差到遗传效应 【重点】</h3><p>数量性状的连续变化可以由多个位点、环境、交互和测量噪声共同产生。常见分解 <span class="math">\(P=\mu+A+D+I+E\)</span>，并可加入 <span class="math">\(G\times E\)</span>；各项方差简单相加需要相应正交&#x2F;独立条件，不能不检查协方差。</p>
+<p>狭义遗传率 <span class="math">\(h^2=V_A/V_P\)</span>，广义遗传率 <span class="math">\(H^2=V_G/V_P\)</span>。它们是给定群体、环境与测量设计中的方差比例，不是“某个人性状有多少由 DNA 决定”，也不保证跨群体不变。SNP 遗传率只涉及所用标记可捕获的部分，不等于全部遗传率。</p>
+<p>在 F2 中，可用加性编码 <span class="math">\(x\in\{-1,0,1\}\)</span> 及显性编码 <span class="math">\(z=\mathbf1[\text{基因型为杂合子}]\)</span>，对应两个纯合型与杂合型时分别取 0、1、0 写：</p>
+<div class="math">\[
+y=\mu+ax+dz+e.
+\]</div>
+
+<span class="math">\(a\)</span> 对应两个纯合子均值差的一半，d 描述杂合子相对纯合子中点的偏离。统计加性/显性/上位性依编码、频率和背景定义，与分子层面“两个蛋白是否相互作用”不一一对应。
+
+<h3 id="5-2-QTL-作图群体与分辨率-【重点】"><a href="#5-2-QTL-作图群体与分辨率-【重点】" class="headerlink" title="5.2 QTL 作图群体与分辨率 【重点】"></a>5.2 QTL 作图群体与分辨率 【重点】</h3><table>
+<thead>
+<tr>
+<th>群体</th>
+<th>形成与基因型</th>
+<th>优点</th>
+<th>需要匹配的模型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>F2</td>
+<td>两纯合亲本 F1 自交；常有三基因型</td>
+<td>可分解加性、显性</td>
+<td>重组、分离与环境设计</td>
+</tr>
+<tr>
+<td>BC</td>
+<td>F1 回交亲本</td>
+<td>组成较简单</td>
+<td>两类基因型，效应编码不同</td>
+</tr>
+<tr>
+<td>DH</td>
+<td>配子染色体加倍</td>
+<td>纯合、可重复测量</td>
+<td>配子形成阶段的重组</td>
+</tr>
+<tr>
+<td>RIL</td>
+<td>多代自交形成近纯合系</td>
+<td>多环境重复、积累重组</td>
+<td>RIL 重组关系不能直接套单次减数分裂</td>
+</tr>
+</tbody></table>
+<p>永久群体表示遗传材料可较稳定重复，不表示环境和测量误差消失。重复同一株系用于估计环境&#x2F;误差，不能把它们当独立新基因型。</p>
+<p>物理距离 bp 与遗传距离 cM 不同。重组比例 <span class="math">\(r\)</span> 在简单两点连锁定义下不超过 0.5；远距离可因多次交换使观察 <span class="math">\(r\)</span> 趋于 0.5。Haldane 图距（无干涉）<span class="math">\(d=-\frac12\ln(1-2r)\)</span>，单位 Morgan，说明图距并非总等于 <span class="math">\(r\)</span>。单纯加密标记无法制造群体里不存在的重组事件。</p>
+<h3 id="5-3-单标记到区间作图：隐变量混合模型-【重点】"><a href="#5-3-单标记到区间作图：隐变量混合模型-【重点】" class="headerlink" title="5.3 单标记到区间作图：隐变量混合模型 【重点】"></a>5.3 单标记到区间作图：隐变量混合模型 【重点】</h3><p>教材 DH 例中 QTL 基因型效应为 <span class="math">\(\mu\pm a\)</span>，标记与 QTL 重组率为 <span class="math">\(r\)</span>，则：</p>
+<div class="math">\[
+E[y|MM]=\mu+(1-2r)a,\qquad E[y|mm]=\mu-(1-2r)a,
+\]</div>
+
+<div class="math">\[
+E[y|MM]-E[y|mm]=2(1-2r)a.
+\]</div>
+
+<p>这是效应与连锁距离的混合：小标记差异可能来自小 <span class="math">\(a\)</span>，也可能来自较大 <span class="math">\(r\)</span>。单标记显著说明统计关联&#x2F;连锁证据，不把标记自身变成因果变异；不显著也可能是功效不足。</p>
+<p>区间作图在候选位置 <span class="math">\(t\)</span>，用侧翼&#x2F;其他标记计算个体 <span class="math">\(i\)</span> 的未知 QTL 基因型概率 <span class="math">\(p_{iq}\)</span>(<span class="math">\(t\)</span>)，再建立似然：</p>
+<div class="math">\[
+L(t,\beta,\sigma)=\prod_i\sum_q p_{iq}(t)\,\phi(y_i;\mu+a x_q+d z_q,\sigma^2).
+\]</div>
+
+<p>这是一组已知先验混合权重、未知效应参数的正态混合模型。可用 EM：E 步结合表型更新 QTL 基因型责任度，<span class="math">\(M\)</span> 步加权估计效应与方差；不同群体的 <span class="math">\(p_{iq}\)</span>(<span class="math">\(t\)</span>)由其遗传传递模型决定。</p>
+<p>用 <span class="math">\(E[x\mid\mathrm{markers}]\)</span> 做回归的近似与完整混合似然并不完全等价，后者显式保留基因型不确定性。不要直接给所有缺失或潜在 QTL 位点填最可能基因型后假装确定。</p>
+<div class="math">\[
+LOD(t)=\log_{10}\frac{\hat L_1(t)}{\hat L_0},\qquad LR=2\ln(10)\,LOD.
+\]</div>
+
+<p>LOD 不是 <span class="math">\(-\log_{10}p\)</span>。位置是在全基因组搜索中选出来的，因此一个普通固定位置检验阈值不能直接用于整张扫描图。峰顶是估计位置，不是基因边界；支持区间、bootstrap 区间与严格置信区间要注明方法。</p>
+<h3 id="5-4-CIM、ICIM、MCIM-和多-QTL-【必须理解算法差异】"><a href="#5-4-CIM、ICIM、MCIM-和多-QTL-【必须理解算法差异】" class="headerlink" title="5.4 CIM、ICIM、MCIM 和多 QTL 【必须理解算法差异】"></a>5.4 CIM、ICIM、MCIM 和多 QTL 【必须理解算法差异】</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>背景处理&#x2F;推断思想</th>
+<th>容易忽略的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单标记</td>
+<td>各标记分别回归&#x2F;比较均值</td>
+<td>位置与效应混淆，多个连锁 QTL 混合</td>
+</tr>
+<tr>
+<td>IM</td>
+<td>对位置扫描，QTL 基因型是隐变量</td>
+<td>其他 QTL 干扰、鬼影峰</td>
+</tr>
+<tr>
+<td>CIM</td>
+<td>区间作图＋背景标记协变量</td>
+<td>协变量&#x2F;排除窗口选择会吸收目标信号</td>
+</tr>
+<tr>
+<td>ICIM</td>
+<td>全标记背景选择和效应估计，再逐区间调整并扫描</td>
+<td>调整时保留当前区间相应信息，不是把全部遗传信号减去</td>
+</tr>
+<tr>
+<td>MCIM</td>
+<td>混合模型表达主效应、上位性、环境及互作</td>
+<td>方差分量、重复观测相关性和扫描阈值</td>
+</tr>
+<tr>
+<td>多区间&#x2F;多 QTL</td>
+<td>多个 QTL 同时建模，可用似然或贝叶斯</td>
+<td>模型空间大、选择后偏差与可辨识性</td>
+</tr>
+</tbody></table>
+<p>教材式 13.43—13.48 可理解为一个多环境模型：</p>
+<div class="math">\[y_{ie}=\mu+E_e+\sum_k a_kx_{ik}+\sum_{k&lt;h}a_{kh}x_{ik}x_{ih}
++\sum_k(aE)_{ke}x_{ik}+\sum_{k&lt;h}(aaE)_{khe}x_{ik}x_{ih}+\epsilon_{ie}.\]</div>
+
+<p>环境若只对这几个地点做推断可作固定效应；若希望推广到环境总体，可考虑随机效应及其协方差。随机&#x2F;固定不是“未知&#x2F;已知”的区别。加性×环境、上位性×环境允许遗传效应随条件变化，需有足够重复支撑。</p>
+<p>有些互作没有明显边际主效应。只在单标记显著位点里寻找互作，会提高效率但可能漏掉纯互作；测试全部 <span class="math">\(M^2\)</span> 组合则带来计算和多重检验代价。应明确这是方法取舍。</p>
+<p>置换检验：在零假设下可交换的单位上置换；每次运行扫描，记录全基因组最大统计量，以其分位数作阈值。家系、多环境重复、批次等限制交换方式；有协变量时，可考虑合适残差置换&#x2F;参数 bootstrap，而非任意打乱 <span class="math">\(y\)</span>。数据驱动的筛选步骤也应纳入校准，不能先用真表型选好标记再只置换最后一层。</p>
+<h3 id="5-5-GWAS：检验标记与性状的条件关联-【重点】"><a href="#5-5-GWAS：检验标记与性状的条件关联-【重点】" class="headerlink" title="5.5 GWAS：检验标记与性状的条件关联 【重点】"></a>5.5 GWAS：检验标记与性状的条件关联 【重点】</h3><p>QTL 连锁作图利用人为交配积累的重组；自然群体 GWAS 利用历史重组和 LD。后者常有更细分辨率，但群体结构、亲缘和环境混杂更突出。两者都不保证峰顶就是因果碱基。</p>
+<p>连续性状：</p>
+<div class="math">\[
+y_i=\alpha+\beta g_i+\mathbf c_i^T\gamma+\epsilon_i.
+\]</div>
+
+<p>二分类性状：</p>
+<div class="math">\[
+y_i\sim\mathrm{Bernoulli}(p_i),\quad \log\frac{p_i}{1-p_i}=\alpha+\beta g_i+\mathbf c_i^T\gamma.
+\]</div>
+
+<span class="math">\(g\)</span> 可为 0/1/2 剂量；<span class="math">\(\beta\)</span> 取决于计数的效应等位基因。逻辑回归中 <span class="math">\(\exp(\beta)\)</span> 为所设模型下每增加一个效应等位的优势比，不是风险比。剂量与硬调用、缺失编码、效应等位翻转都影响解释。病例—对照抽样下截距还不能直接当总体患病率。
+
+<p>2×3 基因型列联检验为 2 自由度，可以捕捉一般基因型差异；加性剂量回归通常测试 1 个 <span class="math">\(\beta\)</span>，假设每多一个等位产生相同线性预测增量。两者不是互相替代的“同一检验”。期望计数很小、完全分离或极端病例不平衡时，普通渐近检验可能失准，需要合适方法。</p>
+<h3 id="5-6-群体混杂与-TDT-【重点】"><a href="#5-6-群体混杂与-TDT-【重点】" class="headerlink" title="5.6 群体混杂与 TDT 【重点】"></a>5.6 群体混杂与 TDT 【重点】</h3><p>若亚群 A 的某等位更常见，同时由于环境而性状均值更高，该等位即使没有直接效应，也可能与性状强关联。增加样本只会把错误零模型下的关联估计得更精确。</p>
+<p>可根据设计使用 PC&#x2F;协变量、亲缘模型、分层分析或家系设计；控制不足会假阳性，过度控制与目标相关的生物路径也会改变问题。PC 数量不能只按“结果图最好看”选择。</p>
+<p>TDT 以家系内传递作对照。对于携带 Aa 的可提供信息亲本，记录 A 传递给患病子代的次数 <span class="math">\(b\)</span>，以及未传递的次数 <span class="math">\(c\)</span>，经典统计量为：</p>
+<div class="math">\[
+T_{TDT}=\frac{(b-c)^2}{b+c}\overset{H_0}{\approx}\chi^2_1.
+\]</div>
+
+<p>小样本可条件于 <span class="math">\(b\)</span>+c 做 Binomial(<span class="math">\(b\)</span>+c,½)精确检验。不要求亲本患病；纯合亲本对此位点的传递方向没有信息。基因分型错误、家系关系错误及复杂家系非独立性仍要处理。</p>
+<h3 id="5-7-LMM、亲缘矩阵与白化-【重点】"><a href="#5-7-LMM、亲缘矩阵与白化-【重点】" class="headerlink" title="5.7 LMM、亲缘矩阵与白化 【重点】"></a>5.7 LMM、亲缘矩阵与白化 【重点】</h3><p>统一记为：</p>
+<div class="math">\[
+\mathbf y=C\gamma+\mathbf g\beta+u+e,\quad u\sim N(0,\sigma_g^2K),\quad e\sim N(0,\sigma_e^2I),
+\]</div>
+
+<div class="math">\[
+V=\mathrm{Var}(\mathbf y)=\sigma_g^2K+\sigma_e^2I.
+\]</div>
+
+<span class="math">\(K\)</span> 来自系谱或标记，描述个体相关性；教材使用 <span class="math">\(2K\sigma^2\)</span> 等约定，要核对 <span class="math">\(K\)</span> 是 kinship 还是 relationship 矩阵。缩放改变时方差参数也应相应改变。
+
+<p>给定 <span class="math">\(V\)</span> 后，广义最小二乘为 <span class="math">\(\hat\beta_{\mathrm{all}}=(X^\top V^{-1}X)^{-1}X^\top V^{-1}y\)</span>。若 <span class="math">\(V=LL^\top\)</span>，令 <span class="math">\(\tilde y=L^{-1}y\)</span>、<span class="math">\(\tilde X=L^{-1}X\)</span>，就转成白化空间 OLS。LMM 是在建模样本间相关误差，不是简单先把所有群体差异删除。</p>
+<span class="math">\(K\)</span> 的谱分解可在扫描中复用，避免每个位点从头做昂贵矩阵分解；GEMMA 是这一思路的重要例子。[Zhou 与 Stephens，2012](https://pmc.ncbi.nlm.nih.gov/articles/PMC3386377/)
+
+<p>方差分量常用 ML&#x2F;REML。比较不同固定效应时，不能机械比较不同固定设计下的 REML 似然；需选择适当 ML、score&#x2F;Wald 或软件专门实现的检验。二分类性状、极端不平衡、罕见变异可能需要 GLMM 或专用校准。</p>
+<p>若待检区域也进入 <span class="math">\(K\)</span>，可能产生 proximal contamination，削弱局部效应；LOCO（留出当前染色体构造背景）是一种常见策略。它也不是无条件最佳，需考虑数据规模和遗传结构。</p>
+<h3 id="5-8-多位点、上位性、多组学与“关联之后”-【应该理解】"><a href="#5-8-多位点、上位性、多组学与“关联之后”-【应该理解】" class="headerlink" title="5.8 多位点、上位性、多组学与“关联之后” 【应该理解】"></a>5.8 多位点、上位性、多组学与“关联之后” 【应该理解】</h3><p>教材 mrMLM 等采用先筛候选、再多位点联合收缩&#x2F;估计。这些方法改变了背景模型、候选搜索与检验流程，不能单凭检出位点更多就认定更好；应在同等假阳性控制下比较功效、位置误差、效应偏差和复现。</p>
+<p>GCTA 等可估计标记捕获的遗传方差，或在适合输入和 LD 参考下做条件&#x2F;联合分析。QTXNetwork 把关联扩展到转录、蛋白、代谢等读出。但表达与性状相关可能来自共同遗传原因、环境或反向作用，不是天然的因果中介。</p>
+<p>发现阶段效应常有 winner’s curse。可在独立样本估计效应；条件分析检查是否存在多个信号；精细定位输出模型依赖的候选变异集合和概率；共定位、功能注释、扰动实验提供后续证据。最近基因、最大注意力权重、最高 SHAP 都不是因果基因的充分判据。</p>
+<p>与第 12 章的区别：GWAS 关注 <span class="math">\(\beta\)</span> 及其检验，GP&#x2F;GS 关注新材料预测。一个标记不显著仍可能帮助预测；一个显著标记在不同 LD 和环境下也未必可迁移。</p>
+<h3 id="5-9-k-mer-GWAS：参考之外的变异表示-【重点】"><a href="#5-9-k-mer-GWAS：参考之外的变异表示-【重点】" class="headerlink" title="5.9 k-mer GWAS：参考之外的变异表示 【重点】"></a>5.9 k-mer GWAS：参考之外的变异表示 【重点】</h3><p><img src="/bioinformatics-notes/images/ch13/fig13-10.png" alt="图 13.10 SNP 与 k-mer GWAS 比较"></p>
+<p><em>图 13.10，p366。A 说明 SNP、插入缺失和结构变化可改变多个 k-mer；<span class="math">\(B\)</span> 为 QQ 图；<span class="math">\(C\)</span>、<span class="math">\(D\)</span> 比较信号对应区域。QQ 尾部更高既可能是真实信号，也可能是混杂，不能仅据此评价方法。</em></p>
+<p>从每个样本读序提取固定长度 k-mer，构成样本×k-mer 的 presence&#x2F;absence 或计数矩阵；每个特征再与表型做结构校正的关联。它可标记参考序列中缺失的插入、存在&#x2F;缺失和某些重排，不要求先把全部变异规范到同一参考坐标。<a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41588-020-0612-7">Voichek 与 Weigel，2020</a></p>
+<p>presence 与 depth 不同：低覆盖会制造假缺失，错误 read 制造稀有 k-mer，重复&#x2F;CNV 改变计数。若测序批次与表型相关，模型可能关联的是文库质量。通常需计数阈值、跨样本频率过滤、链&#x2F;方向处理和混杂校正；教材的 <span class="math">\(k\)</span>、次数及样本比例是案例参数。</p>
+<p><img src="/bioinformatics-notes/images/ch13/fig13-11.png" alt="图 13.11 k-mer GWAS 流程"></p>
+<p><em>图 13.11，p367。先构建特征矩阵，再用近似筛选减少精细 LMM 计算量；筛选召回率和阈值校准是流程的一部分。</em></p>
+<p>同一变异可产生许多高度相关 k-mer，不能把 100 个显著 k-mer 说成 100 个独立位点。将显著序列映射&#x2F;组装回候选区域，并按共享出现模式、LD 及序列关系汇总。相同 k-mer 可有多个基因组来源，“无需参考发现”不等于“无需参考或组装解释”。</p>
+<p>canonical k-mer 把一个序列和其反向互补映射到统一表示，可减少冗余；但链信息是否应保留取决于具体任务。更长 <span class="math">\(k\)</span> 增加特异性，也提高对测序错误、深度和样本差异的敏感性。</p>
+<h3 id="5-10-数据格式、质控和-GWAS-读图-【重点】"><a href="#5-10-数据格式、质控和-GWAS-读图-【重点】" class="headerlink" title="5.10 数据格式、质控和 GWAS 读图 【重点】"></a>5.10 数据格式、质控和 GWAS 读图 【重点】</h3><p><img src="/bioinformatics-notes/images/ch13/fig13-12.png" alt="图 13.12 PLINK 文本格式"></p>
+<p><em>图 13.12，p368。PED&#x2F;MAP 按个体组织，TPED&#x2F;TFAM 转置组织；家系&#x2F;样本 ID 用于对齐，不允许依靠文件行号“碰巧相同”。</em></p>
+<p>教材格式基础仍有价值：PED 前 6 列为家系、个体、父、母、性别、表型，后续是等位对；MAP 含染色体、ID、遗传位置和物理位置。二进制 BED&#x2F;BIM&#x2F;FAM 和 PLINK2 的 PGEN&#x2F;PVAR&#x2F;PSAM 承担更丰富的存储需求。PLINK 的.bed 是二进制基因型文件，不是基因组区间 BED。<a target="_blank" rel="noopener" href="https://www.cog-genomics.org/plink/2.0/formats">官方格式说明</a></p>
+<p>建议保留以下 QC 审计表：样本缺失、重复&#x2F;亲缘、异常杂合、批次&#x2F;测序平台、表型缺失与单位；位点缺失、MAC&#x2F;MAF、分型质量、HWE 适用范围、填补质量；参考版本、效应等位、strand 和坐标；样本&#x2F;协变量&#x2F;亲缘矩阵的 ID 顺序。</p>
+<p>Manhattan 图：横轴是位置，纵轴通常 <span class="math">\(-\log_{10}p\)</span>；大峰可能覆盖许多 LD 位点，不能每个点都算独立发现。无参考 k-mer 不一定有唯一坐标，需另行展示未定位信号。</p>
+<p>QQ 图：把观察 <span class="math">\(p\)</span> 值与零假设 Uniform(0,1)的次序统计量比较。整体抬高可来自混杂或多基因真实信号，尾部偏离也不是自动正确；需要结构诊断、合适 null 模拟与复现。<span class="math">\(\lambda_{GC}=\operatorname{median}(\chi^2_{\mathrm{obs}})/\operatorname{median}(\chi_1^2)\)</span>，其中分母约为 0.4549，仅适合相应统计量，不是通用质量分数。</p>
+<p>Bonferroni 阈值 <span class="math">\(\alpha/M\)</span> 控制家族错误率不要求检验独立；LD 常使它保守。BH 控制 FDR 需考虑有效 <span class="math">\(p\)</span> 值与依赖条件。人类常用 <span class="math">\(5\times10^{-8}\)</span> 来自特定规模背景，不是所有物种、k-mer、互作或稀有变异研究的自然常数。</p>
+<p>PLINK2 的 <code>--glm</code> 提供协变量线性&#x2F;逻辑&#x2F;Firth 回归，并不因此等同于带亲缘随机效应的 LMM。具体命令须匹配版本和表型编码；本笔记没有实际运行真实 GWAS。<a target="_blank" rel="noopener" href="https://www.cog-genomics.org/plink/2.0/assoc">官方关联分析说明</a></p>
+<h3 id="5-11-BSA、QTL-seq-与两层抽样-【重点】"><a href="#5-11-BSA、QTL-seq-与两层抽样-【重点】" class="headerlink" title="5.11 BSA、QTL-seq 与两层抽样 【重点】"></a>5.11 BSA、QTL-seq 与两层抽样 【重点】</h3><p><img src="/bioinformatics-notes/images/ch13/fig13-13.png" alt="图 13.13 QTL-seq"></p>
+<p><em>图 13.13，p370。A 先根据表型选择极端材料；<span class="math">\(B\)</span> 用等位 read 数估计 SNP-index；<span class="math">\(C\)</span> 比较两个池沿染色体的差异。选样与测序是两个不同的随机阶段。</em></p>
+<p>BSA 在分离群体中把表型相反的极端个体组成两个池，比较位点等位频率。若定义 ALT 为共同计数等位：</p>
+<div class="math">\[
+\widehat{AF}_{H}=\frac{R_{H,ALT}}{D_H},\quad \widehat{AF}_{L}=\frac{R_{L,ALT}}{D_L},\quad \Delta AF=\widehat{AF}_{H}-\widehat{AF}_{L}.
+\]</div>
+
+<p>SNP-index 不一定以“突变”作分子，关键是亲本&#x2F;参考等位定义一致。不同群体、回交、偏分离和选择可能使中性基线不是 0.5。</p>
+<p>两层噪声：先从群体抽 <span class="math">\(n\)</span> 个个体形成池，再从池抽 <span class="math">\(D\)</span> 条 reads。即使 <span class="math">\(D\)</span> 无限大，也只能精确估计这个有限池，而不是原群体频率。等 DNA、独立二倍体拷贝的简化模型为：</p>
+<div class="math">\[
+K\sim\mathrm{Binomial}(2n,p),\quad R\mid K\sim\mathrm{Binomial}(D,K/(2n)),
+\]</div>
+
+<div class="math">\[
+\mathrm{Var}(R/D)=p(1-p)\left[\frac1{2n}+\frac{1-1/(2n)}{D}\right].
+\]</div>
+
+<p>这不是所有 F2&#x2F;RIL 池的完整模型；基因型相关、非等量 DNA、PCR 和过度离散会改变方差。但它清楚说明：深度不能替代个体数。两池独立时 ΔAF 方差是两池方差之和，共享来源&#x2F;设计相关时还要考虑协方差。</p>
+<p>滑窗平滑能降低单点噪声，但邻窗相关。重组图距决定定位信息，不能从物理窗口宽度直接断言分辨率。阈值需匹配群体、池大小、深度、偏分离和全基因组检验过程。</p>
+<p><img src="/bioinformatics-notes/images/ch13/fig13-14.png" alt="图 13.14 GradedPool-seq"></p>
+<p><em>图 13.14，p371。按性状分级而非仅取两个极端池；看等位频率随等级的变化。图中 100×下的 Ref&#x2F;Alt 数字代表测序读出示意，不是直接观察到 100 个独立个体。</em></p>
+<p>教材扩展方法可按设计理解：QTG-seq 结合 QTL 定位、背景选择与后续池测序；GradedPool-seq 利用表型分级、Ridit 等分析；BRM 用区块回归进行定位与阈值&#x2F;区间估计，PQHE 讨论池数据下 QTL 遗传率。不能把某案例“四代克隆成功”当通用完成时间。</p>
+<p>对双等位频率向量 <span class="math">\((p,1-p)\)</span> 和 <span class="math">\((q,1-q)\)</span>，欧氏距离为 <span class="math">\(\sqrt2\,|p-q|\)</span>；OCR 容易丢掉根号。这个距离关系不提供显著性，仍需抽样方差与校准。</p>
+<h3 id="5-12-QTL、GWAS、BSA、GP-怎么选"><a href="#5-12-QTL、GWAS、BSA、GP-怎么选" class="headerlink" title="5.12 QTL、GWAS、BSA、GP 怎么选"></a>5.12 QTL、GWAS、BSA、GP 怎么选</h3><table>
+<thead>
+<tr>
+<th>目标与条件</th>
+<th>优先考虑</th>
+<th>主要信息瓶颈</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>有双亲材料，可构建分离群体并逐个分型</td>
+<td>QTL 连锁作图</td>
+<td>重组数、效应、表型精度</td>
+</tr>
+<tr>
+<td>已有多样材料及历史重组</td>
+<td>GWAS</td>
+<td>群体结构、LD、MAC、混杂</td>
+</tr>
+<tr>
+<td>可构建分离群体，预算倾向混池测序</td>
+<td>BSA&#x2F;QTL-seq</td>
+<td>池样本量、读深、遗传背景和分辨率</td>
+</tr>
+<tr>
+<td>目标是选育&#x2F;预测新材料表现</td>
+<td>GP&#x2F;GS</td>
+<td>训练群体代表性、环境迁移、验证划分</td>
+</tr>
+</tbody></table>
+<p>实际研究可以串联：发现粗区间 → 精细定位 → 功能验证 → 育种&#x2F;预测。每一步改变问题与证据要求，不能把一个统计峰直接跳译为可推广的因果机制。</p>
+<h2 id="6-关键数据对象与数学推导"><a href="#6-关键数据对象与数学推导" class="headerlink" title="6. 关键数据对象与数学推导"></a>6. 关键数据对象与数学推导</h2><h3 id="6-1-shape、统计单位与内存-【重点】"><a href="#6-1-shape、统计单位与内存-【重点】" class="headerlink" title="6.1 shape、统计单位与内存 【重点】"></a>6.1 shape、统计单位与内存 【重点】</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>典型 shape</th>
+<th>必须保留的语义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>剂量矩阵 <span class="math">\(G\)</span></td>
+<td><span class="math">\(N_{\mathrm{ind}}\times M_{\mathrm{var}}\)</span></td>
+<td>效应等位、倍性、缺失、参考版本</td>
+</tr>
+<tr>
+<td>定相单倍型 H</td>
+<td><span class="math">\(N_{\mathrm{hap}}\times M_{\mathrm{var}}\)</span></td>
+<td>相位块、样本归属、祖先方向</td>
+</tr>
+<tr>
+<td>read 等位计数</td>
+<td><span class="math">\(N_{\mathrm{sample}}\times M_{\mathrm{var}}\times2\)</span></td>
+<td>深度、质量、参考偏倚、非独立 read</td>
+</tr>
+<tr>
+<td>单群体 SFS</td>
+<td><span class="math">\(n\)</span>+1，或只保留多态区间</td>
+<td><span class="math">\(n\)</span> 为拷贝数；折叠、投影、不变位点</td>
+</tr>
+<tr>
+<td>联合 SFS</td>
+<td><span class="math">\(\prod_k(n_k+1)\)</span></td>
+<td>群体顺序、边界定义、稀疏性</td>
+</tr>
+<tr>
+<td>Q&#x2F;频率矩阵</td>
+<td><span class="math">\(N\times K\)</span>；<span class="math">\(K\times M\)</span></td>
+<td>成分标签、<span class="math">\(K\)</span>、模型与样本组成</td>
+</tr>
+<tr>
+<td>GRM&#x2F;<span class="math">\(K\)</span></td>
+<td><span class="math">\(N\times N\)</span></td>
+<td>样本顺序、关系&#x2F;亲缘缩放、建矩阵标记</td>
+</tr>
+<tr>
+<td>QTL 基因型概率</td>
+<td><span class="math">\(N\times P_{\mathrm{position}}\times G_{\mathrm{state}}\)</span></td>
+<td>作图群体、遗传图谱、条件概率</td>
+</tr>
+<tr>
+<td>多环境表型</td>
+<td><span class="math">\(N_{\mathrm{record}}\times\text{字段}\)</span></td>
+<td>个体、家系、地点、年份、重复、单位</td>
+</tr>
+<tr>
+<td>k-mer 矩阵</td>
+<td><span class="math">\(N\times M_{\mathrm{kmer}}\)</span></td>
+<td>canonical 规则、presence 或 count、过滤</td>
+</tr>
+<tr>
+<td>tree sequence</td>
+<td>nodes&#x2F;edges&#x2F;sites&#x2F;mutations</td>
+<td>节点时间、半开区间、样本与个体区别</td>
+</tr>
+</tbody></table>
+<p>10000 个体×100 万个标记的 float64 稠密矩阵要约 80GB；同一规模硬调用若用 2bit 编码理论上约 2.5GB，另有元数据及缺失编码。<span class="math">\(N=100000\)</span> 时稠密 <span class="math">\(N\times N\)</span> float64 关系矩阵本身就约 80GB。复杂度应分别报告 <span class="math">\(N\)</span>、<span class="math">\(M\)</span>、窗口和模拟数，不能只说“线性扩展”。</p>
+<h3 id="6-2-Tajima-的有限样本常数-【补充推导】"><a href="#6-2-Tajima-的有限样本常数-【补充推导】" class="headerlink" title="6.2 Tajima  的有限样本常数 【补充推导】"></a>6.2 Tajima <span class="math">\(D\)</span> 的有限样本常数 【补充推导】</h3><p>用 <span class="math">\(n\)</span> 条完整单倍型、无限位点经典无重组方差模型：</p>
+<div class="math">\[
+a_1=\sum_{i=1}^{n-1}\frac1i,\quad a_2=\sum_{i=1}^{n-1}\frac1{i^2},
+\]</div>
+
+<div class="math">\[
+b_1=\frac{n+1}{3(n-1)},\quad b_2=\frac{2(n^2+n+3)}{9n(n-1)},
+\]</div>
+
+<div class="math">\[
+c_1=b_1-1/a_1,\quad c_2=b_2-\frac{n+2}{na_1}+\frac{a_2}{a_1^2},
+\]</div>
+
+<div class="math">\[
+e_1=c_1/a_1,\quad e_2=c_2/(a_1^2+a_2).
+\]</div>
+
+<p>把这些代入§3.3 公式。<span class="math">\(\pi\)</span> 若按每位点给出，先乘 <span class="math">\(L\)</span> 成为 <span class="math">\(k\)</span>，或同时一致缩放整个分子分母。公式能算不代表经典零分布适合有重组、人口变化和缺失的实际数据。</p>
+<h3 id="6-3-SFS-投影：超几何抽样-【补充推导】"><a href="#6-3-SFS-投影：超几何抽样-【补充推导】" class="headerlink" title="6.3 SFS 投影：超几何抽样 【补充推导】"></a>6.3 SFS 投影：超几何抽样 【补充推导】</h3><p>一个位点在 <span class="math">\(n\)</span> 条已观测拷贝中有 <span class="math">\(i\)</span> 条衍生，投影到 <span class="math">\(m\)</span>≤<span class="math">\(n\)</span> 条时，抽到 <span class="math">\(j\)</span> 条衍生的概率为：</p>
+<div class="math">\[
+P(j\mid i,n,m)=\frac{{i\choose j}{n-i\choose m-j}}{{n\choose m}}.
+\]</div>
+
+<p>用这些权重累积期望谱，可以在损失样本信息的代价下统一不同位点的拷贝数。投影不能恢复系统性缺失的变异，也不能修正参考偏倚；<span class="math">\(m\)</span> 太小会丢信息，太大可能只保留很少位点。</p>
+<h3 id="6-4-时变溯祖风险与-【补充推导】"><a href="#6-4-时变溯祖风险与-【补充推导】" class="headerlink" title="6.4 时变溯祖风险与 () 【补充推导】"></a>6.4 时变溯祖风险与 <span class="math">\(N_{e}\)</span>(<span class="math">\(t\)</span>) 【补充推导】</h3><p>两条谱系在简单随机交配模型下的瞬时合并风险 <span class="math">\(\lambda(t)=1/[2N_e(t)]\)</span>。生存概率与密度为：</p>
+<div class="math">\[
+P(T&gt;t)=\exp\left[-\int_0^t\lambda(u)du\right],\qquad f_T(t)=\lambda(t)P(T&gt;t).
+\]</div>
+
+<p>恒定 <span class="math">\(N_{e}\)</span> 时退化为指数分布。群体结构改变“谱系是否同处一群体”的过程，因而把观察到的合并风险硬解释成单一 <span class="math">\(N_{e}\)</span>(<span class="math">\(t\)</span>)可能产生误导。这个关系是理解历史曲线可辨识性的入口。</p>
+<h3 id="6-5-区间作图的-EM-责任度-【补充推导】"><a href="#6-5-区间作图的-EM-责任度-【补充推导】" class="headerlink" title="6.5 区间作图的 EM 责任度 【补充推导】"></a>6.5 区间作图的 EM 责任度 【补充推导】</h3><p>给定位置 <span class="math">\(t\)</span> 和当前参数，潜在 QTL 基因型 <span class="math">\(q\)</span> 的后验权重为：</p>
+<div class="math">\[
+r_{iq}=\frac{p_{iq}(t)\phi(y_i;\mu+a x_q+d z_q,\sigma^2)}{\sum_{q'}p_{iq'}(t)\phi(y_i;\mu+a x_{q'}+d z_{q'},\sigma^2)}.
+\]</div>
+
+<p>下一步用 <span class="math">\(r_{iq}\)</span> 作为权重拟合参数，再迭代。表型进入责任度，这是模型拟合的一部分，不可随后又把这些“表型帮助推断的基因型”当独立观测去做未经校准的新检验。计算 log 似然要用 log-sum-exp 避免下溢，多初值用于检查局部最优。</p>
+<h3 id="6-6-Logistic-回归与-LMM-的数值联系-【补充推导】"><a href="#6-6-Logistic-回归与-LMM-的数值联系-【补充推导】" class="headerlink" title="6.6 Logistic 回归与 LMM 的数值联系 【补充推导】"></a>6.6 Logistic 回归与 LMM 的数值联系 【补充推导】</h3><p>逻辑回归 <span class="math">\(\eta=X\beta\)</span>，<span class="math">\(p=\operatorname{sigmoid}(\eta)\)</span>，<span class="math">\(\mathrm{score}=X^\top(y-p)\)</span>，负 Hessian 为 <span class="math">\(X^\top WX\)</span>，<span class="math">\(W_{ii}=p_i(1-p_i)\)</span>。IRLS 把非线性拟合转成逐步更新的加权问题；完全分离时普通 MLE 可发散，增加迭代次数不能解决不存在有限估计的问题。</p>
+<p>LMM 白化则由样本协方差 <span class="math">\(V\)</span> 决定变换。两者都出现加权线性代数，但一个处理非高斯均值—方差关系，一个处理个体间相关性；GLMM 同时涉及两方面，不能只把一个权重矩阵改名就声称实现了完整 GLMM。</p>
+<h3 id="6-7-从方差分解推出-Pool-seq-深度上限-【补充推导】"><a href="#6-7-从方差分解推出-Pool-seq-深度上限-【补充推导】" class="headerlink" title="6.7 从方差分解推出 Pool-seq 深度上限 【补充推导】"></a>6.7 从方差分解推出 Pool-seq 深度上限 【补充推导】</h3><p>令 <span class="math">\(P_{\mathrm{pool}}=K/(2n)\)</span>。全方差公式给出：</p>
+<div class="math">\[
+\mathrm{Var}(\hat p)=\mathrm{Var}(E[\hat p\mid P_{pool}])+E[\mathrm{Var}(\hat p\mid P_{pool})]
+\]</div>
+
+<div class="math">\[
+=\frac{p(1-p)}{2n}+\frac1D E[P_{pool}(1-P_{pool})].
+\]</div>
+
+<p>而 <span class="math">\(E[P_{\mathrm{pool}}(1-P_{\mathrm{pool}})]=p(1-p)(1-1/(2n))\)</span>，得到§5.11。<span class="math">\(D\to\infty\)</span> 时方差趋于 <span class="math">\(p(1-p)/(2n)\)</span>，不会趋于 0。这是实验设计结论：在高深度区继续测同一个池，收益可能远小于增加独立生物材料或改善等量混合。</p>
+<h3 id="6-8-教材公式的学习对应表"><a href="#6-8-教材公式的学习对应表" class="headerlink" title="6.8 教材公式的学习对应表"></a>6.8 教材公式的学习对应表</h3><table>
+<thead>
+<tr>
+<th>教材公式</th>
+<th>本笔记对应</th>
+<th>学习动作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>13.1—13.3</td>
+<td>§2.2—2.3</td>
+<td>从基因型概率推导杂合缺失，区分 <span class="math">\(F\)</span> 层级</td>
+</tr>
+<tr>
+<td>13.4—13.10</td>
+<td>§2.4、§4.3</td>
+<td>核对拷贝数、区域&#x2F;每位点单位与有限样本修正</td>
+</tr>
+<tr>
+<td>13.11—13.12</td>
+<td>§2.7</td>
+<td>后验、模型成分和 <span class="math">\(K\)</span> 选择的局限</td>
+</tr>
+<tr>
+<td>13.13—13.18</td>
+<td>§3.3—3.4、§6.2</td>
+<td>比较频谱权重、外部&#x2F;内部枝和方差</td>
+</tr>
+<tr>
+<td>13.19—13.24</td>
+<td>§3.5—3.6</td>
+<td>单倍型条件概率、符号、选择与 IBD 的假设</td>
+</tr>
+<tr>
+<td>13.25—13.27</td>
+<td>§3.7—3.8</td>
+<td>区分多态&#x2F;分歧、替换机会和检验零模型</td>
+</tr>
+<tr>
+<td>13.28—13.38</td>
+<td>§5.3、§6.5</td>
+<td>标记效应衰减、混合似然、LOD 与 LR</td>
+</tr>
+<tr>
+<td>13.39—13.48</td>
+<td>§5.4</td>
+<td>背景校正、一维&#x2F;二维扫描、环境与上位性</td>
+</tr>
+<tr>
+<td>13.49—13.54</td>
+<td>§5.5—5.7、§6.6</td>
+<td>列联、GLM、TDT、相关样本 LMM</td>
+</tr>
+<tr>
+<td>13.55—13.58</td>
+<td>§5.8</td>
+<td>多组学&#x2F;多位点效应与方差组分，检查选择后推断</td>
+</tr>
+</tbody></table>
+<p>笔记使用统一符号解释原理，不逐行照录复杂扫描式；具体实现需要相应软件的完整模型与参数定义。</p>
+<h2 id="7-可运行教学实验与实际输出"><a href="#7-可运行教学实验与实际输出" class="headerlink" title="7. 可运行教学实验与实际输出"></a>7. 可运行教学实验与实际输出</h2><p>完整脚本：<a href="/bioinformatics-notes/code/ch13/ch13_examples.py">ch13_examples.py</a>。本次实际输出：<a href="/bioinformatics-notes/code/ch13/results.md">results.md</a>；机器可读结果：<a href="/bioinformatics-notes/code/ch13/results.json">results.json</a>。运行环境 Python 3.13.14、NumPy 2.5.3、SciPy 1.18.1；随机实验均固定种子，含数值一致性检查。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\ark-ai\ComfyUI_windows_portable\python_embeded\python.exe -I -X utf8 ch13_examples.py</span><br></pre></td></tr></table></figure>
+
+<p>在脚本所在目录运行，或传入脚本路径；输出写在脚本目录。除教材习题 3—5 使用题目给定数据外，其他全部是构造数据或模拟。没有进行真实群体的选择扫描、人口史重建或 GWAS，也不将教学代码称作生产工具替代品。</p>
+<h3 id="7-1-HWE：同一个-，两个检验"><a href="#7-1-HWE：同一个-，两个检验" class="headerlink" title="7.1 HWE：同一个 ，两个检验"></a>7.1 HWE：同一个 <span class="math">\(p\)</span>，两个检验</h3><p>教材数据[1787,3039,1303]给出 <span class="math">\(N=6129\)</span>、<span class="math">\(p_{A}=0.539484\)</span>。Pearson <span class="math">\(\chi ^2=0.026980\)</span>、<span class="math">\(df=1\)</span>、<span class="math">\(p=0.869529\)</span>；条件精确检验 <span class="math">\(p=0.877420\)</span>，结论一致。两个 <span class="math">\(p\)</span> 值不必相等，因为零分布及尾部定义不同。</p>
+<p>精确检验条件于等位拷贝总数，对可行杂合子数枚举。若 A 总拷贝数为 <span class="math">\(m\)</span>、杂合数为 <span class="math">\(h\)</span>，则 <span class="math">\(n_{AA}=(m-h)/2\)</span>、<span class="math">\(n_{aa}=N-n_{AA}-h\)</span>，条件概率正比：</p>
+<div class="math">\[
+P(h\mid N,m)\propto\frac{2^h}{n_{AA}!h!n_{aa}!}.
+\]</div>
+
+<p>代码用 log-gamma 计算并归一化，累加概率不大于观察表概率的状态，得到概率排序意义的双侧精确 <span class="math">\(p\)</span> 值。它不是简单把“单侧概率乘 2”。完整推导与题解见§10.3。</p>
+<h3 id="7-2-Wahlund-效应：两群体都平衡，合并却缺杂合"><a href="#7-2-Wahlund-效应：两群体都平衡，合并却缺杂合" class="headerlink" title="7.2 Wahlund 效应：两群体都平衡，合并却缺杂合"></a>7.2 Wahlund 效应：两群体都平衡，合并却缺杂合</h3><p>两亚群 <span class="math">\(p=0.2\)</span>、0.8，输出群内 <span class="math">\(H=0.32\)</span>，总频率期望 <span class="math">\(H=0.5\)</span>，合并杂合缺失 <span class="math">\(F=0.36\)</span>，概念性 <span class="math">\(F_{ST}=0.36\)</span>。这里群内符合 HWE，但合并后仍会出现由群间频率差异造成的杂合缺失。</p>
+<p>进一步练习：改变样本比例，再看合并频率与缺失程度；避免把抽样不平衡误当生物历史改变。</p>
+<h3 id="7-3-SFS-改变，-相同而-不同"><a href="#7-3-SFS-改变，-相同而-不同" class="headerlink" title="7.3 SFS 改变， 相同而  不同"></a>7.3 SFS 改变，<span class="math">\(S\)</span> 相同而 <span class="math">\(D\)</span> 不同</h3><p>每例 <span class="math">\(n=10\)</span> 条序列、<span class="math">\(S=10\)</span>，使用区域总量：</p>
+<table>
+<thead>
+<tr>
+<th>10 个变异都处于</th>
+<th align="right"><span class="math">\(\theta _{W}\)</span></th>
+<th align="right"><span class="math">\(k=\pi L\)</span></th>
+<th align="right">Tajima <span class="math">\(D\)</span></th>
+<th align="right"><span class="math">\(\theta _{H}\)</span></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><span class="math">\(1/10\)</span> 衍生频率</td>
+<td align="right">3.534858</td>
+<td align="right">2.000000</td>
+<td align="right">−1.924582</td>
+<td align="right">0.222222</td>
+</tr>
+<tr>
+<td><span class="math">\(5/10\)</span> 衍生频率</td>
+<td align="right">3.534858</td>
+<td align="right">5.555556</td>
+<td align="right">2.533785</td>
+<td align="right">5.555556</td>
+</tr>
+<tr>
+<td><span class="math">\(9/10\)</span> 衍生频率</td>
+<td align="right">3.534858</td>
+<td align="right">2.000000</td>
+<td align="right">−1.924582</td>
+<td align="right">18.000000</td>
+</tr>
+</tbody></table>
+<p>这验证频谱权重与极化信息的区别；没有为三个任意构造谱声称某个真实人口史或选择机制。特别是 <span class="math">\(D\)</span> 约−1.92 不能直接翻译成“<span class="math">\(p\)</span> 略大于 0.05”。</p>
+<h3 id="7-4-LD-随重组衰减"><a href="#7-4-LD-随重组衰减" class="headerlink" title="7.4 LD 随重组衰减"></a>7.4 LD 随重组衰减</h3><p>初始单倍型 <span class="math">\((f_{AB},f_{Ab},f_{aB},f_{ab})=(0.4,0.1,0.1,0.4)\)</span>，得到 <span class="math">\(D=0.15\)</span>、<span class="math">\(r^2=0.36\)</span>；<span class="math">\(c=0.1\)</span>、10 代后 <span class="math">\(D=0.052302\)</span>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D0 = <span class="number">0.4</span> - <span class="number">0.5</span> * <span class="number">0.5</span></span><br><span class="line">D10 = D0 * (<span class="number">1</span> - <span class="number">0.1</span>)**<span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<p>完整脚本对应的实际输出节选：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;D0&quot;</span><span class="punctuation">:</span> <span class="number">0.15000000000000002</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;r_squared0&quot;</span><span class="punctuation">:</span> <span class="number">0.3600000000000001</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;D_after_10_c01&quot;</span><span class="punctuation">:</span> <span class="number">0.05230176601500002</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>此例无漂变、迁移、选择和突变。若真实数据的 LD 没有这样衰减，不代表数学公式算错，可能是模型缺了过程。</p>
+<h3 id="7-5-有效群体大小改变漂变方差"><a href="#7-5-有效群体大小改变漂变方差" class="headerlink" title="7.5 有效群体大小改变漂变方差"></a>7.5 有效群体大小改变漂变方差</h3><p>固定 <span class="math">\(p=0.3\)</span>，分别模拟 100000 次一代抽样：</p>
+<table>
+<thead>
+<tr>
+<th align="right"><span class="math">\(N_{e}\)</span></th>
+<th align="right">理论 Var(<span class="math">\(p\)</span>′)</th>
+<th align="right">模拟方差</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">50</td>
+<td align="right">0.002100</td>
+<td align="right">0.00209660</td>
+</tr>
+<tr>
+<td align="right">5000</td>
+<td align="right">0.00002100</td>
+<td align="right">0.0000211103</td>
+</tr>
+</tbody></table>
+<span class="math">\(N_{e}\)</span> 增加 100 倍，一代漂变方差约缩小 100 倍。此处 <span class="math">\(N_{e}\)</span> 直接作为理想 Wright–Fisher 群体大小，不是从真实群体估计得到。
+
+<h3 id="7-6-从指数等待时间生成溯祖尺度"><a href="#7-6-从指数等待时间生成溯祖尺度" class="headerlink" title="7.6 从指数等待时间生成溯祖尺度"></a>7.6 从指数等待时间生成溯祖尺度</h3><span class="math">\(N_{e}=10000\)</span>、<span class="math">\(n=10\)</span> 条单倍型，模拟 50000 次等待时间序列。平均 <span class="math">\(T_{MRCA}=35845.22\)</span> 代，理论 36000 代；平均总枝长 112700.96 谱系·代，理论 113158.73。
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 节选：以下固定随机种子和Ne，与完整脚本相同</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">rng = np.random.default_rng(<span class="number">1306</span>)</span><br><span class="line">Ne = <span class="number">10000</span></span><br><span class="line">k = np.arange(<span class="number">2</span>, <span class="number">11</span>)</span><br><span class="line">wait = rng.exponential(<span class="number">4</span>*Ne/(k*(k-<span class="number">1</span>)), size=(<span class="number">50000</span>, <span class="number">9</span>))</span><br><span class="line">tmrca = wait.<span class="built_in">sum</span>(axis=<span class="number">1</span>)</span><br><span class="line">total_branch = (wait*k).<span class="built_in">sum</span>(axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>完整脚本对应的实际输出节选：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;mean_TMRCA_generations&quot;</span><span class="punctuation">:</span> <span class="number">35845.21890656767</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;theory_TMRCA&quot;</span><span class="punctuation">:</span> <span class="number">36000.0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;mean_total_branch&quot;</span><span class="punctuation">:</span> <span class="number">112700.95763842207</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;theory_total_branch&quot;</span><span class="punctuation">:</span> <span class="number">113158.73015873015</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>只生成等待时间，未构建随机拓扑、ARG 或测序数据。它检验尺度推导，不替代 msprime。</p>
+<h3 id="7-7-两组表型的-检验"><a href="#7-7-两组表型的-检验" class="headerlink" title="7.7 两组表型的  检验"></a>7.7 两组表型的 <span class="math">\(t\)</span> 检验</h3><p>教材习题 4 中两组均值 68.188889 与 62.577778，差值 5.611111。等方差 <span class="math">\(t=3.853166\)</span>、<span class="math">\(df=16\)</span>、双侧 <span class="math">\(p=0.00140591\)</span>；Welch <span class="math">\(df=15.8222\)</span>、<span class="math">\(p=0.00143182\)</span>。完整假设、置信区间与关联解释在§10.4。</p>
+<h3 id="7-8-两位点基因型的条件-Monte-Carlo-检验"><a href="#7-8-两位点基因型的条件-Monte-Carlo-检验" class="headerlink" title="7.8 两位点基因型的条件 Monte Carlo 检验"></a>7.8 两位点基因型的条件 Monte Carlo 检验</h3><p>教材习题 5 的 3×3 表给出 <span class="math">\(\chi ^2=17.307692\)</span>、<span class="math">\(df=4\)</span>、渐近 <span class="math">\(p=0.00168416\)</span>。因若干期望格数&lt;5，再固定边际模拟 100000 张零假设列联表，以 Pearson 统计量排序，得到 Monte Carlo <span class="math">\(p=0.00191998\)</span>，模拟标准误约 0.000138。</p>
+<p>这是一种固定边际、指定统计量的条件模拟检验，不是精确枚举后的绝对数值，也不是把 <span class="math">\(2N\)</span> 条未定相染色体当成已观测单倍型。题解另给出全部相位分配下的 <span class="math">\(D\)</span> 和 <span class="math">\(r^2\)</span> 可能范围。</p>
+<h3 id="7-9-群体混杂：一个真实效应为-0-的-SNP-也能强关联"><a href="#7-9-群体混杂：一个真实效应为-0-的-SNP-也能强关联" class="headerlink" title="7.9 群体混杂：一个真实效应为 0 的 SNP 也能强关联"></a>7.9 群体混杂：一个真实效应为 0 的 SNP 也能强关联</h3><p>构造 2000 个个体，两个群体的等位频率分别为 0.1、0.9，性状只由群体效应 3z 和方差 1 的噪声生成，SNP 直接效应为 0。</p>
+<table>
+<thead>
+<tr>
+<th>拟合</th>
+<th align="right">SNP 系数</th>
+<th align="right">用已知 <span class="math">\(\sigma\)</span>&#x3D;1 的 <span class="math">\(z\)</span> 统计量</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>忽略群体</td>
+<td align="right">1.448239</td>
+<td align="right">58.7735</td>
+<td>错误均值模型产生巨大表面关联</td>
+</tr>
+<tr>
+<td>加入真实群体标签</td>
+<td align="right">−0.066257</td>
+<td align="right">−1.2884</td>
+<td>双侧 <span class="math">\(p\approx 0.1976\)</span></td>
+</tr>
+</tbody></table>
+<p>这是为了隔离机制而使用已知噪声方差的教学模型，未调整模型的方差假设也受失配影响；实际 GWAS 通常需要估计方差并处理未知结构。极小 <span class="math">\(p\)</span> 在浮点数里可能下溢为 0，脚本同时输出稳定计算的 log10(<span class="math">\(p\)</span>)，不能解释为数学上的 <span class="math">\(p=0\)</span>。</p>
+<h3 id="7-10-GLS-与白化-OLS-等价"><a href="#7-10-GLS-与白化-OLS-等价" class="headerlink" title="7.10 GLS 与白化 OLS 等价"></a>7.10 GLS 与白化 OLS 等价</h3><p>构造 <span class="math">\(40\times40\)</span> 正定 <span class="math">\(V\)</span>，用直接 GLS 与 Cholesky 白化 OLS 求解，回归系数最大差约 <span class="math">\(1.25\times10^{-16}\)</span>。该实验固定 <span class="math">\(V\)</span>，没有估计遗传方差、扫描位点或实现完整 GEMMA。</p>
+<h3 id="7-11-ABC-与可解析后验比较"><a href="#7-11-ABC-与可解析后验比较" class="headerlink" title="7.11 ABC 与可解析后验比较"></a>7.11 ABC 与可解析后验比较</h3><p>用最简单的可校验模型：<span class="math">\(p\sim\operatorname{Uniform}(0,1)\)</span>，<span class="math">\(X\mid p\sim\operatorname{Binomial}(10,p)\)</span>，观察 <span class="math">\(X=7\)</span>。模拟 200000 次，接受 <span class="math">\(X_{sim}\)</span>&#x3D;7 的 18324 个参数。</p>
+<p>ABC 后验均值 0.665619，精确 Beta(8,4)后验均值 0.666667；ABC 的 95% 分位区间约[0.384793,0.888906]，精确区间[0.390257,0.890737]。</p>
+<p>这个离散充分摘要可以精确匹配，因此剩余差异主要来自 Monte Carlo 误差。真实人口史摘要通常不充分、连续距离需 <span class="math">\(\varepsilon &gt;0\)</span>，不能由本例推断 ABC 在所有问题中无近似偏差。</p>
+<h3 id="7-12-Pool-seq：深度越高，越能看见个体抽样的下限"><a href="#7-12-Pool-seq：深度越高，越能看见个体抽样的下限" class="headerlink" title="7.12 Pool-seq：深度越高，越能看见个体抽样的下限"></a>7.12 Pool-seq：深度越高，越能看见个体抽样的下限</h3><span class="math">\(n=50\)</span> 个独立二倍体个体、<span class="math">\(p=0.5\)</span>，每个深度模拟 100000 次：
+
+<table>
+<thead>
+<tr>
+<th align="right">每池深度 <span class="math">\(D\)</span></th>
+<th align="right">两层理论方差</th>
+<th align="right">模拟方差</th>
+<th align="right">错只按 reads 估计的方差</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">100</td>
+<td align="right">0.00497500</td>
+<td align="right">0.00498697</td>
+<td align="right">0.00250000</td>
+</tr>
+<tr>
+<td align="right">1000</td>
+<td align="right">0.00274750</td>
+<td align="right">0.00273829</td>
+<td align="right">0.00025000</td>
+</tr>
+<tr>
+<td align="right">10000</td>
+<td align="right">0.00252475</td>
+<td align="right">0.00253019</td>
+<td align="right">0.00002500</td>
+</tr>
+</tbody></table>
+<p>理论极限为 0.0025。把 read 数当样本数，会随着测序变深而越来越过度自信。该模拟不包含极端表型选择、连锁和不等量 DNA，需要在真实 BSA 模型中扩展。</p>
+<h3 id="7-13-全基因组最大值阈值高于单位点阈值"><a href="#7-13-全基因组最大值阈值高于单位点阈值" class="headerlink" title="7.13 全基因组最大值阈值高于单位点阈值"></a>7.13 全基因组最大值阈值高于单位点阈值</h3><p>构造 80 个独立个体、100 个标记、无真实关联，做 2000 次表型置换。首个标记 LOD 的 95% 分位约 0.879850；每次取 100 个标记最大 LOD 后，95% 分位约 2.730042。</p>
+<p>这里用单标记高斯回归的 <span class="math">\(\mathrm{LOD}=-(N/2)\log_{10}(1-r^2)\)</span>，不是完整隐 QTL 区间作图。实验说明搜索本身带来多重比较；2.73 只适用于本次构造设计，不是通用 LOD 门槛。复杂设计必须保持可交换结构。</p>
+<h2 id="8-AI-for-Science-扩展"><a href="#8-AI-for-Science-扩展" class="headerlink" title="8. AI for Science 扩展"></a>8. AI for Science 扩展</h2><h3 id="8-1-把进化模拟当作有假设的训练数据生成器-【重点】"><a href="#8-1-把进化模拟当作有假设的训练数据生成器-【重点】" class="headerlink" title="8.1 把进化模拟当作有假设的训练数据生成器 【重点】"></a>8.1 把进化模拟当作有假设的训练数据生成器 【重点】</h3><p>群体遗传为基于模拟的推断（simulation-based inference）提供了明确的应用场景：部分真实历史未知，但能在明确模型下模拟带标签数据。<span class="math">\(\eta\)</span> 可包含 <span class="math">\(N_{e}\)</span>(<span class="math">\(t\)</span>)、分化时间、迁移、选择系数和重组率；网络学习参数、后验、似然比或模型类别。</p>
+<p>这也容易制造“训练与测试都在同一个错误模拟器里，所以分数极高”的假象。至少分开四种测试：同分布新种子、训练参数范围内新组合、参数范围外、生成机制改变。真实数据外推需要额外检查观测噪声与模型覆盖。</p>
+<table>
+<thead>
+<tr>
+<th>任务</th>
+<th>输入→输出</th>
+<th>必备基线</th>
+<th>必须留出&#x2F;改变</th>
+<th>科学风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>人口参数估计</td>
+<td>SFS&#x2F;单倍型→<span class="math">\(\eta\)</span> 或后验</td>
+<td>经典摘要＋回归、ABC、适合的 SFS 方法</td>
+<td>历史类型、<span class="math">\(\mu\)</span>&#x2F;<span class="math">\(r\)</span>、缺失机制</td>
+<td>不同参数产生相近数据</td>
+</tr>
+<tr>
+<td>扫荡分类</td>
+<td>局部序列→选择类别&#x2F;分数</td>
+<td>Tajima <span class="math">\(D\)</span>、<span class="math">\(\pi\)</span>、单倍型特征＋简单模型</td>
+<td>瓶颈、背景选择、局部重组</td>
+<td>将未训练的人口史当选择</td>
+</tr>
+<tr>
+<td>局部祖源&#x2F;渗入</td>
+<td>单倍型→来源或片段</td>
+<td>合适 HMM&#x2F;距离方法</td>
+<td>参考谱系、混合时间</td>
+<td>来源缺失仍被强行分配</td>
+</tr>
+<tr>
+<td>重组&#x2F;系谱</td>
+<td>序列与位置→<span class="math">\(r\)</span> 或局部树</td>
+<td>统计方法、简单图&#x2F;特征模型</td>
+<td>区域、物种、变异密度</td>
+<td>树估计误差传到下游</td>
+</tr>
+<tr>
+<td>k-mer 性状预测</td>
+<td>序列特征→表型</td>
+<td>ridge&#x2F;LMM、合理频率基线</td>
+<td>谱系、批次、覆盖、环境</td>
+<td>学到技术偏差或种群标签</td>
+</tr>
+<tr>
+<td>因果候选排序</td>
+<td>GWAS&#x2F;注释&#x2F;功能数据→优先级</td>
+<td>单信号&#x2F;注释基线</td>
+<td>LD 块、基因家族、队列</td>
+<td>关联证据被包装成因果证明</td>
+</tr>
+</tbody></table>
+<p>Flagel 等以序列联配矩阵作为 CNN 输入，在模拟的渗入、重组、扫荡与历史任务中展示了有效性。这提供了一个方法入口；论文中的优势不能自动推广到新物种和未建模历史。<a target="_blank" rel="noopener" href="https://academic.oup.com/mbe/article/36/2/220/5229930">原论文</a></p>
+<h3 id="8-2-表示学习的归纳偏置：哪些轴有顺序-【重点】"><a href="#8-2-表示学习的归纳偏置：哪些轴有顺序-【重点】" class="headerlink" title="8.2 表示学习的归纳偏置：哪些轴有顺序 【重点】"></a>8.2 表示学习的归纳偏置：哪些轴有顺序 【重点】</h3><p>单倍型矩阵的列有基因组顺序，且相邻变异的物理距离不均匀；行通常是可交换的样本，并没有图像中“相邻像素”的天然关系。对矩阵做 2D 卷积时，要解释行排序、列距离与变长输入。</p>
+<p>可以探索按相似性排序、行置换增强、集合编码器、带位置与群体标签的注意力、图&#x2F;局部树表示。若目标是整体人口参数，可要求对同群体样本行置换不变；若输出每个样本标签，则更适合置换等变。群体身份不同的行不能不加区分地任意合并。</p>
+<p>REF&#x2F;ALT 翻转对应编码变化；在不关心祖先方向的任务中，模型可考虑相关对称性。但 Fay &amp; Wu 类依赖衍生状态的任务，不能把方向随意增强后仍声称保留全部信息。</p>
+<p>若输入只保留 SNP 而丢掉位置和 callable 长度，模型很难区分“同样变异数来自 10kb 还是 1Mb”。把变异数、坐标、缺失 mask 和测序信息作为显式对象，比盲目扩大网络更重要。</p>
+<h3 id="8-3-神经后验的校准与评测"><a href="#8-3-神经后验的校准与评测" class="headerlink" title="8.3 神经后验的校准与评测"></a>8.3 神经后验的校准与评测</h3><p>若用网络 <span class="math">\(q_\phi(\eta\mid X)\)</span> 近似后验，需评价后验是否校准：在预先定义的测试分布中，标称 90% 可信区间是否约覆盖 90% 的真值；覆盖是否随参数、样本量、历史类型变化。</p>
+<p>可以进行 simulation-based calibration：从先验抽 <span class="math">\(\eta\)</span>，模拟 <span class="math">\(X\)</span>，再从估计后验抽样，检查真 <span class="math">\(\eta\)</span> 在后验样本中的秩分布。它检验的是所用生成模型下的校准，不证明模型覆盖真实生物过程；窄区间不一定更好。</p>
+<p>点估计 MSE 可能掩盖多峰后验。例如两个起源模型均能解释数据，输出平均分化时间可能落在两者都不支持的位置。应保留模型不确定性，必要时报告“无法区分”。</p>
+<h3 id="8-4-模型失配压力测试与观测层"><a href="#8-4-模型失配压力测试与观测层" class="headerlink" title="8.4 模型失配压力测试与观测层"></a>8.4 模型失配压力测试与观测层</h3><p>建议一次改变一种机制：训练恒定群体，测试瓶颈；训练均匀重组，测试热点；训练完美定相，测试 switch error；训练随机缺失，测试群体相关缺失；训练一致覆盖，测试表型相关深度。</p>
+<p>检查模型关注的是选择本身，还是 <span class="math">\(\pi\)</span>、缺失率、SNP 数量等代理特征。可以将这些摘要作为强基线，并用匹配摘要的困难样本比较。需要报告失败的条件范围，分析还应指出是哪一种生成机制或观测条件变化造成了失败。</p>
+<p>对训练&#x2F;测试拆分，要以独立模拟历史&#x2F;祖先图为单位；从同一模拟染色体裁出的相邻窗口应整体分组。否则共享系谱、重组背景和选择事件的窗口可能跨训练测试，导致信息泄漏。</p>
+<h3 id="8-5-人口结构与跨群体预测"><a href="#8-5-人口结构与跨群体预测" class="headerlink" title="8.5 人口结构与跨群体预测"></a>8.5 人口结构与跨群体预测</h3><p>同一标记可能在不同群体有不同 LD、等位频率和表型环境。跨群体预测下降不必意味着生物机制完全不同，也可能是标记对因果变异的代理关系改变。</p>
+<p>应区分：预测同一育种群体新个体、预测新家系、预测新地理群体、预测新环境、预测干预。报告分组误差、校准和不确定性；不要把某一祖源成分分数当作固定、天然、无误差的群体本质。</p>
+<h3 id="8-6-五个可执行的后续项目"><a href="#8-6-五个可执行的后续项目" class="headerlink" title="8.6 五个可执行的后续项目"></a>8.6 五个可执行的后续项目</h3><p>以下为实验方案，本次只完成§7 教学模拟与教材题解。</p>
+<ol>
+<li>选择与扩张的混淆实验：生成恒定中性、扩张中性、硬扫荡三类数据；先比较 <span class="math">\(\pi\)</span>、<span class="math">\(S\)</span>、Tajima <span class="math">\(D\)</span> 与简单分类器，再尝试序列模型。测试未见瓶颈，报告每类错误率而非仅整体 accuracy。</li>
+<li>SFS 信息损失实验：比较完整单倍型、展开 SFS、折叠 SFS；控制模拟预算和参数先验，评价点误差、后验覆盖以及哪组参数无法区分。</li>
+<li>群体结构与关联实验：构造有真实因果标记和结构混杂的数据，比较 OLS、PC 校正、LMM；校准零效应位点错误率，评估功效及 <span class="math">\(K\)</span> 包含待检区域的影响。</li>
+<li>参考 SNP 与 k-mer 对照：在可追溯的公开植物材料中选择一个性状，保持相同样本&#x2F;协变量&#x2F;结构校正；按独立区域汇总信号，检测覆盖和缺失与表型是否相关。</li>
+<li>混池预算实验：固定总实验成本，改变个体数、读深、池数和重组群体大小；用定位误差、区间覆盖和检出率评价，而不只看 SNP-index 曲线平滑程度。</li>
+</ol>
+<p>从<a target="_blank" rel="noopener" href="https://tskit.dev/msprime/docs/latest/ancestry.html">msprime 官方教程</a>与<a target="_blank" rel="noopener" href="https://tskit.dev/tutorials/getting_started.html">tskit 入门</a>开始，明确 ploidy、samples、<span class="math">\(sequence_{length}\)</span>、<span class="math">\(mutation_{rate}\)</span>、<span class="math">\(recombination_{rate}\)</span> 和时间单位。输入几十个“samples”最终生成多少条单倍型，应检查对象而不是凭变量名猜测。</p>
+<h2 id="9-与-VirusBin-研究的联系"><a href="#9-与-VirusBin-研究的联系" class="headerlink" title="9. 与 VirusBin 研究的联系"></a>9. 与 VirusBin 研究的联系</h2><p>本节延续前几章中“组成表示、覆盖度剪边、聚类稳定性”的研究背景，属于可验证设想，不表示现有实现已经具备这些能力。</p>
+<h3 id="9-1-同种、同株、同祖片段是不同标签"><a href="#9-1-同种、同株、同祖片段是不同标签" class="headerlink" title="9.1 同种、同株、同祖片段是不同标签"></a>9.1 同种、同株、同祖片段是不同标签</h3><p>两个 contig 可能来自同一株，也可能来自近缘株、共享保守基因或发生水平转移。序列相似和共覆盖不能完全区分这些情况。类似群体遗传中的 IBS&#x2F;IBD 区分，必须先定义目标 bin 的生物层级与允许混合程度。</p>
+<p>病毒重组、分节段和宿主相关丰度变化会进一步破坏简单标签。二倍体常染色体 HWE、<span class="math">\(2N\)</span> 拷贝计数和标准人群 SFS 不能直接移植到混合病毒 read 数据。</p>
+<h3 id="9-2-k-mer-的相关与观测偏差"><a href="#9-2-k-mer-的相关与观测偏差" class="headerlink" title="9.2 k-mer 的相关与观测偏差"></a>9.2 k-mer 的相关与观测偏差</h3><p>一个局部突变会同时改变多个重叠 k-mer，因此特征数不是独立信息数。模型可能被重复序列、高 GC、contig 长度或错误读段特征支配。可比较不同 <span class="math">\(k\)</span>、canonical 处理、长度标准化与重复 mask；按近缘簇或完整基因组留出。</p>
+<p>从同一基因组切出的训练和测试片段可能共享长序列及谱系特征，随机 contig 划分会过于容易。若研究目标是未知远缘病毒，测试必须包含相应的谱系外推。</p>
+<h3 id="9-3-覆盖度检验需要分层抽样模型"><a href="#9-3-覆盖度检验需要分层抽样模型" class="headerlink" title="9.3 覆盖度检验需要分层抽样模型"></a>9.3 覆盖度检验需要分层抽样模型</h3><p>Pool-seq 的两层噪声提醒我们：read 深度、样本数、真实基因组拷贝数不是同一数量。覆盖还受 contig 长度、可比对性、拷贝数、GC 及生物过程影响。为边构造 <span class="math">\(p\)</span> 值前，先确认零假设及方差是否包含这些来源。</p>
+<p>可以研究覆盖模型的后验预测残差，再按长度&#x2F;覆盖分层检查边级错误；但不能把一个“不显著差异”的边解释成“已证实同基因组”。</p>
+<h3 id="9-4-稳定性与选择扫描共享一个陷阱"><a href="#9-4-稳定性与选择扫描共享一个陷阱" class="headerlink" title="9.4 稳定性与选择扫描共享一个陷阱"></a>9.4 稳定性与选择扫描共享一个陷阱</h3><p>一个聚类在重复初始化或重采样中很稳定，可能只是系统性偏差稳定；就像多个选择统计量共同异常可能都由同一个瓶颈造成。应加入难例：近缘株共享区、重组片段、嵌合 contig、低覆盖、宿主污染及批次共变。</p>
+<h3 id="9-5-模拟训练数据的标签层级"><a href="#9-5-模拟训练数据的标签层级" class="headerlink" title="9.5 模拟训练数据的标签层级"></a>9.5 模拟训练数据的标签层级</h3><p>可生成已知来源基因组和丰度，再经过片段化、错误、覆盖偏差、组装混合等观测层，分别评估表示、边、聚类。训练集和测试集在来源基因组与模拟历史层面分开，而不是仅换随机 read 种子。</p>
+<p>若从边级检验进入图聚类，BH 控制边级某类错误不直接保证 bin 级污染率；图上的传递路径会累积错误。最终仍需按完整基因组&#x2F;株系真值报告纯度、完整度、碎片化和合并错误。</p>
+<h2 id="10-教材习题完整解答"><a href="#10-教材习题完整解答" class="headerlink" title="10. 教材习题完整解答"></a>10. 教材习题完整解答</h2><h3 id="10-1-习题-1：选择压检测主要方法、原理和特点"><a href="#10-1-习题-1：选择压检测主要方法、原理和特点" class="headerlink" title="10.1 习题 1：选择压检测主要方法、原理和特点"></a>10.1 习题 1：选择压检测主要方法、原理和特点</h3><p>可按观测信息分为六组：</p>
+<table>
+<thead>
+<tr>
+<th>方法类别</th>
+<th>原理</th>
+<th>优点</th>
+<th>主要混淆&#x2F;限制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SFS：Tajima <span class="math">\(D\)</span>、Fu &amp; Li、Fay &amp; Wu H</td>
+<td>比较不同频率&#x2F;树枝突变权重</td>
+<td>输入相对简洁、易理解</td>
+<td>人口史、结构、祖先误判、缺失</td>
+</tr>
+<tr>
+<td>单倍型：LRH、iHS、XP-EHH</td>
+<td>高频变异与异常长共享片段</td>
+<td>对近期快速上升有信息</td>
+<td>定相、重组图谱、频率、瓶颈</td>
+</tr>
+<tr>
+<td>群体分化：<span class="math">\(F_{ST}\)</span> 等</td>
+<td>观察局部群间频率异常</td>
+<td>可研究群体特异适应</td>
+<td>漂变、迁移、群内多样性</td>
+</tr>
+<tr>
+<td>系谱：MFDM、Du 等</td>
+<td>观察拓扑&#x2F;分支不平衡</td>
+<td>利用祖先关系的信息</td>
+<td>树估计、重组、模型条件</td>
+</tr>
+<tr>
+<td>种内＋种间：MK、HKA</td>
+<td>比较多态与分歧的比例关系</td>
+<td>用种间信息建立参照</td>
+<td>弱有害变异、区域选择、联配</td>
+</tr>
+<tr>
+<td><span class="math">\(d_N/d_S\)</span> 及复合检验</td>
+<td>替换率或多信号组合</td>
+<td>可研究编码进化&#x2F;汇总多类证据</td>
+<td>平均效应掩盖异质性、依赖与零分布</td>
+</tr>
+</tbody></table>
+<p>先说明零模型，再报告统计量、效应方向、显著性、多个区域检验校正及替代解释。不同方法检测的时间尺度与选择类型不同；不应以“尽量多跑软件、挑显著的那个”代替预先设计。</p>
+<h3 id="10-2-习题-2：溯祖理论的方法与应用"><a href="#10-2-习题-2：溯祖理论的方法与应用" class="headerlink" title="10.2 习题 2：溯祖理论的方法与应用"></a>10.2 习题 2：溯祖理论的方法与应用</h3><p>溯祖从当代样本谱系向过去追踪合并。在经典恒定二倍体群体中，<span class="math">\(k\)</span> 谱系的下一次合并等待时间均值为 4<span class="math">\(N_{e}\)</span>&#x2F;[<span class="math">\(k\)</span>(<span class="math">\(k\)</span>−1)]；中性突变可以在生成的树上附加。有重组时需要局部树序列&#x2F;ARG 及相应近似。</p>
+<p>应用包括：构造中性&#x2F;人口史零分布以检验选择；比较分化、瓶颈、迁移与混合模型；用 SFS&#x2F;ABC 等估计参数；以 PSMC&#x2F;MSMC&#x2F;SMC++推断历史合并尺度；生成带真值数据验证新算法。</p>
+<p>具体流程是定义采样与模型 ，随后 处理变异&#x2F;缺失&#x2F;定相 ，随后 设定参数和先验 ，随后 模拟或优化 ，随后 估计不确定性 ，随后 做拟合检查及敏感性分析。<span class="math">\(\mu\)</span>、世代长度、重组与群体结构不能省略；样本 MRCA、物种分化时间和普查群体数是不同对象。</p>
+<h3 id="10-3-习题-3：HWE-计算"><a href="#10-3-习题-3：HWE-计算" class="headerlink" title="10.3 习题 3：HWE 计算"></a>10.3 习题 3：HWE 计算</h3><p>题目给定 <span class="math">\(n_{AA}=1787\)</span>、<span class="math">\(n_{Aa}=3039\)</span>、<span class="math">\(n_{aa}=1303\)</span>，<span class="math">\(N=6129\)</span>。</p>
+<p>第一步，观测基因型频率。</p>
+<table>
+<thead>
+<tr>
+<th>基因型</th>
+<th align="right">计数</th>
+<th align="right">观测频率</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AA</td>
+<td align="right">1787</td>
+<td align="right">0.29156469</td>
+</tr>
+<tr>
+<td>Aa</td>
+<td align="right">3039</td>
+<td align="right">0.49583945</td>
+</tr>
+<tr>
+<td>aa</td>
+<td align="right">1303</td>
+<td align="right">0.21259586</td>
+</tr>
+</tbody></table>
+<p>第二步，等位频率。</p>
+<div class="math">\[
+\hat p_A=\frac{2\times1787+3039}{2\times6129}=\frac{6613}{12258}=0.53948442,
+\]</div>
+
+<div class="math">\[
+\hat p_a=0.46051558.
+\]</div>
+
+<p>第三步，HWE 期望。</p>
+<table>
+<thead>
+<tr>
+<th>基因型</th>
+<th align="right">期望频率</th>
+<th align="right">期望计数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AA</td>
+<td align="right"><span class="math">\(p^2=0.29104344\)</span></td>
+<td align="right">1783.805229</td>
+</tr>
+<tr>
+<td>Aa</td>
+<td align="right"><span class="math">\(2pq=0.49688196\)</span></td>
+<td align="right">3045.389542</td>
+</tr>
+<tr>
+<td>aa</td>
+<td align="right"><span class="math">\(q^2=0.21207460\)</span></td>
+<td align="right">1299.805229</td>
+</tr>
+</tbody></table>
+<p>第四步，检验一致性。</p>
+<div class="math">\[
+\chi^2=\sum_{g\in\{AA,Aa,aa\}}\frac{(O_g-E_g)^2}{E_g}=0.02698008.
+\]</div>
+
+<p>自由度 1，<span class="math">\(p=0.869529\)</span>；所有期望计数都很大。本次条件精确检验 <span class="math">\(p=0.877420\)</span> 也不显著。<span class="math">\(F=1-H_O/H_E\approx0.002098\)</span>，仅有非常小的样本杂合缺失。</p>
+<p>在常用 0.05 水平下，没有证据拒绝该位点的 HWE 比例。不能写成“证明群体完全随机交配且没有选择”，因为检验只检查所给样本的这一比例约束。</p>
+<h3 id="10-4-习题-4：回交群体两组表型差异"><a href="#10-4-习题-4：回交群体两组表型差异" class="headerlink" title="10.4 习题 4：回交群体两组表型差异"></a>10.4 习题 4：回交群体两组表型差异</h3><p>两组各 9 个个体：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MM: 67.4, 72.8, 68.4, 66.0, 70.8, 69.6, 67.2, 68.9, 62.6</span><br><span class="line">Mm: 60.6, 66.6, 64.9, 61.8, 61.7, 67.2, 56.7, 62.4, 61.3</span><br></pre></td></tr></table></figure>
+
+<p>零假设 <span class="math">\(H_0:\mu_{MM}=\mu_{Mm}\)</span>，备择为不等。独立样本、近似正态残差，先按教材常用等方差 <span class="math">\(t\)</span> 检验：</p>
+<div class="math">\[
+\bar y_{MM}=68.18888889,\quad \bar y_{Mm}=62.57777778,
+\]</div>
+
+<div class="math">\[
+s_{MM}^2=8.53111111,\quad s_{Mm}^2=10.55444444,
+\]</div>
+
+<div class="math">\[
+s_p^2=\frac{8s_{MM}^2+8s_{Mm}^2}{16}=9.54277778,
+\]</div>
+
+<div class="math">\[
+t=\frac{\bar y_{MM}-\bar y_{Mm}}{\sqrt{s_p^2(1/9+1/9)}}=3.85316601.
+\]</div>
+
+<span class="math">\(df=16\)</span>，双侧 <span class="math">\(p=0.00140591\)</span>。均值差为 5.61111111，95% 置信区间为[2.52403307,8.69818915]。Welch 检验无需等方差假设，<span class="math">\(df\approx 15.8222\)</span>、<span class="math">\(p\approx 0.00143182\)</span>，结论相同。
+
+<p>在这次单标记检验下，表型均值存在显著差异，支持标记与性状相关&#x2F;与影响性状的位点连锁。不能据此确定因果基因、QTL 距离或把 5.61 无条件解释为真实 QTL 加性效应。若这是全基因组大量标记中挑出的最小 <span class="math">\(p\)</span> 值，必须进行相应多重检验校准；若个体非独立，还需改变模型。</p>
+<h3 id="10-5-习题-5：两位点关联与未定相-LD"><a href="#10-5-习题-5：两位点关联与未定相-LD" class="headerlink" title="10.5 习题 5：两位点关联与未定相 LD"></a>10.5 习题 5：两位点关联与未定相 LD</h3><p>把题目整理为 3×3 基因型表，行为 A 位点，列为 <span class="math">\(B\)</span> 位点：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="right">BB</th>
+<th align="right">Bb</th>
+<th align="right">bb</th>
+<th align="right">合计</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AA</td>
+<td align="right">45</td>
+<td align="right">10</td>
+<td align="right">5</td>
+<td align="right">60</td>
+</tr>
+<tr>
+<td>Aa</td>
+<td align="right">15</td>
+<td align="right">10</td>
+<td align="right">5</td>
+<td align="right">30</td>
+</tr>
+<tr>
+<td>aa</td>
+<td align="right">5</td>
+<td align="right">0</td>
+<td align="right">5</td>
+<td align="right">10</td>
+</tr>
+<tr>
+<td>合计</td>
+<td align="right">65</td>
+<td align="right">20</td>
+<td align="right">15</td>
+<td align="right">100</td>
+</tr>
+</tbody></table>
+<p>第一层：直接检验基因型独立性，不要求知道相位。</p>
+<span class="math">\(H_{0}\)</span> 为两个位点的基因型分类独立，<span class="math">\(E_{ij}=n_{i\cdot}n_{\cdot j}/100\)</span>：
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="right">BB</th>
+<th align="right">Bb</th>
+<th align="right">bb</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AA</td>
+<td align="right">39.0</td>
+<td align="right">12.0</td>
+<td align="right">9.0</td>
+</tr>
+<tr>
+<td>Aa</td>
+<td align="right">19.5</td>
+<td align="right">6.0</td>
+<td align="right">4.5</td>
+</tr>
+<tr>
+<td>aa</td>
+<td align="right">6.5</td>
+<td align="right">2.0</td>
+<td align="right">1.5</td>
+</tr>
+</tbody></table>
+<span class="math">\(\chi ^2=17.30769231\)</span>，自由度 <span class="math">\((3-1)(3-1)=4\)</span>，渐近 <span class="math">\(p=0.00168416\)</span>。但 4.5、2.0、1.5 这几格的期望较小，不能只看渐近结果。
+
+<p>固定行列边际、以 Pearson 统计量为极端程度，100000 次条件 Monte Carlo 得到 <span class="math">\(p\approx 0.00191998\)</span>，模拟标准误约 0.000138。两种计算都支持两个位点的基因型不独立。这是基因型层面的结论，不自动证明两个位点在物理位置上紧密连锁；群体结构等也可能造成关联。</p>
+<p>第二层：为什么不能直接得到唯一单倍型 LD？</p>
+<p>10 个 AaBb 双杂合个体可能是 AB|ab，也可能是 Ab|aB。设其中 x 个为 AB|ab，其余 10−x 个为 Ab|aB，<span class="math">\(x\in\{0,\ldots,10\}\)</span>。其余基因型的单倍型组成没有此歧义。总共 200 条拷贝：</p>
+<div class="math">\[
+n_{AB}=115+x,\quad n_{Ab}=35-x,\quad n_{aB}=35-x,\quad n_{ab}=15+x.
+\]</div>
+
+<span class="math">\(p_A=p_B=0.75\)</span>，故：
+
+<div class="math">\[
+D=\frac{115+x}{200}-0.75^2=0.0125+0.005x,
+\]</div>
+
+<div class="math">\[
+0.0125\le D\le0.0625,\qquad 0.00444444\le r^2\le0.11111111.
+\]</div>
+
+<p>这是所有可能相位下的样本统计量范围，不是总体参数置信区间。在这份样本中所有相位分配都给正 <span class="math">\(D\)</span>，但大小不能唯一确定。若要估计一个点值，可以引入随机单倍型配对等假设做 EM 或获取读段&#x2F;家系定相；要先检查这些假设，而不是把全部 AaBb 默认分成 AB 和 ab。</p>
+<p>最终答法：有显著的两位点基因型关联证据；单倍型 LD 大小因相位未知而不唯一。不能把 3×3 表展开成一张“已观测”的 2×2 单倍型表后，使用未经说明的 1 自由度检验。</p>
+<h2 id="11-自测题"><a href="#11-自测题" class="headerlink" title="11. 自测题"></a>11. 自测题</h2><p>先回答，再查后面的要点。重点不是记住软件名，而是说清对象、假设和反例。</p>
+<ol>
+<li>100 个二倍体个体有多少个常染色体位点拷贝？若部分样本缺失呢？</li>
+<li>一个群体满足单个位点 HWE，是否意味着两个位点处于连锁平衡？</li>
+<li>两个亚群都在 HWE，合并后为什么可能缺杂合？</li>
+<li><span class="math">\(\pi\)</span> 和 <span class="math">\(\theta _{W}\)</span> 分别怎样给不同频率变异计权？</li>
+<li>只用变异 VCF 行数作 <span class="math">\(\pi\)</span> 分母，会出什么问题？</li>
+<li>无限位点模型是否必然要求无重组？</li>
+<li>folded SFS 能不能修复低深度造成的假参考？</li>
+<li><span class="math">\(\Delta K\)</span> 不能选择 <span class="math">\(K=1\)</span>，对解释“存在结构”有何影响？</li>
+<li>ADMIXTURE 的一种颜色是否必然代表一个真实古代群体？</li>
+<li>高 <span class="math">\(F_{ST}\)</span> 是否等价于大的绝对序列分歧？</li>
+<li>两个位点的频率均为 <span class="math">\(p_A=p_B=0.5\)</span>，且 <span class="math">\(f_{AB}=0.4\)</span> 时，<span class="math">\(D\)</span> 与 <span class="math">\(r^2\)</span> 是多少？</li>
+<li>在适合度 <span class="math">\(1\)</span>、<span class="math">\(1-hs\)</span>、<span class="math">\(1-s\)</span> 下，<span class="math">\(s&gt;0\)</span>、<span class="math">\(h&gt;1\)</span> 是杂合优势吗？</li>
+<li>Tajima <span class="math">\(D&lt;0\)</span> 能否区分扩张、净化选择与扫荡？</li>
+<li>Fay &amp; Wu H 为什么更依赖祖先状态？</li>
+<li>长单倍型为什么要控制核心频率及局部重组？</li>
+<li><span class="math">\(d_N/d_S\)</span> 是否就是两个原始突变数的比？</li>
+<li>Kingman 等待时间是指数分布，与“时间指数增长”有何不同？</li>
+<li>若 <span class="math">\(\mu\)</span> 加倍，按同一缩放推断换算的 <span class="math">\(N_{e}\)</span> 和代数怎样变化？</li>
+<li>ABC 容差趋于 0，是否一定恢复完整数据后验？</li>
+<li>单标记效应为何可能小于真实 QTL 效应？</li>
+<li><span class="math">\(LOD=3\)</span> 是否等于 <span class="math">\(p=0.001\)</span>？</li>
+<li>PLINK <code>--glm</code> 加 PC，是否等同亲缘 LMM？</li>
+<li>为什么混池 10000×仍不能取代增加独立个体？</li>
+<li>显著 k-mer 数量能否直接当独立位点数量？</li>
+<li>未定相 AaBb 有几种无序单倍型配对？</li>
+<li>同一模拟染色体切成窗口后随机划分，为什么可能泄漏？</li>
+<li>后验区间越窄是否说明 AI 推断越好？</li>
+<li>边级 FDR 控制能否直接保证 VirusBin 最终 bin 污染率？</li>
+</ol>
+<h3 id="参考答案"><a href="#参考答案" class="headerlink" title="参考答案"></a>参考答案</h3><ol>
+<li>无缺失为 200；缺失时按真实可调用拷贝计数，不能默认 200。</li>
+<li>不能，HWE 与跨位点组合是不同约束。</li>
+<li>合并频率的期望杂合度高于加权群内杂合度，出现 Wahlund 效应。</li>
+<li><span class="math">\(\theta _{W}\)</span> 按分离位点数，<span class="math">\(\pi\)</span> 按成对差异，中频位点贡献较大。</li>
+<li>变异密度与多样性尺度被破坏，忽略了可靠不变位点及缺失。</li>
+<li>不是；突变模型与重组模型是分开的假设。</li>
+<li>不能；折叠只消除祖先&#x2F;衍生方向。</li>
+<li>不能仅凭 <span class="math">\(\Delta K\)</span> 峰宣称已排除无结构模型。</li>
+<li>不必；颜色是拟合成分，多个历史可能产生相似图。</li>
+<li>不等价；<span class="math">\(F_{ST}\)</span> 还依赖群内多样性和估计定义。</li>
+<li>若两个位点频率都 0.5，则 <span class="math">\(D=0.15\)</span>，<span class="math">\(r^2=0.36\)</span>。</li>
+<li>不是，是杂合劣势；<span class="math">\(s&gt;0\)</span> 下杂合优势需 <span class="math">\(h&lt;0\)</span>。</li>
+<li>不能，需额外信息和匹配人口史的零模型。</li>
+<li>它对高频衍生变异计权，极化错误改变信号。</li>
+<li>中性频率变化和低重组也影响单倍型长度。</li>
+<li>不是，要校正同义&#x2F;非同义可替换机会等。</li>
+<li>前者是随机变量的分布；均值随 <span class="math">\(k\)</span> 按 4<span class="math">\(N_{e}\)</span>&#x2F;[<span class="math">\(k\)</span>(<span class="math">\(k\)</span>−1)]变化。</li>
+<li>在固定缩放估计且其他不变时约减半，年份还依赖世代长度。</li>
+<li>不一定；摘要不充分仍丢信息，还受模拟模型限制。</li>
+<li>重组造成(1−2r)衰减，还可能有其他连锁位点和误差。</li>
+<li>不是，LOD 是 log10 似然比；<span class="math">\(p\)</span> 需零分布及搜索校准。</li>
+<li>不是，PC 是固定协变量，LMM 另建相关随机效应。</li>
+<li>read 抽样误差可降低，有限池的生物抽样误差仍存在。</li>
+<li>不能，一个变异会产生多个相关 k-mer。</li>
+<li>AB|ab 与 Ab|aB 两种；交换同源染色体标签不是新配对。</li>
+<li>窗口共享系谱、变异背景和事件，测试不是独立历史。</li>
+<li>不一定，必须看覆盖、校准及失配时表现。</li>
+<li>不能，错误边通过聚类路径影响整体，需要独立 bin 级验证。</li>
+</ol>
+<h2 id="12-历史与人物-【了解即可】"><a href="#12-历史与人物-【了解即可】" class="headerlink" title="12. 历史与人物 【了解即可】"></a>12. 历史与人物 【了解即可】</h2><p><img src="/bioinformatics-notes/images/ch13/history-malecot.png" alt="马莱科特"></p>
+<p><em>教材 p373 人物照片：Gustave Malécot。</em></p>
+<p>教材借 Malécot 强调从数学定义理解亲缘：IBD 把“看起来一样”转成“相对于某个祖先参考的共同来源”。这个概念描述相对于参考祖先的遗传来源，也可以用概率刻画不确定的共享关系；虽然 HMM 等可用来推断 IBD，IBD 本身不是某一种马尔可夫链算法。</p>
+<p><img src="/bioinformatics-notes/images/ch13/history-cockerham.png" alt="科克汉姆"></p>
+<p><em>教材 p373 人物照片：Clark Cockerham。</em></p>
+<p>Cockerham 的上位性与 <span class="math">\(F\)</span> 统计量研究把遗传变异放到可分解的层级中。对 CS 学生最值得学的是：随机变量和参考群体应先定义清楚，随后才能推导期望、方差与估计量；同一个统计量名称也可能对应不同的有限样本估计实现。</p>
+<p>本章也连接 Fisher、Wright、Haldane、Kimura 和 Kingman 的工作。学习这些历史的意义是识别不同问题如何产生不同数学对象，不必把现代群体遗传简化为几位研究者的一条单线发展史。</p>
+<h2 id="13-五视角总结"><a href="#13-五视角总结" class="headerlink" title="13. 五视角总结"></a>13. 五视角总结</h2><table>
+<thead>
+<tr>
+<th>视角</th>
+<th>本章要带走的问题</th>
+<th>合格答案应包含</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>生物学</td>
+<td>哪些过程产生了今天的变异？</td>
+<td>突变、漂变、迁移、重组、选择与历史</td>
+</tr>
+<tr>
+<td>实验与数据</td>
+<td>实际观测单位是什么？</td>
+<td>个体&#x2F;拷贝&#x2F;read，callable 长度，相位与误差</td>
+</tr>
+<tr>
+<td>数学与统计</td>
+<td>哪个零模型、哪些参数可辨识？</td>
+<td>分布、单位、依赖、校准、条件假设</td>
+</tr>
+<tr>
+<td>CS 与算法</td>
+<td>怎样压缩和计算而不误解信息？</td>
+<td>SFS 丢信息、tree sequence 共享结构、谱分解和搜索复杂度</td>
+</tr>
+<tr>
+<td>AI4S 研究</td>
+<td>模型在哪些新情形仍可信？</td>
+<td>强基线、机制外推、观测层、后验校准和独立验证</td>
+</tr>
+</tbody></table>
+<h2 id="14-全章速记-25-条"><a href="#14-全章速记-25-条" class="headerlink" title="14. 全章速记 25 条"></a>14. 全章速记 25 条</h2><ol>
+<li>基因型频率除以个体数，等位频率除以可调用拷贝数。</li>
+<li>HWE 不是 LD 平衡，也不是没有选择的证明。</li>
+<li><span class="math">\(F_{IS}\)</span> 与 <span class="math">\(F_{ST}\)</span> 分别描述不同层级，不混用。</li>
+<li><span class="math">\(\pi\)</span>、<span class="math">\(\theta _{W}\)</span> 必须明确区域总量或每位点单位。</li>
+<li><span class="math">\(\theta=4N_e\mu\)</span> 只适用于指定的二倍体常染色体模型。</li>
+<li>infinite sites 约束突变，no recombination 是另一假设。</li>
+<li>REF、major、ancestral 是三个不同标签。</li>
+<li>folded SFS 不解决缺失，投影也不能恢复系统性漏检。</li>
+<li>PCA 轴和祖源颜色都是模型表示，不能直接读取唯一历史。</li>
+<li>高 <span class="math">\(F_{ST}\)</span>、低 <span class="math">\(\pi\)</span>、负 Tajima <span class="math">\(D\)</span> 都不是选择的唯一指纹。</li>
+<li>单倍型方法要检查相位、核心频率、重组和时间尺度。</li>
+<li><span class="math">\(d_N/d_S\)</span> 是校正替换机会后的速率比。</li>
+<li>溯祖等待时间服从指数分布，不是时间指数增长。</li>
+<li>样本 MRCA 不同于全群体 MRCA 或物种起源。</li>
+<li>ARG 描述重组祖先关系，tree sequence 是紧凑表示。</li>
+<li><span class="math">\(N_{e}\)</span> 是模型中的有效尺度，不是古代普查人数。</li>
+<li>模型集合中最佳不等于真实历史已被唯一识别。</li>
+<li>QTL 效应与标记连锁距离会混淆。</li>
+<li>LOD 不是 <span class="math">\(-\log_{10}p\)</span>，全基因组搜索需全局阈值。</li>
+<li>GWAS 关联、GP 预测、功能因果是不同目标。</li>
+<li>LMM 建模样本协方差，PC 校正不能自动替代它。</li>
+<li>多 k-mer 可能来自同一个变异，缺失也可能来自低覆盖。</li>
+<li>增加 reads 不能消除有限个体抽样误差。</li>
+<li>神经网络置信度需要校准，模拟测试需要改变机制。</li>
+<li>图稳定、统计显著和生物正确分别需要证据。</li>
+</ol>
+<h2 id="15-下一步学习建议"><a href="#15-下一步学习建议" class="headerlink" title="15. 下一步学习建议"></a>15. 下一步学习建议</h2><p>优先补三条数学主线：从 Binomial 抽样到漂变&#x2F;溯祖；从回归到混合模型&#x2F;方差分量；从 Bayes 公式到隐变量、HMM、ABC 与神经后验。这比孤立记忆几十种检验名更有助于读 AI4S 论文。</p>
+<p>优先补三类生物信息：LD 与重组图谱如何产生；变异调用、定相和 callable mask 如何影响统计；真实交配系统、倍性与群体结构如何改变理想模型。对病毒研究再专门补重组、水平转移、群体内株系和混合测序的观测模型。</p>
+<p>建议的验收顺序：独立解出§10 三道数值题 → 复现§7 输出并修改一个参数解释变化 → 选择§8.6 一个模拟项目 → 再进入公开真实数据。每次记录输入、采样单位、参考版本、模型、种子、阈值、失败案例和适用范围。</p>
+<p>与第 14 章并行时，反复回到本章具体对象：STRUCTURE 的混合模型、PSMC 的 HMM、IM 的 EM、LMM 的矩阵分解。把概率图中的节点对应到实际测量或隐变量，避免只会推公式却不知道变量代表什么。</p>
+<h2 id="16-参考资料与核对记录"><a href="#16-参考资料与核对记录" class="headerlink" title="16. 参考资料与核对记录"></a>16. 参考资料与核对记录</h2><p>教材提供章节范围、图 13.1—13.14、表 13.1—13.4 及全部习题。以下列出原笔记及本轮核查所用的原论文和官方文档。各条目的核查范围与待确认事项见审校记录。</p>
+<table>
+<thead>
+<tr>
+<th>来源</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC1203831/">Tajima，1989</a></td>
+<td>多样性估计差异与中性检验</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/15789306/">Wigginton 等，2005</a></td>
+<td>HWE 条件精确检验与渐近误差</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://ms.mcmaster.ca/~bolker/eeid/evolution/Popgen_EEID_2012/References/Evanno_et_al_Delta_K_structure_2005.pdf">Evanno 等，2005，原论文 PDF</a></td>
+<td><span class="math">\(\Delta K\)</span> 及 <span class="math">\(K=1\)</span> 限制</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6092366">Lawson 等，2018</a></td>
+<td>STRUCTURE&#x2F;ADMIXTURE 解释边界</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/2011_Li_Nature_2.pdf">Li 与 Durbin，2011，作者机构 PDF</a></td>
+<td>PSMC 的成对溯祖推断</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4116295">Schiffels 与 Durbin，2014</a></td>
+<td>MSMC、多序列与时间缩放</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5470542/">Terhorst 等，2017</a></td>
+<td>SMC++、未定相数据与模型假设</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9176297/">Baumdicker 等，2022</a></td>
+<td>msprime 1.0 与祖先&#x2F;突变模拟</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://tskit.dev/msprime/docs/latest/ancestry.html">msprime 官方文档</a></td>
+<td>模拟输入与模型配置</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://tskit.dev/tskit/docs/stable/stats.html">tskit 统计接口</a></td>
+<td>SFS、polarisation 与 span normalisation</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://tskit.dev/tutorials/getting_started.html">tskit 入门</a></td>
+<td>tree sequence 实践入口</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3386377/">Zhou 与 Stephens，2012</a></td>
+<td>GEMMA 及谱分解复用</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41588-020-0612-7">Voichek 与 Weigel，2020</a></td>
+<td>植物 k-mer GWAS 与参考之外变异</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://academic.oup.com/mbe/article/36/2/220/5229930">Flagel 等，2019</a></td>
+<td>CNN 群体遗传推断的研究入口</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.cog-genomics.org/plink/2.0/assoc">PLINK2 关联分析</a></td>
+<td>GLM 功能与模型范围</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.cog-genomics.org/plink/2.0/formats">PLINK2 格式</a></td>
+<td>基因型、样本和输出语义</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.cog-genomics.org/plink/2.0/strat">PLINK2 群体结构</a></td>
+<td>PCA 与协变量衔接</td>
+</tr>
+</tbody></table>
+<h3 id="插图索引"><a href="#插图索引" class="headerlink" title="插图索引"></a>插图索引</h3><table>
+<thead>
+<tr>
+<th>图片</th>
+<th align="right">印刷页</th>
+<th>本笔记位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>章首知识图</td>
+<td align="right">334</td>
+<td>§1</td>
+</tr>
+<tr>
+<td>13.1 分离位点</td>
+<td align="right">336</td>
+<td>§2.4</td>
+</tr>
+<tr>
+<td>13.2 水稻群体结构</td>
+<td align="right">339</td>
+<td>§2.7</td>
+</tr>
+<tr>
+<td>13.3 基因树与枝</td>
+<td align="right">342</td>
+<td>§3.4</td>
+</tr>
+<tr>
+<td>13.4 核心单倍型</td>
+<td align="right">343</td>
+<td>§3.5</td>
+</tr>
+<tr>
+<td>13.5 溯祖过程</td>
+<td align="right">348</td>
+<td>§4.2</td>
+</tr>
+<tr>
+<td>13.6 驯化模型</td>
+<td align="right">350</td>
+<td>§4.6</td>
+</tr>
+<tr>
+<td>13.7 银杏起源模型</td>
+<td align="right">353</td>
+<td>§4.6</td>
+</tr>
+<tr>
+<td>13.8 有效群体大小曲线</td>
+<td align="right">354</td>
+<td>§4.7</td>
+</tr>
+<tr>
+<td>13.9 定相</td>
+<td align="right">354</td>
+<td>§4.8</td>
+</tr>
+<tr>
+<td>13.10 SNP&#x2F;k-mer 比较</td>
+<td align="right">366</td>
+<td>§5.9</td>
+</tr>
+<tr>
+<td>13.11 k-mer 流程</td>
+<td align="right">367</td>
+<td>§5.9</td>
+</tr>
+<tr>
+<td>13.12 PLINK 格式</td>
+<td align="right">368</td>
+<td>§5.10</td>
+</tr>
+<tr>
+<td>13.13 QTL-seq</td>
+<td align="right">370</td>
+<td>§5.11</td>
+</tr>
+<tr>
+<td>13.14 GradedPool-seq</td>
+<td align="right">371</td>
+<td>§5.11</td>
+</tr>
+<tr>
+<td>Malécot、Cockerham 照片</td>
+<td align="right">373</td>
+<td>§12</td>
+</tr>
+</tbody></table>
+<p>图片及教材页码见<a href="/bioinformatics-notes/images/ch13/manifest.json">manifest.json</a>。教材表 13.1 按方法原理重整，表 13.2 作为不同零模型案例解释，表 13.3—13.4 在关联&#x2F;TDT 部分纠正并解释；不复制旧软件网页目录作为当前安装清单。</p>
+<ul>
+<li>PSMC 每 base、每 bin 及时间缩放：<a target="_blank" rel="noopener" href="https://github.com/lh3/psmc/blob/master/utils/psmc_plot.pl">官方 psmc_plot.pl</a>。</li>
+</ul>
+<hr>
+<p><a href="/bioinformatics/chapter-12/">上一章</a> · <a href="/bioinformatics/chapter-14/">下一章</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF/" rel="tag"># 生物信息</a>
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/bioinformatics/chapter-12/" rel="prev" title="第 12 章 新类型组学数据分析与利用：学习笔记">
+      <i class="fa fa-chevron-left"></i> 第 12 章 新类型组学数据分析与利用：学习笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/bioinformatics/chapter-14/" rel="next" title="第 14 章 生物信息学统计与算法基础：学习笔记">
+      第 14 章 生物信息学统计与算法基础：学习笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E6%95%99%E6%9D%90%E8%8C%83%E5%9B%B4%E4%B8%8E%E5%8B%98%E8%AF%AF"><span class="nav-number">1.</span> <span class="nav-text">0. 教材范围与勘误</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-1-%E5%85%88%E4%BF%AE%E6%AD%A3%E4%BC%9A%E5%BD%B1%E5%93%8D%E5%BB%BA%E6%A8%A1%E7%9A%84%E5%86%85%E5%AE%B9"><span class="nav-number">1.1.</span> <span class="nav-text">0.1 先修正会影响建模的内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-2-%E4%B8%89%E9%81%8D%E8%AF%BB%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">0.2 三遍读法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%9C%AC%E7%AB%A0%E5%AE%9A%E4%BD%8D%E4%B8%8E%E7%9F%A5%E8%AF%86%E5%9C%B0%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">1. 本章定位与知识地图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-CS-%E5%AD%A6%E7%94%9F%E9%9C%80%E8%A6%81%E5%BB%BA%E7%AB%8B%E7%9A%84%E4%B8%89%E5%B1%82%E6%A8%A1%E5%9E%8B-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 CS 学生需要建立的三层模型 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E4%B8%8E%E5%89%8D%E5%87%A0%E7%AB%A0%E5%92%8C-VirusBin-%E7%9A%84%E8%A1%94%E6%8E%A5"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 与前几章和 VirusBin 的衔接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%AC%AC%E4%B8%80%E8%8A%82-%E7%BE%A4%E4%BD%93%E9%81%97%E4%BC%A0%E5%A4%9A%E6%80%81%E6%80%A7%E4%B8%8E%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">2. 第一节 群体遗传多态性与结构分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%BE%A4%E4%BD%93%E3%80%81%E4%BD%8D%E7%82%B9%E3%80%81%E7%AD%89%E4%BD%8D%E5%9F%BA%E5%9B%A0%E4%B8%8E%E5%8D%95%E5%80%8D%E5%9E%8B-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 群体、位点、等位基因与单倍型 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Hardy%E2%80%93Weinberg-%E5%B9%B3%E8%A1%A1%E4%B8%8E%E5%9B%BA%E5%AE%9A%E7%B3%BB%E6%95%B0-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 Hardy–Weinberg 平衡与固定系数 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E3%80%81%E3%80%81-%E4%B8%8E%E5%88%86%E5%8C%96-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">3.3.</span> <span class="nav-text">2.3 \(F_{IS}\)、\(F_{ST}\)、\(F_{IT}\) 与分化 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E5%88%86%E7%A6%BB%E4%BD%8D%E7%82%B9-%E3%80%81%E6%A0%B8%E8%8B%B7%E9%85%B8%E5%A4%9A%E6%A0%B7%E6%80%A7-%E4%B8%8E-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">3.4.</span> <span class="nav-text">2.4 分离位点 \(S\)、核苷酸多样性 \(\pi\) 与 \(\theta\) 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E9%A2%91%E7%8E%87%E8%B0%B1-SFS%EF%BC%9A%E6%8A%8A%E5%BA%8F%E5%88%97%E5%8E%8B%E7%BC%A9%E6%88%90%E7%BB%9F%E8%AE%A1%E9%87%8F-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">3.5.</span> <span class="nav-text">2.5 频率谱 SFS：把序列压缩成统计量 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E7%BE%A4%E4%BD%93%E7%BB%93%E6%9E%84%E6%A8%A1%E5%9E%8B%E4%B8%8E-PCA-%E3%80%90%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E3%80%91"><span class="nav-number">3.6.</span> <span class="nav-text">2.6 群体结构模型与 PCA 【必须掌握】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-STRUCTURE-%E4%B8%8E-ADMIXTURE%EF%BC%9A%E6%A8%A1%E5%9E%8B%E5%88%86%E8%A7%A3%EF%BC%8C%E4%B8%8D%E6%98%AF%E5%8E%86%E5%8F%B2%E5%BD%95%E5%83%8F-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">3.7.</span> <span class="nav-text">2.7 STRUCTURE 与 ADMIXTURE：模型分解，不是历史录像 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-8-LD%E3%80%81%E7%9B%B8%E4%BD%8D%E3%80%81IBS-%E4%B8%8E-IBD-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">3.8.</span> <span class="nav-text">2.8 LD、相位、IBS 与 IBD 【重点】</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%AC%AC%E4%BA%8C%E8%8A%82-%E8%87%AA%E7%84%B6%E9%80%89%E6%8B%A9%E7%9A%84%E7%BB%9F%E8%AE%A1%E6%A3%80%E9%AA%8C"><span class="nav-number">4.</span> <span class="nav-text">3. 第二节 自然选择的统计检验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%BB%8E%E9%80%82%E5%90%88%E5%BA%A6%E6%8E%A8%E5%AF%BC%E9%A2%91%E7%8E%87%E5%8F%98%E5%8C%96-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 从适合度推导频率变化 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E9%80%89%E6%8B%A9%E4%BF%A1%E5%8F%B7%E7%9A%84%E6%9D%A5%E6%BA%90%E4%B8%8E%E9%9D%9E%E5%94%AF%E4%B8%80%E6%80%A7-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 选择信号的来源与非唯一性 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Tajima%E2%80%99s-%EF%BC%9A%E5%AF%B9%E5%90%8C%E4%B8%80%E9%A2%91%E8%B0%B1%E6%96%BD%E5%8A%A0%E4%B8%8D%E5%90%8C%E6%9D%83%E9%87%8D-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.3.</span> <span class="nav-text">3.3 Tajima’s \(D\)：对同一频谱施加不同权重 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-Fu-Li%E3%80%81Fay-Wu%EF%BC%9A%E7%AA%81%E5%8F%98%E4%BD%8D%E4%BA%8E%E6%A0%91%E7%9A%84%E5%93%AA%E9%87%8C-%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">4.4.</span> <span class="nav-text">3.4 Fu &amp; Li、Fay &amp; Wu：突变位于树的哪里 【应该理解】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E5%8D%95%E5%80%8D%E5%9E%8B%E6%A3%80%E9%AA%8C%EF%BC%9AEHH%E3%80%81LRH%E3%80%81HS%E3%80%81iHS%E3%80%81XP-EHH-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.5.</span> <span class="nav-text">3.5 单倍型检验：EHH、LRH、HS、iHS、XP-EHH 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-%E5%88%86%E5%8C%96%E3%80%81%E7%B3%BB%E8%B0%B1%E4%B8%8E%E5%A4%8D%E5%90%88%E6%96%B9%E6%B3%95-%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">4.6.</span> <span class="nav-text">3.6 分化、系谱与复合方法 【应该理解】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-MK%EF%BC%9A%E5%A4%9A%E6%80%81%E6%80%A7%E4%B8%8E%E5%9B%BA%E5%AE%9A%E5%B7%AE%E5%BC%82%E7%9A%84-2%C3%972-%E6%AF%94%E8%BE%83-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.7.</span> <span class="nav-text">3.7 MK：多态性与固定差异的 2×2 比较 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-8-HKA-%E4%B8%8E-%E3%80%90%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E5%8C%BA%E5%88%AB%E3%80%91"><span class="nav-number">4.8.</span> <span class="nav-text">3.8 HKA 与 \(d_N&#x2F;d_S\) 【必须掌握区别】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-9-%E4%BB%8E%E6%89%AB%E6%8F%8F%E5%B3%B0%E5%88%B0%E5%8F%AF%E6%A3%80%E9%AA%8C%E7%94%9F%E7%89%A9%E5%81%87%E8%AE%BE-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">4.9.</span> <span class="nav-text">3.9 从扫描峰到可检验生物假设 【重点】</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%AC%AC%E4%B8%89%E8%8A%82-%E7%A7%8D%E7%BE%A4%E5%8E%86%E5%8F%B2%E7%9A%84%E6%BA%AF%E7%A5%96%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">4. 第三节 种群历史的溯祖分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Wright%E2%80%93Fisher%EF%BC%9A%E5%90%91%E5%89%8D%E7%9C%8B%E9%A2%91%E7%8E%87%EF%BC%8C%E5%90%91%E5%90%8E%E7%9C%8B%E7%A5%96%E5%85%88-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">5.1.</span> <span class="nav-text">4.1 Wright–Fisher：向前看频率，向后看祖先 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Kingman-%E6%BA%AF%E7%A5%96%E7%9A%84%E7%AD%89%E5%BE%85%E6%97%B6%E9%97%B4-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">5.2.</span> <span class="nav-text">4.2 Kingman 溯祖的等待时间 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E4%BB%8E%E6%A0%91%E6%9E%9D%E5%88%B0%E7%AA%81%E5%8F%98%EF%BC%8C%E5%86%8D%E5%88%B0-SFS-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">5.3.</span> <span class="nav-text">4.3 从树枝到突变，再到 SFS 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E9%87%8D%E7%BB%84%E4%BD%BF%E5%85%A8%E5%9F%BA%E5%9B%A0%E7%BB%84%E6%88%90%E4%B8%BA%E6%A0%91%E7%9A%84%E5%BA%8F%E5%88%97%EF%BC%9AARG-%E4%B8%8E-SMC-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">5.4.</span> <span class="nav-text">4.4 重组使全基因组成为树的序列：ARG 与 SMC 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-%E4%BB%8E%E6%A8%A1%E6%8B%9F%E5%88%B0%E6%8E%A8%E6%96%AD%EF%BC%9AABC%E3%80%81%E4%BC%BC%E7%84%B6%E4%B8%8E%E5%8F%AF%E8%BE%A8%E8%AF%86%E6%80%A7-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">5.5.</span> <span class="nav-text">4.5 从模拟到推断：ABC、似然与可辨识性 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-%E6%95%99%E6%9D%90%E6%A1%88%E4%BE%8B%EF%BC%9A%E7%93%B6%E9%A2%88%E9%9B%B6%E6%A8%A1%E5%9E%8B%E4%B8%8E%E9%93%B6%E6%9D%8F%E8%B5%B7%E6%BA%90-%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">5.6.</span> <span class="nav-text">4.6 教材案例：瓶颈零模型与银杏起源 【应该理解】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-7-PSMC%E3%80%81MSMC%E3%80%81SMC-%E7%9A%84%E8%BE%93%E5%85%A5%E4%B8%8E%E5%90%AB%E4%B9%89-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">5.7.</span> <span class="nav-text">4.7 PSMC、MSMC、SMC++的输入与含义 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-8-%E5%AE%9A%E7%9B%B8%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%9E%8B%E5%B7%B2%E7%9F%A5%EF%BC%8C%E7%BB%84%E5%90%88%E4%BB%8D%E6%9C%AA%E7%9F%A5-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">5.8.</span> <span class="nav-text">4.8 定相：基因型已知，组合仍未知 【重点】</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E7%AC%AC%E5%9B%9B%E8%8A%82-%E6%95%B0%E9%87%8F%E9%81%97%E4%BC%A0%E5%AD%A6%E5%88%86%E6%9E%90"><span class="nav-number">6.</span> <span class="nav-text">5. 第四节 数量遗传学分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E4%BB%8E%E8%A1%A8%E5%9E%8B%E6%96%B9%E5%B7%AE%E5%88%B0%E9%81%97%E4%BC%A0%E6%95%88%E5%BA%94-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.1.</span> <span class="nav-text">5.1 从表型方差到遗传效应 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-QTL-%E4%BD%9C%E5%9B%BE%E7%BE%A4%E4%BD%93%E4%B8%8E%E5%88%86%E8%BE%A8%E7%8E%87-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.2.</span> <span class="nav-text">5.2 QTL 作图群体与分辨率 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%8D%95%E6%A0%87%E8%AE%B0%E5%88%B0%E5%8C%BA%E9%97%B4%E4%BD%9C%E5%9B%BE%EF%BC%9A%E9%9A%90%E5%8F%98%E9%87%8F%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8B-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.3.</span> <span class="nav-text">5.3 单标记到区间作图：隐变量混合模型 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-CIM%E3%80%81ICIM%E3%80%81MCIM-%E5%92%8C%E5%A4%9A-QTL-%E3%80%90%E5%BF%85%E9%A1%BB%E7%90%86%E8%A7%A3%E7%AE%97%E6%B3%95%E5%B7%AE%E5%BC%82%E3%80%91"><span class="nav-number">6.4.</span> <span class="nav-text">5.4 CIM、ICIM、MCIM 和多 QTL 【必须理解算法差异】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-GWAS%EF%BC%9A%E6%A3%80%E9%AA%8C%E6%A0%87%E8%AE%B0%E4%B8%8E%E6%80%A7%E7%8A%B6%E7%9A%84%E6%9D%A1%E4%BB%B6%E5%85%B3%E8%81%94-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.5.</span> <span class="nav-text">5.5 GWAS：检验标记与性状的条件关联 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-%E7%BE%A4%E4%BD%93%E6%B7%B7%E6%9D%82%E4%B8%8E-TDT-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.6.</span> <span class="nav-text">5.6 群体混杂与 TDT 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-LMM%E3%80%81%E4%BA%B2%E7%BC%98%E7%9F%A9%E9%98%B5%E4%B8%8E%E7%99%BD%E5%8C%96-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.7.</span> <span class="nav-text">5.7 LMM、亲缘矩阵与白化 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-8-%E5%A4%9A%E4%BD%8D%E7%82%B9%E3%80%81%E4%B8%8A%E4%BD%8D%E6%80%A7%E3%80%81%E5%A4%9A%E7%BB%84%E5%AD%A6%E4%B8%8E%E2%80%9C%E5%85%B3%E8%81%94%E4%B9%8B%E5%90%8E%E2%80%9D-%E3%80%90%E5%BA%94%E8%AF%A5%E7%90%86%E8%A7%A3%E3%80%91"><span class="nav-number">6.8.</span> <span class="nav-text">5.8 多位点、上位性、多组学与“关联之后” 【应该理解】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-9-k-mer-GWAS%EF%BC%9A%E5%8F%82%E8%80%83%E4%B9%8B%E5%A4%96%E7%9A%84%E5%8F%98%E5%BC%82%E8%A1%A8%E7%A4%BA-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.9.</span> <span class="nav-text">5.9 k-mer GWAS：参考之外的变异表示 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-10-%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F%E3%80%81%E8%B4%A8%E6%8E%A7%E5%92%8C-GWAS-%E8%AF%BB%E5%9B%BE-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.10.</span> <span class="nav-text">5.10 数据格式、质控和 GWAS 读图 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-11-BSA%E3%80%81QTL-seq-%E4%B8%8E%E4%B8%A4%E5%B1%82%E6%8A%BD%E6%A0%B7-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">6.11.</span> <span class="nav-text">5.11 BSA、QTL-seq 与两层抽样 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-12-QTL%E3%80%81GWAS%E3%80%81BSA%E3%80%81GP-%E6%80%8E%E4%B9%88%E9%80%89"><span class="nav-number">6.12.</span> <span class="nav-text">5.12 QTL、GWAS、BSA、GP 怎么选</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%85%B3%E9%94%AE%E6%95%B0%E6%8D%AE%E5%AF%B9%E8%B1%A1%E4%B8%8E%E6%95%B0%E5%AD%A6%E6%8E%A8%E5%AF%BC"><span class="nav-number">7.</span> <span class="nav-text">6. 关键数据对象与数学推导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-shape%E3%80%81%E7%BB%9F%E8%AE%A1%E5%8D%95%E4%BD%8D%E4%B8%8E%E5%86%85%E5%AD%98-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 shape、统计单位与内存 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-Tajima-%E7%9A%84%E6%9C%89%E9%99%90%E6%A0%B7%E6%9C%AC%E5%B8%B8%E6%95%B0-%E3%80%90%E8%A1%A5%E5%85%85%E6%8E%A8%E5%AF%BC%E3%80%91"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 Tajima \(D\) 的有限样本常数 【补充推导】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-SFS-%E6%8A%95%E5%BD%B1%EF%BC%9A%E8%B6%85%E5%87%A0%E4%BD%95%E6%8A%BD%E6%A0%B7-%E3%80%90%E8%A1%A5%E5%85%85%E6%8E%A8%E5%AF%BC%E3%80%91"><span class="nav-number">7.3.</span> <span class="nav-text">6.3 SFS 投影：超几何抽样 【补充推导】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E6%97%B6%E5%8F%98%E6%BA%AF%E7%A5%96%E9%A3%8E%E9%99%A9%E4%B8%8E-%E3%80%90%E8%A1%A5%E5%85%85%E6%8E%A8%E5%AF%BC%E3%80%91"><span class="nav-number">7.4.</span> <span class="nav-text">6.4 时变溯祖风险与 \(N_{e}\)(\(t\)) 【补充推导】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E5%8C%BA%E9%97%B4%E4%BD%9C%E5%9B%BE%E7%9A%84-EM-%E8%B4%A3%E4%BB%BB%E5%BA%A6-%E3%80%90%E8%A1%A5%E5%85%85%E6%8E%A8%E5%AF%BC%E3%80%91"><span class="nav-number">7.5.</span> <span class="nav-text">6.5 区间作图的 EM 责任度 【补充推导】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-Logistic-%E5%9B%9E%E5%BD%92%E4%B8%8E-LMM-%E7%9A%84%E6%95%B0%E5%80%BC%E8%81%94%E7%B3%BB-%E3%80%90%E8%A1%A5%E5%85%85%E6%8E%A8%E5%AF%BC%E3%80%91"><span class="nav-number">7.6.</span> <span class="nav-text">6.6 Logistic 回归与 LMM 的数值联系 【补充推导】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-7-%E4%BB%8E%E6%96%B9%E5%B7%AE%E5%88%86%E8%A7%A3%E6%8E%A8%E5%87%BA-Pool-seq-%E6%B7%B1%E5%BA%A6%E4%B8%8A%E9%99%90-%E3%80%90%E8%A1%A5%E5%85%85%E6%8E%A8%E5%AF%BC%E3%80%91"><span class="nav-number">7.7.</span> <span class="nav-text">6.7 从方差分解推出 Pool-seq 深度上限 【补充推导】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-8-%E6%95%99%E6%9D%90%E5%85%AC%E5%BC%8F%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%AF%B9%E5%BA%94%E8%A1%A8"><span class="nav-number">7.8.</span> <span class="nav-text">6.8 教材公式的学习对应表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%8F%AF%E8%BF%90%E8%A1%8C%E6%95%99%E5%AD%A6%E5%AE%9E%E9%AA%8C%E4%B8%8E%E5%AE%9E%E9%99%85%E8%BE%93%E5%87%BA"><span class="nav-number">8.</span> <span class="nav-text">7. 可运行教学实验与实际输出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-HWE%EF%BC%9A%E5%90%8C%E4%B8%80%E4%B8%AA-%EF%BC%8C%E4%B8%A4%E4%B8%AA%E6%A3%80%E9%AA%8C"><span class="nav-number">8.1.</span> <span class="nav-text">7.1 HWE：同一个 \(p\)，两个检验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-Wahlund-%E6%95%88%E5%BA%94%EF%BC%9A%E4%B8%A4%E7%BE%A4%E4%BD%93%E9%83%BD%E5%B9%B3%E8%A1%A1%EF%BC%8C%E5%90%88%E5%B9%B6%E5%8D%B4%E7%BC%BA%E6%9D%82%E5%90%88"><span class="nav-number">8.2.</span> <span class="nav-text">7.2 Wahlund 效应：两群体都平衡，合并却缺杂合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-SFS-%E6%94%B9%E5%8F%98%EF%BC%8C-%E7%9B%B8%E5%90%8C%E8%80%8C-%E4%B8%8D%E5%90%8C"><span class="nav-number">8.3.</span> <span class="nav-text">7.3 SFS 改变，\(S\) 相同而 \(D\) 不同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-LD-%E9%9A%8F%E9%87%8D%E7%BB%84%E8%A1%B0%E5%87%8F"><span class="nav-number">8.4.</span> <span class="nav-text">7.4 LD 随重组衰减</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-%E6%9C%89%E6%95%88%E7%BE%A4%E4%BD%93%E5%A4%A7%E5%B0%8F%E6%94%B9%E5%8F%98%E6%BC%82%E5%8F%98%E6%96%B9%E5%B7%AE"><span class="nav-number">8.5.</span> <span class="nav-text">7.5 有效群体大小改变漂变方差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6-%E4%BB%8E%E6%8C%87%E6%95%B0%E7%AD%89%E5%BE%85%E6%97%B6%E9%97%B4%E7%94%9F%E6%88%90%E6%BA%AF%E7%A5%96%E5%B0%BA%E5%BA%A6"><span class="nav-number">8.6.</span> <span class="nav-text">7.6 从指数等待时间生成溯祖尺度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-7-%E4%B8%A4%E7%BB%84%E8%A1%A8%E5%9E%8B%E7%9A%84-%E6%A3%80%E9%AA%8C"><span class="nav-number">8.7.</span> <span class="nav-text">7.7 两组表型的 \(t\) 检验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-8-%E4%B8%A4%E4%BD%8D%E7%82%B9%E5%9F%BA%E5%9B%A0%E5%9E%8B%E7%9A%84%E6%9D%A1%E4%BB%B6-Monte-Carlo-%E6%A3%80%E9%AA%8C"><span class="nav-number">8.8.</span> <span class="nav-text">7.8 两位点基因型的条件 Monte Carlo 检验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-9-%E7%BE%A4%E4%BD%93%E6%B7%B7%E6%9D%82%EF%BC%9A%E4%B8%80%E4%B8%AA%E7%9C%9F%E5%AE%9E%E6%95%88%E5%BA%94%E4%B8%BA-0-%E7%9A%84-SNP-%E4%B9%9F%E8%83%BD%E5%BC%BA%E5%85%B3%E8%81%94"><span class="nav-number">8.9.</span> <span class="nav-text">7.9 群体混杂：一个真实效应为 0 的 SNP 也能强关联</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-10-GLS-%E4%B8%8E%E7%99%BD%E5%8C%96-OLS-%E7%AD%89%E4%BB%B7"><span class="nav-number">8.10.</span> <span class="nav-text">7.10 GLS 与白化 OLS 等价</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-11-ABC-%E4%B8%8E%E5%8F%AF%E8%A7%A3%E6%9E%90%E5%90%8E%E9%AA%8C%E6%AF%94%E8%BE%83"><span class="nav-number">8.11.</span> <span class="nav-text">7.11 ABC 与可解析后验比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-12-Pool-seq%EF%BC%9A%E6%B7%B1%E5%BA%A6%E8%B6%8A%E9%AB%98%EF%BC%8C%E8%B6%8A%E8%83%BD%E7%9C%8B%E8%A7%81%E4%B8%AA%E4%BD%93%E6%8A%BD%E6%A0%B7%E7%9A%84%E4%B8%8B%E9%99%90"><span class="nav-number">8.12.</span> <span class="nav-text">7.12 Pool-seq：深度越高，越能看见个体抽样的下限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-13-%E5%85%A8%E5%9F%BA%E5%9B%A0%E7%BB%84%E6%9C%80%E5%A4%A7%E5%80%BC%E9%98%88%E5%80%BC%E9%AB%98%E4%BA%8E%E5%8D%95%E4%BD%8D%E7%82%B9%E9%98%88%E5%80%BC"><span class="nav-number">8.13.</span> <span class="nav-text">7.13 全基因组最大值阈值高于单位点阈值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-AI-for-Science-%E6%89%A9%E5%B1%95"><span class="nav-number">9.</span> <span class="nav-text">8. AI for Science 扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E6%8A%8A%E8%BF%9B%E5%8C%96%E6%A8%A1%E6%8B%9F%E5%BD%93%E4%BD%9C%E6%9C%89%E5%81%87%E8%AE%BE%E7%9A%84%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E7%94%9F%E6%88%90%E5%99%A8-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">9.1.</span> <span class="nav-text">8.1 把进化模拟当作有假设的训练数据生成器 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%BD%92%E7%BA%B3%E5%81%8F%E7%BD%AE%EF%BC%9A%E5%93%AA%E4%BA%9B%E8%BD%B4%E6%9C%89%E9%A1%BA%E5%BA%8F-%E3%80%90%E9%87%8D%E7%82%B9%E3%80%91"><span class="nav-number">9.2.</span> <span class="nav-text">8.2 表示学习的归纳偏置：哪些轴有顺序 【重点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E7%A5%9E%E7%BB%8F%E5%90%8E%E9%AA%8C%E7%9A%84%E6%A0%A1%E5%87%86%E4%B8%8E%E8%AF%84%E6%B5%8B"><span class="nav-number">9.3.</span> <span class="nav-text">8.3 神经后验的校准与评测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-%E6%A8%A1%E5%9E%8B%E5%A4%B1%E9%85%8D%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E4%B8%8E%E8%A7%82%E6%B5%8B%E5%B1%82"><span class="nav-number">9.4.</span> <span class="nav-text">8.4 模型失配压力测试与观测层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-5-%E4%BA%BA%E5%8F%A3%E7%BB%93%E6%9E%84%E4%B8%8E%E8%B7%A8%E7%BE%A4%E4%BD%93%E9%A2%84%E6%B5%8B"><span class="nav-number">9.5.</span> <span class="nav-text">8.5 人口结构与跨群体预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-6-%E4%BA%94%E4%B8%AA%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%9A%84%E5%90%8E%E7%BB%AD%E9%A1%B9%E7%9B%AE"><span class="nav-number">9.6.</span> <span class="nav-text">8.6 五个可执行的后续项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E4%B8%8E-VirusBin-%E7%A0%94%E7%A9%B6%E7%9A%84%E8%81%94%E7%B3%BB"><span class="nav-number">10.</span> <span class="nav-text">9. 与 VirusBin 研究的联系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E5%90%8C%E7%A7%8D%E3%80%81%E5%90%8C%E6%A0%AA%E3%80%81%E5%90%8C%E7%A5%96%E7%89%87%E6%AE%B5%E6%98%AF%E4%B8%8D%E5%90%8C%E6%A0%87%E7%AD%BE"><span class="nav-number">10.1.</span> <span class="nav-text">9.1 同种、同株、同祖片段是不同标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-k-mer-%E7%9A%84%E7%9B%B8%E5%85%B3%E4%B8%8E%E8%A7%82%E6%B5%8B%E5%81%8F%E5%B7%AE"><span class="nav-number">10.2.</span> <span class="nav-text">9.2 k-mer 的相关与观测偏差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-%E8%A6%86%E7%9B%96%E5%BA%A6%E6%A3%80%E9%AA%8C%E9%9C%80%E8%A6%81%E5%88%86%E5%B1%82%E6%8A%BD%E6%A0%B7%E6%A8%A1%E5%9E%8B"><span class="nav-number">10.3.</span> <span class="nav-text">9.3 覆盖度检验需要分层抽样模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-4-%E7%A8%B3%E5%AE%9A%E6%80%A7%E4%B8%8E%E9%80%89%E6%8B%A9%E6%89%AB%E6%8F%8F%E5%85%B1%E4%BA%AB%E4%B8%80%E4%B8%AA%E9%99%B7%E9%98%B1"><span class="nav-number">10.4.</span> <span class="nav-text">9.4 稳定性与选择扫描共享一个陷阱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-5-%E6%A8%A1%E6%8B%9F%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E7%9A%84%E6%A0%87%E7%AD%BE%E5%B1%82%E7%BA%A7"><span class="nav-number">10.5.</span> <span class="nav-text">9.5 模拟训练数据的标签层级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E6%95%99%E6%9D%90%E4%B9%A0%E9%A2%98%E5%AE%8C%E6%95%B4%E8%A7%A3%E7%AD%94"><span class="nav-number">11.</span> <span class="nav-text">10. 教材习题完整解答</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E4%B9%A0%E9%A2%98-1%EF%BC%9A%E9%80%89%E6%8B%A9%E5%8E%8B%E6%A3%80%E6%B5%8B%E4%B8%BB%E8%A6%81%E6%96%B9%E6%B3%95%E3%80%81%E5%8E%9F%E7%90%86%E5%92%8C%E7%89%B9%E7%82%B9"><span class="nav-number">11.1.</span> <span class="nav-text">10.1 习题 1：选择压检测主要方法、原理和特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E4%B9%A0%E9%A2%98-2%EF%BC%9A%E6%BA%AF%E7%A5%96%E7%90%86%E8%AE%BA%E7%9A%84%E6%96%B9%E6%B3%95%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">11.2.</span> <span class="nav-text">10.2 习题 2：溯祖理论的方法与应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-%E4%B9%A0%E9%A2%98-3%EF%BC%9AHWE-%E8%AE%A1%E7%AE%97"><span class="nav-number">11.3.</span> <span class="nav-text">10.3 习题 3：HWE 计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-4-%E4%B9%A0%E9%A2%98-4%EF%BC%9A%E5%9B%9E%E4%BA%A4%E7%BE%A4%E4%BD%93%E4%B8%A4%E7%BB%84%E8%A1%A8%E5%9E%8B%E5%B7%AE%E5%BC%82"><span class="nav-number">11.4.</span> <span class="nav-text">10.4 习题 4：回交群体两组表型差异</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-5-%E4%B9%A0%E9%A2%98-5%EF%BC%9A%E4%B8%A4%E4%BD%8D%E7%82%B9%E5%85%B3%E8%81%94%E4%B8%8E%E6%9C%AA%E5%AE%9A%E7%9B%B8-LD"><span class="nav-number">11.5.</span> <span class="nav-text">10.5 习题 5：两位点关联与未定相 LD</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E8%87%AA%E6%B5%8B%E9%A2%98"><span class="nav-number">12.</span> <span class="nav-text">11. 自测题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88"><span class="nav-number">12.1.</span> <span class="nav-text">参考答案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-%E5%8E%86%E5%8F%B2%E4%B8%8E%E4%BA%BA%E7%89%A9-%E3%80%90%E4%BA%86%E8%A7%A3%E5%8D%B3%E5%8F%AF%E3%80%91"><span class="nav-number">13.</span> <span class="nav-text">12. 历史与人物 【了解即可】</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-%E4%BA%94%E8%A7%86%E8%A7%92%E6%80%BB%E7%BB%93"><span class="nav-number">14.</span> <span class="nav-text">13. 五视角总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-%E5%85%A8%E7%AB%A0%E9%80%9F%E8%AE%B0-25-%E6%9D%A1"><span class="nav-number">15.</span> <span class="nav-text">14. 全章速记 25 条</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%AD%A6%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="nav-number">16.</span> <span class="nav-text">15. 下一步学习建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16-%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%E4%B8%8E%E6%A0%B8%E5%AF%B9%E8%AE%B0%E5%BD%95"><span class="nav-number">17.</span> <span class="nav-text">16. 参考资料与核对记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%9B%BE%E7%B4%A2%E5%BC%95"><span class="nav-number">17.1.</span> <span class="nav-text">插图索引</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AgioPan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">AgioPan</p>
+  <div class="site-description" itemprop="description">Solving equations, decoding life, exploring minds.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Agio910" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Agio910" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=itGxWzYAAAAJ" title="Google Scholar → https:&#x2F;&#x2F;scholar.google.com.hk&#x2F;citations?hl&#x3D;zh-CN&amp;user&#x3D;itGxWzYAAAAJ" rel="noopener" target="_blank"><i class="fa fa-graduation-cap fa-fw"></i>Google Scholar</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0005-1485-9515" title="orcid → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0005-1485-9515" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>orcid</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:202111079094@mail.bnu.edu.cn" title="E-Mail → mailto:202111079094@mail.bnu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2025 – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AgioPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

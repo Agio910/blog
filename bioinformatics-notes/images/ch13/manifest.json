@@ -1,0 +1,177 @@
+{
+  "source_pdf": "生物信息学/生物信息学_第十三章_群体遗传分析.pdf",
+  "printed_page_offset": 333,
+  "coordinate_width": 500,
+  "figures": {
+    "fig13-00": {
+      "pdf_page": 1,
+      "printed_page": 334,
+      "box": [
+        50,
+        310,
+        450,
+        530
+      ]
+    },
+    "fig13-01": {
+      "pdf_page": 3,
+      "printed_page": 336,
+      "box": [
+        50,
+        235,
+        245,
+        345
+      ]
+    },
+    "fig13-02": {
+      "pdf_page": 6,
+      "printed_page": 339,
+      "box": [
+        60,
+        190,
+        445,
+        535
+      ]
+    },
+    "fig13-03": {
+      "pdf_page": 9,
+      "printed_page": 342,
+      "box": [
+        50,
+        70,
+        245,
+        275
+      ]
+    },
+    "fig13-04": {
+      "pdf_page": 10,
+      "printed_page": 343,
+      "box": [
+        100,
+        375,
+        400,
+        515
+      ]
+    },
+    "fig13-05": {
+      "pdf_page": 15,
+      "printed_page": 348,
+      "box": [
+        50,
+        70,
+        245,
+        282
+      ]
+    },
+    "fig13-06": {
+      "pdf_page": 17,
+      "printed_page": 350,
+      "box": [
+        50,
+        215,
+        450,
+        415
+      ]
+    },
+    "fig13-07": {
+      "pdf_page": 20,
+      "printed_page": 353,
+      "box": [
+        60,
+        80,
+        445,
+        590
+      ]
+    },
+    "fig13-08": {
+      "pdf_page": 21,
+      "printed_page": 354,
+      "box": [
+        50,
+        70,
+        445,
+        460
+      ]
+    },
+    "fig13-09": {
+      "pdf_page": 21,
+      "printed_page": 354,
+      "box": [
+        50,
+        535,
+        245,
+        645
+      ]
+    },
+    "fig13-10": {
+      "pdf_page": 33,
+      "printed_page": 366,
+      "box": [
+        50,
+        380,
+        445,
+        650
+      ]
+    },
+    "fig13-11": {
+      "pdf_page": 34,
+      "printed_page": 367,
+      "box": [
+        50,
+        410,
+        445,
+        650
+      ]
+    },
+    "fig13-12": {
+      "pdf_page": 35,
+      "printed_page": 368,
+      "box": [
+        80,
+        330,
+        420,
+        520
+      ]
+    },
+    "fig13-13": {
+      "pdf_page": 37,
+      "printed_page": 370,
+      "box": [
+        50,
+        70,
+        445,
+        515
+      ]
+    },
+    "fig13-14": {
+      "pdf_page": 38,
+      "printed_page": 371,
+      "box": [
+        60,
+        80,
+        445,
+        620
+      ]
+    },
+    "history-malecot": {
+      "pdf_page": 40,
+      "printed_page": 373,
+      "box": [
+        350,
+        140,
+        440,
+        265
+      ]
+    },
+    "history-cockerham": {
+      "pdf_page": 40,
+      "printed_page": 373,
+      "box": [
+        65,
+        495,
+        170,
+        630
+      ]
+    }
+  }
+}
